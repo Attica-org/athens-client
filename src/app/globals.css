@@ -17,6 +17,7 @@
 }
 
 body {
+  font-family: "laundryGothic", sans-serif;
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -30,4 +31,18 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+@font-face {
+  font-family: "laundryGothic";
+  font-weight: 400;
+  font-style: normal;
+  src: url("/fonts/laundryGothicOTF-Regular.otf") format("otf");
+}
+
+@font-face {
+  font-family: "laundryGothic";
+  font-weight: 700;
+  font-style: normal;
+  src: url("/fonts/laundryGothicOTF-Bold.otf") format("otf");
 }
