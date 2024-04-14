@@ -6,7 +6,7 @@ export default function SearchAgora() {
       <UserImage />
       <div className="flex-1 p-0.5rem">
         <div className="flex justify-between items-start pb-5">
-          <h3 className="text-sm break-words break-keep line-clamp-2 max-w-prose">
+          <h3 className="text-sm under-mobile:text-xs break-words break-keep line-clamp-2 max-w-prose">
             국가 발전에는 유능한 독재자가 필요한 시기가 있다
           </h3>
           <div className="text-xs text-gray-500 pl-3">2024.04.14</div>
