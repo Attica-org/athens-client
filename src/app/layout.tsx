@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import SideNav from "./_components/home/organisms/NavMenu";
-import AgoraUserList from "./_components/chat/AgoraUserList";
 
 export const metadata: Metadata = {
   title: "Athens",
