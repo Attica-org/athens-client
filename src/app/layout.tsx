@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="lg:flex">
+      <body className="lg:flex scrollbar-hide">
         <SideNav />
         {children}
       </body>
