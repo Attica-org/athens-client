@@ -3,7 +3,7 @@ export default function Agora() {
     <article className="w-7.5rem p-10 border-1 rounded-lg flex flex-col justify-center items-center">
       <h3 className="text-sm pb-3">쌀떡보다 밀떡</h3>
       <div className="w-3rem h-3rem rounded-full bg-yellow-400 relative">
-        <div className="w-0.5rem h-0.5rem rounded-full bg-red-400 absolute top-2 right-3 z-10" />
+        <div className="w-0.5rem h-0.5rem rounded-full bg-red-400 absolute top-2 right-3 z-5" />
       </div>
       <p className="text-xs pt-7">
         <div className="pb-1">
