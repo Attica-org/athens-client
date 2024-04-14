@@ -1,10 +1,10 @@
 import AgoraStatus from "./_components/home/atoms/AgoraStatus";
 import AgoraStatusTab from "./_components/home/atoms/AgoraStatusTab";
-import CategoryButton from "./_components/home/atoms/CategoryButton";
 import PageTitle from "./_components/home/atoms/PageTitle";
 import SearchBar from "./_components/home/atoms/SearchBar";
 import AgoraList from "./_components/home/molecules/AgoraList";
 import CategoryButtonList from "./_components/home/molecules/CategoryButtonList";
+import SearchAgoraList from "./_components/home/organisms/SearchAgoraList";
 
 export default function Home() {
   return (
@@ -23,8 +23,9 @@ export default function Home() {
           <AgoraStatusTab />
           <CategoryButtonList />
         </section>
-        <section className="flex flex-1 p-0.5rem pb-5rem pt-1rem justify-center items-start">
-          <AgoraList />
+        <section className="flex flex-1 flex-col p-0.5rem pb-5rem pt-1rem justify-start items-center">
+          <SearchAgoraList />
+          {/* <AgoraList /> */}
         </section>
       </main>
     </section>
