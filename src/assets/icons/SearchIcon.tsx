@@ -10,6 +10,7 @@ const SearchIcon = ({ className }: Props) => {
       className={className}
       viewBox="0 0 13 13"
       fill="none"
+      aria-hidden
     >
       <rect
         width="13"
