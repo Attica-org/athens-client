@@ -25,7 +25,7 @@ export default function NavLinks() {
           </DesktopNavLink>
           <DesktopNavLink
             href="/create-agora"
-            className="bg-athens-button w-8rem p-8 h-3rem flex justify-center items-center rounded-full"
+            className="bg-athens-main w-8rem p-8 flex justify-center items-center rounded-full"
           >
             <span className="text-white">아고라 생성</span>
           </DesktopNavLink>
