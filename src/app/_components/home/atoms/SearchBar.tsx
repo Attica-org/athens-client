@@ -4,7 +4,7 @@ import SearchIcon from "@/assets/icons/SearchIcon";
 export default function SearchBar() {
   // TODO: 삭제 버튼 클릭 시 input 내용 삭제
   return (
-    <div className="bg-athens-gray rounded-md p-7 flex justify-center items-center">
+    <div className="bg-athens-gray rounded-md p-4 flex justify-center items-center">
       <SearchIcon className="w-1rem ml-10" />
       <input
         type="text"
