@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-// import { Inter } from "next/font/google";
 import "./globals.css";
-
-// const inter = Inter({ subsets: ["latin"] });
+import SideNav from "./_components/home/SideNav";
+import AgoraUserList from "./_components/AgoraUserList";
 
 export const metadata: Metadata = {
   title: "Athens",
@@ -18,9 +17,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      {/* <body className={inter.className}>{children}</body> */}
-      <body>{children}</body>
+    <html lang="ko">
+      <body>
+        <div className="flex justify-center items-stretch">{children}</div>
+      </body>
     </html>
   );
 }
