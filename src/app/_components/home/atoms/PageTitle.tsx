@@ -10,8 +10,10 @@ export default function PageTitle({ title, desc, children }: Props) {
       <h1 className="text-xl font-semibold w-full flex justify-start items-center">
         {title}
       </h1>
-      <div className="flex justify-between items-center">
-        <p className="mt-1rem text-sm text-gray-700 mb-1rem">{desc}</p>
+      <div className="flex justify-between items-center break-words">
+        <p className="mt-1rem text-sm text-gray-700 mb-1rem break-keep">
+          {desc}
+        </p>
         {children}
       </div>
     </>
