@@ -33,10 +33,14 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      borderWidth: {
+        "1": "1px", // 1px 단위 추가
+      },
       colors: {
         "athens-main": "#10AE5D",
         "athens-gray": "#F1F3F5",
         "athens-button": "#21d2a1",
+        "athens-sub": "#FEAC3E",
       },
     },
     spacing: {
