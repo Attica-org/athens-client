@@ -20,7 +20,6 @@
 body {
   font-family: "laundryGothic", sans-serif;
   color: rgb(var(--foreground-rgb));
-  background-color: white;
 }
 
 @layer utilities {
