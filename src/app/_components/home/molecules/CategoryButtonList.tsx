@@ -14,6 +14,9 @@ const categoryList = [
 
 // TODO: swiper 적용 혹은 다른 라이브러리 찾아보기
 export default function CategoryButtonList() {
+  const search = "검색";
+
+  if (search) return null;
   return (
     <div className="mt-10 flex text-nowrap overflow-hidden ml-5">
       {categoryList.map((category) => (
