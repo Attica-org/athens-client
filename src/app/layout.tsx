@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import SideNav from "./_components/home/SideNav";
-import AgoraUserList from "./_components/AgoraUserList";
+import SideNav from "./_components/home/organisms/NavMenu";
+import AgoraUserList from "./_components/chat/AgoraUserList";
 
 export const metadata: Metadata = {
   title: "Athens",
@@ -18,8 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body>
-        <div className="flex justify-center items-stretch">{children}</div>
+      <body className="lg:flex">
+        <SideNav />
+        {children}
       </body>
     </html>
   );
