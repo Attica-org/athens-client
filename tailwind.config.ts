@@ -16,6 +16,7 @@ const value = {
     acc[`${rem}`] = pxToRem(rem);
     return acc;
   }, {}),
+  "0.5rem": "9px",
   "1.5rem": "27px",
   "2.5rem": "45px",
 };
@@ -41,12 +42,40 @@ const config: Config = {
         "athens-gray": "#F1F3F5",
         "athens-button": "#21d2a1",
         "athens-sub": "#FEAC3E",
+        "athens-gray-500": "#A9A5A5",
       },
+    },
+    screens: {
+      "under-mobile": { max: "389px" },
+      mobile: "360px",
+      "under-foldable": { max: "522px", min: "410" },
+      foldable: "523px",
+      sm: "640px",
+      "under-tablet": { max: "767px", min: "640px" },
+      tablet: "768px",
+      md: "768px",
+      "under-large": { max: "1023px", min: "821px" },
+      lg: "1024px",
+      "under-xl": { max: "1279px", min: "1024px" },
+      xl: "1280px",
+      "2xl": { min: "1536px" },
     },
     spacing: {
       ...value,
     },
   },
-  plugins: [],
+  plugins: [
+    ({ addUtilities }: any) => {
+      addUtilities({
+        ".scrollbar-hide": {
+          scrollbarWidth: "none",
+          "-ms-overflow-style": "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+        },
+      });
+    },
+  ],
 };
 export default config;
