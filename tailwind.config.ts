@@ -76,6 +76,13 @@ const config: Config = {
         },
       });
     },
+    ({ addUtilities }: any) => {
+      addUtilities({
+        ".text-xxs": {
+          fontSize: "0.625rem",
+        },
+      });
+    },
   ],
 };
 export default config;
