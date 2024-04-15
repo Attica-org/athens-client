@@ -14,7 +14,7 @@ import Agora from "../atoms/Agora";
 
 export default function AgoraList() {
   return (
-    <div className="grid under-large:grid-cols-7 gap-x-7 gap-y-10 under-mobile:grid-cols-2 mobile:grid-cols-3 foldable:grid-cols-4 tablet:grid-cols-6 under-tablet:grid-cols-5 xl:grid-cols-8 2xl:grid-cols-10  sm:grid-cols-4 lg:grid-cols-7 under-xl:grid-cols-6">
+    <div className="grid under-large:grid-cols-7 gap-x-10 gap-y-10 under-mobile:grid-cols-2 mobile:grid-cols-3 foldable:grid-cols-4 tablet:grid-cols-6 under-tablet:grid-cols-5 xl:grid-cols-8 2xl:grid-cols-10  sm:grid-cols-4 lg:grid-cols-7 under-xl:grid-cols-6">
       <Agora />
       <Agora />
       <Agora />
