@@ -5,7 +5,7 @@ export default function Agora() {
       <div className="w-3rem h-3rem rounded-full bg-yellow-400 relative">
         <div className="w-0.5rem h-0.5rem rounded-full bg-red-400 absolute top-2 right-3 z-5" />
       </div>
-      <p className="text-xs pt-7">
+      <p className="text-xxs pt-7">
         <div className="pb-1">
           <span className="pr-5 text-athens-gray-500 text-nowrap">
             <span className="text-blue-500 pr-3">찬성</span>10명
