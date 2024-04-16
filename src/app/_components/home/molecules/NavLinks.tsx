@@ -8,28 +8,22 @@ import DesktopNavLink from "../atoms/DesktopNavLink";
 
 export default function NavLinks() {
   const pathname = useSelectedLayoutSegment();
+  // 전역 상태 관리 훅을 사용하여 pathname을 가져온다.
+  // create-agora 페이지에서는 전역 상태를 create-agora로 설정하고, 그 외의 페이지에서는 home으로 설정한다.
 
   return (
     <>
       <div className="hidden lg:block">
         <ul>
-          <DesktopNavLink href="/">
-            <div className="hover:bg-gray-100 h-3rem p-1rem inline-flex flex-row justify-center items-center mb-1rem rounded-full">
-              <HomeIcon className="w-1.5rem" segment={pathname} />
-              <span
-                className={`pl-1rem text-sm ${
-                  pathname === null ? "font-bold" : ""
-                }`}
-              >
-                홈
-              </span>
-            </div>
+          <DesktopNavLink href="/" segment={pathname} innerText="홈">
+            <HomeIcon className="w-1.5rem" segment={pathname} />
           </DesktopNavLink>
           <DesktopNavLink
             href="/create-agora"
-            className="bg-athens-sub ml-0.5rem text-sm w-8rem p-8 flex justify-center items-center rounded-full"
+            segment={`/${pathname}`}
+            innerText="아고라 생성"
           >
-            <span className="text-white">아고라 생성</span>
+            <AddIcon className="w-1.5rem" segment={pathname} />
           </DesktopNavLink>
         </ul>
       </div>
