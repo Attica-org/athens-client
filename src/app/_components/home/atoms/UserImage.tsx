@@ -1,3 +1,3 @@
 export default function UserImage() {
-  return <div className="min-w-3rem h-3rem rounded-xl bg-yellow-400"></div>;
+  return <div className="min-w-5rem h-5rem rounded-lg bg-yellow-400"></div>;
 }
