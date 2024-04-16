@@ -4,7 +4,7 @@ type Props = {
 };
 
 const HomeIcon = ({ className, segment }: Props) => {
-  if (segment === null) {
+  if (segment === `(home)`) {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
         <g>
