@@ -1,13 +1,13 @@
 type Props = {
   children: React.ReactNode;
-  createAgora: React.ReactNode;
+  modal: React.ReactNode;
 };
 
-export default function Layout({ children, createAgora }: Props) {
+export default function Layout({ children, modal }: Props) {
   return (
     <div>
       {children}
-      {createAgora}
+      {modal}
     </div>
   );
 }

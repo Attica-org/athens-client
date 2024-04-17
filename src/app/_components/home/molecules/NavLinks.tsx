@@ -19,7 +19,7 @@ export default function NavLinks() {
             <HomeIcon className="w-1.5rem" segment={pathname} />
           </DesktopNavLink>
           <DesktopNavLink
-            href="/create-agora"
+            href="/flow/create-agora"
             segment={`/${pathname}`}
             innerText="아고라 생성"
           >
@@ -37,7 +37,7 @@ export default function NavLinks() {
           </MobileNavLink>
           <MobileNavLink
             className="flex flex-col text-xs justify-center items-center p-10"
-            href="/create-agora"
+            href="/flow/create-agora"
           >
             <AddIcon className="w-23 pb-2" segment={pathname} />
             아고라생성
