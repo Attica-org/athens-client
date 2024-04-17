@@ -1,6 +1,20 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
 export default function Agora() {
+  const router = useRouter();
+
+  //TODO: 아고라 id를 받아서 해당 아고라로 이동
+  const enterAgora = () => {
+    router.push("/flow/enter-agora");
+  };
+
   return (
-    <article className="w-10rem under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center">
+    <article
+      className="w-10rem under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center cursor-pointer"
+      onClick={enterAgora}
+    >
       <div className="under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-2xl bg-yellow-400 relative">
         <div className="w-0.5rem h-0.5rem rounded-full bg-red-400 absolute top-2 right-1 z-5" />
       </div>
