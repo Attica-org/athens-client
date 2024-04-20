@@ -30,14 +30,14 @@ body {
 
 @font-face {
   font-family: "laundryGothic";
-  font-weight: 400;
+  font-weight: normal;
   font-style: normal;
   src: url("/fonts/laundryGothicOTF-Regular.otf") format("otf");
 }
 
 @font-face {
   font-family: "laundryGothic";
-  font-weight: 700;
+  font-weight: bold;
   font-style: normal;
   src: url("/fonts/laundryGothicOTF-Bold.otf") format("otf");
 }
