@@ -11,10 +11,7 @@ export default function Agora() {
   };
 
   return (
-    <article
-      className="w-10rem under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center cursor-pointer"
-      onClick={enterAgora}
-    >
+    <article className="w-10rem under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center">
       <div className="under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-2xl bg-yellow-400 relative">
         <div className="w-0.5rem h-0.5rem rounded-full bg-red-400 absolute top-2 right-1 z-5" />
       </div>
@@ -35,7 +32,10 @@ export default function Agora() {
           <span className="text-athens-gray-500">10명</span>
         </span>
       </p>
-      <button className="text-sm under-mobile:text-xs text-white bg-athens-main p-4 pt-5 pb-5 mt-10 w-8rem under-mobile:w-6rem rounded-md">
+      <button
+        onClick={enterAgora}
+        className="text-sm under-mobile:text-xs text-white bg-athens-main p-4 pt-5 pb-5 mt-10 w-8rem under-mobile:w-6rem rounded-md"
+      >
         입장하기
       </button>
     </article>
