@@ -1,10 +1,15 @@
+"use client";
+
+import { usePathname, useSelectedLayoutSegment } from "next/navigation";
+
 type Props = {
   className: string;
-  segment: string | null;
 };
 
-const HomeIcon = ({ className, segment }: Props) => {
-  if (segment === `(home)`) {
+const HomeIcon = ({ className }: Props) => {
+  const segment = usePathname();
+
+  if (segment === `/`) {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
         <g>

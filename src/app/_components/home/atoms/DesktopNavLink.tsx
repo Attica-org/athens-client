@@ -1,10 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type Props = {
   href: string;
   className?: string;
   children: React.ReactNode;
-  segment: string | null;
   innerText: string;
 };
 
@@ -12,12 +14,9 @@ export default function DesktopNavLink({
   className,
   href,
   children,
-  segment,
   innerText,
 }: Props) {
-  if (segment === `(home)`) {
-    segment = "/";
-  }
+  let segment = usePathname();
 
   return (
     <li>

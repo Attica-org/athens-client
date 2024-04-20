@@ -1,10 +1,15 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+
 type Props = {
   className: string;
-  segment: string | null;
 };
 
-const AddIcon = ({ className, segment }: Props) => {
-  if (segment === "create-agora") {
+const AddIcon = ({ className }: Props) => {
+  const segment = usePathname();
+
+  if (segment === "/create-agora") {
     return (
       <svg
         className={className}
