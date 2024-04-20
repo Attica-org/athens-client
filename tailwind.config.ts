@@ -21,6 +21,12 @@ const value = {
   "2.5rem": "45px",
 };
 
+const screenKeys = Array.from({ length: 20 }, (_, i) => i * 5);
+const screenSizes = screenKeys.reduce(
+  (v, key) => Object.assign(v, { [key]: key }),
+  {}
+);
+
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -43,10 +49,16 @@ const config: Config = {
         "athens-button": "#21d2a1",
         "athens-sub": "#FEAC3E",
         "athens-gray-500": "#A9A5A5",
+        "agora-point-color1": "#00ADAC",
+        "agora-point-color2": "#79E0D9",
+        "agora-point-color3": "#F7F3F4",
+        "agora-point-color4": "#E1C5B9",
+        "agora-point-color5": "#FAC171",
+        "agora-point-color6": "#35627B",
       },
     },
     screens: {
-      "under-mobile": { max: "389px" },
+      "under-mobile": { max: "359px" },
       mobile: "360px",
       "under-foldable": { max: "522px", min: "410" },
       foldable: "523px",
@@ -74,12 +86,25 @@ const config: Config = {
             display: "none",
           },
         },
-      });
-    },
-    ({ addUtilities }: any) => {
-      addUtilities({
         ".text-xxs": {
           fontSize: "0.625rem",
+        },
+        ".max-width-screen": {
+          maxWidth: "1580px",
+        },
+        ".input-number-hide": {
+          "&::-webkit-outer-spin-button": {
+            "-webkit-appearance": "none",
+            margin: 0,
+          },
+          "&::-webkit-inner-spin-button": {
+            "-webkit-appearance": "none",
+            margin: 0,
+          },
+          "-moz-appearance": {
+            appearance: "textfield",
+          },
+          appearance: "textfield",
         },
       });
     },
