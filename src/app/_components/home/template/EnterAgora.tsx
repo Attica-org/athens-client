@@ -5,9 +5,9 @@ import ModalBase from "../molecules/ModalBase";
 export default function EnterAgora() {
   return (
     <ModalBase>
-      <h3 className="flex justify-center items-center mt-2rem text-base">
+      <h2 className="flex justify-center items-center mt-2rem text-base">
         입장
-      </h3>
+      </h2>
       <p className="text-sm p-2rem pb-1.5rem flex justify-center items-cener text-center break-keep font-medium">
         국가 발전에 유능한 독재자가 필요한 시기가 있다.
       </p>
