@@ -4,8 +4,8 @@ import NavLinks from "../molecules/NavLinks";
 
 export default function SideNav() {
   return (
-    <nav className="lg:h-dvh relative flex-1 max-w-14rem flex-grow border-r-2 border-r-gray-50">
-      <div className="hidden lg:block fixed h-dvh xl:w-14rem lg:w-13rem pl-3rem ">
+    <nav className="lg:h-dvh relative flex-1 max-w-12rem flex-grow border-r-2 border-r-gray-50">
+      <div className="hidden lg:block fixed h-dvh xl:w-12rem lg:w-11rem pl-1rem ">
         <div className="w-lg flex flex-col">
           <div className="flex-col">
             <Link
