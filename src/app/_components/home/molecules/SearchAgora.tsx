@@ -1,4 +1,4 @@
-import UserImage from "../atoms/UserImage";
+import UserImage from "../../atoms/UserImage";
 
 export default function SearchAgora() {
   return (

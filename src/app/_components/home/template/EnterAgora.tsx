@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import ModalBase from "../molecules/ModalBase";
+import ModalBase from "../../molecules/ModalBase";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -44,7 +44,7 @@ export default function EnterAgora() {
         아고라 입장
       </h1>
       <p className="text-sm p-1rem pt-1.5rem pb-1.5rem flex justify-center items-cener text-center break-keep font-medium">
-        국가 발전에 유능한 독재자가 필요한 시기가 있다.
+        {'"'}국가 발전에 유능한 독재자가 필요한 시기가 있다.{'"'}
       </p>
       <div className="flex flex-col justiy-start items-center">
         <div className="flex justify-start items-center mb-10">
