@@ -27,9 +27,9 @@ export default function ModalBase({ children }: Props) {
       onClick={clickOutSideModal}
       className="w-dvw h-dvh flex absolute justify-center items-center z-20 top-0 right-0 left-0 bottom-0 bg-opacity-20 bg-gray-600"
     >
-      <div className="mt-10rem under-mobile:mt-14rem bg-white bottom-7rem mobile:w-[70vw] pb-2rem under-mobile:pb-1rem under-mobile:w-[80vw] w-[50vw] lg:w-40rem relative rounded-2xl min-w-220">
+      <div className="under-mobile:mt-14rem bg-white bottom-7rem mobile:w-[70vw] pb-0.5rem under-mobile:pb-1rem under-mobile:w-[80vw] w-[50vw] lg:w-40rem relative rounded-2xl min-w-220">
         <BackButton className="absolute right-2rem top-25" />
-        {children}
+        <div className="p-1.5rem">{children}</div>
       </div>
     </div>
   );
