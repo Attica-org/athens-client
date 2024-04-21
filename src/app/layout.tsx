@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import SideNav from "./_components/home/organisms/NavMenu";
 
 export const metadata: Metadata = {
   title: "Athens",
@@ -18,7 +17,6 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="lg:flex scrollbar-hide justify-center items-start">
-        <SideNav />
         {children}
       </body>
     </html>
