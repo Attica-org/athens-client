@@ -1,8 +1,9 @@
 type Props = {
   className?: string;
+  onClick?: () => void;
 };
 
-const RemoveIcon = ({ className }: Props) => {
+const RemoveIcon = ({ className, onClick }: Props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -10,6 +11,7 @@ const RemoveIcon = ({ className }: Props) => {
       viewBox="0 0 10 10"
       fill="none"
       className={className}
+      onClick={onClick}
     >
       <rect width="10" height="10" fill="url(#pattern0_158_1815)" />
       <defs>
