@@ -99,7 +99,7 @@ export default function CreateAgora() {
   };
 
   return (
-    <section className="xl:w-[1058px] tablet:w-[706px] under-large:w-full overflow-y-scroll scrollbar-hide flex flex-col pb-57 lg:pb-25 flex-1 h-dvh min-w-270 flex-grow">
+    <section className="overflow-y-scroll scrollbar-hide flex flex-col pb-57 lg:pb-25 flex-1 h-dvh min-w-270 flex-grow">
       <header className="p-1rem pb-0 relative min-w-270">
         <PageTitle
           title="아고라 생성"
