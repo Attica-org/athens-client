@@ -85,7 +85,7 @@ export default function CreateAgora() {
   };
 
   const handleNoTime = () => {
-    if (!time) {
+    if (timeCheck) {
       setTime(DEFAULT_TIME);
       setTimeCheck(false);
     } else {
@@ -99,24 +99,24 @@ export default function CreateAgora() {
   };
 
   return (
-    <section className="overflow-y-scroll scrollbar-hide flex flex-col pb-57 lg:pb-25 flex-1 h-dvh min-w-270 flex-grow max-width-screen">
+    <section className="xl:w-[1058px] tablet:w-[706px] under-large:w-full overflow-y-scroll scrollbar-hide flex flex-col pb-57 lg:pb-25 flex-1 h-dvh min-w-270 flex-grow">
       <header className="p-1rem pb-0 relative min-w-270">
         <PageTitle
           title="아고라 생성"
           desc="생성할 아고라 정보를 입력해주세요."
         ></PageTitle>
       </header>
-      <main className="flex lg:w-[82.5vw] w-[100vw] max-width-screen h-dvh flex-1 flex-grow min-w-270 justify-between items-stretch p-1.5rem pt-0 under-mobile:pl-1rem under-mobile:pr-1rem flex-col">
-        <div className="flex flex-col w-full">
+      <main className="flex h-dvh flex-1 flex-grow min-w-270 justify-between items-stretch p-1rem pt-0 under-mobile:pl-1rem under-mobile:pr-1rem flex-col">
+        <div className="flex flex-col w-full under-mobile:mt-10">
           <input
             aria-label="생성할 아고라 주제 입력창"
             type="text"
             placeholder="토론 할 주제를 입력해주세요."
-            className="w-full mt-1rem p-0.5rem text-xs border-1 border-athens-gray rounded-md"
+            className="w-full p-0.5rem  text-xs border-1 border-athens-gray rounded-md"
           />
           <div className="flex justify-around flex-col w-full">
-            <section className="mt-1rem w-full">
-              <h3 className="text-sm mb-10 under-mobile:text-xs">
+            <section className="mt-1.5rem w-full">
+              <h3 className="text-md mb-10 under-mobile:text-sm">
                 아고라 카테고리 분류
               </h3>
               <div
@@ -125,8 +125,8 @@ export default function CreateAgora() {
               ></div>
             </section>
             <section className="mt-1.5rem w-full">
-              <h3 className="text-sm mb-10 under-mobile:text-xs">
-                아고라 색상
+              <h3 className="text-md mb-10 under-mobile:text-sm">
+                포인트 색상
               </h3>
               <div
                 aria-label="아고라 색상 리스트"
@@ -140,8 +140,8 @@ export default function CreateAgora() {
                 <div className="w-2rem h-2rem under-mobile:w-1.5rem under-mobile:h-1.5rem rounded-full bg-agora-point-color6" />
               </div>
             </section>
-            <section className="mt-1.5rem w-full">
-              <h3 className="mb-8 text-sm under-mobile:text-xs">
+            <section className="mt-2rem w-full">
+              <h3 className="mb-8 text-md under-mobile:text-sm">
                 최대 참여 인원
               </h3>
               <div className="flex justify-start items-center">
@@ -171,20 +171,22 @@ export default function CreateAgora() {
                 </div>
               </div>
               {message.participants && (
-                <div className="text-xs under-mobile:text-xxs text-red-400 p-0.5rem pl-0">
+                <div className="text-xs under-mobile:text-xxs text-red-400 p-5 pl-0">
                   {message.participants}
                 </div>
               )}
               <div className="flex justify-start items-center mt-5">
-                <NotificationIcon className="w-1.5rem mr-0.5rem" />
+                <NotificationIcon className="w-1rem mr-0.5rem" />
                 <span className="text-xs text-athens-gray-500 break-keep under-mobile:text-xxs">
                   관찰자는 인원 제한없이 참여할 수 있습니다.
                 </span>
               </div>
             </section>
-            <section className="mt-1.5rem w-full text-sm">
-              <h3 className="mb-10 under-mobile:text-xs">토론 제한시간</h3>
-              <div className="flex flex-col w-full under-mobile:flex-row justify-center under-mobile:justify-start items-start under-mobile:items-center">
+            <section className="mt-2rem w-full">
+              <h3 className="mb-10 under-mobile:text-sm text-md">
+                토론 제한시간
+              </h3>
+              <div className="text-sm flex flex-col w-full under-mobile:flex-row justify-center under-mobile:justify-start items-start under-mobile:items-center">
                 <div className="flex justify-start items-center">
                   <input
                     type="number"
@@ -210,7 +212,7 @@ export default function CreateAgora() {
                 </div>
               </div>
               {message.time && (
-                <div className="text-sm under-mobile:text-xxs text-red-400 p-0.5rem pb-0 pl-0">
+                <div className="text-sm under-mobile:text-xxs text-red-400 p-5 pb-0 pl-0">
                   {message.time}
                 </div>
               )}
