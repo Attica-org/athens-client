@@ -29,7 +29,7 @@ export default function ModalBase({ children }: Props) {
     >
       <div className="under-mobile:mt-14rem bg-white bottom-7rem mobile:w-[70vw] pb-0.5rem under-mobile:pb-1rem under-mobile:w-[80vw] w-[50vw] lg:w-40rem relative rounded-2xl min-w-220">
         <BackButton className="absolute right-2rem top-25" />
-        <div className="p-1.5rem">{children}</div>
+        <div className="p-1rem">{children}</div>
       </div>
     </div>
   );
