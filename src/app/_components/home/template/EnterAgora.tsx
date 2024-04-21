@@ -17,27 +17,34 @@ type ProfileImageName = {
   name: string;
 };
 
+type Position = "con" | "pro" | "watcher";
+
 export default function EnterAgora() {
   const [selectedProfileImage, setSelectedProfileImage] =
     useState<ProfileImageName>({ id: 1, name: "도끼 든 회색 곰" });
+  const [selectedPosition, setSelectedPosition] = useState<Position>("watcher");
 
   const selectProfile = (profile: ProfileImageName) => {
     setSelectedProfileImage(profile);
   };
 
+  const selectPosition = (position: Position) => {
+    setSelectedPosition(position);
+  };
+
   return (
     <ModalBase>
-      <h1 className="flex justify-center items-center mt-2rem text-base">
+      <h1 className="flex justify-center items-center mt-1rem text-md">
         아고라 입장
       </h1>
       <p className="text-sm p-2rem pb-1.5rem flex justify-center items-cener text-center break-keep font-medium">
         국가 발전에 유능한 독재자가 필요한 시기가 있다.
       </p>
-      <div>
-        <div className="flex justify-start items-center">
+      <div className="flex flex-col justiy-start items-center">
+        <div className="flex justify-start items-center mb-10">
           <div
             aria-label="사용자가 선택한 프로필 이미지"
-            className="mb-10 border-1 border-gray-300 w-70 h-70 rounded-2xl flex justify-center items-center"
+            className="border-1 border-gray-300 w-70 h-70 rounded-2xl flex justify-center items-center"
           >
             <Image
               src={`/img/${selectedProfileImage.name}.png`}
@@ -69,17 +76,42 @@ export default function EnterAgora() {
           ))}
         </div>
       </div>
-      <div className="flex justify-center items-center text-sm under-mobile:text-xs min-w-200">
-        <button className="p-5 pr-1rem pl-1rem text-white bg-blue-400 rounded-xl mr-0.5rem">
+      <div className="mt-2rem flex justify-center items-center text-sm under-mobile:text-xs min-w-200">
+        <button
+          onClick={() => selectPosition("pro")}
+          className={`p-5 pr-1rem pl-1rem ${
+            selectedPosition === "pro"
+              ? "text-white bg-blue-400"
+              : "text-blue-400 bg-white"
+          } rounded-xl mr-7`}
+        >
           찬성
         </button>
-        <button className="p-5 pr-1rem pl-1rem text-white bg-red-400 rounded-xl mr-0.5rem">
+        <button
+          onClick={() => selectPosition("con")}
+          className={`p-5 pr-1rem pl-1rem ${
+            selectedPosition === "con"
+              ? "text-white bg-red-400"
+              : "text-red-400 bg-white"
+          } rounded-xl mr-7`}
+        >
           반대
         </button>
-        <button className="p-5 pr-1rem pl-1rem text-white bg-athens-main rounded-xl">
+        <button
+          onClick={() => selectPosition("watcher")}
+          className={`p-5 pr-1rem pl-1rem ${
+            selectedPosition === "watcher"
+              ? "text-white bg-athens-main"
+              : "text-athens-main bg-white"
+          } rounded-xl`}
+        >
           관찰자
         </button>
+        <span className="pl-1rem">으로 입장</span>
       </div>
+      <button className="mt-2rem text-sm bg-athens-main p-0.5rem w-full text-white rounded-lg">
+        입장하기
+      </button>
     </ModalBase>
   );
 }
