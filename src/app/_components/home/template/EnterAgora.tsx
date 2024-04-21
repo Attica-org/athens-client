@@ -3,13 +3,14 @@
 import Image from "next/image";
 import ModalBase from "../molecules/ModalBase";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const profileImageNameList = [
   { id: 1, name: "도끼 든 회색 곰" },
   { id: 2, name: "노트북 하는 병아리" },
   { id: 3, name: "안경 쓴 기린" },
   { id: 4, name: "책 읽는 코알라" },
-  { id: 5, name: "총을 든 토끼" },
+  { id: 5, name: "총 든 토끼" },
 ];
 
 type ProfileImageName = {
@@ -23,6 +24,7 @@ export default function EnterAgora() {
   const [selectedProfileImage, setSelectedProfileImage] =
     useState<ProfileImageName>({ id: 1, name: "도끼 든 회색 곰" });
   const [selectedPosition, setSelectedPosition] = useState<Position>("watcher");
+  const router = useRouter();
 
   const selectProfile = (profile: ProfileImageName) => {
     setSelectedProfileImage(profile);
@@ -32,12 +34,16 @@ export default function EnterAgora() {
     setSelectedPosition(position);
   };
 
+  const enterAgora = () => {
+    router.push("/agora");
+  };
+
   return (
     <ModalBase>
       <h1 className="flex justify-center items-center mt-1rem text-md">
         아고라 입장
       </h1>
-      <p className="text-sm p-2rem pb-1.5rem flex justify-center items-cener text-center break-keep font-medium">
+      <p className="text-sm p-1rem pt-1.5rem pb-1.5rem flex justify-center items-cener text-center break-keep font-medium">
         국가 발전에 유능한 독재자가 필요한 시기가 있다.
       </p>
       <div className="flex flex-col justiy-start items-center">
@@ -79,37 +85,40 @@ export default function EnterAgora() {
       <div className="mt-2rem flex justify-center items-center text-sm under-mobile:text-xs min-w-200">
         <button
           onClick={() => selectPosition("pro")}
-          className={`p-5 pr-1rem pl-1rem ${
+          className={`p-5 mobile:pr-1rem mobile:pl-1rem pr-10 pl-10 ${
             selectedPosition === "pro"
               ? "text-white bg-blue-400"
               : "text-blue-400 bg-white"
-          } rounded-xl mr-7`}
+          } rounded-xl mr-7 text-xs tablet:text-sm `}
         >
           찬성
         </button>
         <button
           onClick={() => selectPosition("con")}
-          className={`p-5 pr-1rem pl-1rem ${
+          className={`p-5 mobile:pr-1rem mobile:pl-1rem pr-10 pl-10 ${
             selectedPosition === "con"
               ? "text-white bg-red-400"
               : "text-red-400 bg-white"
-          } rounded-xl mr-7`}
+          } rounded-xl mr-7 text-xs tablet:text-sm`}
         >
           반대
         </button>
         <button
           onClick={() => selectPosition("watcher")}
-          className={`p-5 pr-1rem pl-1rem ${
+          className={`p-5 mobile:pr-1rem mobile:pl-1rem pr-10 pl-10 ${
             selectedPosition === "watcher"
               ? "text-white bg-athens-main"
               : "text-athens-main bg-white"
-          } rounded-xl`}
+          } rounded-xl text-xs tablet:text-sm `}
         >
           관찰자
         </button>
-        <span className="pl-1rem">으로 입장</span>
+        <span className="pl-6 text-xs">로 입장</span>
       </div>
-      <button className="mt-2rem text-sm bg-athens-main p-0.5rem w-full text-white rounded-lg">
+      <button
+        onClick={enterAgora}
+        className="mt-2rem text-sm bg-athens-main p-0.5rem w-full text-white rounded-lg"
+      >
         입장하기
       </button>
     </ModalBase>
