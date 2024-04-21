@@ -12,6 +12,7 @@ const RemoveIcon = ({ className, onClick }: Props) => {
       fill="none"
       className={className}
       onClick={onClick}
+      aria-hidden
     >
       <rect width="10" height="10" fill="url(#pattern0_158_1815)" />
       <defs>

@@ -9,6 +9,7 @@ export default function NotificationIcon({ className }: Props) {
       className={className}
       viewBox="0 0 13 13"
       fill="none"
+      aria-hidden
     >
       <path
         fill-rule="evenodd"
