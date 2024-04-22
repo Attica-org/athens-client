@@ -1,7 +1,7 @@
 export interface Message {
-  message: {
-    name: string;
-    message: string;
-    createdAt: string;
-  };
+  messageId: number;
+  role: string;
+  name: string;
+  content: string;
+  createdAt: string;
 }
