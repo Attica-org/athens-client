@@ -4,6 +4,7 @@ import Image from "next/image";
 import ModalBase from "../../molecules/ModalBase";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import ModalPosSelectBtn from "../atoms/ModalPosSelectBtn";
 
 const profileImageNameList = [
   { id: 1, name: "도끼 든 회색 곰" },
@@ -43,7 +44,7 @@ export default function EnterAgora() {
       <h1 className="flex justify-center items-center mt-1rem text-md">
         아고라 입장
       </h1>
-      <p className="text-sm p-1rem pt-1.5rem pb-1.5rem flex justify-center items-cener text-center break-keep font-medium">
+      <p className="text-base p-1rem pt-1.5rem pb-1.5rem flex justify-center items-cener text-center break-keep font-medium">
         {'"'}국가 발전에 유능한 독재자가 필요한 시기가 있다.{'"'}
       </p>
       <div className="flex flex-col justiy-start items-center">
