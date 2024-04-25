@@ -1,16 +1,15 @@
 import { Message } from "@/app/model/Message";
-import Image from "next/image";
+import UserImage from "../../atoms/UserImage";
 
 export default function YourMessage({ message }: { message: Message }) {
   return (
     <div className="flex justify-start items-start p-1rem h-full">
       <div className="border-1 border-gray-300 w-fit rounded-xl">
-        <Image
-          src={`/img/${message.name}.png`}
-          alt="사용자 프로필 이미지"
-          width={60}
-          height={60}
-          className="rounded-xl"
+        <UserImage
+          className="w-60 h-60 flex rounded-xl"
+          name={message.name}
+          w={60}
+          h={60}
         />
       </div>
       <div className="p-0.5rem flex flex-col justify-center items-start">
