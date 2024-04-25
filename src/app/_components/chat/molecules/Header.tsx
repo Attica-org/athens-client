@@ -2,19 +2,20 @@ import EyeIcon from "@/assets/icons/EyeIcon";
 import BackButton from "../../atoms/BackButton";
 import ShareButton from "../atoms/ShareButton";
 import AgoraTitle from "./AgoraTitle";
+import HamburgerButton from "../atoms/HamburgerButton";
 
 export default function Header() {
   return (
     <div className="flex flex-col w-full justify-center">
       <div className="flex justify-between items-center pb-10 border-b-1 border-gray-200">
         <BackButton />
-        <div className="flex justify-center items-center text-sm">
-          <button className="italic bg-athens-main p-4 pl-15 pr-15 rounded-lg text-white mr-0.5rem">
+        <div className="flex justify-center items-center text-sm under-mobile:text-xs">
+          <button className="italic bg-athens-main p-4 pl-15 pr-15 under-mobile:pl-10 under-mobile:pr-10 rounded-lg text-white mr-0.5rem">
             START
           </button>
           <div
             aria-label="토론 제한 시간"
-            className="italic border-1 border-athens-main p-4 pl-15 pr-15 rounded-lg"
+            className="italic border-1 border-athens-main p-4 pl-15 pr-15 under-mobile:pl-10 under-mobile:pr-10 rounded-lg"
           >
             60:00
           </div>
@@ -32,7 +33,10 @@ export default function Header() {
             <span className="pl-5 text-xs text-gray-400">12</span>
           </div>
         </div>
-        <ShareButton />
+        <div className="flex justify-end items-center mr-0.5rem">
+          <ShareButton />
+          <HamburgerButton />
+        </div>
       </div>
       <div className="flex justify-center items-center pt-0.5rem">
         <AgoraTitle />
