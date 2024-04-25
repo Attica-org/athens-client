@@ -3,8 +3,8 @@ import Image from "next/image";
 type Props = {
   className: string;
   name?: string;
-  w: number;
-  h: number;
+  w?: number;
+  h?: number;
 };
 
 // min-w-5rem h-5rem bg-yellow-400
