@@ -22,7 +22,7 @@ export default function SearchAgora() {
         </div>
       </div>
       <div className="relative">
-        <UserImage />
+        <UserImage className="min-w-5rem h-5rem bg-yellow-400" />
         <span className="absolute top-0 left-4rem inline-block w-13 h-13 bg-red-400 rounded-full ml-3" />
       </div>
     </article>
