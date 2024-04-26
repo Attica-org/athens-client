@@ -1,17 +1,13 @@
-"use client";
-
 import HamburgerIcon from "@/assets/icons/HamburgerIcon";
 
-export default function HamburgerButton() {
-  const toggleMenu = () => {
-    console.log("toggle menu");
-  };
+type Props = {
+  toggleMenu: () => void;
+};
 
-  // TODO: 전역 상태로 메뉴를 열고 닫도록 수정
-
+export default function HamburgerButton({ toggleMenu }: Props) {
   return (
     <div onClick={toggleMenu}>
-      <HamburgerIcon className="w-22" />
+      <HamburgerIcon className="w-22 cursor-pointer" />
     </div>
   );
 }

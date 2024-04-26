@@ -4,7 +4,11 @@ import ShareButton from "../atoms/ShareButton";
 import AgoraTitle from "./AgoraTitle";
 import HamburgerButton from "../atoms/HamburgerButton";
 
-export default function Header() {
+type Props = {
+  toggleMenu: () => void;
+};
+
+export default function Header({ toggleMenu }: Props) {
   return (
     <div className="flex flex-col w-full justify-center">
       <div className="flex justify-between items-center pb-10 border-b-1 border-gray-200">
@@ -35,7 +39,7 @@ export default function Header() {
         </div>
         <div className="flex justify-end items-center mr-0.5rem">
           <ShareButton />
-          <HamburgerButton />
+          <HamburgerButton toggleMenu={toggleMenu} />
         </div>
       </div>
       <div className="flex justify-center items-center pt-0.5rem">
