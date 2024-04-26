@@ -6,7 +6,7 @@ type Props = {
   className: string;
 };
 
-const AddIcon = ({ className }: Props) => {
+export default function AddIcon({ className }: Props) {
   const segment = usePathname();
 
   if (segment === "/create-agora") {
@@ -45,6 +45,4 @@ const AddIcon = ({ className }: Props) => {
       </g>
     </svg>
   );
-};
-
-export default AddIcon;
+}
