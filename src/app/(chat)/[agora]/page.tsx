@@ -3,7 +3,7 @@
 import Header from "@/app/_components/chat/molecules/Header";
 import MessageInput from "@/app/_components/chat/molecules/MessageInput";
 import Message from "@/app/_components/chat/molecules/Message";
-import AgoraUserSide from "@/app/_components/chat/AgoraUserSide";
+import AgoraUserSide from "@/app/_components/chat/organisms/AgoraUserSide";
 import { useState } from "react";
 
 export default function Page() {
