@@ -13,7 +13,7 @@ type Props = {
 
 export default function AgoraUserList({ position, userList }: Props) {
   return (
-    <div className="pb-1rem">
+    <div className="pb-0.5rem">
       <div className="text-sm pb-1rem">
         {position === "pro" ? "찬성측" : "반대측"}
       </div>
