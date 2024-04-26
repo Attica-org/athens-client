@@ -6,9 +6,11 @@ import RemoveButton from "../atoms/RemoveButton";
 
 type Props = {
   children: React.ReactNode;
+  title: string;
+  removeIcon: boolean;
 };
 
-export default function ModalBase({ children }: Props) {
+export default function ModalBase({ children, title, removeIcon }: Props) {
   const router = useRouter();
 
   useEffect(() => {
@@ -19,7 +21,7 @@ export default function ModalBase({ children }: Props) {
   }, []);
 
   const clickOutSideModal: MouseEventHandler<HTMLDivElement> = (e) => {
-    if (e.target === e.currentTarget) router.back();
+    if (e.target === e.currentTarget && removeIcon) router.back();
   };
 
   return (
@@ -28,7 +30,10 @@ export default function ModalBase({ children }: Props) {
       className="w-dvw h-dvh flex absolute justify-center items-center z-20 top-0 right-0 left-0 bottom-0 bg-opacity-20 bg-gray-600"
     >
       <div className="under-mobile:mt-14rem bg-white bottom-7rem mobile:w-[70vw] pb-0.5rem under-mobile:pb-1rem under-mobile:w-[80vw] w-[50vw] lg:w-40rem relative rounded-2xl min-w-220">
-        <RemoveButton className="absolute right-20 top-20" />
+        <h1 className="flex justify-center items-center mt-2rem text-md">
+          {title}
+        </h1>
+        {removeIcon && <RemoveButton className="absolute right-20 top-20" />}
         <div className="p-1rem">{children}</div>
       </div>
     </div>

@@ -40,10 +40,7 @@ export default function EnterAgora() {
   };
 
   return (
-    <ModalBase>
-      <h1 className="flex justify-center items-center mt-1rem text-md">
-        아고라 입장
-      </h1>
+    <ModalBase title="아고라 입장" removeIcon={true}>
       <p className="text-base p-1rem pt-1.5rem pb-1.5rem flex justify-center items-cener text-center break-keep font-medium">
         {'"'}국가 발전에 유능한 독재자가 필요한 시기가 있다.{'"'}
       </p>
