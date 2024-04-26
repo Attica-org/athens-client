@@ -28,7 +28,7 @@ export default function ModalBase({ children }: Props) {
       className="w-dvw h-dvh flex absolute justify-center items-center z-20 top-0 right-0 left-0 bottom-0 bg-opacity-20 bg-gray-600"
     >
       <div className="under-mobile:mt-14rem bg-white bottom-7rem mobile:w-[70vw] pb-0.5rem under-mobile:pb-1rem under-mobile:w-[80vw] w-[50vw] lg:w-40rem relative rounded-2xl min-w-220">
-        <RemoveButton className="absolute right-2rem top-25" />
+        <RemoveButton className="absolute right-20 top-20" />
         <div className="p-1rem">{children}</div>
       </div>
     </div>
