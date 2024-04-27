@@ -1,6 +1,7 @@
 "use client";
 
 import confetti from "canvas-confetti";
+import React from "react";
 import { useEffect, useRef } from "react";
 
 export default function ConfettiButton2() {
@@ -42,5 +43,5 @@ export default function ConfettiButton2() {
     };
   });
 
-  return <div></div>;
+  return <div />;
 }
