@@ -11,6 +11,10 @@ export default function SearchAgoraList() {
       <SearchAgora />
       <SearchAgora />
       <SearchAgora />
+      <SearchAgora />
+      <SearchAgora />
+      <SearchAgora />
+      <SearchAgora />
     </>
   );
 }
