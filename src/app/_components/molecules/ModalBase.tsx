@@ -47,7 +47,7 @@ export default function ModalBase({
           {title}
         </h1>
         {removeIcon && <RemoveButton className="absolute right-20 top-20" />}
-        <div className="p-1rem">{children}</div>
+        <div className="p-14">{children}</div>
       </div>
     </div>
   );
