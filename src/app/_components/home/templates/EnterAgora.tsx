@@ -5,14 +5,7 @@ import ModalBase from "../../molecules/ModalBase";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ModalPosSelectBtn from "../atoms/ModalPosSelectBtn";
-
-const profileImageNameList = [
-  { id: 1, name: "도끼 든 회색 곰" },
-  { id: 2, name: "노트북 하는 병아리" },
-  { id: 3, name: "안경 쓴 기린" },
-  { id: 4, name: "책 읽는 코알라" },
-  { id: 5, name: "총 든 토끼" },
-];
+import { PROFLELIST } from "@/constants/userProfileImage";
 
 type ProfileImageName = {
   id: number;
@@ -63,11 +56,11 @@ export default function EnterAgora() {
           </div>
         </div>
         <div className="flex pl-1rem">
-          {profileImageNameList.map((profileImageName) => (
+          {PROFLELIST.map((profileImageName) => (
             <div
               onClick={() => selectProfile(profileImageName)}
               key={profileImageName.id}
-              className="mr-5 w-fit flex justify-center items-center border-1 border-gray-300 rounded-full"
+              className="cursor-pointer mr-5 w-fit flex justify-center items-center border-1 border-gray-300 rounded-full"
             >
               <Image
                 src={`/img/${profileImageName.name}.png`}

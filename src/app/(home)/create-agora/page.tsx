@@ -6,11 +6,12 @@ import NotificationIcon from "@/assets/icons/NotificationIcon";
 import { ChangeEventHandler, useState } from "react";
 import PageTitle from "@/app/_components/home/atoms/PageTitle";
 import AgoraPointColorList from "@/app/_components/home/molecules/AgoraPointColorList";
-
-const DEFAULT_PARTICIPANTS_CNT = 5;
-const MAX_PARTICIPANTS_CNT = 5;
-const MIN_PARTICIPANTS_CNT = 1;
-const DEFAULT_TIME = 60;
+import {
+  DEFAULT_PARTICIPANTS_CNT,
+  MAX_PARTICIPANTS_CNT,
+  MIN_PARTICIPANTS_CNT,
+  DEFAULT_TIME,
+} from "@/constants/createAgora";
 
 type Message = {
   participants: string | null;
