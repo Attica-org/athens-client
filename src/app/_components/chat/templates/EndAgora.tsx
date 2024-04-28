@@ -50,13 +50,21 @@ export default function EndAgora() {
         <div className="pt-0.5rem pb-0.5rem">
           <button
             onClick={() => selectResultPosition("pro")}
-            className="bg-blue-400 mr-1rem text-white text-sm p-6 pl-1.5rem pr-1.5rem rounded-xl hover:opacity-80"
+            className={`${
+              selectedResultPosition === "pro"
+                ? "bg-blue-400 text-white"
+                : "text-blue-400 bg-white"
+            } mr-1rem text-sm p-6 pl-1.5rem pr-1.5rem rounded-xl`}
           >
             찬성
           </button>
           <button
             onClick={() => selectResultPosition("con")}
-            className="bg-red-400 text-white text-sm p-6 pl-1.5rem pr-1.5rem rounded-xl hover:opacity-80"
+            className={`${
+              selectedResultPosition === "con"
+                ? "bg-red-400 text-white"
+                : "bg-white text-red-400"
+            } text-sm p-6 pl-1.5rem pr-1.5rem rounded-xl`}
           >
             반대
           </button>
