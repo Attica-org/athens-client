@@ -51,8 +51,8 @@ export default function CategoryButtonList() {
 
   if (!search) return null;
   return (
-    <div className="w-full mt-10 mb-0 pb-0 pl-0.5rem pr-0.5rem flex text-nowrap overflow-hidden ml-5">
-      <div className="swiper pr-1rem">
+    <div className="mt-10 mb-0 pb-0 pl-0.5rem pr-0.5rem flex text-nowrap overflow-hidden ml-5">
+      <div className="swiper pr-1rem w-full">
         <div className="swiper-wrapper pr-1rem">
           {categoryList.map((category) => (
             <div
