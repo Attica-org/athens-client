@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/canvas-confetti": "^1.6.4",
+    "canvas-confetti": "^1.9.2",
     "next": "14.1.4",
     "react": "^18",
     "react-dom": "^18",
+    "swiper": "^11.1.1",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
