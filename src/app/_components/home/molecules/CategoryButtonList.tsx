@@ -1,8 +1,11 @@
 "use client";
 
 import CategoryButton from "../atoms/CategoryButton";
-// import { register, SwiperContainer, SwiperSlide } from "swiper/element/bundle";
-// register();
+import Swiper from "swiper";
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/mousewheel";
+import { useEffect } from "react";
 
 const categoryList = [
   { innerText: "전체", isActive: true },
@@ -12,20 +15,45 @@ const categoryList = [
   { innerText: "일상/취미", isActive: false },
 ];
 
-// TODO: swiper 적용 혹은 다른 라이브러리 찾아보기
 export default function CategoryButtonList() {
   const search = "검색";
 
-  if (search) return null;
+  useEffect(() => {
+    const swiper = new Swiper(".swiper", {
+      direction: "horizontal",
+      loop: false,
+      centeredSlides: false,
+      touchRatio: 1,
+      freeMode: true,
+      grabCursor: true,
+      slidesPerView: "auto",
+      spaceBetween: 7,
+      keyboard: {
+        enabled: true,
+        onlyInViewport: false,
+      },
+    });
+
+    return () => {
+      swiper.destroy();
+    };
+  }, []);
+
+  if (!search) return null;
   return (
-    <div className="mt-10 flex text-nowrap overflow-hidden ml-5">
-      {categoryList.map((category) => (
-        <CategoryButton
-          key={category.innerText}
-          innerText={category.innerText}
-          isActive={category.isActive}
-        />
-      ))}
+    <div className="w-full mt-10 mb-0 pb-0 pr-1rem pl-0.5rem flex text-nowrap overflow-hidden ml-5">
+      <div className="swiper pr-1rem">
+        <div className="swiper-wrapper pr-1rem">
+          {categoryList.map((category) => (
+            <div className="swiper-slide" key={category.innerText}>
+              <CategoryButton
+                innerText={category.innerText}
+                isActive={category.isActive}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
