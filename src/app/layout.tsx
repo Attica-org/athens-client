@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { register } from "swiper/element/bundle";
+// import { register } from "swiper/element/bundle";
 import "./globals.css";
-register();
+// register();
 
 export const metadata: Metadata = {
   title: "Athens",
