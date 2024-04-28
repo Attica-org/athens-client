@@ -16,7 +16,7 @@ export default function NavLinks() {
           </DesktopNavLink>
         </ul>
       </div>
-      <div className="block lg:hidden w-full h-58 border-t-2 border-gray-100">
+      <div className="sticky bottom-0 block lg:hidden w-full h-58 border-t-2 border-gray-100">
         <ul className="flex flex-row h-full justify-around">
           <MobileNavLink
             className="flex p-5 text-xs flex-col justify-center items-center"
