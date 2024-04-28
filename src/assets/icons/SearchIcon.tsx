@@ -16,7 +16,7 @@ const SearchIcon = ({ className }: Props) => {
         width="13"
         height="13"
         fill="url(#pattern0_172_1290)"
-        fill-opacity="0.6"
+        fillOpacity="0.6"
       />
       <defs>
         <pattern

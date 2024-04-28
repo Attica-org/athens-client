@@ -35,9 +35,9 @@ export default function AddIcon({ className }: Props) {
     >
       <g
         stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
       >
         <path d="m8 12h8" />
         <path d="m12 16v-8" />
