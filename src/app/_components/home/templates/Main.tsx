@@ -27,7 +27,7 @@ export default function Main() {
             <CategoryButtonList />
           </div>
         </section>
-        <section className="flex flex-1 flex-col p-0.5rem pb-5rem pt-1rem justify-start items-center">
+        <section className="flex flex-1 flex-col p-0.5rem pt-3 pb-5rem justify-start items-center">
           {/* <SearchAgoraList /> */}
           <AgoraList />
         </section>
