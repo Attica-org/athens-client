@@ -5,6 +5,7 @@ import CheckIcon from "@/assets/icons/CheckIcon";
 import NotificationIcon from "@/assets/icons/NotificationIcon";
 import { ChangeEventHandler, useState } from "react";
 import PageTitle from "@/app/_components/home/atoms/PageTitle";
+import AgoraPointColorList from "@/app/_components/home/molecules/AgoraPointColorList";
 
 const DEFAULT_PARTICIPANTS_CNT = 5;
 const MAX_PARTICIPANTS_CNT = 5;
@@ -119,10 +120,9 @@ export default function CreateAgora() {
               <h3 className="text-md mb-10 under-mobile:text-sm">
                 아고라 카테고리 분류
               </h3>
-              <div
-                aria-label="카테고리 리스트"
-                className="bg-yellow-400 w-full h-3rem"
-              ></div>
+              <div aria-label="카테고리 리스트" className="w-full">
+                <CategoryButtonList />
+              </div>
             </section>
             <section className="mt-1.5rem w-full">
               <h3 className="text-md mb-10 under-mobile:text-sm">
@@ -132,12 +132,7 @@ export default function CreateAgora() {
                 aria-label="아고라 색상 리스트"
                 className="flex justify-start items-center"
               >
-                <div className="w-2rem h-2rem under-mobile:w-1.5rem under-mobile:h-1.5rem rounded-full bg-agora-point-color1 mr-5" />
-                <div className="w-2rem h-2rem under-mobile:w-1.5rem under-mobile:h-1.5rem rounded-full bg-agora-point-color2 mr-5" />
-                <div className="w-2rem h-2rem under-mobile:w-1.5rem under-mobile:h-1.5rem rounded-full bg-agora-point-color3 mr-5" />
-                <div className="w-2rem h-2rem under-mobile:w-1.5rem under-mobile:h-1.5rem rounded-full bg-agora-point-color4 mr-5" />
-                <div className="w-2rem h-2rem under-mobile:w-1.5rem under-mobile:h-1.5rem rounded-full bg-agora-point-color5 mr-5" />
-                <div className="w-2rem h-2rem under-mobile:w-1.5rem under-mobile:h-1.5rem rounded-full bg-agora-point-color6" />
+                <AgoraPointColorList />
               </div>
             </section>
             <section className="mt-2rem w-full">
