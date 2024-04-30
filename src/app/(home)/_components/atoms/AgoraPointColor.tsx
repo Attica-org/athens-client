@@ -1,9 +1,18 @@
-import { COLOR } from "@/constants/color";
+// import { COLOR } from "@/constants/color";
 
 type Props = {
   id: number;
   isCheck: boolean;
 };
+
+const COLOR = [
+  "bg-agora-point-color1",
+  "bg-agora-point-color2",
+  "bg-agora-point-color3",
+  "bg-agora-point-color4",
+  "bg-agora-point-color5",
+  "bg-agora-point-color6",
+];
 
 export default function AgoraPointColor({ id, isCheck }: Props) {
   const color = COLOR[id - 1];

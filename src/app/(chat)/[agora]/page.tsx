@@ -1,9 +1,9 @@
 "use client";
 
-import Header from "@/app/_components/chat/molecules/Header";
-import MessageInput from "@/app/_components/chat/molecules/MessageInput";
-import Message from "@/app/_components/chat/molecules/Message";
-import AgoraUserSide from "@/app/_components/chat/organisms/AgoraUserSide";
+import Header from "@/app/(chat)/_components/molecules/Header";
+import MessageInput from "@/app/(chat)/_components/molecules/MessageInput";
+import Message from "@/app/(chat)/_components/molecules/Message";
+import AgoraUserSide from "@/app/(chat)/_components/organisms/AgoraUserSide";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import ModalBase from "../../molecules/ModalBase";
+import ModalBase from "../../../_components/molecules/ModalBase";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ModalPosSelectBtn from "../atoms/ModalPosSelectBtn";

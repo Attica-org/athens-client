@@ -1,4 +1,4 @@
-import SideNav from "../_components/home/organisms/NavMenu";
+import SideNav from "./_components/organisms/NavMenu";
 
 type Props = {
   children: React.ReactNode;

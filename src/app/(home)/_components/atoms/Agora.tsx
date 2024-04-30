@@ -20,16 +20,16 @@ export default function Agora() {
       </h3>
       <p className="text-xxs pt-7">
         <span className="pb-1">
-          <span className="pr-5 text-athens-gray-500 text-nowrap">
+          <span className="pr-5 text-athens-gray-thick text-nowrap">
             <span className="text-blue-500 pr-3">찬성</span>10명
           </span>
-          <span className="pr-5 text-athens-gray-500 text-nowrap">
+          <span className="pr-5 text-athens-gray-thick text-nowrap">
             <span className="text-red-500 pr-3">반대</span>10명
           </span>
         </span>
         <span className="under-mobile:block">
           <span className="pr-3">관찰자</span>
-          <span className="text-athens-gray-500">10명</span>
+          <span className="text-athens-gray-thick">10명</span>
         </span>
       </p>
       <button

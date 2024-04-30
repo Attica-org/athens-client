@@ -1,5 +1,5 @@
 import EyeIcon from "@/assets/icons/EyeIcon";
-import BackButton from "../../atoms/BackButton";
+import BackButton from "../../../_components/atoms/BackButton";
 import ShareButton from "../atoms/ShareButton";
 import AgoraTitle from "./AgoraTitle";
 import HamburgerButton from "../atoms/HamburgerButton";

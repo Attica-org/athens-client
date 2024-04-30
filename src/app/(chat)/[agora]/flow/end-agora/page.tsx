@@ -1,4 +1,4 @@
-import EndAgora from "@/app/_components/chat/templates/EndAgora";
+import EndAgora from "@/app/(chat)/_components/templates/EndAgora";
 
 export default function Page() {
   return (

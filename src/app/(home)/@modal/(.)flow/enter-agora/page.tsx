@@ -1,4 +1,4 @@
-import EnterAgora from "@/app/_components/home/templates/EnterAgora";
+import EnterAgora from "@/app/(home)/_components/templates/EnterAgora";
 
 export default function Page() {
   return <EnterAgora />;

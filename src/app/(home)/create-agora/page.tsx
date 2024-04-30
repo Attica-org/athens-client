@@ -1,11 +1,11 @@
 "use client";
 
-import CategoryButtonList from "@/app/_components/home/molecules/CategoryButtonList";
+import CategoryButtonList from "@/app/(home)/_components/molecules/CategoryButtonList";
 import CheckIcon from "@/assets/icons/CheckIcon";
 import NotificationIcon from "@/assets/icons/NotificationIcon";
 import { ChangeEventHandler, useState } from "react";
-import PageTitle from "@/app/_components/home/atoms/PageTitle";
-import AgoraPointColorList from "@/app/_components/home/molecules/AgoraPointColorList";
+import PageTitle from "@/app/(home)/_components/atoms/PageTitle";
+import AgoraPointColorList from "@/app/(home)/_components/molecules/AgoraPointColorList";
 import {
   DEFAULT_PARTICIPANTS_CNT,
   MAX_PARTICIPANTS_CNT,
@@ -114,7 +114,7 @@ export default function CreateAgora() {
             aria-label="생성할 아고라 주제 입력창"
             type="text"
             placeholder="토론 할 주제를 입력해주세요."
-            className="w-full p-0.5rem  text-xs border-1 border-athens-gray rounded-md"
+            className="placeholder:text-athens-thick w-full p-0.5rem text-xs border-1 border-athens-gray rounded-md"
           />
           <div className="flex justify-around flex-col w-full">
             <section className="mt-1.5rem w-full">
@@ -173,7 +173,7 @@ export default function CreateAgora() {
               )}
               <div className="flex justify-start items-center mt-5">
                 <NotificationIcon className="w-1rem mr-0.5rem" />
-                <span className="text-xs text-athens-gray-500 break-keep under-mobile:text-xxs">
+                <span className="text-xs text-athens-gray-thick break-keep under-mobile:text-xxs">
                   관찰자는 인원 제한없이 참여할 수 있습니다.
                 </span>
               </div>

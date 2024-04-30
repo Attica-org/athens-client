@@ -1,4 +1,4 @@
-import ResultAgora from "@/app/_components/chat/templates/ResultAgora";
+import ResultAgora from "@/app/(chat)/_components/templates/ResultAgora";
 
 export default function Page() {
   return (

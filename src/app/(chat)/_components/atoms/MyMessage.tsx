@@ -1,5 +1,5 @@
 import { Message } from "@/app/model/Message";
-import UserImage from "../../atoms/UserImage";
+import UserImage from "../../../_components/atoms/UserImage";
 
 export default function MyMessage({ message }: { message: Message }) {
   return (

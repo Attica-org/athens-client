@@ -1,4 +1,4 @@
-import UserImage from "../../atoms/UserImage";
+import UserImage from "../../../_components/atoms/UserImage";
 
 export default function SearchAgora() {
   return (
@@ -11,13 +11,13 @@ export default function SearchAgora() {
         </div>
         <div className="text-xs text-nowrap">
           <span className="text-blue-500">
-            찬성<span className="text-athens-gray-500 pl-3">10명 | </span>
+            찬성<span className="text-athens-gray-thick pl-3">10명 | </span>
           </span>
           <span className="text-red-500">
-            반대<span className="text-athens-gray-500 pl-3">10명 | </span>
+            반대<span className="text-athens-gray-thick pl-3">10명 | </span>
           </span>
           <span>
-            관찰자<span className="pl-3 text-athens-gray-500">10명</span>
+            관찰자<span className="pl-3 text-athens-gray-thick">10명</span>
           </span>
         </div>
       </div>
