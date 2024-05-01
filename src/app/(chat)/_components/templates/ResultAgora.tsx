@@ -18,7 +18,7 @@ export default function ResultAgora() {
           >
             찬성 13
           </button>
-          <Link href="/" className="pt-1.5rem text-sm text-gray-400">
+          <Link href="/" className="pt-1.5rem text-sm text-athens-gray-thick">
             홈으로 돌아가기
           </Link>
         </div>

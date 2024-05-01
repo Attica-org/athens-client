@@ -30,7 +30,7 @@ export default function Page() {
           <section className="flex flex-1 flex-col justify-between">
             <Message />
             <div className="flex p-0.5rem pl-1rem pr-1rem" onClick={onClick}>
-              <div className="rounded-lg text-center flex justify-center items-center text-sm under-mobile:text-xs text-gray-400 p-11 bg-athens-gray w-full break-keep">
+              <div className="rounded-lg text-center flex justify-center items-center text-sm under-mobile:text-xs text-athens-gray-thick p-11 bg-athens-gray w-full break-keep">
                 사용자들간의 쾌적한 토론 환경을 위해 바른말을 사용해주세요.
               </div>
             </div>

@@ -10,9 +10,9 @@ export default function AgoraTitle() {
         />
         국가 발전에는 유능한 독재자가 필요한 시기가 있다.
       </p>
-      <div className="flex justify-around items-center w-full text-xs under-mobile:text-xxs p-6">
-        <div className="text-blue-400">찬성 10</div>
-        <div className="text-red-400">반대 10</div>
+      <div className="flex justify-around items-center w-full text-sm under-mobile:text-xxs p-6">
+        <div className="text-blue-600">찬성 10</div>
+        <div className="text-red-600">반대 10</div>
       </div>
     </div>
   );

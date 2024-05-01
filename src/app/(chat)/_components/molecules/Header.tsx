@@ -25,7 +25,7 @@ export default function Header({ toggleMenu }: Props) {
           </div>
           <div
             aria-label="토론 종료 버튼을 누른 인원 수"
-            className="text-xs text-gray-400 pl-0.5rem pr-0.5rem"
+            className="text-xs text-athens-gray-thick pl-0.5rem pr-0.5rem"
           >
             8
           </div>
@@ -34,7 +34,7 @@ export default function Header({ toggleMenu }: Props) {
             className="flex justify-center items-center"
           >
             <EyeIcon className="w-1rem" />
-            <span className="pl-5 text-xs text-gray-400">12</span>
+            <span className="pl-5 text-xs text-athens-gray-thick">12</span>
           </div>
         </div>
         <div className="flex justify-end items-center mr-0.5rem">

@@ -9,7 +9,7 @@ export default function MessageInput() {
         <input
           type="text"
           placeholder="Type a message"
-          className="text-base w-full focus-visible:outline-none"
+          className="placeholder:text-athens-gray-thick text-base w-full focus-visible:outline-none"
         />
       </form>
       <div className="bg-athens-main p-12 cursor-pointer">
