@@ -51,12 +51,12 @@ export default function EndAgora() {
         >
           {sec}
         </div>
-        <h3
+        <h2
           aria-label="토론 주제"
           className="p-1rem pt-1rem text-base break-keep text-center"
         >
           국가 발전에 유능한 독재자가 필요한 시기가 있다.
-        </h3>
+        </h2>
         <div className="pt-0.5rem pb-0.5rem">
           <button
             aria-label="찬성하기"
@@ -64,7 +64,7 @@ export default function EndAgora() {
             className={`${
               selectedResultPosition === "pro"
                 ? "bg-blue-400 text-white"
-                : "text-blue-500 bg-white"
+                : "text-blue-600 bg-white"
             } mr-1rem text-sm p-6 pl-1.5rem pr-1.5rem rounded-xl`}
           >
             찬성
@@ -74,7 +74,7 @@ export default function EndAgora() {
             onClick={() => selectResultPosition("con")}
             className={`${
               selectedResultPosition === "con"
-                ? "bg-red-400 text-white"
+                ? "bg-red-600 text-white"
                 : "bg-white text-red-500"
             } text-sm p-6 pl-1.5rem pr-1.5rem rounded-xl`}
           >

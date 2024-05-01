@@ -9,9 +9,9 @@ export default function MyMessage({ message }: { message: Message }) {
           <time className="text-xxs mb-8">{message.createdAt}</time>
         </div>
         <div className="p-0.5rem flex flex-col justify-center items-end">
-          <h3 aria-label="사용자 이름" className="text-xs pb-5">
+          <div role="region" aria-label="사용자 이름" className="text-xs pb-5">
             {message.name}
-          </h3>
+          </div>
           <div className="max-w-[50vw] whitespace-pre-line bg-red-200 rounded-tl-xl rounded-bl-xl rounded-br-xl p-0.5rem  pl-10 pr-10 text-sm under-mobile:text-xs">
             {message.content}
           </div>

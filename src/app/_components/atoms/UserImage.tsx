@@ -17,7 +17,7 @@ export default function UserImage({ className, name, w, h }: Props) {
         <Image
           className="object-cover rounded-xl"
           src={`/img/${name}.png`}
-          alt={`${name}`}
+          alt={`${name} 프로필`}
           width={w}
           height={h}
           aria-hidden

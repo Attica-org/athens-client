@@ -118,29 +118,29 @@ export default function CreateAgora() {
           />
           <div className="flex justify-around flex-col w-full">
             <section className="mt-1.5rem w-full">
-              <h3 className="text-md mb-10 under-mobile:text-sm">
+              <div role="region" className="text-md mb-10 under-mobile:text-sm">
                 아고라 카테고리 분류
-              </h3>
+              </div>
               <div aria-label="카테고리 리스트" className="w-full">
                 <CategoryButtonList />
               </div>
             </section>
             <section className="mt-1.5rem w-full">
-              <h3 className="text-md mb-10 under-mobile:text-sm">
+              <div role="region" className="text-md mb-10 under-mobile:text-sm">
                 포인트 색상
-              </h3>
+              </div>
               <div className="flex justify-start items-center">
                 <AgoraPointColorList />
               </div>
             </section>
             <section className="mt-2rem w-full">
-              <h3 className="mb-8 text-md under-mobile:text-sm">
+              <div role="region" className="mb-8 text-md under-mobile:text-sm">
                 최대 참여 인원
-              </h3>
+              </div>
               <div className="flex justify-start items-center">
-                <label className="pr-0.5rem text-sm under-mobile:text-xs">
+                <div className="pr-0.5rem text-sm under-mobile:text-xs">
                   찬성 / 반대
-                </label>
+                </div>
                 <div className="p-3 pl-7 pr-7 flex justify-between items-center border-1 border-athens-gray rounded-md ">
                   <button
                     aria-label="각 입장 참여 인원 감소"
@@ -182,9 +182,9 @@ export default function CreateAgora() {
               </div>
             </section>
             <section className="mt-2rem w-full">
-              <h3 className="mb-10 under-mobile:text-sm text-md">
+              <div role="region" className="mb-10 under-mobile:text-sm text-md">
                 토론 제한시간
-              </h3>
+              </div>
               <div className="text-sm flex flex-col w-full under-mobile:flex-row justify-center under-mobile:justify-start items-start under-mobile:items-center">
                 <div className="flex justify-start items-center">
                   <input

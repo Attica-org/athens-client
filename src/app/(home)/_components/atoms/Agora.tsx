@@ -22,10 +22,10 @@ export default function Agora() {
       </h3>
       <p aria-label="아고라 참여 인원" className="text-xs pt-7">
         <span className="pr-5 text-athens-gray-thick text-nowrap">
-          <span className="text-blue-500 pr-3">찬성</span>10명
+          <span className="text-blue-600 pr-3">찬성</span>10명
         </span>
         <span className="pr-5 text-athens-gray-thick text-nowrap">
-          <span className="text-red-500 pr-3">반대</span>10명
+          <span className="text-red-600 pr-3">반대</span>10명
         </span>
         <span className="under-mobile:bloc break-keep">
           <span className="pr-3">관찰자</span>

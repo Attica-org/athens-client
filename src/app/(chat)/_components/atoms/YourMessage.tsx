@@ -13,9 +13,9 @@ export default function YourMessage({ message }: { message: Message }) {
         />
       </div>
       <div className="p-0.5rem flex flex-col justify-center items-start">
-        <h3 aria-label="사용자 이름" className="text-xs pb-5">
+        <div role="region" aria-label="사용자 이름" className="text-xs pb-5">
           {message.name}
-        </h3>
+        </div>
         <div className="flex justify-start items-end">
           <div className="max-w-[50vw] whitespace-pre-line bg-blue-200 rounded-tr-xl rounded-bl-xl rounded-br-xl p-0.5rem pl-10 pr-10 text-sm under-mobile:text-xs">
             {message.content}
