@@ -48,7 +48,7 @@ const config: Config = {
         "athens-gray": "#F1F3F5",
         "athens-button": "#21d2a1",
         "athens-sub": "#FEAC3E",
-        "athens-gray-thick": "#66666",
+        "athens-gray-thick": "#666666",
         "agora-point-color1": "#00ADAC",
         "agora-point-color2": "#79E0D9",
         "agora-point-color3": "#E1C5B9",
