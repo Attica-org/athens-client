@@ -1,22 +1,11 @@
 // import { COLOR } from "@/constants/color";
 
 type Props = {
-  id: number;
+  color: string;
   isCheck: boolean;
 };
 
-const COLOR = [
-  "bg-agora-point-color1",
-  "bg-agora-point-color2",
-  "bg-agora-point-color3",
-  "bg-agora-point-color4",
-  "bg-agora-point-color5",
-  "bg-agora-point-color6",
-];
-
-export default function AgoraPointColor({ id, isCheck }: Props) {
-  const color = COLOR[id - 1];
-
+export default function AgoraPointColor({ isCheck, color }: Props) {
   return (
     <>
       <div
@@ -24,6 +13,7 @@ export default function AgoraPointColor({ id, isCheck }: Props) {
       >
         {isCheck && (
           <svg
+            aria-label="선택한 색상"
             xmlns="http://www.w3.org/2000/svg"
             height="25"
             viewBox="0 -960 960 960"
