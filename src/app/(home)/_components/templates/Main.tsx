@@ -27,7 +27,10 @@ export default function Main() {
             <CategoryButtonList />
           </div>
         </section>
-        <section className="flex flex-1 flex-col p-0.5rem pt-3 pb-5rem justify-start items-center">
+        <section
+          aria-label="아고라 리스트"
+          className="flex flex-1 flex-col p-5 pt-3 pb-5rem justify-start items-center"
+        >
           {/* <SearchAgoraList /> */}
           <AgoraList />
         </section>

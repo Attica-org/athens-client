@@ -2,7 +2,7 @@
 
 import RemoveIcon from "@/assets/icons/RemoveIcon";
 import AgoraUserList from "../molecules/AgoraUserList";
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, useState } from "react";
 
 type UserList = {
   id: number;
@@ -10,12 +10,9 @@ type UserList = {
   position: "pro" | "con";
 };
 
-type Props = {
-  toggleMenu: () => void;
-  toggle: boolean;
-};
+type Props = {};
 
-export default function AgoraUserSide({ toggleMenu, toggle }: Props) {
+export default function AgoraUserSide() {
   const userList: UserList[] = [
     {
       id: 1,
@@ -34,20 +31,25 @@ export default function AgoraUserSide({ toggleMenu, toggle }: Props) {
     },
   ];
 
+  // TODO: 전역 상태로 메뉴를 열고 닫도록 수정
+  const [toggle, setToggle] = useState(false);
+  const toggleMenu = () => {
+    setToggle(!toggle);
+  };
+
   const onClickOutside: MouseEventHandler<HTMLDivElement> = (e) => {
     if (e.target === e.currentTarget) toggleMenu();
   };
 
   return (
-    <>
+    <aside aria-label="채팅 참여자 목록" aria-hidden={toggle ? false : true}>
       <div
         className={`absolute inset-0 bg-gray-400 bg-opacity-75 duration-500 transition-opacity ${
           !toggle && "pointer-events-none opacity-0"
         }`}
-        aria-hidden
         onClick={onClickOutside}
       />
-      <aside
+      <div
         className={`absolute inset-y-0 right-0 flex max-w-full pl-10 ${
           toggle ? "z-15" : "pointer-events-none"
         }`}
@@ -57,17 +59,20 @@ export default function AgoraUserSide({ toggleMenu, toggle }: Props) {
             toggle ? "translate-x-0" : "translate-x-full"
           }`}
         >
-          <div className="flex justify-between items-center pb-1rem">
-            <h3 className="text-base font-semibold">대화상대</h3>
-            <div onClick={toggleMenu}>
+          <div
+            aria-hidden={!toggle}
+            className="flex justify-between items-center pb-1rem"
+          >
+            <h2 className="text-base font-semibold">대화상대</h2>
+            <button aria-label="참여자 목록 닫기" onClick={toggleMenu}>
               <RemoveIcon className="w-15 cursor-pointer" />
-            </div>
+            </button>
           </div>
           <AgoraUserList position="pro" userList={userList} />
           <div className="border-b-1 border-gray-200 mb-1rem" />
           <AgoraUserList position="con" userList={userList} />
         </section>
-      </aside>
-    </>
+      </div>
+    </aside>
   );
 }

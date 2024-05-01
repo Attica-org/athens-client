@@ -17,7 +17,6 @@ export default function EndAgora() {
     timerId.current = setInterval(() => {
       setSec((prev) => prev - 1);
     }, 1000);
-
     return () => {
       clearInterval(timerId.current);
     };
@@ -42,15 +41,25 @@ export default function EndAgora() {
   return (
     <ModalBase title="토론 종료" removeIcon={false} animation={false}>
       <div className="flex justify-center items-center flex-col">
-        <h2 className="text-xs text-athens-gray-thick">
+        <p className="text-xs text-athens-gray-thick">
           최종 투표를 진행해주세요.
-        </h2>
-        <div className={`pt-0.5rem ${sec <= 5 && "text-red-500"}`}>{sec}</div>
-        <p className="p-1rem pt-1rem text-base break-keep text-center">
-          국가 발전에 유능한 독재자가 필요한 시기가 있다.
         </p>
+        <div
+          role="status"
+          aria-label="투표 종료까지 남은 시간"
+          className={`pt-0.5rem ${sec <= 5 && "text-red-500"}`}
+        >
+          {sec}
+        </div>
+        <h3
+          aria-label="토론 주제"
+          className="p-1rem pt-1rem text-base break-keep text-center"
+        >
+          국가 발전에 유능한 독재자가 필요한 시기가 있다.
+        </h3>
         <div className="pt-0.5rem pb-0.5rem">
           <button
+            aria-label="찬성하기"
             onClick={() => selectResultPosition("pro")}
             className={`${
               selectedResultPosition === "pro"
@@ -61,6 +70,7 @@ export default function EndAgora() {
             찬성
           </button>
           <button
+            aria-label="반대하기"
             onClick={() => selectResultPosition("con")}
             className={`${
               selectedResultPosition === "con"

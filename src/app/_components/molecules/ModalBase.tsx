@@ -19,6 +19,7 @@ export default function ModalBase({
 }: Props) {
   const router = useRouter();
   const [opacity, setOpacity] = useState("opacity-0");
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -29,12 +30,27 @@ export default function ModalBase({
     };
   }, [animation]);
 
+  useEffect(() => {
+    // 모달창이 열릴 때 첫 번째 포커스 가능한 요소에 초점 설정
+    const focusableElements = modalRef.current?.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+
+    if (focusableElements) {
+      const firstFocusableElement = focusableElements[0] as HTMLElement;
+      firstFocusableElement?.focus();
+    }
+  }, [modalRef.current]);
+
   const clickOutSideModal: MouseEventHandler<HTMLDivElement> = (e) => {
     if (e.target === e.currentTarget && removeIcon) router.back();
   };
 
   return (
     <div
+      ref={modalRef}
+      role="dialog"
+      aria-modal="true"
       onClick={clickOutSideModal}
       className="w-dvw h-dvh flex absolute justify-center items-center z-20 top-0 right-0 left-0 bottom-0 bg-opacity-20 bg-gray-600"
     >

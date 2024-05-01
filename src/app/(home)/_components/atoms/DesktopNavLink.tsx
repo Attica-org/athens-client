@@ -8,6 +8,7 @@ type Props = {
   className?: string;
   children: React.ReactNode;
   innerText: string;
+  label?: string;
 };
 
 export default function DesktopNavLink({
@@ -15,12 +16,13 @@ export default function DesktopNavLink({
   href,
   children,
   innerText,
+  label,
 }: Props) {
   let segment = usePathname();
 
   return (
     <li>
-      <Link href={href} className={className}>
+      <Link aria-label={label} href={href} className={className}>
         <div className="hover:bg-gray-100 h-3rem p-1rem inline-flex flex-row justify-center items-center mb-1rem rounded-full">
           {children}
           <span

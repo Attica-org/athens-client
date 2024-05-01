@@ -9,6 +9,7 @@ export default function HamburgerIcon({ className }: Props) {
       viewBox="0 -960 960 960"
       className={className}
       fill="currentColor"
+      aria-hidden
     >
       <path d="M120-240v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z" />
     </svg>

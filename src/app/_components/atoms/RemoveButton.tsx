@@ -15,8 +15,14 @@ export default function RemoveButton({ className }: Props) {
   };
 
   return (
-    <div onClick={onClickClose} className={className}>
-      <RemoveIcon className="w-1rem cursor-pointer" />
-    </div>
+    <button
+      aria-label="모달창 닫기"
+      onClick={onClickClose}
+      className={className}
+    >
+      <div aria-hidden>
+        <RemoveIcon className="w-1rem cursor-pointer" />
+      </div>
+    </button>
   );
 }

@@ -7,7 +7,10 @@ type Props = {
 export default function PageTitle({ title, desc, children }: Props) {
   return (
     <>
-      <h1 className="text-xl font-semibold w-full flex justify-start items-center">
+      <h1
+        aria-label="페이지 제목"
+        className="text-xl font-semibold w-full flex justify-start items-center"
+      >
         {title}
       </h1>
       <div className="flex justify-between items-center break-words">

@@ -35,7 +35,7 @@ export default function EnterAgora() {
   return (
     <ModalBase title="아고라 입장" removeIcon={true} animation={false}>
       <p className="text-base p-1rem pt-1.5rem pb-1.5rem flex justify-center items-cener text-center break-keep font-medium">
-        {'"'}국가 발전에 유능한 독재자가 필요한 시기가 있다.{'"'}
+        국가 발전에 유능한 독재자가 필요한 시기가 있다.
       </p>
       <div className="flex flex-col justiy-start items-center">
         <div className="flex justify-start items-center mb-10">
@@ -45,33 +45,35 @@ export default function EnterAgora() {
           >
             <Image
               src={`/img/${selectedProfileImage.name}.png`}
-              alt="프로필 이미지"
+              alt={`${selectedProfileImage.name}`}
               width={70}
               height={70}
               className="rounded-2xl object-contain"
             />
           </div>
-          <div className="text-sm p-0.5rem w-fit ml-12">
+          <div aria-hidden className="text-sm p-0.5rem w-fit ml-12">
             {selectedProfileImage.name}
           </div>
         </div>
-        <div className="flex pl-1rem">
+        <ul aria-label="사용할 프로필 이미지 선택" className="flex pl-1rem">
           {PROFLELIST.map((profileImageName) => (
-            <div
+            <li
               onClick={() => selectProfile(profileImageName)}
               key={profileImageName.id}
               className="cursor-pointer mr-5 w-fit flex justify-center items-center border-1 border-gray-300 rounded-full"
             >
-              <Image
-                src={`/img/${profileImageName.name}.png`}
-                alt={profileImageName.name}
-                width={45}
-                height={45}
-                className="rounded-full object-contain"
-              />
-            </div>
+              <button>
+                <Image
+                  src={`/img/${profileImageName.name}.png`}
+                  alt={profileImageName.name}
+                  width={45}
+                  height={45}
+                  className="rounded-full object-contain"
+                />
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
       <div className="mt-2rem flex justify-center items-center text-sm under-mobile:text-xs min-w-200">
         <button
@@ -79,7 +81,7 @@ export default function EnterAgora() {
           className={`p-5 mobile:pr-1rem mobile:pl-1rem pr-10 pl-10 ${
             selectedPosition === "pro"
               ? "text-white bg-blue-400"
-              : "text-blue-400 bg-white"
+              : "text-blue-600 bg-white"
           } rounded-xl mr-4 text-xs tablet:text-sm `}
         >
           찬성
@@ -89,7 +91,7 @@ export default function EnterAgora() {
           className={`p-5 mobile:pr-1rem mobile:pl-1rem pr-10 pl-10 ${
             selectedPosition === "con"
               ? "text-white bg-red-400"
-              : "text-red-400 bg-white"
+              : "text-red-600 bg-white"
           } rounded-xl mr-4 text-xs tablet:text-sm`}
         >
           반대
@@ -107,6 +109,7 @@ export default function EnterAgora() {
         <span className="pl-6 text-xs">로 입장</span>
       </div>
       <button
+        aria-label="아고라 입장하기"
         onClick={enterAgora}
         className="mt-2rem text-sm bg-athens-main p-0.5rem w-full text-white rounded-lg"
       >

@@ -114,7 +114,7 @@ export default function CreateAgora() {
             aria-label="생성할 아고라 주제 입력창"
             type="text"
             placeholder="토론 할 주제를 입력해주세요."
-            className="placeholder:text-athens-thick w-full p-0.5rem text-xs border-1 border-athens-gray rounded-md"
+            className="placeholder:text-athens-gray-thick w-full p-0.5rem text-xs border-1 border-athens-gray rounded-md"
           />
           <div className="flex justify-around flex-col w-full">
             <section className="mt-1.5rem w-full">
@@ -129,10 +129,7 @@ export default function CreateAgora() {
               <h3 className="text-md mb-10 under-mobile:text-sm">
                 포인트 색상
               </h3>
-              <div
-                aria-label="아고라 색상 리스트"
-                className="flex justify-start items-center"
-              >
+              <div className="flex justify-start items-center">
                 <AgoraPointColorList />
               </div>
             </section>
@@ -145,29 +142,35 @@ export default function CreateAgora() {
                   찬성 / 반대
                 </label>
                 <div className="p-3 pl-7 pr-7 flex justify-between items-center border-1 border-athens-gray rounded-md ">
-                  <div
+                  <button
+                    aria-label="각 입장 참여 인원 감소"
                     className="text-xl cursor-pointer"
                     onClick={() => clickParticipantsBtn("DECLEASE")}
                   >
                     -
-                  </div>
+                  </button>
                   <input
-                    aria-label="최대 참여 인원"
+                    aria-label="설정한 최대 참여 인원"
                     value={participants}
                     onChange={inputParticipants}
                     type="number"
                     className="text-center max-w-32 w-32 text-xs input-number-hide focus-visible:outline-none"
                   />
-                  <div
+                  <button
+                    aria-label="각 입장 참여 인원 증가"
                     className="text-xl cursor-pointer"
                     onClick={() => clickParticipantsBtn("INCREASE")}
                   >
                     +
-                  </div>
+                  </button>
                 </div>
               </div>
               {message.participants && (
-                <div className="text-xs under-mobile:text-xxs text-red-400 p-5 pl-0">
+                <div
+                  aria-live="polite"
+                  role="alert"
+                  className="text-xs under-mobile:text-xxs text-red-600 p-5 pl-0"
+                >
                   {message.participants}
                 </div>
               )}
@@ -185,6 +188,7 @@ export default function CreateAgora() {
               <div className="text-sm flex flex-col w-full under-mobile:flex-row justify-center under-mobile:justify-start items-start under-mobile:items-center">
                 <div className="flex justify-start items-center">
                   <input
+                    aria-label="토론 제한시간 입력창"
                     type="number"
                     value={time || ""}
                     onChange={handleAgoraTime}
@@ -193,9 +197,18 @@ export default function CreateAgora() {
                   />
                   <div className="under-mobile:text-xs">분</div>
                 </div>
-                <div
+                {message.time && (
+                  <div
+                    role="alert"
+                    aria-live="polite"
+                    className="text-xs under-mobile:text-xxs text-red-600 p-5 pb-0 pl-0"
+                  >
+                    {message.time}
+                  </div>
+                )}
+                <button
                   onClick={handleNoTime}
-                  className="under-mobile:ml-1rem cursor-pointer mt-12 under-mobile:mt-0 flex justify-start items-center text-gray-500 text-center"
+                  className="under-mobile:ml-1rem cursor-pointer mt-12 under-mobile:mt-0 flex justify-start items-center text-athens-gray-thick text-center"
                 >
                   <CheckIcon
                     className="w-1rem"
@@ -205,18 +218,16 @@ export default function CreateAgora() {
                   <div className="ml-8 text-sm under-mobile:text-xs">
                     제한 없음
                   </div>
-                </div>
+                </button>
               </div>
-              {message.time && (
-                <div className="text-sm under-mobile:text-xxs text-red-400 p-5 pb-0 pl-0">
-                  {message.time}
-                </div>
-              )}
             </section>
           </div>
         </div>
         <div className="max-h-5rem w-ful">
-          <button className="w-full bg-athens-main text-white pt-15 pb-15 mt-1.5rem under-mobile:pt-10 under-mobile:pb-10 under-mobile:mt-1rem text-sm rounded-lg">
+          <button
+            aria-label="아고라 생성하기"
+            className="w-full bg-athens-main text-white font-semibold pt-10 pb-10 mt-1.5rem under-mobile:pt-10 under-mobile:pb-10 under-mobile:mt-1rem text-base rounded-lg"
+          >
             아고라 생성
           </button>
         </div>

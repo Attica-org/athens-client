@@ -6,8 +6,8 @@ type Props = {
 
 export default function HamburgerButton({ toggleMenu }: Props) {
   return (
-    <div onClick={toggleMenu}>
+    <button aria-label="메뉴 열기" onClick={toggleMenu}>
       <HamburgerIcon className="w-22 cursor-pointer" />
-    </div>
+    </button>
   );
 }

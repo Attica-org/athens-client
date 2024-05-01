@@ -8,10 +8,14 @@ export default function NavLinks() {
     <>
       <div className="hidden lg:block">
         <ul>
-          <DesktopNavLink href="/" innerText="홈">
+          <DesktopNavLink href="/" innerText="홈" label="홈으로 가기">
             <HomeIcon className="w-1.5rem" />
           </DesktopNavLink>
-          <DesktopNavLink href="/create-agora" innerText="아고라 생성">
+          <DesktopNavLink
+            href="/create-agora"
+            innerText="아고라 생성"
+            label="아고라 생성하기"
+          >
             <AddIcon className="w-1.5rem" />
           </DesktopNavLink>
         </ul>
@@ -21,10 +25,12 @@ export default function NavLinks() {
           <MobileNavLink
             className="flex p-5 text-xs flex-col justify-center items-center"
             href="/"
+            label="홈으로 가기"
           >
             <HomeIcon className="w-23 pb-2" />홈
           </MobileNavLink>
           <MobileNavLink
+            label="아고라 생성하기"
             className="flex flex-col text-xs justify-center items-center p-10"
             href="/create-agora"
           >

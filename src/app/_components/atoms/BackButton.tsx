@@ -11,8 +11,8 @@ export default function BackButton() {
   };
 
   return (
-    <>
+    <button aria-label="뒤로가기">
       <BackIcon onClick={handleBack} className="w-22 ml-1rem cursor-pointer" />
-    </>
+    </button>
   );
 }

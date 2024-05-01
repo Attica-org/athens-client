@@ -17,9 +17,10 @@ export default function UserImage({ className, name, w, h }: Props) {
         <Image
           className="object-cover rounded-xl"
           src={`/img/${name}.png`}
-          alt={`${name}의 프로필 이미지`}
+          alt={`${name}`}
           width={w}
           height={h}
+          aria-hidden
         />
       )}
     </div>
