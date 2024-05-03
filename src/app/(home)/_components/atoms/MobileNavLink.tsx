@@ -1,4 +1,5 @@
-import Link from "next/link";
+import Link from 'next/link';
+import React from 'react';
 
 type Props = {
   className: string;
@@ -14,7 +15,7 @@ export default function MobileNavLink({
   label,
 }: Props) {
   return (
-    <li className="flex justify-center items-center p-10">
+    <li className="flex justify-center items-center p-10 dark:text-dark-line-semilight">
       <Link aria-label={label} href={href} className={className}>
         {children}
       </Link>

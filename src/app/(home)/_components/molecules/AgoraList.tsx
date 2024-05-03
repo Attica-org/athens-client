@@ -1,4 +1,5 @@
-import Agora from "../atoms/Agora";
+import React from 'react';
+import Agora from '../atoms/Agora';
 
 // mobile: '360px' // @media (min-width: 360px)
 // foldable: '523px' // @media (min-width: 523px)

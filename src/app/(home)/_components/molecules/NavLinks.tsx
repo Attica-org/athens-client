@@ -1,7 +1,8 @@
-import HomeIcon from "@/assets/icons/homeIcon";
-import AddIcon from "@/assets/icons/AddIcon";
-import MobileNavLink from "../atoms/MobileNavLink";
-import DesktopNavLink from "../atoms/DesktopNavLink";
+import HomeIcon from '@/assets/icons/homeIcon';
+import AddIcon from '@/assets/icons/AddIcon';
+import React from 'react';
+import MobileNavLink from '../atoms/MobileNavLink';
+import DesktopNavLink from '../atoms/DesktopNavLink';
 
 export default function NavLinks() {
   return (
@@ -20,14 +21,15 @@ export default function NavLinks() {
           </DesktopNavLink>
         </ul>
       </div>
-      <div className="sticky bottom-0 block lg:hidden w-full h-58 border-t-2 border-gray-100">
+      <div className="sticky bottom-0 block lg:hidden w-full h-58 border-t-1 border-gray-100 dark:border-gray-500">
         <ul className="flex flex-row h-full justify-around">
           <MobileNavLink
             className="flex p-5 text-xs flex-col justify-center items-center"
             href="/"
             label="홈으로 가기"
           >
-            <HomeIcon className="w-23 pb-2" />홈
+            <HomeIcon className="w-23 pb-2" />
+            홈
           </MobileNavLink>
           <MobileNavLink
             label="아고라 생성하기"
