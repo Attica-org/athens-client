@@ -1,23 +1,22 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import ModalBase from "../../../_components/molecules/ModalBase";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import ModalPosSelectBtn from "../atoms/ModalPosSelectBtn";
-import { PROFLELIST } from "@/constants/userProfileImage";
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { PROFLELIST } from '@/constants/userProfileImage';
+import UserImage from '@/app/_components/atoms/UserImage';
+import ModalPosSelectBtn from '../atoms/ModalPosSelectBtn';
+import ModalBase from '../../../_components/molecules/ModalBase';
 
 type ProfileImageName = {
   id: number;
   name: string;
 };
 
-type Position = "con" | "pro" | "watcher";
+type Position = 'con' | 'pro' | 'watcher';
 
 export default function EnterAgora() {
-  const [selectedProfileImage, setSelectedProfileImage] =
-    useState<ProfileImageName>({ id: 1, name: "도끼 든 회색 곰" });
-  const [selectedPosition, setSelectedPosition] = useState<Position>("watcher");
+  const [selectedProfileImage, setSelectedProfileImage] = useState<ProfileImageName>({ id: 1, name: '도끼 든 회색 곰' });
+  const [selectedPosition, setSelectedPosition] = useState<Position>('watcher');
   const router = useRouter();
 
   const selectProfile = (profile: ProfileImageName) => {
@@ -29,86 +28,49 @@ export default function EnterAgora() {
   };
 
   const enterAgora = () => {
-    router.push("/agora");
+    router.push('/agora');
   };
 
   return (
-    <ModalBase title="아고라 입장" removeIcon={true} animation={false}>
-      <p className="text-base p-1rem pt-1.5rem pb-1.5rem flex justify-center items-cener text-center break-keep font-medium">
+    <ModalBase title="아고라 입장" removeIcon animation={false}>
+      <p className="text-base p-1rem pt-0.5rem pb-1.5rem flex justify-center items-cener text-center break-keep font-medium">
         국가 발전에 유능한 독재자가 필요한 시기가 있다.
       </p>
       <div className="flex flex-col justiy-start items-center">
         <div className="flex justify-start items-center mb-10">
-          <div
-            aria-label="사용자가 선택한 프로필 이미지"
-            className="border-1 border-gray-300 w-70 h-70 rounded-2xl flex justify-center items-center"
-          >
-            <Image
-              src={`/img/${selectedProfileImage.name}.png`}
-              alt={`${selectedProfileImage.name}`}
-              width={70}
-              height={70}
-              className="rounded-2xl object-contain"
-            />
-          </div>
+          <UserImage className="w-65 h-65 bg-white" name={selectedProfileImage.name} w={65} h={65} />
           <div aria-hidden className="text-sm p-0.5rem w-fit ml-12">
             {selectedProfileImage.name}
           </div>
         </div>
-        <ul aria-label="사용할 프로필 이미지 선택" className="flex pl-1rem">
+        <ul aria-label="사용할 프로필 이미지 선택" className="grid grid-cols-5 under-mobile:grid-cols-4 mobile:grid-cols-4 foldable:grid-cols-5 gap-y-5  pl-1rem">
           {PROFLELIST.map((profileImageName) => (
             <li
               onClick={() => selectProfile(profileImageName)}
               key={profileImageName.id}
               className="cursor-pointer mr-5 w-fit flex justify-center items-center border-1 border-gray-300 rounded-full"
             >
-              <button>
-                <Image
-                  src={`/img/${profileImageName.name}.png`}
-                  alt={profileImageName.name}
-                  width={45}
-                  height={45}
-                  className="rounded-full object-contain"
-                />
+              <button type="button" aria-label={profileImageName.name}>
+                <UserImage className="rounded-full w-45 h-45 bg-white" name={profileImageName.name} w={45} h={45} />
               </button>
             </li>
           ))}
         </ul>
       </div>
       <div className="mt-2rem flex justify-center items-center text-sm under-mobile:text-xs min-w-200">
-        <button
-          onClick={() => selectPosition("pro")}
-          className={`p-5 mobile:pr-1rem mobile:pl-1rem pr-10 pl-10 ${
-            selectedPosition === "pro"
-              ? "text-white bg-blue-400"
-              : "text-blue-600 bg-white"
-          } rounded-xl mr-4 text-xs tablet:text-sm `}
-        >
+        <ModalPosSelectBtn selectedPosition={selectedPosition} selectPosition={selectPosition} position="pro" color="blue">
           찬성
-        </button>
-        <button
-          onClick={() => selectPosition("con")}
-          className={`p-5 mobile:pr-1rem mobile:pl-1rem pr-10 pl-10 ${
-            selectedPosition === "con"
-              ? "text-white bg-red-400"
-              : "text-red-600 bg-white"
-          } rounded-xl mr-4 text-xs tablet:text-sm`}
-        >
+        </ModalPosSelectBtn>
+        <ModalPosSelectBtn selectedPosition={selectedPosition} selectPosition={selectPosition} position="con" color="red">
           반대
-        </button>
-        <button
-          onClick={() => selectPosition("watcher")}
-          className={`p-5 mobile:pr-1rem mobile:pl-1rem pr-10 pl-10 ${
-            selectedPosition === "watcher"
-              ? "text-white bg-athens-main"
-              : "text-athens-main bg-white"
-          } rounded-xl text-xs tablet:text-sm `}
-        >
+        </ModalPosSelectBtn>
+        <ModalPosSelectBtn selectedPosition={selectedPosition} selectPosition={selectPosition} position="watcher" color="athens-main">
           관찰자
-        </button>
+        </ModalPosSelectBtn>
         <span className="pl-6 text-xs">로 입장</span>
       </div>
       <button
+        type="button"
         aria-label="아고라 입장하기"
         onClick={enterAgora}
         className="mt-2rem text-sm bg-athens-main p-0.5rem w-full text-white rounded-lg"

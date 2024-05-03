@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import React from 'react';
 // import { register } from "swiper/element/bundle";
 import './globals.css';
 // register();
@@ -18,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className="dark">
-      <body className="lg:flex scrollbar-hide justify-center items-start w-full">
+      <body className="lg:flex scrollbar-hide justify-center items-start w-full dark:bg-dark-bg-light">
         {children}
       </body>
     </html>

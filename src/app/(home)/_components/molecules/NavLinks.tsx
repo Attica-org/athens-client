@@ -1,6 +1,6 @@
 import HomeIcon from '@/assets/icons/homeIcon';
-import AddIcon from '@/assets/icons/AddIcon';
 import React from 'react';
+import AddIcon from '@/assets/icons/AddIcon';
 import MobileNavLink from '../atoms/MobileNavLink';
 import DesktopNavLink from '../atoms/DesktopNavLink';
 

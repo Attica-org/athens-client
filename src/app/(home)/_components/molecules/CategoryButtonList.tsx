@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
-import CategoryButton from "../atoms/CategoryButton";
-import { useEffect, useState } from "react";
-import { Category } from "@/app/model/Category";
+import React, { useEffect, useState } from 'react';
+import { Category } from '@/app/model/Category';
 
-import Swiper from "swiper";
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/mousewheel";
+import Swiper from 'swiper';
+import CategoryButton from '../atoms/CategoryButton';
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import 'swiper/css/mousewheel';
 
 export default function CategoryButtonList() {
-  const search = "검색";
+  const search = '검색';
   const [categoryList, setCategoryList] = useState<Category[]>([
-    { id: 1, innerText: "전체", isActive: true },
-    { id: 2, innerText: "지식/공부", isActive: false },
-    { id: 3, innerText: "문화/예술", isActive: false },
-    { id: 4, innerText: "음식/여행", isActive: false },
-    { id: 5, innerText: "일상/취미", isActive: false },
+    { id: 1, innerText: '전체', isActive: true },
+    { id: 2, innerText: '지식/공부', isActive: false },
+    { id: 3, innerText: '문화/예술', isActive: false },
+    { id: 4, innerText: '음식/여행', isActive: false },
+    { id: 5, innerText: '일상/취미', isActive: false },
   ]);
 
   useEffect(() => {
-    const swiper = new Swiper(".swiper", {
-      direction: "horizontal",
+    const swiper = new Swiper('.swiper', {
+      direction: 'horizontal',
       loop: false,
       centeredSlides: false,
       touchRatio: 1,
       freeMode: true,
       grabCursor: true,
-      slidesPerView: "auto",
+      slidesPerView: 'auto',
       spaceBetween: 7,
       keyboard: {
         enabled: true,
@@ -45,7 +45,7 @@ export default function CategoryButtonList() {
       categoryList.map((category) => ({
         ...category,
         isActive: category.id === id,
-      }))
+      })),
     );
   };
 
