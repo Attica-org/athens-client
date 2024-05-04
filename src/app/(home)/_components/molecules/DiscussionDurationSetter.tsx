@@ -1,7 +1,7 @@
 'use client';
 
 import React, { ChangeEventHandler, useState } from 'react';
-import { DEFAULT_TIME } from '@/constants/createAgora';
+import { DEFAULT_TIME, MIN_DISCUSSION_TIME, MIN_TIME_MESSAGE } from '@/constants/createAgora';
 import CheckIcon from '@/assets/icons/CheckIcon';
 
 export default function DiscussionDurationSetter() {
@@ -12,8 +12,8 @@ export default function DiscussionDurationSetter() {
   const handleAgoraTime: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = parseInt(e.target.value, 10);
 
-    if (value < 30) {
-      setMessage('최소 제한시간은 30분입니다.');
+    if (value < MIN_DISCUSSION_TIME) {
+      setMessage(MIN_TIME_MESSAGE);
     } else {
       setMessage(null);
     }
