@@ -1,19 +1,20 @@
-import { Message } from "@/app/model/Message";
-import UserImage from "../../../_components/atoms/UserImage";
+import { Message } from '@/app/model/Message';
+import React from 'react';
+import UserImage from '../../../_components/atoms/UserImage';
 
 export default function YourMessage({ message }: { message: Message }) {
   return (
     <article className="flex justify-start items-start p-0.5rem pb-0 h-full">
-      <div aria-hidden className="border-1 border-gray-300 w-fit rounded-xl">
+      <div aria-hidden className="border-1 border-gray-300 w-fit rounded-3xl dark:bg-white">
         <UserImage
-          className="w-60 h-60 under-mobile:w-50 under-mobile:h-50 flex rounded-xl"
+          className="w-60 h-60 under-mobile:w-50 under-mobile:h-50 flex rounded-3xl"
           name={message.name}
           w={60}
           h={60}
         />
       </div>
       <div className="p-0.5rem flex flex-col justify-center items-start">
-        <div role="region" aria-label="사용자 이름" className="text-xs pb-5">
+        <div role="region" aria-label="사용자 이름" className="text-xs pb-5 dark:text-white dark:text-opacity-85">
           {message.name}
         </div>
         <div className="flex justify-start items-end">

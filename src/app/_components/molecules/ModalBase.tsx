@@ -54,7 +54,7 @@ export default function ModalBase({
       role="dialog"
       aria-modal="true"
       onClick={clickOutSideModal}
-      className="w-dvw h-dvh flex absolute justify-center items-center z-20 top-0 right-0 left-0 bottom-0 bg-opacity-60 bg-dark-bg-dark"
+      className="w-dvw h-dvh flex absolute justify-center items-center z-20 top-0 right-0 left-0 bottom-0 bg-opacity-50 bg-dark-bg-dark"
     >
       <div
         className={`${

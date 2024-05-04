@@ -1,13 +1,11 @@
-"use client";
+'use client';
 
-import EyeIcon from "@/assets/icons/EyeIcon";
-import BackButton from "../../../_components/atoms/BackButton";
-import ShareButton from "../atoms/ShareButton";
-import AgoraTitle from "./AgoraTitle";
-import HamburgerButton from "../atoms/HamburgerButton";
-import { useState } from "react";
-
-type Props = {};
+import EyeIcon from '@/assets/icons/EyeIcon';
+import React, { useState } from 'react';
+import BackButton from '../../../_components/atoms/BackButton';
+import ShareButton from '../atoms/ShareButton';
+import AgoraTitle from './AgoraTitle';
+import HamburgerButton from '../atoms/HamburgerButton';
 
 export default function Header() {
   const [progress, setProgress] = useState(false);
@@ -23,16 +21,17 @@ export default function Header() {
   };
 
   return (
-    <div className="flex flex-col w-full justify-center">
-      <div className="flex justify-between items-center pb-10 border-b-1 border-gray-200">
+    <div className="flex flex-col w-full justify-center dark:text-white dark:text-opacity-85">
+      <div className="flex justify-between items-center pb-10 border-b-1 border-gray-200 dark:border-dark-bg-light">
         <BackButton />
         <div className="flex justify-center items-center text-sm under-mobile:text-xs">
           <button
+            type="button"
             onClick={toggleProgress}
-            aria-label={`토론 ${progress ? "종료하기" : "시작하기"}`}
+            aria-label={`토론 ${progress ? '종료하기' : '시작하기'}`}
             className="italic bg-athens-main p-4 pl-15 pr-15 under-mobile:pl-10 under-mobile:pr-10 rounded-lg text-white mr-0.5rem"
           >
-            {progress ? "END" : "START"}
+            {progress ? 'END' : 'START'}
           </button>
           <div
             role="group"
@@ -49,7 +48,7 @@ export default function Header() {
             <div
               role="status"
               aria-label="토론 종료 버튼을 누른 인원 수"
-              className="text-xs text-athens-gray-thick pl-0.5rem pr-0.5rem"
+              className="text-xs text-athens-gray-thick pl-0.5rem pr-0.5rem dark:text-white dark:text-opacity-85"
             >
               8
             </div>
@@ -59,7 +58,7 @@ export default function Header() {
               className="flex justify-center items-center"
             >
               <EyeIcon className="w-1rem" />
-              <span className="pl-5 text-xs text-athens-gray-thick">12</span>
+              <span className="pl-5 text-xs text-athens-gray-thick dark:text-white dark:text-opacity-85">12</span>
             </div>
           </div>
         </div>

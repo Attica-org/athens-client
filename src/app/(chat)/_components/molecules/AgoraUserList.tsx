@@ -1,9 +1,10 @@
-import UserImage from "../../../_components/atoms/UserImage";
+import React from 'react';
+import UserImage from '../../../_components/atoms/UserImage';
 
 type UserList = {
   id: number;
   name: string;
-  position: "pro" | "con";
+  position: 'pro' | 'con';
 };
 
 type Props = {
@@ -14,8 +15,8 @@ type Props = {
 export default function AgoraUserList({ position, userList }: Props) {
   return (
     <div className="pb-0.5rem">
-      <h3 id={position} className="text-sm pb-1rem">
-        {position === "pro" ? "찬성측" : "반대측"}
+      <h3 id={position} className="text-sm pb-1rem dark:text-white dark:text-opacity-85">
+        {position === 'pro' ? '찬성측' : '반대측'}
       </h3>
       <ul
         aria-labelledby={position}
@@ -25,12 +26,12 @@ export default function AgoraUserList({ position, userList }: Props) {
           <li className="flex justify-start items-center pb-1rem" key={user.id}>
             <UserImage
               aria-hidden
-              className="w-40 h-40"
+              className="w-40 h-40 bg-white"
               name={user.name}
               w={40}
               h={40}
             />
-            <div className="ml-0.5rem text-sm">{user.name}</div>
+            <div className="ml-0.5rem text-sm dark:text-white dark:text-opacity-85">{user.name}</div>
           </li>
         ))}
       </ul>

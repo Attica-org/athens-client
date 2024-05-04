@@ -1,14 +1,15 @@
-import ModalBase from "@/app/_components/molecules/ModalBase";
-import Confetti from "@/utils/Confetti";
-import Link from "next/link";
+import ModalBase from '@/app/_components/molecules/ModalBase';
+import Confetti from '@/utils/Confetti';
+import Link from 'next/link';
+import React from 'react';
 
 export default function ResultAgora() {
-  let color = "bg-blue-400";
+  const color = 'bg-blue-400';
 
   return (
     <>
       <Confetti />
-      <ModalBase title="투표 결과" removeIcon={true} animation={true}>
+      <ModalBase title="투표 결과" removeIcon animation>
         <div className="flex justify-center items-center flex-col">
           <h2
             aria-label="토론 주제"
@@ -25,7 +26,7 @@ export default function ResultAgora() {
           <Link
             aria-label="홈으로 가기"
             href="/"
-            className="pt-1.5rem text-sm text-athens-gray-thick"
+            className="pt-1.5rem text-sm text-athens-gray-thick dark:text-dark-line"
           >
             홈으로 돌아가기
           </Link>

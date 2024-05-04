@@ -1,3 +1,6 @@
+import React from 'react';
+import DARKMODE from '@/constants/darkMode';
+
 type Props = {
   className: string;
 };
@@ -11,7 +14,10 @@ export default function HamburgerIcon({ className }: Props) {
       fill="currentColor"
       aria-hidden
     >
-      <path d="M120-240v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z" />
+      <path
+        fill={DARKMODE ? '#fff' : '#000'}
+        d="M120-240v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z"
+      />
     </svg>
   );
 }

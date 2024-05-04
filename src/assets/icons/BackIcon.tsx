@@ -1,3 +1,6 @@
+import React from 'react';
+import DARKMODE from '@/constants/darkMode';
+
 type Props = {
   className: string;
   onClick: () => void;
@@ -12,7 +15,10 @@ export default function BackIcon({ className, onClick }: Props) {
       onClick={onClick}
       aria-hidden
     >
-      <path d="M400-80 0-480l400-400 56 57-343 343 343 343-56 57Z" />
+      <path
+        fill={DARKMODE ? '#fff' : '#000'}
+        d="M400-80 0-480l400-400 56 57-343 343 343 343-56 57Z"
+      />
     </svg>
   );
 }
