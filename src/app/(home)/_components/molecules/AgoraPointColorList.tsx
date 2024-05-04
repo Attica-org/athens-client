@@ -20,7 +20,7 @@ export default function AgoraPointColorList() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex justify-start items-center">
       {Array.from({ length: COLOR.length }, (_, i) => (
         <button
           type="button"

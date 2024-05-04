@@ -48,7 +48,7 @@ export default function ParticipantCapacitySetter() {
   };
 
   return (
-    <div>
+    <div className="flex justify-center items-start flex-col">
       <div className="p-3 flex justify-between items-center">
         <ControlNumberInput
           label="찬성 / 반대"
@@ -60,15 +60,17 @@ export default function ParticipantCapacitySetter() {
           inputLabel="설정한 최대 참여 인원"
         />
       </div>
-      {message && (
-      <div
-        aria-live="polite"
-        role="alert"
-        className="text-xs text-red-600 p-5 pl-0 dark:text-dark-con-color"
-      >
-        {message}
+      <div>
+        {message && (
+        <div
+          aria-live="polite"
+          role="alert"
+          className="text-xs text-red-600 p-5 pl-0 dark:text-dark-con-color"
+        >
+          {message}
+        </div>
+        )}
       </div>
-      )}
     </div>
   );
 }
