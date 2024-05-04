@@ -64,7 +64,7 @@ export default function ParticipantCapacitySetter() {
       <div
         aria-live="polite"
         role="alert"
-        className="text-xs under-mobile:text-xxs text-red-600 p-5 pl-0 dark:text-dark-con-color"
+        className="text-xs text-red-600 p-5 pl-0 dark:text-dark-con-color"
       >
         {message}
       </div>
