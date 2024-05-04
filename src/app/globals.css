@@ -20,6 +20,14 @@
 body {
   font-family: "laundryGothic", sans-serif;
   color: rgb(var(--foreground-rgb));
+  min-height: 100%;
+}
+
+html {
+  display: flex;
+  min-height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 @layer utilities {
