@@ -15,8 +15,8 @@ export default function Agora() {
 
   return (
     <article className="w-165 under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center dark:bg-dark-light-300 dark:border-gray-500">
-      <div className="under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-3xl bg-yellow-400 relative">
-        <div className="w-0.5rem h-0.5rem rounded-full bg-red-400 absolute top-2 right-1 z-5" />
+      <div className="under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-3xl under-mobile:rounded-2xl bg-yellow-400 relative">
+        <div className="w-0.5rem h-0.5rem rounded-full bg-red-400 absolute top-3 right-2 under-mobile:top-2 under-mobile:right-1 z-5" />
       </div>
       <h3 className="text-xs under-mobile:text-xs under-mobile:font-semibold pt-10 dark:text-white">
         {title}
@@ -39,7 +39,7 @@ export default function Agora() {
         aria-label="아고라 입장하기"
         onClick={enterAgora}
         type="button"
-        className="text-sm under-mobile:text-xs text-white bg-athens-main p-4 pt-5 pb-5 mt-10 w-8rem under-mobile:w-6rem rounded-md"
+        className="text-sm under-mobile:text-xs text-white bg-athens-main p-4 pt-5 pb-5 mt-10 w-9rem under-mobile:w-110 rounded-md"
       >
         입장하기
       </button>
