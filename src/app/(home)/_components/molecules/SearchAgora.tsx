@@ -20,7 +20,7 @@ export default function SearchAgora() {
 
   return (
     <article className="w-full">
-      <div role="button" tabIndex={0} aria-label="아고라" onKeyDown={handleKeyDownEnterAgora} onClick={enterAgora} className="w-full flex mb-30 pl-1rem pr-1rem justify-center items-center cursor-pointer border-b-1 border-gray-100 dark:border-0">
+      <div role="button" tabIndex={0} aria-label="아고라" onKeyDown={handleKeyDownEnterAgora} onClick={enterAgora} className="w-full flex mb-15 pb-15 pl-1rem pr-1rem justify-center items-center cursor-pointer border-b-1 border-gray-100 dark:border-0">
         <div className="flex-1 p-0.5rem pl-0">
           <div className="flex justify-between items-start mb-12">
             <h3 className="text-base under-mobile:text-xs break-words break-keep line-clamp-2 max-w-prose dark:text-white dark:text-opacity-85">
