@@ -2,22 +2,17 @@
 
 import React, { useEffect, useState } from 'react';
 import { Category } from '@/app/model/Category';
-
+import AGORACATEGORY from '@/constants/agoraCategory';
 import Swiper from 'swiper';
 import CategoryButton from '../atoms/CategoryButton';
+
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/mousewheel';
 
 export default function CategoryButtonList() {
   const search = '검색';
-  const [categoryList, setCategoryList] = useState<Category[]>([
-    { id: 1, innerText: '전체', isActive: true },
-    { id: 2, innerText: '지식/공부', isActive: false },
-    { id: 3, innerText: '문화/예술', isActive: false },
-    { id: 4, innerText: '음식/여행', isActive: false },
-    { id: 5, innerText: '일상/취미', isActive: false },
-  ]);
+  const [categoryList, setCategoryList] = useState<Category[]>(AGORACATEGORY);
 
   useEffect(() => {
     const swiper = new Swiper('.swiper', {
