@@ -9,7 +9,7 @@ import AgoraPointColorList from '@/app/(home)/_components/molecules/AgoraPointCo
 import {
   DEFAULT_TIME,
 } from '@/constants/createAgora';
-import ModifyNumberInput from '../_components/atoms/ModifyNumberInput';
+import ParticipantCapacitySetter from '../_components/molecules/ParticipantCapacitySetter';
 
 type Message = {
   participants: string | null;
@@ -94,7 +94,7 @@ export default function CreateAgora() {
                 최대 참여 인원
               </div>
               <div className="flex justify-start items-center">
-                <ModifyNumberInput label="찬성 / 반대" />
+                <ParticipantCapacitySetter />
               </div>
               <div className="flex justify-start items-center mt-5">
                 <NotificationIcon className="w-1rem mr-0.5rem" />
