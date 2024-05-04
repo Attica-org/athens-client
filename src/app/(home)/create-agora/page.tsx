@@ -98,7 +98,7 @@ export default function CreateAgora() {
               </div>
               <div className="flex justify-start items-center mt-5">
                 <NotificationIcon className="w-1rem mr-0.5rem" />
-                <span className="text-xs text-athens-gray-thick break-keep under-mobile:text-xxs dark:text-white dark:text-opacity-65">
+                <span className="text-xs text-athens-gray-thick break-keep dark:text-white dark:text-opacity-65">
                   관찰자는 인원 제한없이 참여할 수 있습니다.
                 </span>
               </div>
@@ -123,7 +123,7 @@ export default function CreateAgora() {
                   <div
                     role="alert"
                     aria-live="polite"
-                    className="text-xs under-mobile:text-xxs text-red-600 p-5 pb-0 pl-0 dark:text-dark-con-color"
+                    className="text-xs text-red-600 p-5 pb-0 pl-0 dark:text-dark-con-color"
                   >
                     {message.time}
                   </div>
