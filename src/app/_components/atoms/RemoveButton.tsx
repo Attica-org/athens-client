@@ -28,3 +28,7 @@ export default function RemoveButton({ className }: Props) {
     </button>
   );
 }
+
+RemoveButton.defaultProps = {
+  className: '',
+};

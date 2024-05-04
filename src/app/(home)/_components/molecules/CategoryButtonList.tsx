@@ -55,7 +55,9 @@ export default function CategoryButtonList() {
       <div className="swiper pr-1rem w-full">
         <div className="swiper-wrapper pr-1rem">
           {categoryList.map((category) => (
-            <div
+            <button
+              type="button"
+              aria-label="카테고리 선택"
               onClick={() => selectCategory(category.id)}
               className="swiper-slide"
               key={category.innerText}
@@ -64,7 +66,7 @@ export default function CategoryButtonList() {
                 innerText={category.innerText}
                 isActive={category.isActive}
               />
-            </div>
+            </button>
           ))}
         </div>
       </div>

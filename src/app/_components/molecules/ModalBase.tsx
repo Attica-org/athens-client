@@ -1,6 +1,7 @@
 'use client';
 
 import React, {
+  KeyboardEventHandler,
   MouseEventHandler, useEffect, useRef, useState,
 } from 'react';
 import { useRouter } from 'next/navigation';
@@ -42,21 +43,28 @@ export default function ModalBase({
       const firstFocusableElement = focusableElements[0] as HTMLElement;
       firstFocusableElement?.focus();
     }
-  }, [modalRef.current]);
+  }, [modalRef]);
 
   const clickOutSideModal: MouseEventHandler<HTMLDivElement> = (e) => {
     if (e.target === e.currentTarget && removeIcon) router.back();
   };
 
+  const keyDownOutSideModal:KeyboardEventHandler<HTMLElement> = (e) => {
+    if (e.key === 'Enter' && e.target === e.currentTarget && removeIcon) router.back();
+  };
+
   return (
     <div
+      role="button"
+      tabIndex={0}
       ref={modalRef}
-      role="dialog"
-      aria-modal="true"
       onClick={clickOutSideModal}
+      onKeyDown={keyDownOutSideModal}
       className="w-dvw h-dvh flex absolute justify-center items-center z-20 top-0 right-0 left-0 bottom-0 bg-opacity-50 bg-dark-bg-dark"
     >
       <div
+        role="dialog"
+        aria-modal="true"
         className={`${
           animation && 'transition duration-500 transform scale-100 '
         } ${opacity} under-mobile:mt-13rem bg-white dark:bg-dark-light-300 dark:text-dark-line-light bottom-7rem mobile:w-[70vw] pb-0.5rem under-mobile:pb-1rem under-mobile:w-[80vw] w-[50vw] lg:w-40rem relative rounded-2xl min-w-220`}

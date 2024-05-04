@@ -22,3 +22,7 @@ export default function MobileNavLink({
     </li>
   );
 }
+
+MobileNavLink.defaultProps = {
+  label: '경로 이동',
+};

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { PROFLELIST } from '@/constants/userProfileImage';
+import PROFLELIST from '@/constants/userProfileImage';
 import UserImage from '@/app/_components/atoms/UserImage';
 import ModalPosSelectBtn from '../atoms/ModalPosSelectBtn';
 import ModalBase from '../../../_components/molecules/ModalBase';
@@ -19,7 +19,7 @@ export default function EnterAgora() {
   const [selectedPosition, setSelectedPosition] = useState<Position>('watcher');
   const router = useRouter();
 
-  const selectProfile = (profile: ProfileImageName) => {
+  const selectProfile = (profile: ProfileImageName):void => {
     setSelectedProfileImage(profile);
   };
 
@@ -29,6 +29,15 @@ export default function EnterAgora() {
 
   const enterAgora = () => {
     router.push('/agora');
+  };
+
+  const handleKeyDownEnterAgora = (
+    e: React.KeyboardEvent<HTMLElement>,
+    profile: ProfileImageName,
+  ) => {
+    if (e.key === 'Enter') {
+      selectProfile(profile);
+    }
   };
 
   return (
@@ -46,13 +55,18 @@ export default function EnterAgora() {
         <ul aria-label="사용할 프로필 이미지 선택" className="grid grid-cols-5 under-mobile:grid-cols-4 mobile:grid-cols-4 foldable:grid-cols-5 gap-y-5  pl-1rem">
           {PROFLELIST.map((profileImageName) => (
             <li
-              onClick={() => selectProfile(profileImageName)}
               key={profileImageName.id}
               className="cursor-pointer mr-5 w-fit flex justify-center items-center border-1 border-gray-300 rounded-full"
             >
-              <button type="button" aria-label={profileImageName.name}>
+              <div
+                role="button"
+                tabIndex={0}
+                aria-label={profileImageName.name}
+                onClick={() => selectProfile(profileImageName)}
+                onKeyDown={(e) => handleKeyDownEnterAgora(e, profileImageName)}
+              >
                 <UserImage className="rounded-full w-45 h-45 bg-white" name={profileImageName.name} w={45} h={45} />
-              </button>
+              </div>
             </li>
           ))}
         </ul>

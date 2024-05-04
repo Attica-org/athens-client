@@ -24,3 +24,7 @@ export default function PageTitle({ title, desc, children }: Props) {
     </>
   );
 }
+
+PageTitle.defaultProps = {
+  children: null,
+};

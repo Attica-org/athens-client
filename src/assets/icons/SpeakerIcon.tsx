@@ -1,3 +1,5 @@
+import React from 'react';
+
 type Props = {
   className: string;
   fill?: string;
@@ -18,3 +20,7 @@ export default function SpeakerIcon({ className, fill }: Props) {
     </svg>
   );
 }
+
+SpeakerIcon.defaultProps = {
+  fill: '#282828',
+};

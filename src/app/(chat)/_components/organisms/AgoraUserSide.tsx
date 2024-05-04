@@ -1,7 +1,7 @@
 'use client';
 
 import RemoveIcon from '@/assets/icons/RemoveIcon';
-import React, { MouseEventHandler, useState } from 'react';
+import React, { KeyboardEventHandler, MouseEventHandler, useState } from 'react';
 import AgoraUserList from '../molecules/AgoraUserList';
 
 type UserList = {
@@ -30,7 +30,7 @@ export default function AgoraUserSide() {
   ];
 
   // TODO: 전역 상태로 메뉴를 열고 닫도록 수정
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(true);
   const toggleMenu = () => {
     setToggle(!toggle);
   };
@@ -39,13 +39,23 @@ export default function AgoraUserSide() {
     if (e.target === e.currentTarget) toggleMenu();
   };
 
+  const closeModal:KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      toggleMenu();
+    }
+  };
+
   return (
     <aside aria-label="채팅 참여자 목록" aria-hidden={!toggle}>
       <div
-        className={`absolute inset-0 bg-opacity-50 bg-dark-bg-dark bg-opacity-75 duration-500 transition-opacity ${
+        role="button"
+        tabIndex={0}
+        aria-label="모달 외부 클릭으로 참여자 목록 닫기"
+        className={`absolute inset-0 bg-opacity-50 bg-dark-bg-dark duration-500 transition-opacity ${
           !toggle && 'pointer-events-none opacity-0'
         }`}
         onClick={onClickOutside}
+        onKeyDown={closeModal}
       />
       <div
         className={`absolute inset-y-0 right-0 flex max-w-full pl-10 ${
@@ -62,7 +72,7 @@ export default function AgoraUserSide() {
             className="flex justify-between items-center pb-1rem"
           >
             <h2 className="text-base font-semibold dark:text-white">대화상대</h2>
-            <button type="button" aria-label="참여자 목록 닫기" onClick={toggleMenu}>
+            <button type="button" aria-label="아이콘으로 참여자 목록 닫기" onClick={toggleMenu}>
               <RemoveIcon className="w-22 cursor-pointer" />
             </button>
           </div>

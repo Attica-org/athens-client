@@ -17,3 +17,9 @@ function RemoveIcon({ className, onClick, label }: Props) {
 }
 
 export default RemoveIcon;
+
+RemoveIcon.defaultProps = {
+  className: '',
+  onClick: () => {},
+  label: 'X 아이콘',
+};

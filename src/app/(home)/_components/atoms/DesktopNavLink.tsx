@@ -38,3 +38,8 @@ export default function DesktopNavLink({
     </li>
   );
 }
+
+DesktopNavLink.defaultProps = {
+  className: '',
+  label: '경로 이동',
+};

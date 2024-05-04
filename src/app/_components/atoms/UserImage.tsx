@@ -3,7 +3,7 @@ import React from 'react';
 
 type Props = {
   className: string;
-  name: string;
+  name?: string;
   w: number;
   h: number;
 };
@@ -29,3 +29,7 @@ export default function UserImage({
     </div>
   );
 }
+
+UserImage.defaultProps = {
+  name: null,
+};

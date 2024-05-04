@@ -1,4 +1,4 @@
-export const COLOR = [
+const COLOR = [
   'bg-agora-point-color1',
   'bg-agora-point-color2',
   'bg-agora-point-color3',
@@ -6,3 +6,5 @@ export const COLOR = [
   'bg-agora-point-color5',
   'bg-agora-point-color6',
 ];
+
+export default COLOR;
