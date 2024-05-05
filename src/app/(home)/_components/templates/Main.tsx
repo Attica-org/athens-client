@@ -3,9 +3,9 @@ import AgoraStatus from '../atoms/AgoraStatus';
 import AgoraStatusTab from '../atoms/AgoraStatusTab';
 import PageTitle from '../atoms/PageTitle';
 import SearchBar from '../atoms/SearchBar';
-// import AgoraList from '../molecules/AgoraList';
+import AgoraList from '../molecules/AgoraList';
 import CategoryButtonList from '../molecules/CategoryButtonList';
-import SearchAgoraList from '../organisms/SearchAgoraList';
+// import SearchAgoraList from '../organisms/SearchAgoraList';
 
 export default function Main() {
   return (
@@ -32,8 +32,8 @@ export default function Main() {
           aria-label="아고라 리스트"
           className="flex flex-1 flex-col p-5 pt-3 pb-5rem justify-start items-center"
         >
-          <SearchAgoraList />
-          {/* <AgoraList /> */}
+          {/* <SearchAgoraList /> */}
+          <AgoraList />
         </section>
       </main>
     </section>
