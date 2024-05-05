@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className="dark">
-      <body className="lg:flex scrollbar-hide justify-center items-start w-full dark:bg-dark-bg-light">
+      <body className="lg:flex scrollbar-hide overflow-x-hidden justify-center items-start w-full dark:bg-dark-bg-light">
         <MSWComponent />
         {children}
       </body>
