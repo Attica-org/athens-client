@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import React from 'react';
-// import { register } from "swiper/element/bundle";
 import './globals.css';
-// register();
+import MSWComponent from './_components/utils/MSWComponent';
 
 export const metadata: Metadata = {
   title: 'Athens',
@@ -20,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="ko" className="dark">
       <body className="lg:flex scrollbar-hide justify-center items-start w-full dark:bg-dark-bg-light">
+        <MSWComponent />
         {children}
       </body>
     </html>
