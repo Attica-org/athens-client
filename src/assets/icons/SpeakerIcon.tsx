@@ -5,7 +5,7 @@ type Props = {
   fill?: string;
 };
 
-export default function SpeakerIcon({ className, fill }: Props) {
+export default function SpeakerIcon({ className, fill = '#282828' }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -20,7 +20,3 @@ export default function SpeakerIcon({ className, fill }: Props) {
     </svg>
   );
 }
-
-SpeakerIcon.defaultProps = {
-  fill: '#282828',
-};

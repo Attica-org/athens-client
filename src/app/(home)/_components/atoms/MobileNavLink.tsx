@@ -12,7 +12,7 @@ export default function MobileNavLink({
   className,
   href,
   children,
-  label,
+  label = '경로 이동',
 }: Props) {
   return (
     <li className="flex justify-center items-center p-10 dark:text-dark-line-semilight">
@@ -22,7 +22,3 @@ export default function MobileNavLink({
     </li>
   );
 }
-
-MobileNavLink.defaultProps = {
-  label: '경로 이동',
-};

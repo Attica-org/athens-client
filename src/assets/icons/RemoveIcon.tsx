@@ -7,7 +7,7 @@ type Props = {
   label?: string;
 };
 
-function RemoveIcon({ className, onClick, label }: Props) {
+function RemoveIcon({ className = '', onClick = () => {}, label = 'X 아이콘' }: Props) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill={DARKMODE ? '#ffff' : '#282828'} className={className} onClick={onClick} aria-label={label}>
       <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
@@ -17,9 +17,3 @@ function RemoveIcon({ className, onClick, label }: Props) {
 }
 
 export default RemoveIcon;
-
-RemoveIcon.defaultProps = {
-  className: '',
-  onClick: () => {},
-  label: 'X 아이콘',
-};

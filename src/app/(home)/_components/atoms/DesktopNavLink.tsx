@@ -13,11 +13,11 @@ type Props = {
 };
 
 export default function DesktopNavLink({
-  className,
+  className = '',
   href,
   children,
   innerText,
-  label,
+  label = '경로 이동',
 }: Props) {
   const segment = usePathname();
 
@@ -38,8 +38,3 @@ export default function DesktopNavLink({
     </li>
   );
 }
-
-DesktopNavLink.defaultProps = {
-  className: '',
-  label: '경로 이동',
-};
