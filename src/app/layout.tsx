@@ -4,7 +4,7 @@ import './globals.css';
 import MSWComponent from './_components/utils/MSWComponent';
 
 export const viewport:Viewport = {
-  themeColor: '#ffffff',
+  themeColor: '#3A3A3B',
   width: 'device-width',
   initialScale: 1,
   minimumScale: 1,
