@@ -2751,6 +2751,43 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@npm:5.35.1":
+  version: 5.35.1
+  resolution: "@tanstack/query-core@npm:5.35.1"
+  checksum: 10c0/c991efeb29ec42f9aadf43130dac5e4e9e0651880ef96e0cb5f0dc3224b9b919b34f0e4af53231a7de32582aa7ba801ed6683ed7448e41e7b2a344803f08f3fe
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-devtools@npm:5.32.1":
+  version: 5.32.1
+  resolution: "@tanstack/query-devtools@npm:5.32.1"
+  checksum: 10c0/ad13f04641cae4c6ac70094d4979a5b1cbf3dc7a4795fce6847eb645ba06bd9e0e7057af3204c5ee9170c011290504d0edf26a8cdb920a65c4b1bb97bcbe037a
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query-devtools@npm:^5.35.1":
+  version: 5.35.1
+  resolution: "@tanstack/react-query-devtools@npm:5.35.1"
+  dependencies:
+    "@tanstack/query-devtools": "npm:5.32.1"
+  peerDependencies:
+    "@tanstack/react-query": ^5.35.1
+    react: ^18.0.0
+  checksum: 10c0/030ed59d06824fa08d676855c1d008ded16bbc76ad4cf0fb375cacc36da4dfd3bc72b315a74f3570db7795a84601a7059d97520e1247d0084df0e1677dde198d
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^5.35.1":
+  version: 5.35.1
+  resolution: "@tanstack/react-query@npm:5.35.1"
+  dependencies:
+    "@tanstack/query-core": "npm:5.35.1"
+  peerDependencies:
+    react: ^18.0.0
+  checksum: 10c0/80b3d4e295b05171e34f522c1856bcd561c58963e7661ae2340f3406a3097b7c9896d4f67005876c634ce1d808791498a987b200f00341e6df9fcc862060e6ad
+  languageName: node
+  linkType: hard
+
 "@trysound/sax@npm:0.2.0":
   version: 0.2.0
   resolution: "@trysound/sax@npm:0.2.0"
@@ -3566,6 +3603,8 @@ __metadata:
   dependencies:
     "@mswjs/http-middleware": "npm:^0.10.1"
     "@svgr/webpack": "npm:^8.1.0"
+    "@tanstack/react-query": "npm:^5.35.1"
+    "@tanstack/react-query-devtools": "npm:^5.35.1"
     "@types/canvas-confetti": "npm:^1.6.4"
     "@types/cors": "npm:^2"
     "@types/express": "npm:^4"
@@ -3593,6 +3632,7 @@ __metadata:
     prettier: "npm:^3.2.5"
     react: "npm:^18"
     react-dom: "npm:^18"
+    react-intersection-observer: "npm:^9.10.2"
     sharp: "npm:^0.33.3"
     swiper: "npm:^11.1.1"
     tailwindcss: "npm:^3.3.0"
@@ -7672,6 +7712,19 @@ __metadata:
   peerDependencies:
     react: ^18.2.0
   checksum: 10c0/66dfc5f93e13d0674e78ef41f92ed21dfb80f9c4ac4ac25a4b51046d41d4d2186abc915b897f69d3d0ebbffe6184e7c5876f2af26bfa956f179225d921be713a
+  languageName: node
+  linkType: hard
+
+"react-intersection-observer@npm:^9.10.2":
+  version: 9.10.2
+  resolution: "react-intersection-observer@npm:9.10.2"
+  peerDependencies:
+    react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+  checksum: 10c0/e2224de16ed5617a7e75f0644abebd5668f4ccc78e9a210ae4b0307d8f306719fce8a7e3e1a4aec0f815b954934028e6a9d14cd70e50f11a603e392dce0450a4
   languageName: node
   linkType: hard
 
