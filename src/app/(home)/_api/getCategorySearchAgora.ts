@@ -26,7 +26,8 @@ Partial<number>> = async ({ queryKey, pageParam = 0 }) => {
     throw new Error('Network response was not ok');
   }
 
-  const data = res.json();
+  const result = res.json().then((data) => data.response.agoras);
+  console.log(result);
 
-  return data;
+  return result;
 };
