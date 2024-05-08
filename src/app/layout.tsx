@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import React from 'react';
 import './globals.css';
 import MSWComponent from './_components/utils/MSWComponent';
+import RQProvider from './_components/utils/RQProvider';
 
 export const viewport:Viewport = {
   themeColor: '#3A3A3B',
@@ -33,7 +34,9 @@ export default function RootLayout({
       <link rel="manifest" href="/manifest.json" />
       <body className="lg:flex scrollbar-hide overflow-x-hidden justify-center items-start w-full dark:bg-dark-bg-light">
         <MSWComponent />
-        {children}
+        <RQProvider>
+          {children}
+        </RQProvider>
       </body>
     </html>
   );
