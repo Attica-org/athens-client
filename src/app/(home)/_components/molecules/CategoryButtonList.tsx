@@ -20,6 +20,10 @@ export default function CategoryButtonList() {
     const newSearchParams = new URLSearchParams(searchParams);
 
     newSearchParams.set('category', AGORACATEGORY[selectedCategoryId].innerText);
+
+    if (newSearchParams.get('status') === null) {
+      newSearchParams.set('status', 'active');
+    }
     router.replace(`/?${newSearchParams.toString()}`);
   }, [router, searchParams, selectedCategoryId]);
 

@@ -6,8 +6,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 type Status = 'active' | 'closed';
 
 export default function AgoraStatusTab() {
-  const [status, setStatus] = useState<Status>('active');
   const searchParams = useSearchParams();
+  const [status, setStatus] = useState<Status>(searchParams.get('status') as Status || 'active');
   const router = useRouter();
 
   const changeParams = useCallback(() => {
@@ -16,15 +16,13 @@ export default function AgoraStatusTab() {
     router.replace(`/?${newSearchParams.toString()}`);
   }, [router, searchParams, status]);
 
-  useEffect(() => {
-    changeParams();
-  }, [changeParams]);
-
   const changeStatus = (state: Status) => {
     setStatus(state);
-
-    changeParams();
   };
+
+  useEffect(() => {
+    changeParams();
+  }, [status, changeParams]);
 
   return (
     <nav className="flex flex-row justify-around items-center h-2rem w-full text-xs pl-5 pr-5 dark:text-white">
