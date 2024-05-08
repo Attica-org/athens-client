@@ -3,11 +3,14 @@ import AgoraStatus from '../atoms/AgoraStatus';
 import AgoraStatusTab from '../atoms/AgoraStatusTab';
 import PageTitle from '../atoms/PageTitle';
 import SearchBar from '../atoms/SearchBar';
-import AgoraList from '../molecules/AgoraList';
 import CategoryButtonList from '../molecules/CategoryButtonList';
 // import SearchAgoraList from '../organisms/SearchAgoraList';
 
-export default function Main() {
+type Props = {
+  children: React.ReactNode,
+};
+
+export default function Main({ children }: Props) {
   return (
     <section className="flex flex-col flex-1 h-dvh max-lg:pb-3rem min-w-270 flex-grow max-width-screen dark:bg-dark-bg-light">
       <header className="p-1rem pb-0 relative min-w-270">
@@ -33,7 +36,7 @@ export default function Main() {
           className="flex flex-1 flex-col p-5 pt-3 pb-5rem justify-start items-center"
         >
           {/* <SearchAgoraList /> */}
-          <AgoraList />
+          {children}
         </section>
       </main>
     </section>
