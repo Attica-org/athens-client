@@ -9,7 +9,7 @@ type Props = {
 export default function Home({ searchParams }: Props) {
   return (
     <Main>
-      {searchParams.cat && <AgoraList searchParams={searchParams} />}
+      <AgoraList searchParams={searchParams} />
     </Main>
   );
 }
