@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 type Status = 'active' | 'closed';
 
@@ -10,19 +10,27 @@ export default function AgoraStatusTab() {
   const [status, setStatus] = useState<Status>(searchParams.get('st') as Status || 'active');
   const router = useRouter();
 
-  const changeParams = useCallback(() => {
+  const changeParams = useCallback((state: Status) => {
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('st', status);
-    router.replace(`/?${newSearchParams.toString()}`);
-  }, [router, searchParams, status]);
+
+    newSearchParams.set('st', state);
+
+    const searchQuery = newSearchParams.get('q');
+
+    if (searchQuery) {
+      router.replace(`/search?${newSearchParams.toString()}`);
+    } else {
+      router.replace(`/?${newSearchParams.toString()}`);
+    }
+  }, [router, searchParams]);
 
   const changeStatus = (state: Status) => {
-    setStatus(state);
+    setStatus(() => {
+      const nextStatus = state;
+      changeParams(nextStatus);
+      return nextStatus;
+    });
   };
-
-  useEffect(() => {
-    changeParams();
-  }, [status, changeParams]);
 
   return (
     <nav className="flex flex-row justify-around items-center h-2rem w-full text-xs pl-5 pr-5 dark:text-white">

@@ -4,22 +4,30 @@ import RemoveIcon from '@/assets/icons/RemoveIcon';
 import SearchIcon from '@/assets/icons/SearchIcon';
 import { useSearchStore } from '@/store/search';
 import { useRouter } from 'next/navigation';
-import React, { ChangeEventHandler } from 'react';
+import React, { ChangeEventHandler, useState } from 'react';
 
 export default function SearchBar() {
   const { search, setSearch, reset } = useSearchStore();
+  const [searchText, setSearchText] = useState<string>(search || '');
   const router = useRouter();
 
   const removeInputText = () => {
+    setSearch('');
     reset();
   };
 
   const changeInputText: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setSearch(e.target.value);
+    setSearchText(e.target.value);
   };
 
   const handleSearch = () => {
-    router.push(`/search?q=${search}&st=active`);
+    setSearch(searchText);
+
+    if (!searchText) {
+      router.push('/');
+    } else {
+      router.push(`/search?q=${searchText}&st=active`);
+    }
   };
 
   return (
@@ -33,7 +41,7 @@ export default function SearchBar() {
           type="text"
           className="w-full text-sm bg-athens-gray border-0 focus:outline-none pl-1rem placeholder:font-normal placeholder:text-athens-gray-thick dark:bg-dark-light-300 dark:placeholder:text-white dark:placeholder:text-opacity-85 dark:text-white"
           placeholder="검색"
-          value={search}
+          value={searchText}
           onChange={changeInputText}
         />
       </form>
