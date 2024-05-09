@@ -3,6 +3,8 @@
 import React, { KeyboardEventHandler } from 'react';
 import { useRouter } from 'next/navigation';
 import { Agora } from '@/app/model/Agora';
+import { formatDistanceToNow } from 'date-fns';
+import { ko } from 'date-fns/locale';
 import UserImage from '../../../_components/atoms/UserImage';
 
 type Props = {
@@ -24,6 +26,11 @@ export default function SearchAgora({ agora }: Props) {
     if (e.key === 'Enter') {
       enterAgora();
     }
+  };
+
+  const getRelativeTime = () => {
+    const relativeDate = formatDistanceToNow(createdAt as string, { addSuffix: true, locale: ko });
+    return relativeDate;
   };
 
   return (
@@ -61,7 +68,7 @@ export default function SearchAgora({ agora }: Props) {
                 </span>
               </span>
             </div>
-            <div className="text-xs">{createdAt}</div>
+            <div className="text-xs dark:text-dark-line">{getRelativeTime()}</div>
           </div>
         </div>
         <div className="relative">
