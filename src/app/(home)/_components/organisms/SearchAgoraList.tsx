@@ -8,7 +8,7 @@ import SearchAgora from '../molecules/SearchAgora';
 import { getAgoraKeywordSearch } from '../../_api/getAgoraKeywordSearch';
 
 type Props = {
-  searchParams: { st: string, cat: string, q?: string }
+  searchParams: { st?: string, cat?: string, q?: string }
 };
 
 export default function SearchAgoraList({ searchParams }: Props) {

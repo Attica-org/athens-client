@@ -8,7 +8,7 @@ import Agora from '../atoms/Agora';
 import { getAgoraCategorySearch } from '../../_api/getAgoraCategorySearch';
 
 type Props = {
-  searchParams: { st: string, cat: string, q?: string },
+  searchParams: { st?: string, cat?: string, q?: string },
 };
 
 export default function AgoraList({ searchParams }: Props) {
