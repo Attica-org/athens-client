@@ -2,21 +2,23 @@ import { Agora } from '@/app/model/Agora';
 import { QueryFunction } from '@tanstack/react-query';
 
 type SearchParams = {
-  status: string,
-  category: string,
+  st: string,
+  cat: string,
+  q?: string,
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const getCategorySearchAgora:QueryFunction<
+export const getAgoraCategorySearch:QueryFunction<
 Agora[],
 [_1: string, _2: string, _3: string, searchParams: SearchParams],
 Partial<number>> = async ({ queryKey, pageParam = 0 }) => {
   const searchParams = queryKey[3];
 
   const urlSearchParams = new URLSearchParams(searchParams);
+  console.log('agora', urlSearchParams.toString());
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/agoras?${urlSearchParams.toString()}&cursor=${pageParam}`, {
     next: {
-      tags: ['agoras', 'search', 'category', searchParams.category, searchParams.status],
+      tags: ['agoras', 'search', 'category', searchParams.cat, searchParams.st],
     },
     credentials: 'include',
     cache: 'no-store',
@@ -27,7 +29,6 @@ Partial<number>> = async ({ queryKey, pageParam = 0 }) => {
   }
 
   const result = res.json().then((data) => data.response.agoras);
-  console.log(result);
 
   return result;
 };
