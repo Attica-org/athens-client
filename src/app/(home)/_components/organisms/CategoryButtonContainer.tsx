@@ -7,7 +7,7 @@ import CategoryButtonList from '../molecules/CategoryButtonList';
 export default function CategoryButtonContainer() {
   const { search } = useSearchStore();
 
-  if (search) {
+  if (!search) {
     return (
       <CategoryButtonList />
     );
