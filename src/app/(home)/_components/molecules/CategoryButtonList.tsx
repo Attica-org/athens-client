@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import AGORACATEGORY from '@/constants/agoraCategory';
 import Swiper from 'swiper';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchStore } from '@/store/search';
 import CategoryButton from '../atoms/CategoryButton';
 
 import 'swiper/css';
@@ -11,21 +12,20 @@ import 'swiper/css/free-mode';
 import 'swiper/css/mousewheel';
 
 export default function CategoryButtonList() {
-  const search = '검색';
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+  const search = useSearchStore();
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const changeParams = useCallback(() => {
+  const changeParams = useCallback((id: number) => {
     const newSearchParams = new URLSearchParams(searchParams);
 
-    newSearchParams.set('category', AGORACATEGORY[selectedCategoryId].innerText);
+    newSearchParams.set('cat', AGORACATEGORY[id].innerText);
+    newSearchParams.delete('q');
+    search.reset();
 
-    if (newSearchParams.get('status') === null) {
-      newSearchParams.set('status', 'active');
-    }
     router.replace(`/?${newSearchParams.toString()}`);
-  }, [router, searchParams, selectedCategoryId]);
+  }, [router, searchParams, search]);
 
   useEffect(() => {
     const swiper = new Swiper('.swiper', {
@@ -48,17 +48,15 @@ export default function CategoryButtonList() {
     };
   }, []);
 
-  useEffect(() => {
-    changeParams();
-  }, [changeParams]);
-
   const selectCategory = (id: number) => {
-    changeParams();
+    setSelectedCategoryId(() => {
+      const newState = id;
+      changeParams(id);
 
-    setSelectedCategoryId(id);
+      return newState;
+    });
   };
 
-  if (!search) return null;
   return (
     <div className="w-full mt-10 mb-0 pb-0 pl-0.5rem pr-0.5rem flex text-nowrap overflow-hidden ml-5">
       <div className="swiper pr-1rem w-full">
