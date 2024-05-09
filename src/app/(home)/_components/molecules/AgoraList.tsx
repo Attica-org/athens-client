@@ -5,10 +5,10 @@ import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
 import { Agora as IAgora } from '@/app/model/Agora';
 import { useInView } from 'react-intersection-observer';
 import Agora from '../atoms/Agora';
-import { getCategorySearchAgora } from '../../_api/getCategorySearchAgora';
+import { getAgoraCategorySearch } from '../../_api/getAgoraCategorySearch';
 
 type Props = {
-  searchParams: { status: string, category: string },
+  searchParams: { st: string, cat: string, q?: string },
 };
 
 export default function AgoraList({ searchParams }: Props) {
@@ -16,7 +16,7 @@ export default function AgoraList({ searchParams }: Props) {
     data, hasNextPage, fetchNextPage, isFetching,
   } = useInfiniteQuery<IAgora[], Object, InfiniteData<IAgora[]>, [_1: string, _2: string, _3: string, Props['searchParams']], number>({
     queryKey: ['agoras', 'search', 'category', searchParams],
-    queryFn: getCategorySearchAgora,
+    queryFn: getAgoraCategorySearch,
     staleTime: 60 * 1000,
     gcTime: 500 * 1000,
     initialPageParam: 0,
