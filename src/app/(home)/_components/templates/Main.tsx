@@ -3,8 +3,7 @@ import AgoraStatus from '../atoms/AgoraStatus';
 import AgoraStatusTab from '../atoms/AgoraStatusTab';
 import PageTitle from '../atoms/PageTitle';
 import SearchBar from '../atoms/SearchBar';
-import CategoryButtonList from '../molecules/CategoryButtonList';
-// import SearchAgoraList from '../organisms/SearchAgoraList';
+import CategoryButtonContainer from '../organisms/CategoryButtonContainer';
 
 type Props = {
   children: React.ReactNode,
@@ -28,14 +27,13 @@ export default function Main({ children }: Props) {
           </div>
           <div className="w-full pb-0.5rem">
             <AgoraStatusTab />
-            <CategoryButtonList />
+            <CategoryButtonContainer />
           </div>
         </section>
         <section
           aria-label="아고라 리스트"
           className="flex flex-1 flex-col p-5 pt-3 pb-5rem justify-start items-center"
         >
-          {/* <SearchAgoraList /> */}
           {children}
         </section>
       </main>

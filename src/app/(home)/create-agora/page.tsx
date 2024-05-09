@@ -1,12 +1,12 @@
 'use client';
 
-import CategoryButtonList from '@/app/(home)/_components/molecules/CategoryButtonList';
 import NotificationIcon from '@/assets/icons/NotificationIcon';
 import React from 'react';
 import PageTitle from '@/app/(home)/_components/atoms/PageTitle';
 import AgoraPointColorList from '@/app/(home)/_components/molecules/AgoraPointColorList';
 import ParticipantCapacitySetter from '../_components/molecules/ParticipantCapacitySetter';
 import DiscussionDurationSetter from '../_components/molecules/DiscussionDurationSetter';
+import CategoryButtonContainer from '../_components/organisms/CategoryButtonContainer';
 
 export default function CreateAgora() {
   return (
@@ -30,7 +30,7 @@ export default function CreateAgora() {
               <div role="region" className="text-md mb-10 under-mobile:text-sm">
                 아고라 카테고리 분류
               </div>
-              <CategoryButtonList />
+              <CategoryButtonContainer />
             </section>
             <section className="mt-1.5rem w-full">
               <div role="region" className="text-md mb-10 under-mobile:text-sm">
