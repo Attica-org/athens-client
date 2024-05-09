@@ -7,5 +7,6 @@ export interface Agora {
     cons: number,
     observer: number,
   },
+  createdAt?: string,
   status: string,
 }
