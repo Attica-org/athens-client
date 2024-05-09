@@ -2,8 +2,8 @@ import { Agora } from '@/app/model/Agora';
 import { QueryFunction } from '@tanstack/react-query';
 
 type SearchParams = {
-  st: string,
-  cat: string,
+  st?: string,
+  cat?: string,
   q?: string,
 };
 
@@ -12,10 +12,11 @@ export const getAgoraCategorySearch:QueryFunction<
 Agora[],
 [_1: string, _2: string, _3: string, searchParams: SearchParams],
 Partial<number>> = async ({ queryKey, pageParam = 0 }) => {
-  const searchParams = queryKey[3];
+  const [, , , { st = 'active', cat = '전체' }] = queryKey;
+  const searchParams = { st, cat };
 
   const urlSearchParams = new URLSearchParams(searchParams);
-  console.log('agora', urlSearchParams.toString());
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/agoras?${urlSearchParams.toString()}&cursor=${pageParam}`, {
     next: {
       tags: ['agoras', 'search', 'category', searchParams.cat, searchParams.st],
