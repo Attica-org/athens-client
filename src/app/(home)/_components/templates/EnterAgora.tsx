@@ -4,20 +4,41 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PROFLELIST from '@/constants/userProfileImage';
 import UserImage from '@/app/_components/atoms/UserImage';
+import { useMutation } from '@tanstack/react-query';
+import { useAgora } from '@/store/agora';
 import ModalPosSelectBtn from '../atoms/ModalPosSelectBtn';
 import ModalBase from '../../../_components/molecules/ModalBase';
+import { postEnterAgoraInfo } from '../../_api/postEnterAgoraInfo';
 
 type ProfileImageName = {
   id: number;
   name: string;
 };
 
-type Position = 'con' | 'pro' | 'watcher';
+type Position = 'con' | 'pro' | 'observer';
 
 export default function EnterAgora() {
   const [selectedProfileImage, setSelectedProfileImage] = useState<ProfileImageName>({ id: 1, name: '도끼 든 회색 곰' });
-  const [selectedPosition, setSelectedPosition] = useState<Position>('watcher');
+  const [selectedPosition, setSelectedPosition] = useState<Position>('observer');
   const router = useRouter();
+  const { selectedAgora } = useAgora();
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const info = {
+        ...selectedProfileImage,
+        role: selectedPosition,
+      };
+      return postEnterAgoraInfo({ info, agoraId: selectedAgora.id });
+    },
+    onSuccess: async () => {
+      router.push(`/agora/${selectedAgora.id}`);
+    },
+    onError: (error) => {
+      console.dir(error);
+      alert('문제가 발생했습니다. 다시 시도해주세요.');
+    },
+  });
 
   const selectProfile = (profile: ProfileImageName):void => {
     setSelectedProfileImage(profile);
@@ -28,10 +49,10 @@ export default function EnterAgora() {
   };
 
   const enterAgora = () => {
-    router.push('/agora');
+    mutation.mutate();
   };
 
-  const handleKeyDownEnterAgora = (
+  const handleKeyDownSetProfile = (
     e: React.KeyboardEvent<HTMLElement>,
     profile: ProfileImageName,
   ) => {
@@ -43,7 +64,7 @@ export default function EnterAgora() {
   return (
     <ModalBase title="아고라 입장" removeIcon animation={false}>
       <p className="text-base p-1rem pt-0.5rem pb-1.5rem flex justify-center items-cener text-center break-keep font-medium">
-        국가 발전에 유능한 독재자가 필요한 시기가 있다.
+        {selectedAgora.title}
       </p>
       <div className="flex flex-col justiy-start items-center">
         <div className="flex justify-start items-center mb-10">
@@ -63,7 +84,7 @@ export default function EnterAgora() {
                 tabIndex={0}
                 aria-label={profileImageName.name}
                 onClick={() => selectProfile(profileImageName)}
-                onKeyDown={(e) => handleKeyDownEnterAgora(e, profileImageName)}
+                onKeyDown={(e) => handleKeyDownSetProfile(e, profileImageName)}
               >
                 <UserImage className="rounded-full w-45 h-45 bg-white" name={profileImageName.name} w={45} h={45} />
               </div>
@@ -78,7 +99,7 @@ export default function EnterAgora() {
         <ModalPosSelectBtn selectedPosition={selectedPosition} selectPosition={selectPosition} position="con" color="red">
           반대
         </ModalPosSelectBtn>
-        <ModalPosSelectBtn selectedPosition={selectedPosition} selectPosition={selectPosition} position="watcher" color="athens-main">
+        <ModalPosSelectBtn selectedPosition={selectedPosition} selectPosition={selectPosition} position="observer" color="athens-main">
           관찰자
         </ModalPosSelectBtn>
         <span className="pl-6 text-xs">로 입장</span>
