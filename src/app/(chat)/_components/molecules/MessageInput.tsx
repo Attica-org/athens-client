@@ -45,8 +45,8 @@ export default function MessageInput() {
           type="text"
           value={message}
           onChange={handleMessage}
-          placeholder=""
-          className="placeholder:text-athens-gray-thick dark:placeholder:text-white dark:placeholder:text-opacity-85 dark:text-opacity-85 dark:text-white text-base w-full focus-visible:outline-none dark:bg-dark-light-300"
+          placeholder="메시지 보내기"
+          className="placeholder:text-athens-gray-thick dark:placeholder:text-dark-light-400 dark:placeholder:text-opacity-85 dark:text-opacity-85 dark:text-white text-base w-full focus-visible:outline-none dark:bg-dark-light-300"
         />
       </form>
       <button
