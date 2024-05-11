@@ -71,4 +71,25 @@ export const handlers = [
       },
     });
   }),
+  http.post('/api/v1/agoras/:agoraId/participants', async () => {
+    delay(500);
+
+    return HttpResponse.json({
+      success: true,
+      response: {
+        participant_id: '5f9f1b9b9c9d1b0b8c8b4567',
+        agoraId: '5f9f1b9b9c9d1b0b8c8b4568',
+        userId: 'abcdef1234567890',
+        role: 'pros',
+      },
+      // {
+      //   "success": false,
+      //   "response": null,
+      //   "error": {
+      //     "code": "INVALID_ROLE",
+      //     "message": "Invalid role selected. Please choose from 'pros', 'cons', or 'observer'."
+      //   }
+      // }
+    });
+  }),
 ];
