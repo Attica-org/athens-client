@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Agora } from '@/app/model/Agora';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { useAgora } from '@/store/agora';
 import UserImage from '../../../_components/atoms/UserImage';
 
 type Props = {
@@ -16,9 +17,11 @@ export default function SearchAgora({ agora }: Props) {
   const {
     id, agoraTitle, agoraColor, participants, createdAt, status,
   } = agora;
+  const { setSelectedAgora } = useAgora();
 
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
   const enterAgora = () => {
+    setSelectedAgora({ id, title: agoraTitle });
     router.push('/flow/enter-agora');
   };
 

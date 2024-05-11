@@ -1,6 +1,7 @@
 'use client';
 
 import { Agora as IAgora } from '@/app/model/Agora';
+import { useAgora } from '@/store/agora';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -13,9 +14,11 @@ export default function Agora({ agora }: Props) {
     id, agoraTitle, agoraColor, participants, status,
   } = agora;
   const router = useRouter();
+  const { setSelectedAgora } = useAgora();
 
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
   const enterAgora = () => {
+    setSelectedAgora({ id, title: agoraTitle });
     router.push('/flow/enter-agora');
   };
 
