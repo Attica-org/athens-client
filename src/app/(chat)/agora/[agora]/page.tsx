@@ -3,7 +3,7 @@ import MessageInput from '@/app/(chat)/_components/molecules/MessageInput';
 import Message from '@/app/(chat)/_components/molecules/Message';
 import AgoraUserSide from '@/app/(chat)/_components/organisms/AgoraUserSide';
 import React from 'react';
-import ChatNotification from '../_components/atoms/ChatNotification';
+import ChatNotification from '../../_components/atoms/ChatNotification';
 
 export default function Page() {
   return (
