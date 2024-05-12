@@ -92,4 +92,14 @@ export const handlers = [
       // }
     });
   }),
+  http.post('/api/v1/agoras', async () => {
+    delay(500);
+
+    return HttpResponse.json({
+      success: true,
+      response: {
+        id: 2,
+      },
+    });
+  }),
 ];
