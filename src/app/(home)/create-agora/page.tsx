@@ -1,12 +1,12 @@
-'use client';
-
 import NotificationIcon from '@/assets/icons/NotificationIcon';
 import React from 'react';
 import PageTitle from '@/app/(home)/_components/atoms/PageTitle';
 import AgoraPointColorList from '@/app/(home)/_components/molecules/AgoraPointColorList';
 import ParticipantCapacitySetter from '../_components/molecules/ParticipantCapacitySetter';
 import DiscussionDurationSetter from '../_components/molecules/DiscussionDurationSetter';
-import CategoryButtonContainer from '../_components/organisms/CategoryButtonContainer';
+import AgoraTitleInput from './_component/AgoraTitleInput';
+import CreateAgoraBtn from './_component/CreateAgoraBtn';
+import CategoryButtonList from '../_components/molecules/CategoryButtonList';
 
 export default function CreateAgora() {
   return (
@@ -19,18 +19,15 @@ export default function CreateAgora() {
       </header>
       <main className="flex h-dvh flex-1 flex-grow min-w-270 justify-between items-stretch p-1rem pt-0 under-mobile:pl-1rem under-mobile:pr-1rem flex-col">
         <div className="flex flex-col w-full under-mobile:mt-10 dark:text-white dark:text-opacity-85">
-          <input
-            aria-label="생성할 아고라 주제 입력창"
-            type="text"
-            placeholder="토론 할 주제를 입력해주세요."
-            className="placeholder:text-athens-gray-thick w-full p-0.5rem text-sm border-1 border-gray-300 rounded-md dark:bg-dark-light-300 dark:placeholder:text-white dark:placeholder:text-opacity-85 dark:border-0 dark:text-white"
-          />
           <div className="flex justify-around flex-col w-full">
+            <section>
+              <AgoraTitleInput />
+            </section>
             <section className="mt-1.5rem w-full">
               <div role="region" className="text-md mb-10 under-mobile:text-sm">
                 아고라 카테고리 분류
               </div>
-              <CategoryButtonContainer />
+              <CategoryButtonList />
             </section>
             <section className="mt-1.5rem w-full">
               <div role="region" className="text-md mb-10 under-mobile:text-sm">
@@ -58,15 +55,7 @@ export default function CreateAgora() {
             </section>
           </div>
         </div>
-        <div className="max-h-5rem w-full">
-          <button
-            type="button"
-            aria-label="아고라 생성하기"
-            className="w-full bg-athens-main text-white font-semibold pt-10 pb-10 mt-1.5rem under-mobile:pt-10 under-mobile:pb-10 under-mobile:mt-1rem text-base rounded-lg"
-          >
-            아고라 생성
-          </button>
-        </div>
+        <CreateAgoraBtn />
       </main>
     </section>
   );
