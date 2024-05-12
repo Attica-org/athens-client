@@ -14,11 +14,17 @@ import 'swiper/css/free-mode';
 import 'swiper/css/mousewheel';
 
 function CategoryButtonList() {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
   const search = useSearchStore();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+  const catSearchParams = searchParams.get('cat');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number>(
+    catSearchParams
+      ? AGORACATEGORY.findIndex((category) => category.innerText === catSearchParams)
+      : 0,
+  );
+
   const { setCategory } = useCreateAgora(
     useShallow((state) => ({ setCategory: state.setCategory })),
   );
@@ -61,8 +67,9 @@ function CategoryButtonList() {
       if (pathname === '/') {
         changeParams(id);
       }
-
-      setCategory(AGORACATEGORY[id].value);
+      if (pathname === '/create-agora') {
+        setCategory(AGORACATEGORY[id].value);
+      }
 
       return newState;
     });
