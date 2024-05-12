@@ -6,7 +6,7 @@ type Props = {
   children?: React.ReactNode;
 };
 
-export default function PageTitle({ title, desc, children = null }: Props) {
+function PageTitle({ title, desc, children = null }: Props) {
   return (
     <>
       <h1
@@ -24,3 +24,5 @@ export default function PageTitle({ title, desc, children = null }: Props) {
     </>
   );
 }
+
+export default React.memo(PageTitle);

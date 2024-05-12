@@ -5,7 +5,7 @@ import React, { useCallback, useState } from 'react';
 
 type Status = 'active' | 'closed';
 
-export default function AgoraStatusTab() {
+function AgoraStatusTab() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<Status>(searchParams.get('st') as Status || 'active');
   const router = useRouter();
@@ -57,3 +57,5 @@ export default function AgoraStatusTab() {
     </nav>
   );
 }
+
+export default React.memo(AgoraStatusTab);

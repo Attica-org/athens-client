@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import React, { ChangeEventHandler, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
-export default function SearchBar() {
+function SearchBar() {
   const { search, setSearch, reset } = useSearchStore(
     useShallow((state) => ({
       search: state.search,
@@ -62,3 +62,5 @@ export default function SearchBar() {
     </div>
   );
 }
+
+export default React.memo(SearchBar);
