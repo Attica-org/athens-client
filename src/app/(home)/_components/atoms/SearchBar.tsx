@@ -5,9 +5,16 @@ import SearchIcon from '@/assets/icons/SearchIcon';
 import { useSearchStore } from '@/store/search';
 import { useRouter } from 'next/navigation';
 import React, { ChangeEventHandler, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function SearchBar() {
-  const { search, setSearch, reset } = useSearchStore();
+  const { search, setSearch, reset } = useSearchStore(
+    useShallow((state) => ({
+      search: state.search,
+      setSearch: state.setSearch,
+      reset: state.reset,
+    })),
+  );
   const [searchText, setSearchText] = useState<string>(search || '');
   const router = useRouter();
 
