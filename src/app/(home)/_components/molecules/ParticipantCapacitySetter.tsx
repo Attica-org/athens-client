@@ -2,16 +2,17 @@
 
 import React, { ChangeEventHandler, useState } from 'react';
 import {
-  DEFAULT_PARTICIPANTS_CNT,
   MAX_PARTICIPANTS_CNT,
   MIN_PARTICIPANTS_CNT,
 } from '@/constants/createAgora';
+import { useCreateAgora } from '@/store/create';
+import { useShallow } from 'zustand/react/shallow';
 import ControlNumberInput from '../atoms/ControlNumberInput';
 
-export default function ParticipantCapacitySetter() {
+function ParticipantCapacitySetter() {
   const [message, setMessage] = useState<string | null>('');
-  const [participants, setParticipants] = useState<number>(
-    DEFAULT_PARTICIPANTS_CNT,
+  const { capacity, setCapacity } = useCreateAgora(
+    useShallow((state) => ({ capacity: state.capacity, setCapacity: state.setCapacity })),
   );
 
   const handleMessage = (value: number, state?: 'INCREASE' | 'DECREASE') => {
@@ -26,7 +27,7 @@ export default function ParticipantCapacitySetter() {
 
     setMessage(null);
 
-    setParticipants(value);
+    setCapacity(value);
   };
 
   const inputParticipants: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -37,10 +38,10 @@ export default function ParticipantCapacitySetter() {
   const clickParticipantsBtn = (action: 'DECLEASE' | 'INCREASE') => {
     switch (action) {
       case 'DECLEASE':
-        handleMessage(participants - 1);
+        handleMessage(capacity - 1);
         break;
       case 'INCREASE':
-        handleMessage(participants + 1);
+        handleMessage(capacity + 1);
         break;
       default:
         break;
@@ -52,7 +53,7 @@ export default function ParticipantCapacitySetter() {
       <div className="p-3 flex justify-between items-center">
         <ControlNumberInput
           label="찬성 / 반대"
-          value={participants}
+          value={capacity}
           handleChange={inputParticipants}
           handleButtonClick={clickParticipantsBtn}
           increaseLabel="참여 인원 증가"
@@ -74,3 +75,5 @@ export default function ParticipantCapacitySetter() {
     </div>
   );
 }
+
+export default React.memo(ParticipantCapacitySetter);

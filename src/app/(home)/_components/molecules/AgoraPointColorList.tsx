@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useCreateAgora } from '@/store/create';
+import { useShallow } from 'zustand/react/shallow';
 import AgoraPointColor from '../atoms/AgoraPointColor';
 
 const COLOR = [
@@ -12,11 +14,13 @@ const COLOR = [
   { value: 'bg-agora-point-color6', label: '남색' },
 ];
 
-export default function AgoraPointColorList() {
+function AgoraPointColorList() {
   const [isCheck, setIsCheck] = useState<number>(0);
+  const { setColor } = useCreateAgora(useShallow((state) => ({ setColor: state.setColor })));
 
   const selectColor = (id: number) => {
     setIsCheck(id);
+    setColor(COLOR[id].value);
   };
 
   return (
@@ -38,3 +42,5 @@ export default function AgoraPointColorList() {
     </div>
   );
 }
+
+export default React.memo(AgoraPointColorList);

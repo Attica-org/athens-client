@@ -3,19 +3,25 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import AGORACATEGORY from '@/constants/agoraCategory';
 import Swiper from 'swiper';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useSearchStore } from '@/store/search';
+import { useCreateAgora } from '@/store/create';
+import { useShallow } from 'zustand/react/shallow';
 import CategoryButton from '../atoms/CategoryButton';
 
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/mousewheel';
 
-export default function CategoryButtonList() {
+function CategoryButtonList() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
   const search = useSearchStore();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const router = useRouter();
+  const { setCategory } = useCreateAgora(
+    useShallow((state) => ({ setCategory: state.setCategory })),
+  );
 
   const changeParams = useCallback((id: number) => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -51,7 +57,12 @@ export default function CategoryButtonList() {
   const selectCategory = (id: number) => {
     setSelectedCategoryId(() => {
       const newState = id;
-      changeParams(id);
+
+      if (pathname === '/') {
+        changeParams(id);
+      }
+
+      setCategory(AGORACATEGORY[id].value);
 
       return newState;
     });
@@ -80,3 +91,5 @@ export default function CategoryButtonList() {
     </div>
   );
 }
+
+export default React.memo(CategoryButtonList);

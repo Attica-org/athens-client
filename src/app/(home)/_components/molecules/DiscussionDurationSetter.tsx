@@ -3,11 +3,15 @@
 import React, { ChangeEventHandler, useState } from 'react';
 import { DEFAULT_TIME, MIN_DISCUSSION_TIME, MIN_TIME_MESSAGE } from '@/constants/createAgora';
 import CheckIcon from '@/assets/icons/CheckIcon';
+import { useCreateAgora } from '@/store/create';
+import { useShallow } from 'zustand/react/shallow';
 
-export default function DiscussionDurationSetter() {
+function DiscussionDurationSetter() {
   const [message, setMessage] = useState<string | null>(null);
-  const [time, setTime] = useState<number | null>(DEFAULT_TIME);
   const [timeCheck, setTimeCheck] = useState<boolean>(false);
+  const { duration, setDuration } = useCreateAgora(
+    useShallow((state) => ({ duration: state.duration, setDuration: state.setDuration })),
+  );
 
   const handleAgoraTime: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = parseInt(e.target.value, 10);
@@ -17,15 +21,15 @@ export default function DiscussionDurationSetter() {
     } else {
       setMessage(null);
     }
-    setTime(value);
+    setDuration(value);
   };
 
   const handleNoTime = () => {
     if (timeCheck) {
-      setTime(DEFAULT_TIME);
+      setDuration(DEFAULT_TIME);
       setTimeCheck(false);
     } else {
-      setTime(null);
+      setDuration(null);
       setTimeCheck(true);
       setMessage(null);
     }
@@ -37,7 +41,7 @@ export default function DiscussionDurationSetter() {
         <input
           aria-label="토론 제한시간 입력창"
           type="number"
-          value={time || ''}
+          value={duration || ''}
           onChange={handleAgoraTime}
           disabled={timeCheck}
           className="input-number-hide focus-visible:outline-none text-sm mr-0.5rem text-center p-5 w-5rem border-1 border-athens-gray rounded-md dark:bg-dark-bg-light dark:border-gray-500"
@@ -70,3 +74,5 @@ export default function DiscussionDurationSetter() {
     </div>
   );
 }
+
+export default React.memo(DiscussionDurationSetter);
