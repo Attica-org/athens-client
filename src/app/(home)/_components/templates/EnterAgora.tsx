@@ -9,6 +9,7 @@ import { useAgora } from '@/store/agora';
 import ModalPosSelectBtn from '../atoms/ModalPosSelectBtn';
 import ModalBase from '../../../_components/molecules/ModalBase';
 import { postEnterAgoraInfo } from '../../_api/postEnterAgoraInfo';
+import Loading from '../../loading';
 
 type ProfileImageName = {
   id: number;
@@ -20,6 +21,7 @@ type Position = 'con' | 'pro' | 'observer';
 export default function EnterAgora() {
   const [selectedProfileImage, setSelectedProfileImage] = useState<ProfileImageName>({ id: 1, name: '도끼 든 회색 곰' });
   const [selectedPosition, setSelectedPosition] = useState<Position>('observer');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
   const { selectedAgora } = useAgora();
 
@@ -33,6 +35,7 @@ export default function EnterAgora() {
     },
     onSuccess: async () => {
       router.push(`/agora/${selectedAgora.id}`);
+      setIsLoading(false);
     },
     onError: (error) => {
       console.dir(error);
@@ -49,6 +52,7 @@ export default function EnterAgora() {
   };
 
   const enterAgora = () => {
+    setIsLoading(true);
     mutation.mutate();
   };
 
@@ -107,10 +111,11 @@ export default function EnterAgora() {
       <button
         type="button"
         aria-label="아고라 입장하기"
+        disabled={isLoading}
         onClick={enterAgora}
         className="mt-2rem text-sm bg-athens-main p-0.5rem w-full text-white rounded-lg"
       >
-        입장하기
+        {isLoading ? <Loading w="16" h="16" /> : '입장하기'}
       </button>
     </ModalBase>
   );

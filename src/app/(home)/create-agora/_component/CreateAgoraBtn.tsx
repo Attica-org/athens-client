@@ -6,6 +6,7 @@ import { useCreateAgora } from '@/store/create';
 import { useRouter } from 'next/navigation';
 import { useAgora } from '@/store/agora';
 import { postCreateAgora } from '../../_api/postCreateAgora';
+import Loading from '../../loading';
 
 type Agora = {
   title: string,
@@ -24,6 +25,7 @@ function CreateAgoraBtn() {
     duration: 60,
   });
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -39,6 +41,7 @@ function CreateAgoraBtn() {
       const { reset } = useCreateAgora.getState();
       reset();
 
+      setIsLoading(false);
       router.push('/flow/enter-agora');
     },
     onError: (error) => {
@@ -55,8 +58,9 @@ function CreateAgoraBtn() {
       title, category, color, capacity, duration,
     });
 
-    console.log('title', title);
     if (title.trim() === '') return;
+
+    setIsLoading(true);
     mutation.mutate();
   };
 
@@ -65,10 +69,11 @@ function CreateAgoraBtn() {
       <button
         onClick={handleClick}
         type="button"
+        disabled={isLoading}
         aria-label="아고라 생성하기"
         className="w-full bg-athens-main text-white font-semibold pt-10 pb-10 under-mobile:pt-10 under-mobile:pb-10 under-mobile:mt-1rem text-base rounded-lg"
       >
-        아고라 생성
+        {isLoading ? <Loading w="16" h="16" /> : '아고라 생성'}
       </button>
     </div>
   );
