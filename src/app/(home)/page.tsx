@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Main from './_components/templates/Main';
-import AgoraList from './_components/molecules/AgoraList';
+import SearchDeciderSuspense from './_components/templates/SearchDeciderSuspense';
 
 type Props = {
   searchParams: { st: string, cat: string, q?: string }
@@ -9,7 +9,9 @@ type Props = {
 export default function Home({ searchParams }: Props) {
   return (
     <Main>
-      <AgoraList searchParams={searchParams} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <SearchDeciderSuspense searchParams={searchParams} />
+      </Suspense>
     </Main>
   );
 }
