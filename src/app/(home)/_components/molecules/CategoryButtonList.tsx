@@ -48,7 +48,7 @@ function CategoryButtonList() {
       freeMode: true,
       grabCursor: true,
       slidesPerView: 'auto',
-      spaceBetween: 7,
+      spaceBetween: 0,
       keyboard: {
         enabled: true,
         onlyInViewport: false,
