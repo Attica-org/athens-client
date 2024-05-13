@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+import Loading from '@/app/_components/atoms/loading';
 import AgoraStatus from '../atoms/AgoraStatus';
 import AgoraStatusTab from '../atoms/AgoraStatusTab';
 import PageTitle from '../atoms/PageTitle';
 import SearchBar from '../atoms/SearchBar';
 import CategoryButtonContainer from '../organisms/CategoryButtonContainer';
+import SearchDeciderSuspense from '../organisms/SearchDeciderSuspense';
 
 type Props = {
-  children: React.ReactNode,
+  searchParams: { st: string, cat: string, q?: string }
 };
 
-export default function Main({ children }: Props) {
+export default function Main({ searchParams }: Props) {
   return (
     <section className="flex flex-col flex-1 h-dvh max-lg:pb-3rem min-w-270 flex-grow max-width-screen dark:bg-dark-bg-light">
       <header className="p-1rem pb-0 relative min-w-270">
@@ -34,7 +36,9 @@ export default function Main({ children }: Props) {
           aria-label="아고라 리스트"
           className="flex flex-1 flex-col p-5 pt-3 pb-5rem justify-start items-center"
         >
-          {children}
+          <Suspense fallback={<Loading />}>
+            <SearchDeciderSuspense searchParams={searchParams} />
+          </Suspense>
         </section>
       </main>
     </section>
