@@ -1,3 +1,5 @@
+import { revalidatePath } from 'next/cache';
+
 type Props = {
   title: string,
   category: string,
@@ -23,6 +25,8 @@ export const postCreateAgora = async (info: Props) => {
   if (!res.ok) {
     throw new Error('Network response was not ok');
   }
+
+  revalidatePath('/');
 
   const result = res.json().then((data) => data.response);
 
