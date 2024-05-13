@@ -4,9 +4,8 @@ import Main from '../../_components/templates/Main';
 
 export default function Page() {
   return (
-    <>
-      <Main />
+    <Main>
       <EnterAgora />
-    </>
+    </Main>
   );
 }
