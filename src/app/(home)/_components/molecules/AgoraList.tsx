@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
+import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { Agora as IAgora } from '@/app/model/Agora';
 import { useInView } from 'react-intersection-observer';
 import Agora from '../atoms/Agora';
@@ -14,7 +14,7 @@ type Props = {
 export default function AgoraList({ searchParams }: Props) {
   const {
     data, hasNextPage, fetchNextPage, isFetching,
-  } = useInfiniteQuery<IAgora[], Object, InfiniteData<IAgora[]>, [_1: string, _2: string, _3: string, Props['searchParams']], number>({
+  } = useSuspenseInfiniteQuery<IAgora[], Object, InfiniteData<IAgora[]>, [_1: string, _2: string, _3: string, Props['searchParams']], number>({
     queryKey: ['agoras', 'search', 'category', searchParams],
     queryFn: getAgoraCategorySearch,
     staleTime: 60 * 1000,
