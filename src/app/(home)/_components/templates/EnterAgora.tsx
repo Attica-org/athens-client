@@ -9,7 +9,7 @@ import { useAgora } from '@/store/agora';
 import ModalPosSelectBtn from '../atoms/ModalPosSelectBtn';
 import ModalBase from '../../../_components/molecules/ModalBase';
 import { postEnterAgoraInfo } from '../../_api/postEnterAgoraInfo';
-import Loading from '../../loading';
+import Loading from '../atoms/loading';
 
 type ProfileImageName = {
   id: number;
@@ -34,8 +34,8 @@ export default function EnterAgora() {
       return postEnterAgoraInfo({ info, agoraId: selectedAgora.id });
     },
     onSuccess: async () => {
-      router.push(`/agora/${selectedAgora.id}`);
       setIsLoading(false);
+      router.push(`/agora/${selectedAgora.id}`);
     },
     onError: (error) => {
       console.dir(error);
