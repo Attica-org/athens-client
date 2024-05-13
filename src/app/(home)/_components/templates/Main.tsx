@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import Loading from '@/app/_components/atoms/loading';
+import Loading from '@/app/(home)/loading';
 import AgoraStatus from '../atoms/AgoraStatus';
 import AgoraStatusTab from '../atoms/AgoraStatusTab';
 import PageTitle from '../atoms/PageTitle';
