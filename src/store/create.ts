@@ -17,12 +17,13 @@ interface AgoraState {
   setColor: (color: string) => void;
   setCapacity: (capacity: number) => void;
   setDuration: (duration: number | null) => void;
+  reset: () => void;
 }
 
 const initialState: AgoraState = {
   title: '',
-  category: '',
-  color: '',
+  category: 'all',
+  color: 'agora-point-color1',
   capacity: DEFAULT_PARTICIPANTS_CNT,
   duration: DEFAULT_TIME,
   setTitle: () => {},
@@ -30,6 +31,7 @@ const initialState: AgoraState = {
   setColor: () => {},
   setCapacity: () => {},
   setDuration: () => {},
+  reset: () => {},
 };
 
 // eslint-disable-next-line import/prefer-default-export
