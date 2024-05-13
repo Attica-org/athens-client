@@ -1,31 +1,76 @@
 import React from 'react';
 
-type Props = {
-  w?: string;
-  h?: string;
-};
-
-export default function Loading({ w = '35', h = '35' }: Props) {
-  const size = `w-${w} h-${h}`;
-
+export default function Loading() {
   return (
-    <div role="status" className="m-5 flex justify-center items-center">
-      <svg
-        aria-hidden="true"
-        className={`${size} text-gray-200 animate-spin dark:text-gray-600 fill-athens-main`}
-        viewBox="0 0 100 101"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-          fill="currentColor"
-        />
-        <path
-          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-          fill="currentFill"
-        />
-      </svg>
+    <div role="status">
+      <div className="p-1rem pb-0 relative min-w-270">
+        <h1
+          aria-label="페이지 제목"
+          className="text-xl font-semibold w-full flex justify-start items-center dark:text-white"
+        >
+          아고라 검색
+        </h1>
+        <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center break-words">
+            <p className="under-mobile:mt-0.5rem under-mobile:mb-0 mt-1rem text-sm text-gray-700 mb-1rem break-keep dark:text-white dark:text-opacity-85">
+              토론에 참여하고 싶은 아고라를 선택해주세요.
+            </p>
+          </div>
+          <div className="flex flex-col justify-start items-start p-10">
+            <div className="flex items-center text-xxs text-athens-gray-thick whitespace-nowrap dark:text-white">
+              <div className="bg-red-400 w-8 h-8 rounded-full mr-10" />
+              대기중
+            </div>
+            <div className="flex items-center text-xxs pt-5 text-athens-gray-thick dark:text-white">
+              <div className="bg-athens-button w-8 h-8 rounded-full mr-10" />
+              진행중
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="justify-center items-stretch flex flex-col h-fit flex-1 relative">
+        <div className="bg-white dark:bg-dark-bg-light">
+          <div className="pl-1rem pr-1rem pt-8 pb-8">
+            <div className="bg-athens-gray rounded-md p-4 flex justify-center items-center dark:bg-dark-light-300">
+              <div className="w-full">
+                <div
+                  className="w-full text-sm bg-athens-gray border-0 focus:outline-none p-5 pl-1rem dark:bg-dark-light-300 dark:text-white"
+                >
+                  검색
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="w-full pb-0.5rem">
+          <div className="flex flex-row justify-around items-center h-2rem w-full text-xs pl-5 pr-5 dark:text-white">
+            <div
+              className="border-b-1 border-athens-sub flex flex-1 justify-center p-6"
+            >
+              활성화
+            </div>
+            <div
+              className="flex flex-1 justify-center p-6 border-b-1 dark:border-dark-light-300"
+            >
+              종료
+            </div>
+          </div>
+        </div>
+        <div className="w-full mb-0 pb-0 pl-0.5rem pr-0.5rem flex text-nowrap overflow-hidden ml-5">
+          <div className="w-full flex">
+            <div
+              className="bg-athens-sub text-black border-1 border-athens-sub justify-center p-8 pl-1.5rem pr-1.5rem rounded-full text-xs mr-7"
+            >
+              전체
+            </div>
+            <div className="bg-athens-gray dark:bg-dark-bg-light dark:text-white dark:border-1 dark:border-gray-500 rounded-full text-xs p-8 pl-1.5rem pr-1.5rem justify-center mr-7">지식/공부</div>
+            <div className="bg-athens-gray dark:bg-dark-bg-light dark:text-white dark:border-1 dark:border-gray-500 rounded-full text-xs p-8 pl-1.5rem pr-1.5rem justify-center mr-7">문화/예술</div>
+            <div className="bg-athens-gray dark:bg-dark-bg-light dark:text-white dark:border-1 dark:border-gray-500 rounded-full text-xs p-8 pl-1.5rem pr-1.5rem justify-center mr-7">음식/여행</div>
+            <div className="bg-athens-gray dark:bg-dark-bg-light dark:text-white dark:border-1 dark:border-gray-500 rounded-full text-xs p-8 pl-1.5rem pr-1.5rem justify-center mr-7">일상/취미</div>
+          </div>
+        </div>
+      </div>
     </div>
+
   );
 }
