@@ -4,7 +4,9 @@ import RemoveIcon from '@/assets/icons/RemoveIcon';
 import SearchIcon from '@/assets/icons/SearchIcon';
 import { useSearchStore } from '@/store/search';
 import { useRouter } from 'next/navigation';
-import React, { ChangeEventHandler, useState } from 'react';
+import React, {
+  ChangeEventHandler, FormEventHandler, useEffect, useState,
+} from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 function SearchBar() {
@@ -27,22 +29,29 @@ function SearchBar() {
     setSearchText(e.target.value);
   };
 
-  const handleSearch = () => {
+  const handleSearch:FormEventHandler = (e) => {
+    e.preventDefault();
     setSearch(searchText);
 
     if (!searchText) {
       router.push('/');
     } else {
-      router.push(`/search?q=${searchText}&st=active`);
+      router.push(`/?q=${searchText}&st=active`);
     }
   };
+
+  useEffect(() => {
+    if (search) {
+      router.push(`/?q=${search}&st=active`);
+    }
+  }, [router, search]);
 
   return (
     <div className="bg-athens-gray rounded-md p-4 flex justify-center items-center dark:bg-dark-light-300">
       <button type="button" aria-label="검색하기" onClick={handleSearch}>
         <SearchIcon className="w-22 ml-10" />
       </button>
-      <form action={handleSearch} className="w-full">
+      <form onSubmit={handleSearch} className="w-full">
         <input
           aria-label="아고라 검색창"
           type="text"
