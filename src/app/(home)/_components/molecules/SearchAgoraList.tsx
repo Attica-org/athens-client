@@ -44,7 +44,7 @@ export default function SearchAgoraList({ searchParams }: Props) {
           ))}
         </React.Fragment>
       ))}
-      <div ref={ref} className="h-50 bg-red-400 w-full" />
+      <div ref={ref} />
     </>
   );
 }
