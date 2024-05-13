@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import Main from './_components/templates/Main';
-import SearchDeciderSuspense from './_components/templates/SearchDeciderSuspense';
+import SearchDeciderSuspense from './_components/organisms/SearchDeciderSuspense';
 
 type Props = {
   searchParams: { st: string, cat: string, q?: string }
