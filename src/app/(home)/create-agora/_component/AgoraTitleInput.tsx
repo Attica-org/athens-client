@@ -1,7 +1,7 @@
 'use client';
 
 import { useCreateAgora } from '@/store/create';
-import React, { ChangeEventHandler, useCallback, useState } from 'react';
+import React, { ChangeEventHandler, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 function AgoraTitleInput() {
@@ -9,7 +9,7 @@ function AgoraTitleInput() {
   const [message, setMessage] = useState<string | null>('주제를 입력해주세요.');
   const { setTitle } = useCreateAgora(useShallow((state) => ({ setTitle: state.setTitle })));
 
-  const changeInput:ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
+  const changeInput:ChangeEventHandler<HTMLInputElement> = (e) => {
     setInput(() => {
       setTitle(e.target.value);
       return e.target.value;
@@ -22,7 +22,7 @@ function AgoraTitleInput() {
     } else {
       setMessage(null);
     }
-  }, [setTitle]);
+  };
 
   return (
     <>
