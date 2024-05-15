@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PROFLELIST from '@/constants/userProfileImage';
 import UserImage from '@/app/_components/atoms/UserImage';
@@ -24,6 +24,12 @@ export default function EnterAgora() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
   const { selectedAgora } = useAgora();
+
+  useEffect(() => {
+    if (!selectedAgora.id) {
+      router.replace('/home');
+    }
+  }, [selectedAgora.id, router]);
 
   const mutation = useMutation({
     mutationFn: async () => {
