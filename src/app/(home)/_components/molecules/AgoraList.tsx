@@ -8,19 +8,21 @@ import Agora from '../atoms/Agora';
 import { getAgoraCategorySearch } from '../../_api/getAgoraCategorySearch';
 
 type Props = {
-  searchParams: { st?: string, cat?: string, q?: string },
+  searchParams: { status?: string, category?: string, q?: string },
 };
 
 export default function AgoraList({ searchParams }: Props) {
   const {
     data, hasNextPage, fetchNextPage, isFetching,
-  } = useSuspenseInfiniteQuery<IAgora[], Object, InfiniteData<IAgora[]>, [_1: string, _2: string, _3: string, Props['searchParams']], number>({
+  } = useSuspenseInfiniteQuery<{ agoras: IAgora[], nextCursor: number | null }, Object, InfiniteData<{ agoras: IAgora[], nextCursor: number | null }>, [_1: string, _2: string, _3: string, Props['searchParams']], { nextCursor: number | null }>({
     queryKey: ['agoras', 'search', 'category', searchParams],
     queryFn: getAgoraCategorySearch,
     staleTime: 60 * 1000,
     gcTime: 500 * 1000,
-    initialPageParam: 0,
-    getNextPageParam: (lastPage) => lastPage.at(-1)?.id,
+    initialPageParam: { nextCursor: null },
+    getNextPageParam: (lastPage) => (
+      lastPage.nextCursor !== null ? { nextCursor: lastPage.nextCursor } : undefined
+    ),
   });
 
   const { ref, inView } = useInView({
@@ -39,8 +41,8 @@ export default function AgoraList({ searchParams }: Props) {
     <>
       <div className="grid under-large:grid-cols-5 gap-x-1rem gap-y-1rem under-mobile:grid-cols-2 mobile:grid-cols-2 foldable:grid-cols-3 tablet:grid-cols-4 under-tablet:grid-cols-4 xl:grid-cols-6 sm:grid-cols-3 lg:grid-cols-5 under-xl:grid-cols-4">
         {data?.pages.map((page) => (
-          <React.Fragment key={page[0].id}>
-            {page.map((agora) => (
+          <React.Fragment key={page.agoras[0]?.id}>
+            {page.agoras.map((agora) => (
               <Agora key={agora.id} agora={agora} />
             ))}
           </React.Fragment>

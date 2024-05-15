@@ -2,23 +2,23 @@ import { Agora } from '@/app/model/Agora';
 import { QueryFunction } from '@tanstack/react-query';
 
 type SearchParams = {
-  st?: string,
-  cat?: string,
+  status?: string,
+  category?: string,
   q?: string,
 };
 
 // eslint-disable-next-line import/prefer-default-export
 export const getAgoraKeywordSearch:QueryFunction<
-Agora[],
+{ agoras: Agora[], nextCursor: number | null },
 [_1: string, _2: string, _3: string, searchParams: SearchParams],
-Partial<number>> = async ({ queryKey, pageParam = 0 }) => {
-  const [, , , { st = 'active', q = '' }] = queryKey;
-  const searchParams = { st, q };
+{ nextCursor: number | null }> = async ({ queryKey, pageParam = { nextCursor: null } }) => {
+  const [, , , { status = 'active', q = '' }] = queryKey;
+  const searchParams = { status, q };
 
   const urlSearchParams = new URLSearchParams(searchParams);
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/agoras?${urlSearchParams.toString()}&cursor=${pageParam}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/agoras?${urlSearchParams.toString()}&next=${pageParam.nextCursor ?? null}`, {
     next: {
-      tags: ['agoras', 'search', 'keyword', searchParams.q as string, searchParams.st],
+      tags: ['agoras', 'search', 'keyword', searchParams.q as string, searchParams.status],
     },
     credentials: 'include',
     cache: 'no-store',
@@ -28,7 +28,10 @@ Partial<number>> = async ({ queryKey, pageParam = 0 }) => {
     throw new Error('Network response was not ok');
   }
 
-  const result = res.json().then((data) => data.response.agoras);
+  const result = await res.json();
 
-  return result;
+  return {
+    agoras: result.response.agoras,
+    nextCursor: result.response.hasNext ? result.response.next : null,
+  };
 };

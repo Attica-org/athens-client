@@ -8,19 +8,21 @@ import SearchAgora from '../atoms/SearchAgora';
 import { getAgoraKeywordSearch } from '../../_api/getAgoraKeywordSearch';
 
 type Props = {
-  searchParams: { st?: string, cat?: string, q?: string }
+  searchParams: { status?: string, category?: string, q?: string }
 };
 
 export default function SearchAgoraList({ searchParams }: Props) {
   const {
     data, hasNextPage, fetchNextPage, isFetching,
-  } = useSuspenseInfiniteQuery<IAgora[], Object, InfiniteData<IAgora[]>, [_1: string, _2: string, _3:string, Props['searchParams']], number>({
+  } = useSuspenseInfiniteQuery<{ agoras: IAgora[], nextCursor: number | null }, Object, InfiniteData<{ agoras: IAgora[], nextCursor: number | null }>, [_1: string, _2: string, _3:string, Props['searchParams']], { nextCursor: number | null }>({
     queryKey: ['agoras', 'search', 'keyword', searchParams],
     queryFn: getAgoraKeywordSearch,
     staleTime: 60 * 1000,
     gcTime: 500 * 1000,
-    initialPageParam: 0,
-    getNextPageParam: (lastPage) => lastPage.at(-1)?.id,
+    initialPageParam: { nextCursor: null },
+    getNextPageParam: (lastPage) => (
+      lastPage.nextCursor !== null ? { nextCursor: lastPage.nextCursor } : undefined
+    ),
   });
 
   const { ref, inView } = useInView({
@@ -38,8 +40,8 @@ export default function SearchAgoraList({ searchParams }: Props) {
   return (
     <>
       {data?.pages.map((page) => (
-        <React.Fragment key={page[0].id}>
-          {page.map((agora) => (
+        <React.Fragment key={page.agoras[0]?.id}>
+          {page.agoras.map((agora) => (
             <SearchAgora key={agora.id} agora={agora} />
           ))}
         </React.Fragment>
