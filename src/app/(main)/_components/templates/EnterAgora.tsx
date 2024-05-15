@@ -6,10 +6,10 @@ import PROFLELIST from '@/constants/userProfileImage';
 import UserImage from '@/app/_components/atoms/UserImage';
 import { useMutation } from '@tanstack/react-query';
 import { useAgora } from '@/store/agora';
+import Loading from '@/app/_components/atoms/loading';
 import ModalPosSelectBtn from '../atoms/ModalPosSelectBtn';
 import ModalBase from '../../../_components/molecules/ModalBase';
 import { postEnterAgoraInfo } from '../../_api/postEnterAgoraInfo';
-import Loading from '../atoms/loading';
 
 type ProfileImageName = {
   id: number;
@@ -40,8 +40,10 @@ export default function EnterAgora() {
       return postEnterAgoraInfo({ info, agoraId: selectedAgora.id });
     },
     onSuccess: async () => {
-      setIsLoading(false);
-      router.push(`/agora/${selectedAgora.id}`);
+      setIsLoading(() => {
+        router.push(`/agora/${selectedAgora.id}`);
+        return false;
+      });
     },
     onError: (error) => {
       console.dir(error);
@@ -58,8 +60,10 @@ export default function EnterAgora() {
   };
 
   const enterAgora = () => {
-    setIsLoading(true);
-    mutation.mutate();
+    setIsLoading(() => {
+      mutation.mutate();
+      return true;
+    });
   };
 
   const handleKeyDownSetProfile = (
