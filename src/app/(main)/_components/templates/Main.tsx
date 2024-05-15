@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import Loading from '@/app/loading';
+import Loading from '../atoms/loading';
 import SearchDeciderSuspense from '../organisms/SearchDeciderSuspense';
 
 type Props = {
