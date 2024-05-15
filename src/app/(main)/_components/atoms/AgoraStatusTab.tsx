@@ -14,7 +14,7 @@ function AgoraStatusTab() {
     const newSearchParams = new URLSearchParams(searchParams);
 
     newSearchParams.set('status', state);
-    router.replace(`/home?${newSearchParams.toString()}`);
+    router.push(`/home?${newSearchParams.toString()}`);
   }, [router, searchParams]);
 
   const changeStatus = (state: Status) => {
