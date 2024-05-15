@@ -66,13 +66,12 @@ function SearchBar() {
           onChange={changeInputText}
         />
       </form>
-      <div className="flex justify-center items-center w-1.5rem h-1.5rem">
+      <button type="button" aria-label="입력한 검색 텍스트 전체 삭제" className="flex justify-center items-center w-1.5rem h-1.5rem">
         <RemoveIcon
           className="w-20 cursor-pointer"
-          label="입력한 검색 텍스트 전체 삭제"
           onClick={removeInputText}
         />
-      </div>
+      </button>
     </div>
   );
 }
