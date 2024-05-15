@@ -11,7 +11,7 @@ type Props = {
 function HomeIcon({ className }: Props) {
   const segment = usePathname();
 
-  if (segment === '/' || segment === '/flow/enter-agora') {
+  if (segment === '/home' || segment === '/flow/enter-agora') {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
         <g>

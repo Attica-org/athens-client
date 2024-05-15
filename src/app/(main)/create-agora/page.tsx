@@ -1,7 +1,6 @@
 import NotificationIcon from '@/assets/icons/NotificationIcon';
 import React from 'react';
-import PageTitle from '@/app/(home)/_components/atoms/PageTitle';
-import AgoraPointColorList from '@/app/(home)/_components/molecules/AgoraPointColorList';
+import AgoraPointColorList from '@/app/(main)/_components/molecules/AgoraPointColorList';
 import ParticipantCapacitySetter from '../_components/molecules/ParticipantCapacitySetter';
 import DiscussionDurationSetter from '../_components/molecules/DiscussionDurationSetter';
 import AgoraTitleInput from './_component/AgoraTitleInput';
@@ -11,12 +10,6 @@ import CategoryButtonList from '../_components/molecules/CategoryButtonList';
 export default function CreateAgora() {
   return (
     <section className="overflow-y-scroll scrollbar-hide flex flex-col pb-57 lg:pb-25 flex-1 h-dvh min-w-270 flex-grow">
-      <header className="p-1rem pb-0 relative min-w-270">
-        <PageTitle
-          title="아고라 생성"
-          desc="생성할 아고라 정보를 입력해주세요."
-        />
-      </header>
       <main className="flex h-dvh flex-1 flex-grow min-w-270 justify-between items-stretch p-1rem pt-0 under-mobile:pl-1rem under-mobile:pr-1rem flex-col">
         <div className="flex flex-col w-full under-mobile:mt-10 dark:text-white dark:text-opacity-85">
           <div className="flex justify-around flex-col w-full">

@@ -9,7 +9,7 @@ export default function NavLinks() {
     <>
       <div className="hidden lg:block">
         <ul>
-          <DesktopNavLink href="/" innerText="홈" label="홈으로 가기">
+          <DesktopNavLink href="/home" innerText="홈" label="홈으로 가기">
             <HomeIcon className="w-1.5rem" />
           </DesktopNavLink>
           <DesktopNavLink
@@ -25,7 +25,7 @@ export default function NavLinks() {
         <ul className="flex flex-row h-full justify-around">
           <MobileNavLink
             className="flex p-5 text-xs flex-col justify-center items-center"
-            href="/"
+            href="/home"
             label="홈으로 가기"
           >
             <HomeIcon className="w-23 pb-2" />

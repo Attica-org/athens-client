@@ -10,7 +10,8 @@ import React, {
 import { useShallow } from 'zustand/react/shallow';
 
 function SearchBar() {
-  const q = useSearchParams().get('q');
+  const searchParams = useSearchParams();
+  const q = searchParams.get('q');
   const { search, setSearch, reset } = useSearchStore(
     useShallow((state) => ({
       search: state.search,
@@ -22,8 +23,11 @@ function SearchBar() {
   const router = useRouter();
 
   const removeInputText = () => {
-    setSearch('');
     reset();
+    setSearchText('');
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.delete('q');
+    router.push(`/home?${newSearchParams.toString()}`);
   };
 
   const changeInputText: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -35,15 +39,15 @@ function SearchBar() {
     setSearch(searchText);
 
     if (!searchText) {
-      router.push('/');
+      router.push('/home');
     } else {
-      router.push(`/?q=${searchText}&status=active`);
+      router.push(`/home?q=${searchText}&status=active`);
     }
   };
 
   useEffect(() => {
     if (search) {
-      router.push(`/?q=${search}&status=active`);
+      router.push(`/home?q=${search}&status=active`);
     }
   }, [router, search]);
 

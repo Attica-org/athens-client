@@ -49,7 +49,7 @@ export default function RootLayout({
   return (
     <html lang="ko" className="dark">
       <link rel="manifest" href="/manifest.json" />
-      <body className={`lg:flex scrollbar-hide overflow-x-hidden justify-center items-start w-full dark:bg-dark-bg-light ${noto.className} antialiased`}>
+      <body className={`className="h-dvh  inset-y-full xl:w-[1580px] lg:w-[1024px] under-large:w-full lg:flex scrollbar-hide overflow-x-hidden justify-center items-start w-full dark:bg-dark-bg-light ${noto.className} antialiased`}>
         <MSWComponent />
         <RQProvider>
           {children}

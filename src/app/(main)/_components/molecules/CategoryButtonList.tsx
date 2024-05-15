@@ -36,7 +36,7 @@ function CategoryButtonList() {
     newSearchParams.delete('q');
     search.reset();
 
-    router.replace(`/?${newSearchParams.toString()}`);
+    router.replace(`/home?${newSearchParams.toString()}`);
   }, [router, searchParams, search]);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ function CategoryButtonList() {
     setSelectedCategoryId(() => {
       const newState = id;
 
-      if (pathname === '/') {
+      if (pathname === '/home') {
         changeParams(id);
       }
       if (pathname === '/create-agora') {
