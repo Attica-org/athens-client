@@ -32,7 +32,7 @@ function CategoryButtonList() {
   const changeParams = useCallback((id: number) => {
     const newSearchParams = new URLSearchParams(searchParams);
 
-    newSearchParams.set('category', AGORACATEGORY[id].innerText);
+    newSearchParams.set('category', AGORACATEGORY[id].value);
     newSearchParams.delete('q');
     search.reset();
 
@@ -82,7 +82,7 @@ function CategoryButtonList() {
           {AGORACATEGORY.map((category) => (
             <button
               type="button"
-              aria-label="카테고리 선택"
+              aria-label="카테고리"
               onClick={() => selectCategory(category.id)}
               className="swiper-slide"
               key={category.innerText}
