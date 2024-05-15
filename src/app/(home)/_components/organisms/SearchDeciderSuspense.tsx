@@ -4,7 +4,7 @@ import { getAgoraCategorySearch } from '../../_api/getAgoraCategorySearch';
 import SearchDecider from '../molecules/SearchDecider';
 
 type Props = {
-  searchParams: { st?: string, cat?: string, q?: string },
+  searchParams: { status?: string, category?: string, q?: string },
 };
 
 export default async function SearchDeciderSuspense({ searchParams }: Props) {
@@ -12,7 +12,7 @@ export default async function SearchDeciderSuspense({ searchParams }: Props) {
   await queryClient.prefetchInfiniteQuery({
     queryKey: ['agoras', 'search', 'category', searchParams],
     queryFn: getAgoraCategorySearch,
-    initialPageParam: 0,
+    initialPageParam: { nextCursor: null },
   });
   const dehydratedState = dehydrate(queryClient);
 

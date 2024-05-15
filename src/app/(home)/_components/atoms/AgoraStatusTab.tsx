@@ -7,13 +7,13 @@ type Status = 'active' | 'closed';
 
 function AgoraStatusTab() {
   const searchParams = useSearchParams();
-  const [status, setStatus] = useState<Status>(searchParams.get('st') as Status || 'active');
+  const [status, setStatus] = useState<Status>(searchParams.get('status') as Status || 'active');
   const router = useRouter();
 
   const changeParams = useCallback((state: Status) => {
     const newSearchParams = new URLSearchParams(searchParams);
 
-    newSearchParams.set('st', state);
+    newSearchParams.set('status', state);
     router.replace(`/?${newSearchParams.toString()}`);
   }, [router, searchParams]);
 

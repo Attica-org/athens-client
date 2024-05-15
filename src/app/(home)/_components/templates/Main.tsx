@@ -8,7 +8,7 @@ import CategoryButtonContainer from '../organisms/CategoryButtonContainer';
 import SearchDeciderSuspense from '../organisms/SearchDeciderSuspense';
 
 type Props = {
-  searchParams: { st: string, cat: string, q?: string }
+  searchParams: { status: string, category: string, q?: string }
 };
 
 export default function Main({ searchParams }: Props) {

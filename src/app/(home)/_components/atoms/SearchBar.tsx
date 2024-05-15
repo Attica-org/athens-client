@@ -36,13 +36,13 @@ function SearchBar() {
     if (!searchText) {
       router.push('/');
     } else {
-      router.push(`/?q=${searchText}&st=active`);
+      router.push(`/?q=${searchText}&status=active`);
     }
   };
 
   useEffect(() => {
     if (search) {
-      router.push(`/?q=${search}&st=active`);
+      router.push(`/?q=${search}&status=active`);
     }
   }, [router, search]);
 

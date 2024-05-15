@@ -18,7 +18,7 @@ function CategoryButtonList() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const catSearchParams = searchParams.get('cat');
+  const catSearchParams = searchParams.get('category');
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(
     catSearchParams
       ? AGORACATEGORY.findIndex((category) => category.innerText === catSearchParams)
@@ -32,7 +32,7 @@ function CategoryButtonList() {
   const changeParams = useCallback((id: number) => {
     const newSearchParams = new URLSearchParams(searchParams);
 
-    newSearchParams.set('cat', AGORACATEGORY[id].innerText);
+    newSearchParams.set('category', AGORACATEGORY[id].innerText);
     newSearchParams.delete('q');
     search.reset();
 

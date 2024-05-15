@@ -6,7 +6,7 @@ import SearchAgoraList from './SearchAgoraList';
 import AgoraList from './AgoraList';
 
 type Props = {
-  searchParams: { st?: string, cat?: string, q?: string }
+  searchParams: { status?: string, category?: string, q?: string }
 };
 
 export default function SearchDecider({ searchParams }: Props) {
