@@ -3,13 +3,14 @@
 import RemoveIcon from '@/assets/icons/RemoveIcon';
 import SearchIcon from '@/assets/icons/SearchIcon';
 import { useSearchStore } from '@/store/search';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, {
   ChangeEventHandler, FormEventHandler, useEffect, useState,
 } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 function SearchBar() {
+  const q = useSearchParams().get('q');
   const { search, setSearch, reset } = useSearchStore(
     useShallow((state) => ({
       search: state.search,
@@ -17,7 +18,7 @@ function SearchBar() {
       reset: state.reset,
     })),
   );
-  const [searchText, setSearchText] = useState<string>(search || '');
+  const [searchText, setSearchText] = useState<string>(search || q || '');
   const router = useRouter();
 
   const removeInputText = () => {

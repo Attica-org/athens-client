@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useSearchStore } from '@/store/search';
 import SearchAgoraList from './SearchAgoraList';
 import AgoraList from './AgoraList';
 
@@ -10,9 +9,9 @@ type Props = {
 };
 
 export default function SearchDecider({ searchParams }: Props) {
-  const { search } = useSearchStore();
+  const { q } = searchParams;
 
-  if (search) {
+  if (q) {
     return <SearchAgoraList searchParams={searchParams} />;
   }
   return <AgoraList searchParams={searchParams} />;
