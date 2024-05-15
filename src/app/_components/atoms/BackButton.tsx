@@ -8,7 +8,7 @@ export default function BackButton() {
   const router = useRouter();
 
   const handleBack = () => {
-    router.replace('/');
+    router.replace('/home');
   };
 
   return (
