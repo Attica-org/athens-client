@@ -53,3 +53,9 @@ next-env.d.ts
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+# Ignore Service Worker related files
+sw.js
+sw.js.map
+workbox-*.js
+workbox-*.js.map
