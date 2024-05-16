@@ -14,7 +14,7 @@ export default function YourMessage({ message }: { message: Message }) {
         />
       </div>
       <div className="p-0.5rem flex flex-col justify-center items-start">
-        <div role="region" aria-label="사용자 이름" className="text-xs pb-5 dark:text-white dark:text-opacity-85">
+        <div role="region" aria-label="사용자 이름" className="text-xs pb-5 dark:text-white">
           {message.name}
         </div>
         <div className="flex justify-start items-end">
@@ -22,7 +22,7 @@ export default function YourMessage({ message }: { message: Message }) {
             {message.content}
           </div>
           <div className="flex flex-col justify-end items-end h-full">
-            <time className="text-xxs pl-8 h-full">{message.createdAt}</time>
+            <time className="text-xxs pl-8 h-full dark:text-dark-line">{message.createdAt}</time>
           </div>
         </div>
       </div>

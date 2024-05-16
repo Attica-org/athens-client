@@ -7,10 +7,10 @@ export default function MyMessage({ message }: { message: Message }) {
     <article className="flex justify-end items-start p-0.5rem pb-0 h-full">
       <div className="flex justify-end items-end">
         <div className="flex flex-col justify-end items-end h-full">
-          <time className="text-xxs mb-8">{message.createdAt}</time>
+          <time className="text-xxs mb-8 dark:text-dark-line">{message.createdAt}</time>
         </div>
         <div className="p-0.5rem flex flex-col justify-center items-end">
-          <div role="region" aria-label="사용자 이름" className="text-xs pb-5 dark:text-white dark:text-opacity-85">
+          <div role="region" aria-label="사용자 이름" className="text-xs pb-5 dark:text-white">
             {message.name}
           </div>
           <div className="max-w-[50vw] whitespace-pre-line bg-red-200 rounded-tl-xl rounded-bl-xl rounded-br-xl p-0.5rem  pl-10 pr-10 text-sm under-mobile:text-xs">
