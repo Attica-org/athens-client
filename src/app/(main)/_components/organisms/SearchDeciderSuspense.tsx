@@ -1,6 +1,6 @@
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 import React from 'react';
-import { getAgoraCategorySearch } from '../../_api/getAgoraCategorySearch';
+import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
 import SearchDecider from '../molecules/SearchDecider';
 
 type Props = {

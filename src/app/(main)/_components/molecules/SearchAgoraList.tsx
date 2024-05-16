@@ -5,7 +5,7 @@ import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { Agora as IAgora } from '@/app/model/Agora';
 import { useInView } from 'react-intersection-observer';
 import SearchAgora from '../atoms/SearchAgora';
-import { getAgoraKeywordSearch } from '../../_api/getAgoraKeywordSearch';
+import { getAgoraKeywordSearch } from '../../_lib/getAgoraKeywordSearch';
 
 type Props = {
   searchParams: { status?: string, category?: string, q?: string }

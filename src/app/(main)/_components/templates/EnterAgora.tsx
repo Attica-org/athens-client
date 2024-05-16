@@ -9,7 +9,7 @@ import { useAgora } from '@/store/agora';
 import Loading from '@/app/_components/atoms/loading';
 import ModalPosSelectBtn from '../atoms/ModalPosSelectBtn';
 import ModalBase from '../../../_components/molecules/ModalBase';
-import { postEnterAgoraInfo } from '../../_api/postEnterAgoraInfo';
+import { postEnterAgoraInfo } from '../../_lib/postEnterAgoraInfo';
 
 type ProfileImageName = {
   id: number;

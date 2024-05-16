@@ -6,7 +6,7 @@ import { useCreateAgora } from '@/store/create';
 import { useRouter } from 'next/navigation';
 import { useAgora } from '@/store/agora';
 import Loading from '@/app/_components/atoms/loading';
-import { postCreateAgora } from '../../_api/postCreateAgora';
+import { postCreateAgora } from '../../_lib/postCreateAgora';
 
 type Agora = {
   title: string,
