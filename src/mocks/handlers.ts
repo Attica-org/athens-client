@@ -7,7 +7,7 @@ const delay = (ms: number) => new Promise((resolve) => {
 // eslint-disable-next-line import/prefer-default-export
 export const handlers = [
   http.get('/api/v1/agoras', async ({ request }) => {
-    delay(500);
+    delay(1000);
     const url = new URL(request.url);
     const cursor = parseInt(url.searchParams.get('next') as string, 10) || 0;
 
@@ -69,6 +69,18 @@ export const handlers = [
       },
     });
   }),
+  http.get('/api/v1/agorasId', async () => HttpResponse.json({
+    success: true,
+    response: {
+      agoras: [
+        { id: '5f9f1b9b9c9d1b0b8c8b4568', updatedAt: '2024-04-18T10:30:00Z' },
+        { id: '5f9f1b9b9c9d1b0b8c8b4569', updatedAt: '2024-04-18T10:30:00Z' },
+        { id: '5f9f1b9b9c9d1b0b8c8b4570', updatedAt: '2024-04-18T10:30:00Z' },
+        { id: '5f9f1b9b9c9d1b0b8c8b4571', updatedAt: '2024-04-18T10:30:00Z' },
+      ],
+    },
+    error: null,
+  })),
   http.post('/api/v1/agoras/:agoraId/participants', async () => {
     delay(500);
 
@@ -91,7 +103,7 @@ export const handlers = [
     });
   }),
   http.post('/api/v1/agoras', async () => {
-    delay(500);
+    delay(1500);
 
     return HttpResponse.json({
       success: true,
