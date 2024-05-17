@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import React from 'react';
 import './globals.css';
-// import localFont from 'next/font/local';
 import { Noto_Sans_KR } from 'next/font/google';
 import MSWComponent from './_components/utils/MSWComponent';
 import RQProvider from './_components/utils/RQProvider';
@@ -28,18 +27,8 @@ export const metadata: Metadata = {
 
 const noto = Noto_Sans_KR({
   subsets: ['latin'],
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  weight: ['400', '700'],
 });
-
-// const LDGC = localFont({
-//   src: [
-//     {
-//       path: '../../public/fonts/laundryGothicOTF-Regular.ttf',
-//       weight: 'normal',
-//       style: 'normal',
-//     },
-//   ],
-// });
 
 export default function RootLayout({
   children,
@@ -49,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="ko" className="dark">
       <link rel="manifest" href="/manifest.json" />
-      <body className={`className="h-dvh  inset-y-full xl:w-[1580px] lg:w-[1024px] under-large:w-full lg:flex scrollbar-hide overflow-x-hidden justify-center items-start w-full dark:bg-dark-bg-light ${noto.className} antialiased`}>
+      <body className={`h-dvh inset-y-full under-large:w-full lg:flex scrollbar-hide overflow-x-hidden justify-center items-start w-full dark:bg-dark-bg-light ${noto.className} antialiased`}>
         <MSWComponent />
         <RQProvider>
           {children}

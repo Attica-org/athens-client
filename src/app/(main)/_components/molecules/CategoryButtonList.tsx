@@ -9,7 +9,7 @@ import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 import CategoryButton from '../atoms/CategoryButton';
 
-import 'swiper/css';
+// import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/mousewheel';
 
