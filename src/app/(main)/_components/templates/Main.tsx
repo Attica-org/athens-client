@@ -1,10 +1,12 @@
 import React, { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import Loading from '../atoms/loading';
-import SearchDeciderSuspense from '../organisms/SearchDeciderSuspense';
 
 type Props = {
-  searchParams: { status: string, category: string, q?: string }
+  searchParams: { status?: string, category?: string, q?: string }
 };
+
+const SearchDeciderSuspense = dynamic(() => import('../organisms/SearchDeciderSuspense'));
 
 export default function Main({ searchParams }: Props) {
   return (
