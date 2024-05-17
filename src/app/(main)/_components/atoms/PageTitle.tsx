@@ -11,7 +11,7 @@ function PageTitle({ title, desc, children = null }: Props) {
     <>
       <h1
         aria-label="페이지 제목"
-        className="text-xl font-semibold w-full flex justify-start items-center dark:text-white"
+        className="text-xl font-bold w-full flex justify-start items-center dark:text-white"
       >
         {title}
       </h1>
