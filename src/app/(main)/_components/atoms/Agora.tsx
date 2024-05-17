@@ -27,9 +27,9 @@ export default function Agora({ agora }: Props) {
       <div className={`under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-3xl under-mobile:rounded-2xl bg-${agoraColor} relative`}>
         <div className={`w-0.5rem h-0.5rem rounded-full ${status === 'queued' ? 'bg-athens-button' : 'bg-red-400'} absolute top-3 right-2 under-mobile:top-2 under-mobile:right-1 z-5`} />
       </div>
-      <h3 className="text-xs under-mobile:text-xs under-mobile:font-semibold pt-10 dark:text-white">
+      <h2 className="text-xs under-mobile:text-xs under-mobile:font-semibold pt-10 dark:text-white">
         {agoraTitle}
-      </h3>
+      </h2>
       <p aria-label="아고라 참여 인원" className="text-xs pt-7">
         <span className="pr-5 text-athens-gray-thick text-nowrap dark:text-dark-line">
           <span className="text-blue-600 pr-3 dark:text-dark-pro-color">찬성</span>
