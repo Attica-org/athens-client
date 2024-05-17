@@ -22,7 +22,7 @@ export const getAgoraCategorySearch:QueryFunction<
       tags: ['agoras', 'search', 'category', searchParams.category, searchParams.status],
     },
     credentials: 'include',
-    cache: 'no-store',
+    cache: 'no-cache',
   });
 
   if (!res.ok) {
