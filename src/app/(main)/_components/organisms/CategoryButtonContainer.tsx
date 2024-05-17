@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useSearchStore } from '@/store/search';
 import CategoryButtonList from '../molecules/CategoryButtonList';
 
@@ -9,7 +9,9 @@ function CategoryButtonContainer() {
 
   if (!search) {
     return (
-      <CategoryButtonList />
+      <Suspense fallback={<div>Loading...</div>}>
+        <CategoryButtonList />
+      </Suspense>
     );
   }
 

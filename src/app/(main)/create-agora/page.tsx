@@ -5,9 +5,9 @@ import ParticipantCapacitySetter from '../_components/molecules/ParticipantCapac
 import DiscussionDurationSetter from '../_components/molecules/DiscussionDurationSetter';
 import AgoraTitleInput from './_component/AgoraTitleInput';
 import CreateAgoraBtn from './_component/CreateAgoraBtn';
-import CategoryButtonList from '../_components/molecules/CategoryButtonList';
+import CategoryButtonContainer from '../_components/organisms/CategoryButtonContainer';
 
-export default function CreateAgora() {
+export default function Page() {
   return (
     <section className="overflow-y-scroll scrollbar-hide flex flex-col pb-57 lg:pb-25 flex-1 h-dvh min-w-270 flex-grow">
       <main className="flex h-dvh flex-1 flex-grow min-w-270 justify-between items-stretch p-1rem pt-0 under-mobile:pl-1rem under-mobile:pr-1rem flex-col">
@@ -20,7 +20,7 @@ export default function CreateAgora() {
               <div role="region" className="text-md mb-10 under-mobile:text-sm">
                 아고라 카테고리 분류
               </div>
-              <CategoryButtonList />
+              <CategoryButtonContainer />
             </section>
             <section className="mt-1.5rem w-full">
               <div role="region" className="text-md mb-10 under-mobile:text-sm">
