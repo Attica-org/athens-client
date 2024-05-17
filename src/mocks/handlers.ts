@@ -7,7 +7,7 @@ const delay = (ms: number) => new Promise((resolve) => {
 // eslint-disable-next-line import/prefer-default-export
 export const handlers = [
   http.get('/api/v1/agoras', async ({ request }) => {
-    delay(1000);
+    delay(500);
     const url = new URL(request.url);
     const cursor = parseInt(url.searchParams.get('next') as string, 10) || 0;
 
@@ -16,7 +16,7 @@ export const handlers = [
       response: {
         agoras: [
           {
-            id: cursor * 4 + 1,
+            id: cursor * 8 + 1,
             agoraTitle: '소득 불평등 심화가 사회 양극화를 야기하는가?',
             agoraColor: 'agora-point-color3',
             participants: {
@@ -28,7 +28,7 @@ export const handlers = [
             status: 'queued',
           },
           {
-            id: cursor * 4 + 2,
+            id: cursor * 8 + 2,
             agoraTitle: '인공지능 기술의 발전이 사회의 일자리를 빼앗는가?',
             agoraColor: 'agora-point-color4',
             participants: {
@@ -40,7 +40,7 @@ export const handlers = [
             status: 'running',
           },
           {
-            id: cursor * 4 + 3,
+            id: cursor * 8 + 3,
             agoraTitle: '소득 불평등 심화가 사회 양극화를 야기하는가?',
             agoraColor: 'agora-point-color1',
             participants: {
@@ -52,7 +52,55 @@ export const handlers = [
             status: 'queued',
           },
           {
-            id: cursor * 4 + 4,
+            id: cursor * 8 + 4,
+            agoraTitle: '인공지능 기술의 발전이 사회의 일자리를 빼앗는가?',
+            agoraColor: 'agora-point-color2',
+            participants: {
+              pros: 10,
+              cons: 10,
+              observer: 10,
+            },
+            createdAt: '2024-04-18T10:30:00Z',
+            status: 'running',
+          },
+          {
+            id: cursor * 8 + 5,
+            agoraTitle: '소득 불평등 심화가 사회 양극화를 야기하는가?',
+            agoraColor: 'agora-point-color3',
+            participants: {
+              pros: 10,
+              cons: 10,
+              observer: 10,
+            },
+            createdAt: '2024-04-18T10:30:00Z',
+            status: 'queued',
+          },
+          {
+            id: cursor * 8 + 6,
+            agoraTitle: '인공지능 기술의 발전이 사회의 일자리를 빼앗는가?',
+            agoraColor: 'agora-point-color4',
+            participants: {
+              pros: 10,
+              cons: 10,
+              observer: 10,
+            },
+            createdAt: '2024-04-18T10:30:00Z',
+            status: 'running',
+          },
+          {
+            id: cursor * 8 + 7,
+            agoraTitle: '소득 불평등 심화가 사회 양극화를 야기하는가?',
+            agoraColor: 'agora-point-color1',
+            participants: {
+              pros: 10,
+              cons: 10,
+              observer: 10,
+            },
+            createdAt: '2024-04-18T10:30:00Z',
+            status: 'queued',
+          },
+          {
+            id: cursor * 8 + 8,
             agoraTitle: '인공지능 기술의 발전이 사회의 일자리를 빼앗는가?',
             agoraColor: 'agora-point-color2',
             participants: {
