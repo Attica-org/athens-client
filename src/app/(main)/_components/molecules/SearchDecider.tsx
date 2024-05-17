@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
-import SearchAgoraList from './SearchAgoraList';
-import AgoraList from './AgoraList';
+import dynamic from 'next/dynamic';
+
+const SearchAgoraList = dynamic(() => import('./SearchAgoraList'));
+const AgoraList = dynamic(() => import('./AgoraList'));
 
 type Props = {
   searchParams: { status?: string, category?: string, q?: string }
