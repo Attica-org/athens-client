@@ -18,7 +18,6 @@
 }
 
 body {
-  font-family: "laundryGothic", sans-serif;
   color: rgb(var(--foreground-rgb));
   min-height: 100%;
 }

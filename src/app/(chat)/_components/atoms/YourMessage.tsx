@@ -1,5 +1,6 @@
 import { Message } from '@/app/model/Message';
 import React from 'react';
+import PROFLELIST from '@/constants/userProfileImage';
 import UserImage from '../../../_components/atoms/UserImage';
 
 export default function YourMessage({ message }: { message: Message }) {
@@ -8,21 +9,22 @@ export default function YourMessage({ message }: { message: Message }) {
       <div aria-hidden className="border-1 border-gray-300 w-fit rounded-3xl dark:bg-white">
         <UserImage
           className="w-60 h-60 under-mobile:w-50 under-mobile:h-50 flex rounded-3xl"
-          name={message.name}
+          name={message.sender.name}
+          file={PROFLELIST[message.sender.photoNum].file}
           w={60}
           h={60}
         />
       </div>
       <div className="p-0.5rem flex flex-col justify-center items-start">
         <div role="region" aria-label="사용자 이름" className="text-xs pb-5 dark:text-white">
-          {message.name}
+          {message.sender.name}
         </div>
         <div className="flex justify-start items-end">
           <div className="max-w-[50vw] whitespace-pre-line bg-blue-200 rounded-tr-xl rounded-bl-xl rounded-br-xl p-0.5rem pl-10 pr-10 text-sm under-mobile:text-xs">
             {message.content}
           </div>
           <div className="flex flex-col justify-end items-end h-full">
-            <time className="text-xxs pl-8 h-full dark:text-dark-line">{message.createdAt}</time>
+            <time className="text-xxs pl-8 h-full dark:text-dark-line">{new Date(message.createdAt).toLocaleTimeString().slice(0, -3)}</time>
           </div>
         </div>
       </div>

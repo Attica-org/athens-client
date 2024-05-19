@@ -1,10 +1,10 @@
 import React from 'react';
 import PageTitle from '../_components/atoms/PageTitle';
 import AgoraStatus from '../_components/atoms/AgoraStatus';
-import SearchBar from '../_components/atoms/SearchBar';
-import AgoraStatusTab from '../_components/atoms/AgoraStatusTab';
-import CategoryButtonContainer from '../_components/organisms/CategoryButtonContainer';
 import SideNav from '../_components/organisms/NavMenu';
+import SearchBarSuspense from '../_components/molecules/SearchBarSuspense';
+import AgoraStatusSuspense from '../_components/molecules/AgoraStatusSuspense';
+import CategoryButtonContainer from '../_components/organisms/CategoryButtonContainer';
 
 type Props = {
   children: React.ReactNode;
@@ -26,10 +26,10 @@ export default function Layout({ children }: Props) {
         <div>
           <section className="sticky top-0 z-10 bg-white dark:bg-dark-bg-light">
             <div className="p-1rem pt-8 pb-0.5rem ">
-              <SearchBar />
+              <SearchBarSuspense />
             </div>
             <div className="w-full pb-0.5rem">
-              <AgoraStatusTab />
+              <AgoraStatusSuspense />
               <CategoryButtonContainer />
             </div>
           </section>

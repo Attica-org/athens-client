@@ -3,6 +3,7 @@ import React from 'react';
 
 type Props = {
   className: string;
+  file?: string | null;
   name?: string | null;
   w: number;
   h: number;
@@ -10,16 +11,16 @@ type Props = {
 
 // min-w-5rem h-5rem bg-yellow-400
 export default function UserImage({
-  className, name = null, w, h,
+  className, file = null, name = null, w, h,
 }: Props) {
   return (
     <div
       className={`rounded-2xl ${className} border-1 border-athens-gray flex justify-center items-center`}
     >
-      {name && (
+      {(file || name) && (
         <Image
           className="object-cover rounded-full"
-          src={`/img/${name}.png`}
+          src={`/img/${file || name}`}
           alt={`${name} 프로필`}
           width={w}
           height={h}

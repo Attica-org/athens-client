@@ -21,7 +21,7 @@ export const getAgoraKeywordSearch:QueryFunction<
       tags: ['agoras', 'search', 'keyword', searchParams.q as string, searchParams.status],
     },
     credentials: 'include',
-    cache: 'no-store',
+    cache: 'no-cache',
   });
 
   if (!res.ok) {

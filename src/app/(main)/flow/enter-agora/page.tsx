@@ -3,6 +3,6 @@ import React from 'react';
 
 export default function Page() {
   return (
-      <EnterAgora />
+    <EnterAgora />
   );
 }

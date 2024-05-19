@@ -13,7 +13,7 @@ export const postCreateAgora = async (info: Props) => {
     credentials: 'include',
     body: JSON.stringify({
       title: info.title,
-      category: info.category,
+      categoryId: info.category,
       color: info.color,
       capacity: info.capacity,
       duration: info.duration,

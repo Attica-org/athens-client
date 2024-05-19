@@ -23,14 +23,21 @@ const value = {
 };
 
 const config: Config = {
+  mode: 'jit',
   darkMode: 'class',
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/_components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    // fontWeight: {
+    //   normal: '400',
+    //   bold: '700',
+    // },
     extend: {
+      // fontFamily: {
+      //   noto: ['var(--noto_sans_kr)', 'sans-serif'],
+      // },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
