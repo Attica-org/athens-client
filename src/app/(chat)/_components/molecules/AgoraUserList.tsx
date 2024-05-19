@@ -5,6 +5,7 @@ type UserList = {
   id: number;
   name: string;
   position: 'pro' | 'con';
+  file: string;
 };
 
 type Props = {
@@ -27,6 +28,7 @@ export default function AgoraUserList({ position, userList }: Props) {
             <UserImage
               aria-hidden
               className="w-40 h-40 bg-white"
+              file={user.file}
               name={user.name}
               w={40}
               h={40}

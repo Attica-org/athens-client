@@ -8,6 +8,7 @@ type UserList = {
   id: number;
   name: string;
   position: 'pro' | 'con';
+  file: string;
 };
 
 export default function AgoraUserSide() {
@@ -15,17 +16,20 @@ export default function AgoraUserSide() {
     {
       id: 1,
       name: '총 든 토끼',
+      file: 'rabbit.png',
       position: 'con',
     },
     {
       id: 2,
       name: '도끼 든 회색 곰',
       position: 'pro',
+      file: 'bear.png',
     },
     {
       id: 3,
       name: '노트북 하는 병아리',
       position: 'pro',
+      file: 'chick.png',
     },
   ];
 

@@ -6,37 +6,48 @@ import MyMessage from '../atoms/MyMessage';
 import YourMessage from '../atoms/YourMessage';
 
 export default function Message() {
-  const myRole = 'con';
+  const myRole = 'cons';
   const messages: IMessage[] = [
     {
-      messageId: 1,
-      role: 'pro',
-      content: '안녕하십니까 형님',
-      name: '도끼 든 회색 곰',
-      createdAt: '11:02',
+      chatId: 'a1b2c3d4e5f6g7h8i9j0',
+      sender: {
+        id: 'abcdef1234567890',
+        name: '사용자A',
+        photoNum: 1,
+        role: 'pros',
+      },
+      content: '안녕하세요! 토론 시작해볼까요?',
+      createdAt: '2024-04-18T10:30:00Z',
     },
     {
-      messageId: 2,
-      role: 'con',
-      content:
-        '나는 낭만 고양이 나는 고양이가 되고 싶어요. 그렇게 나는 길고양이가 되었다고 한다..',
-      name: '총 든 토끼',
-      createdAt: '11:02',
+      chatId: '1a2b3c4d5e6f7g8h9i0j',
+      sender: {
+        id: 'abcdef1234567891',
+        name: '사용자B',
+        photoNum: 4,
+        role: 'cons',
+      },
+      content: '좋습니다! 먼저 시작하시죠',
+      createdAt: '2024-04-18T10:31:30Z',
     },
     {
-      messageId: 3,
-      role: 'pro',
-      content: '아따맘마를 아세요?',
-      name: '노트북 하는 병아리',
-      createdAt: '11:02',
+      chatId: '1a2b3c4d5e6f7g8h9i0j',
+      sender: {
+        id: 'abcdef1234567891',
+        name: '사용자B',
+        photoNum: 3,
+        role: 'cons',
+      },
+      content: '좋아용',
+      createdAt: '2024-04-18T10:31:30Z',
     },
   ];
 
   return (
     <div>
       {messages.map((message) => (
-        <div key={message.messageId}>
-          {message.role === myRole ? (
+        <div key={message.chatId}>
+          {message.sender.role === myRole ? (
             <MyMessage message={message} />
           ) : (
             <YourMessage message={message} />

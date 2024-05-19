@@ -14,12 +14,13 @@ import { postEnterAgoraInfo } from '../../_lib/postEnterAgoraInfo';
 type ProfileImageName = {
   id: number;
   name: string;
+  file: string;
 };
 
 type Position = 'con' | 'pro' | 'observer';
 
 export default function EnterAgora() {
-  const [selectedProfileImage, setSelectedProfileImage] = useState<ProfileImageName>({ id: 1, name: '도끼 든 회색 곰' });
+  const [selectedProfileImage, setSelectedProfileImage] = useState<ProfileImageName>(PROFLELIST[0]);
   const [selectedPosition, setSelectedPosition] = useState<Position>('observer');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -41,13 +42,13 @@ export default function EnterAgora() {
     },
     onSuccess: async () => {
       setIsLoading(() => {
-        router.push(`/agora/${selectedAgora.id}`);
+        router.push(`/agoras/${selectedAgora.id}`);
         return false;
       });
     },
-    onError: (error) => {
-      console.dir(error);
-      alert('문제가 발생했습니다. 다시 시도해주세요.');
+    onError: () => {
+      // console.dir(error);
+      // alert('문제가 발생했습니다. 다시 시도해주세요.');
     },
   });
 
@@ -82,7 +83,7 @@ export default function EnterAgora() {
       </p>
       <div className="flex flex-col justiy-start items-center">
         <div className="flex justify-start items-center mb-10">
-          <UserImage className="w-65 h-65 bg-white" name={selectedProfileImage.name} w={65} h={65} />
+          <UserImage className="w-65 h-65 bg-white" name={selectedProfileImage.name} file={selectedProfileImage.file} w={65} h={65} />
           <div aria-hidden className="text-sm p-0.5rem w-fit ml-12">
             {selectedProfileImage.name}
           </div>
@@ -100,7 +101,7 @@ export default function EnterAgora() {
                 onClick={() => selectProfile(profileImageName)}
                 onKeyDown={(e) => handleKeyDownSetProfile(e, profileImageName)}
               >
-                <UserImage className="rounded-full w-45 h-45 bg-white" name={profileImageName.name} w={45} h={45} />
+                <UserImage className="rounded-full w-45 h-45 bg-white" file={profileImageName.file} name={profileImageName.name} w={45} h={45} />
               </div>
             </li>
           ))}

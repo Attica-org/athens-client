@@ -2,6 +2,7 @@ type Props = {
   info: {
     name: string,
     id: number,
+    file: string,
     role: string,
   },
   agoraId: number,
