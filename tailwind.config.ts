@@ -30,14 +30,14 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    fontWeight: {
-      normal: '400',
-      bold: '700',
-    },
+    // fontWeight: {
+    //   normal: '400',
+    //   bold: '700',
+    // },
     extend: {
-      fontFamily: {
-        noto: ['var(--noto_sans_kr)', 'sans-serif'],
-      },
+      // fontFamily: {
+      //   noto: ['var(--noto_sans_kr)', 'sans-serif'],
+      // },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
