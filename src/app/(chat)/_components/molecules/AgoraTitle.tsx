@@ -1,7 +1,11 @@
 import SpeakerIcon from '@/assets/icons/SpeakerIcon';
 import React from 'react';
 
-export default function AgoraTitle() {
+type Props = {
+  title: string;
+};
+
+export default function AgoraTitle({ title }: Props) {
   return (
     <section className="flex flex-col justify-center items-center w-full dark:bg-dark-light-300 pb-5">
       <h1
@@ -12,7 +16,7 @@ export default function AgoraTitle() {
           className="w-18 mr-0.5rem under-mobile:w-14"
           fill="#10AE5D"
         />
-        국가 발전에는 유능한 독재자가 필요한 시기가 있다.
+        {title}
       </h1>
       <div
         role="status"

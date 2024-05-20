@@ -2,18 +2,23 @@
 
 import EyeIcon from '@/assets/icons/EyeIcon';
 import React, { useState } from 'react';
+import { useSidebarStore } from '@/store/sidebar';
+import { useShallow } from 'zustand/react/shallow';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../atoms/ShareButton';
 import AgoraTitle from './AgoraTitle';
 import HamburgerButton from '../atoms/HamburgerButton';
 
+const title = '기후 변화 대책에 대한 토론';
+
 export default function Header() {
+  const { toggle } = useSidebarStore(
+    useShallow((state) => ({ toggle: state.toggle })),
+  );
   const [progress, setProgress] = useState(false);
-  // TODO: 전역 상태로 메뉴를 열고 닫도록 수정
-  const [toggle, setToggle] = useState(false);
 
   const toggleMenu = () => {
-    setToggle(!toggle);
+    toggle();
   };
 
   const toggleProgress = () => {
@@ -63,12 +68,12 @@ export default function Header() {
           </div>
         </div>
         <div className="flex justify-end items-center mr-0.5rem">
-          <ShareButton />
+          <ShareButton title={title} />
           <HamburgerButton toggleMenu={toggleMenu} />
         </div>
       </div>
       <div className="flex justify-center items-center pt-0.5rem">
-        <AgoraTitle />
+        <AgoraTitle title={title} />
       </div>
     </div>
   );
