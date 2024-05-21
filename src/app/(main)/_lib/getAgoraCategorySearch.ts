@@ -12,7 +12,7 @@ export const getAgoraCategorySearch:QueryFunction<
 { agoras: Agora[], nextCursor: number | null },
 [_1: string, _2: string, _3: string, searchParams: SearchParams],
 { nextCursor: number | null }> = async ({ queryKey, pageParam = { nextCursor: null } }) => {
-  const [, , , { status = 'active', category = '전체' }] = queryKey;
+  const [, , , { status = 'active', category = '1' }] = queryKey;
   const searchParams = { status, category };
 
   const urlSearchParams = new URLSearchParams(searchParams);
