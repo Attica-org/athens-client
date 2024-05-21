@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import PROFLELIST from '@/constants/userProfileImage';
 import UserImage from '@/app/_components/atoms/UserImage';
 import { useMutation } from '@tanstack/react-query';
@@ -25,12 +25,17 @@ export default function EnterAgora() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
   const { selectedAgora } = useAgora();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!selectedAgora.id) {
       router.replace('/home');
     }
-  }, [selectedAgora.id, router]);
+  }, [selectedAgora.id, router, pathname]);
+
+  const routePage = () => {
+    router.push(`/agoras/${selectedAgora.id}`);
+  };
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -41,10 +46,8 @@ export default function EnterAgora() {
       return postEnterAgoraInfo({ info, agoraId: selectedAgora.id });
     },
     onSuccess: async () => {
-      setIsLoading(() => {
-        router.push(`/agoras/${selectedAgora.id}`);
-        return false;
-      });
+      await setIsLoading(false);
+      routePage();
     },
     onError: () => {
       // console.dir(error);
