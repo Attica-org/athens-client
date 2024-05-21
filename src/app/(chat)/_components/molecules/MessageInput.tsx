@@ -2,14 +2,15 @@
 
 import SendIcon from '@/assets/icons/SendIcon';
 import React, {
-  ChangeEventHandler, useState,
+  ChangeEventHandler, KeyboardEventHandler, useEffect, useRef, useState,
 } from 'react';
 
 export default function MessageInput() {
   const [message, setMessage] = useState<string>('');
-  // const inputRef = useRef<HTMLInputElement>(null);
+  const [isComposing, setIsComposing] = useState(false);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleMessage: ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleMessage: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setMessage(e.target.value);
   };
 
@@ -21,32 +22,53 @@ export default function MessageInput() {
     setMessage('');
   };
 
-  // useEffect(() => {
-  //   const handleOutSideClick = (e: MouseEvent) => {
-  //     if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
-  //       inputRef.current.focus();
-  //     }
-  //   };
+  const handleCompositionStart = () => {
+    setIsComposing(true);
+  };
 
-  //   window.addEventListener('click', handleOutSideClick);
+  const handleCompositionEnd = () => {
+    setIsComposing(false);
+  };
 
-  //   const cleanup = () => {
-  //     window.removeEventListener('click', handleOutSideClick);
-  //   };
+  const handleKeyDown:KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
 
-  //   return cleanup;
-  // }, []);
+  useEffect(() => {
+    inputRef.current?.focus();
+    const handleOutSideClick = (e: MouseEvent) => {
+      if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
+        inputRef.current.focus();
+      }
+    };
+
+    window.addEventListener('click', handleOutSideClick);
+
+    const cleanup = () => {
+      window.removeEventListener('click', handleOutSideClick);
+    };
+
+    return cleanup;
+  }, []);
 
   return (
     <section className="flex border-t-1 dark:border-dark-light-300 sticky bottom-0 right-0 left-0 w-full bg-white dark:bg-dark-light-300">
-      <form className="pl-1.5rem p-12 flex flex-1 justify-start items-center h-full">
-        <input
+      <form className="pl-1.5rem p-12 pb-0 flex flex-1 justify-start items-center">
+        <textarea
           aria-label="보낼 메세지 입력창"
-          type="text"
+          ref={inputRef}
           value={message}
           onChange={handleMessage}
+          onKeyDown={handleKeyDown}
+          onCompositionStart={handleCompositionStart}
+          onCompositionEnd={handleCompositionEnd}
           placeholder="메시지 보내기"
-          className="placeholder:text-athens-gray-thick dark:placeholder:text-dark-light-400 dark:placeholder:text-opacity-85 dark:text-opacity-85 dark:text-white text-base w-full focus-visible:outline-none dark:bg-dark-light-300"
+          className="placeholder:text-athens-gray-thick dark:placeholder:text-dark-light-400
+          dark:placeholder:text-opacity-85 dark:text-opacity-85 dark:text-white w-full text-base
+          focus-visible:outline-none dark:bg-dark-light-300 resize-none overflow-hidden h-40"
         />
       </form>
       <button
