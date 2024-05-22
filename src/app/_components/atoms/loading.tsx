@@ -9,7 +9,7 @@ export default function Loading({ w = '45', h = '45' }: Props) {
   const size = `w-${w} h-${h}`;
 
   return (
-    <div role="status" className="m-5 flex justify-center items-center">
+    <div role="status" className="m-2 flex justify-center items-center">
       <svg
         aria-hidden="true"
         className={`${size} text-gray-200 animate-spin dark:text-gray-600 fill-athens-main`}
