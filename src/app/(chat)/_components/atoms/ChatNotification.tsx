@@ -4,15 +4,16 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function ChatNotification() {
   const router = useRouter();
+  const pathname = usePathname();
   const [showMessage, setShowMessage] = useState(true);
 
   // TODO: 전역 상태로 투표 종료 확인, 결과 모달 열기
   const onClick = () => {
-    router.push('/agora/flow/result-agora');
+    router.push(`${pathname}/flow/result-agora`);
   };
 
   useEffect(() => {
