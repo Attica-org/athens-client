@@ -1,11 +1,12 @@
 import React from 'react';
+import PROFLELIST from '@/constants/userProfileImage';
 import UserImage from '../../../_components/atoms/UserImage';
 
 type UserList = {
   id: number;
-  name: string;
-  position: 'pros' | 'cons';
-  file: string;
+  nickname: string;
+  photoNumber: number;
+  type: 'PROS' | 'CONS' | 'OBSERVERS';
 };
 
 type Props = {
@@ -28,12 +29,12 @@ export default function AgoraUserList({ position, userList }: Props) {
             <UserImage
               aria-hidden
               className="w-40 h-40 bg-white"
-              file={user.file}
-              name={user.name}
+              file={PROFLELIST[user.photoNumber].file}
+              name={user.nickname}
               w={40}
               h={40}
             />
-            <div className="ml-0.5rem text-sm dark:text-white dark:text-opacity-85">{user.name}</div>
+            <div className="ml-0.5rem text-sm dark:text-white dark:text-opacity-85">{user.nickname}</div>
           </li>
         ))}
       </ul>

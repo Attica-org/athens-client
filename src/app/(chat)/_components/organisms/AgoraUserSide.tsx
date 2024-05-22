@@ -1,40 +1,14 @@
 'use client';
 
 import RemoveIcon from '@/assets/icons/RemoveIcon';
-import React, { KeyboardEventHandler, MouseEventHandler } from 'react';
+import React, { KeyboardEventHandler, MouseEventHandler, Suspense } from 'react';
 import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
-import AgoraUserList from '../molecules/AgoraUserList';
-
-type UserList = {
-  id: number;
-  name: string;
-  position: 'pros' | 'cons';
-  file: string;
-};
+import { usePathname } from 'next/navigation';
+import AgoraUserSuspense from './AgoraUserSuspense';
 
 export default function AgoraUserSide() {
-  const userList: UserList[] = [
-    {
-      id: 1,
-      name: '총 든 토끼',
-      file: 'rabbit.png',
-      position: 'cons',
-    },
-    {
-      id: 2,
-      name: '도끼 든 회색 곰',
-      position: 'pros',
-      file: 'bear.png',
-    },
-    {
-      id: 3,
-      name: '노트북 하는 병아리',
-      position: 'pros',
-      file: 'chick.png',
-    },
-  ];
-
+  const agoraId = usePathname().split('/').pop();
   const { toggle, isOpen } = useSidebarStore(
     useShallow((state) => ({ toggle: state.toggle, isOpen: state.isOpen })),
   );
@@ -84,9 +58,9 @@ export default function AgoraUserSide() {
               <RemoveIcon className="w-22 cursor-pointer" />
             </button>
           </div>
-          <AgoraUserList position="pros" userList={userList} />
-          <div className="border-b-1 border-gray-200 mb-1rem dark:border-gray-500" />
-          <AgoraUserList position="cons" userList={userList} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <AgoraUserSuspense agoraId={agoraId as string} />
+          </Suspense>
         </section>
       </div>
     </aside>
