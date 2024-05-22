@@ -4,7 +4,7 @@ import UserImage from '../../../_components/atoms/UserImage';
 type UserList = {
   id: number;
   name: string;
-  position: 'pro' | 'con';
+  position: 'pros' | 'cons';
   file: string;
 };
 
@@ -17,7 +17,7 @@ export default function AgoraUserList({ position, userList }: Props) {
   return (
     <div className="pb-0.5rem">
       <h3 id={position} className="text-sm pb-1rem dark:text-white dark:text-opacity-85">
-        {position === 'pro' ? '찬성측' : '반대측'}
+        {position === 'pros' ? '찬성측' : '반대측'}
       </h3>
       <ul
         aria-labelledby={position}

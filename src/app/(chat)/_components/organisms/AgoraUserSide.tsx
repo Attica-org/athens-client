@@ -9,7 +9,7 @@ import AgoraUserList from '../molecules/AgoraUserList';
 type UserList = {
   id: number;
   name: string;
-  position: 'pro' | 'con';
+  position: 'pros' | 'cons';
   file: string;
 };
 
@@ -19,18 +19,18 @@ export default function AgoraUserSide() {
       id: 1,
       name: '총 든 토끼',
       file: 'rabbit.png',
-      position: 'con',
+      position: 'cons',
     },
     {
       id: 2,
       name: '도끼 든 회색 곰',
-      position: 'pro',
+      position: 'pros',
       file: 'bear.png',
     },
     {
       id: 3,
       name: '노트북 하는 병아리',
-      position: 'pro',
+      position: 'pros',
       file: 'chick.png',
     },
   ];
@@ -84,9 +84,9 @@ export default function AgoraUserSide() {
               <RemoveIcon className="w-22 cursor-pointer" />
             </button>
           </div>
-          <AgoraUserList position="pro" userList={userList} />
+          <AgoraUserList position="pros" userList={userList} />
           <div className="border-b-1 border-gray-200 mb-1rem dark:border-gray-500" />
-          <AgoraUserList position="con" userList={userList} />
+          <AgoraUserList position="cons" userList={userList} />
         </section>
       </div>
     </aside>

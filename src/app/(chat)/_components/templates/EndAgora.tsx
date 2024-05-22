@@ -4,7 +4,7 @@ import ModalBase from '@/app/_components/molecules/ModalBase';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 
-type ResultPosition = 'pro' | 'con' | 'abs';
+type ResultPosition = 'pros' | 'cons' | 'abs';
 
 export default function EndAgora() {
   const [selectedResultPosition, setSelectedResultPosition] = useState<ResultPosition>('abs');
@@ -59,9 +59,9 @@ export default function EndAgora() {
           <button
             type="button"
             aria-label="찬성하기"
-            onClick={() => selectResultPosition('pro')}
+            onClick={() => selectResultPosition('pros')}
             className={`${
-              selectedResultPosition === 'pro'
+              selectedResultPosition === 'pros'
                 ? 'bg-blue-400 text-white'
                 : 'text-blue-600 bg-white dark:text-white dark:bg-dark-light-500'
             } mr-1rem text-sm p-6 pl-1.5rem pr-1.5rem rounded-xl`}
@@ -71,9 +71,9 @@ export default function EndAgora() {
           <button
             type="button"
             aria-label="반대하기"
-            onClick={() => selectResultPosition('con')}
+            onClick={() => selectResultPosition('cons')}
             className={`${
-              selectedResultPosition === 'con'
+              selectedResultPosition === 'cons'
                 ? 'bg-red-400 text-white '
                 : 'bg-white text-red-500 dark:text-white dark:bg-dark-light-500'
             } text-sm p-6 pl-1.5rem pr-1.5rem rounded-xl`}
