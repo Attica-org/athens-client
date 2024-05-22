@@ -36,7 +36,6 @@ export default function EnterAgoraButton() {
       return postEnterAgoraInfo({ info, agoraId: selectedAgora.id });
     },
     onSuccess: async () => {
-      await setIsLoading(false);
       routePage();
     },
     onError: () => {
