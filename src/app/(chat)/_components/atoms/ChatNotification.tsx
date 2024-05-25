@@ -9,7 +9,7 @@ import { usePathname, useRouter } from 'next/navigation';
 export default function ChatNotification() {
   const router = useRouter();
   const pathname = usePathname();
-  const [showMessage, setShowMessage] = useState(true);
+  const [showMessage, setShowMessage] = useState(false);
 
   // TODO: 전역 상태로 투표 종료 확인, 결과 모달 열기
   const onClick = () => {
@@ -18,7 +18,7 @@ export default function ChatNotification() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowMessage(false);
+      setShowMessage(true);
     }, 10000);
 
     return () => clearTimeout(timer);
