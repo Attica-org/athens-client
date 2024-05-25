@@ -6,6 +6,134 @@ const delay = (ms: number) => new Promise((resolve) => {
 
 // eslint-disable-next-line import/prefer-default-export
 export const handlers = [
+  http.get('/api/v1/agoras/:agoraId/chats', async ({ request }) => {
+    delay(500);
+    const url = new URL(request.url);
+    const cursor = parseInt(url.searchParams.get('key') as string, 10) || 0;
+
+    return HttpResponse.json({
+      success: true,
+      response: {
+        chats: [
+          {
+            chatId: cursor + 10,
+            user: {
+              id: 16,
+              nickname: '사용자A',
+              photoNumber: 0,
+              type: 'PROS',
+            },
+            content: '안녕하세요! 토론 시작해볼까요?',
+            createdAt: '2024-05-23T21:01:21.382692',
+          },
+          {
+            chatId: cursor + 9,
+            user: {
+              id: 16,
+              nickname: '사용자B',
+              photoNumber: 1,
+              type: 'PROS',
+            },
+            content: '좋습니다! 먼저 시작하시죠',
+            createdAt: '2024-05-23T17:18:18.976027',
+          },
+          {
+            chatId: cursor + 8,
+            user: {
+              id: 16,
+              nickname: '사용자C',
+              photoNumber: 2,
+              type: 'CONS',
+            },
+            content: '좋아용',
+            createdAt: '2024-05-23T17:16:13.287576',
+          },
+          {
+            chatId: cursor + 7,
+            user: {
+              id: 16,
+              nickname: '사용자D',
+              photoNumber: 3,
+              type: 'CONS',
+            },
+            content: '코테 어렵지 않았나요? 너무 구현 문제가 많아서 시간이 오래 걸리던데',
+            createdAt: '2024-05-23T16:03:15.601187',
+          },
+          {
+            chatId: cursor + 6,
+            user: {
+              id: 16,
+              nickname: '사용자F',
+              photoNumber: 4,
+              type: 'PROS',
+            },
+            content: '맞아요!!! 너무 시간이 부족해요',
+            createdAt: '2024-05-23T16:02:35.484386',
+          },
+          {
+            chatId: cursor + 5,
+            user: {
+              id: 16,
+              nickname: '사용자A',
+              photoNumber: 0,
+              type: 'PROS',
+            },
+            content: '너무 힘들어요~ 미세먼지도 많고~',
+            createdAt: '2024-05-23T15:59:45.284732',
+          },
+          {
+            chatId: cursor + 4,
+            user: {
+              id: 16,
+              nickname: '사용자B',
+              photoNumber: 1,
+              type: 'PROS',
+            },
+            content: '하하하하하하 저는 합격 기대도 안합니다.',
+            createdAt: '2024-05-23T15:36:01.016162',
+          },
+          {
+            chatId: cursor + 3,
+            user: {
+              id: 16,
+              nickname: '사용자C',
+              photoNumber: 2,
+              type: 'CONS',
+            },
+            content: '그래도 혹시 모르는거죠!',
+            createdAt: '2024-05-23T15:35:13.458079',
+          },
+          {
+            chatId: cursor + 2,
+            user: {
+              id: 16,
+              nickname: '사용자D',
+              photoNumber: 3,
+              type: 'CONS',
+            },
+            content: '쉬익쉬익 그럴 수가 없어요',
+            createdAt: '2024-05-23T15:34:40.632097',
+          },
+          {
+            chatId: cursor + 1,
+            user: {
+              id: 16,
+              nickname: '사용자B',
+              photoNumber: 1,
+              type: 'PROS',
+            },
+            content: 'ㅠㅜ...',
+            createdAt: '2024-05-23T14:58:11.330042',
+          },
+        ],
+        meta: {
+          key: cursor + 10,
+          size: 10,
+        },
+      },
+      error: null,
+    });
+  }),
   http.get('/api/v1/agoras', async ({ request }) => {
     delay(500);
     const url = new URL(request.url);
@@ -195,127 +323,6 @@ export const handlers = [
         ],
       },
       error: null,
-    });
-  }),
-  http.get('/api/v1/agoras/:agoraId/chats', async () => {
-    HttpResponse.json({
-      agoraId: 1,
-      chats: [
-        {
-          chatId: 22,
-          user: {
-            id: 16,
-            nickname: 'dd',
-            photoNumber: 1,
-            agoraUserType: 'PROS',
-          },
-          content: 'ha ha yo',
-          createdAt: '2024-05-20T21:03:02.470432',
-        },
-        {
-          chatId: 21,
-          user: {
-            id: 16,
-            nickname: 'dd',
-            photoNumber: 1,
-            agoraUserType: 'PROS',
-          },
-          content: 'hey yo',
-          createdAt: '2024-05-20T21:02:56.182039',
-        },
-        {
-          chatId: 20,
-          user: {
-            id: 16,
-            nickname: 'dd',
-            photoNumber: 1,
-            agoraUserType: 'PROS',
-          },
-          content: 'hihi',
-          createdAt: '2024-05-20T21:02:51.196496',
-        },
-        {
-          chatId: 19,
-          user: {
-            id: 16,
-            nickname: 'dd',
-            photoNumber: 1,
-            agoraUserType: 'PROS',
-          },
-          content: 'hihi',
-          createdAt: '2024-05-20T21:02:48.942878',
-        },
-        {
-          chatId: 18,
-          user: {
-            id: 16,
-            nickname: 'dd',
-            photoNumber: 1,
-            agoraUserType: 'PROS',
-          },
-          content: 'hihi',
-          createdAt: '2024-05-20T20:39:51.957223',
-        },
-        {
-          chatId: 17,
-          user: {
-            id: 16,
-            nickname: 'dd',
-            photoNumber: 1,
-            agoraUserType: 'PROS',
-          },
-          content: 'nicetoMeetyou',
-          createdAt: '2024-05-20T15:33:42.603558',
-        },
-        {
-          chatId: 16,
-          user: {
-            id: 16,
-            nickname: 'dd',
-            photoNumber: 1,
-            agoraUserType: 'PROS',
-          },
-          content: 'hi',
-          createdAt: '2024-05-20T15:33:34.023178',
-        },
-        {
-          chatId: 3,
-          user: {
-            id: 3,
-            nickname: 'PolicyExpert',
-            photoNumber: 3,
-            agoraUserType: 'OBSERVER',
-          },
-          content: '양측의 입장을 고려하여 균형 잡힌 정책을 수립해야 할 것 같습니다.',
-          createdAt: '2024-05-21T00:24:43',
-        },
-        {
-          chatId: 2,
-          user: {
-            id: 2,
-            nickname: 'BusinessLeader',
-            photoNumber: 2,
-            agoraUserType: 'CONS',
-          },
-          content: '그렇게 되면 경제에 타격이 갈 것입니다. 현실적인 대안이 필요합니다.',
-          createdAt: '2024-05-21T00:24:43',
-        },
-        {
-          chatId: 1,
-          user: {
-            id: 1,
-            nickname: 'EnvironmentalActivist',
-            photoNumber: 1,
-            agoraUserType: 'PROS',
-          },
-          content: '기후 변화 대책으로 화석 연료 사용을 점진적으로 중단해야 합니다.',
-          createdAt: '2024-05-21T00:24:43',
-        },
-      ],
-      meta: {
-        key: 1,
-        effectiveSize: 10,
-      },
     });
   }),
 ];

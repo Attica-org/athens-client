@@ -7,12 +7,12 @@
 // }
 
 export interface Message {
-  chatId: string,
-  sender: {
+  chatId: number,
+  user: {
     id: string,
-    name: string,
-    photoNum: number,
-    role: string,
+    nickname: string,
+    photoNumber: number,
+    type: string,
   },
   content: string,
   createdAt: string,
