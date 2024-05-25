@@ -1,59 +1,115 @@
 'use client';
 
 import { Message as IMessage } from '@/app/model/Message';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  InfiniteData, useQueryClient, useSuspenseInfiniteQuery,
+} from '@tanstack/react-query';
+import { usePathname } from 'next/navigation';
+import { useInView } from 'react-intersection-observer';
+import { useMessageStore } from '@/store/message';
 import MyMessage from '../atoms/MyMessage';
 import YourMessage from '../atoms/YourMessage';
+import { getChatMessages } from '../../_lib/getChatMessages';
+import ChatNotification from '../atoms/ChatNotification';
+
+interface Meta {
+  key: number | null;
+  size: number;
+}
 
 export default function Message() {
-  const myRole = 'cons';
-  const messages: IMessage[] = [
-    {
-      chatId: 'a1b2c3d4e5f6g7h8i9j0',
-      sender: {
-        id: 'abcdef1234567890',
-        name: '사용자A',
-        photoNum: 1,
-        role: 'pros',
-      },
-      content: '안녕하세요! 토론 시작해볼까요?',
-      createdAt: '2024-04-18T10:30:00Z',
-    },
-    {
-      chatId: '1a2b3c4d5e6f7g8h9i0j',
-      sender: {
-        id: 'abcdef1234567891',
-        name: '사용자B',
-        photoNum: 4,
-        role: 'cons',
-      },
-      content: '좋습니다! 먼저 시작하시죠',
-      createdAt: '2024-04-18T10:31:30Z',
-    },
-    {
-      chatId: '1a2b3c4d5e6f7g8h9i0j',
-      sender: {
-        id: 'abcdef1234567891',
-        name: '사용자B',
-        photoNum: 3,
-        role: 'cons',
-      },
-      content: '좋아용',
-      createdAt: '2024-04-18T10:31:30Z',
-    },
-  ];
+  const [pageRendered, setPageRendered] = useState(false);
+  const [adjustScroll, setAdjustScroll] = useState(false);
+  const listRef = useRef<HTMLDivElement>(null);
+  const { shouldGoDown, setGoDown } = useMessageStore();
+  const myRole = 'CONS';
+  const agoraId = usePathname().split('/').pop();
+  const queryClient = useQueryClient();
+
+  const {
+    data, hasPreviousPage, isFetching, fetchPreviousPage,
+  } = useSuspenseInfiniteQuery<
+  { chats: IMessage[], meta: Meta },
+  Object,
+  InfiniteData<{ chats: IMessage[], meta: Meta }
+  >, [_1: string, _2: string, _3: string], { meta: Meta }>({
+    queryKey: ['chat', `${agoraId}`, 'messages'],
+    queryFn: getChatMessages,
+    staleTime: 60 * 1000,
+    gcTime: 500 * 1000,
+    initialPageParam: { meta: { key: null, size: 20 } },
+    getPreviousPageParam: (firstPage) => (
+      firstPage.meta.key !== -1 ? { meta: firstPage.meta } : undefined
+    ),
+    getNextPageParam: (lastPage) => (
+      lastPage.meta.key !== -1 ? { meta: lastPage.meta } : undefined
+    ),
+  });
+
+  const { ref, inView } = useInView({
+    threshold: 0,
+    delay: 0,
+    rootMargin: '100px',
+  });
+
+  const [cnt, setCnt] = useState(0);
+  useEffect(() => {
+    if (inView && hasPreviousPage && !isFetching && !adjustScroll && cnt < 1) {
+      const prevHeight = listRef.current?.scrollHeight || 0;
+      setAdjustScroll(() => true);
+
+      fetchPreviousPage()
+        .then(() => {
+          setTimeout(() => {
+            setCnt((prev) => prev + 1);
+            if (listRef.current) {
+              const moveScroll = listRef.current.scrollHeight - prevHeight;
+              listRef.current.scrollTop = moveScroll;
+            }
+            setAdjustScroll(false);
+          }, 0);
+        });
+    }
+  }, [inView, fetchPreviousPage, isFetching, hasPreviousPage, adjustScroll, cnt]);
+
+  const hasMessage = data?.pages[0].chats.length > 0;
+  useEffect(() => {
+    if (hasMessage && !pageRendered) {
+      listRef.current?.scrollTo(0, listRef.current.scrollHeight);
+      setPageRendered(true);
+    }
+  }, [hasMessage, pageRendered]);
+
+  useEffect(() => {
+    if (shouldGoDown) {
+      // listRef.current?.scrollIntoView({ block: 'end' });
+      listRef.current?.scrollTo(0, listRef.current.scrollHeight);
+      setGoDown(false);
+    }
+
+    return () => {
+      queryClient.removeQueries({ queryKey: ['chat', `${agoraId}`, 'messages'] });
+    };
+  }, [shouldGoDown, setGoDown, queryClient, agoraId]);
 
   return (
-    <div>
-      {messages.map((message) => (
-        <div key={message.chatId}>
-          {message.sender.role === myRole ? (
-            <MyMessage message={message} />
-          ) : (
-            <YourMessage message={message} />
-          )}
-        </div>
+    <div ref={listRef} className="overflow-y-scroll flex-1">
+      {!adjustScroll && pageRendered && <div ref={ref} className="h-1" />}
+      {data?.pages.map((page) => (
+        <React.Fragment key={page.chats[0]?.chatId}>
+          {page.chats.map((message) => (
+            <div key={message.chatId}>
+              {message.user.type === myRole ? (
+                <MyMessage message={message} />
+              ) : (
+                <YourMessage message={message} />
+              )}
+            </div>
+          ))}
+        </React.Fragment>
       ))}
+      <ChatNotification />
     </div>
   );
 }

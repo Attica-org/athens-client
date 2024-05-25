@@ -12,13 +12,11 @@ export default function Layout({ children }: Props) {
     <div className="lg:flex overflow-x-hidden xl:w-[1580px] w-full">
       <section className="flex flex-1 h-dvh max-lg:pb-3rem min-w-270 flex-grow max-width-screen relative">
         <section className="flex flex-1 h-dvh flex-col">
-          <div className="justify-center items-stretch flex flex-col w-full h-full flex-1 relative">
+          <div className="overflow-y-hidden justify-center items-stretch flex flex-col w-full h-full flex-1 relative">
             <section className="flex sticky w-full top-0 bg-white dark:bg-dark-bg-light justify-between items-center pt-10 min-w-270 border-b-1 border-gray-200 dark:border-dark-light-300">
               <Header />
             </section>
-            <div className="flex flex-1">
-              {children}
-            </div>
+            {children}
             <MessageInput />
           </div>
         </section>

@@ -1,6 +1,7 @@
 'use client';
 
 import SendIcon from '@/assets/icons/SendIcon';
+import { useMessageStore } from '@/store/message';
 import React, {
   ChangeEventHandler, KeyboardEventHandler, useEffect, useRef, useState,
 } from 'react';
@@ -9,6 +10,7 @@ export default function MessageInput() {
   const [message, setMessage] = useState<string>('');
   const [isComposing, setIsComposing] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const { setGoDown } = useMessageStore();
 
   const handleMessage: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setMessage(e.target.value);
@@ -20,6 +22,7 @@ export default function MessageInput() {
     // TODO: 메시지 소켓 전송
 
     setMessage('');
+    setGoDown(true);
   };
 
   const handleCompositionStart = () => {
