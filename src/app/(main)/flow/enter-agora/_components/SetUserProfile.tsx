@@ -15,7 +15,7 @@ type ProfileImageName = {
 
 export default function SetUserProfile() {
   const {
-    setProfileImage, reset
+    setProfileImage, reset,
   } = useEnter(
     useShallow((state) => ({
       setProfileImage: state.setProfileImage,
@@ -36,11 +36,9 @@ export default function SetUserProfile() {
     }
   };
 
-  useEffect(() => {
-    return () => {
-      reset();
-    };
-  }, [])
+  useEffect(() => () => {
+    reset();
+  }, [reset]);
 
   return (
     <div className="flex flex-col justiy-start items-center">
