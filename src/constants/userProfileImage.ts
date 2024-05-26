@@ -4,6 +4,8 @@ const PROFLELIST = [
   { id: 3, name: '안경 쓴 기린', file: 'giraffe.png' },
   { id: 4, name: '책 읽는 코알라', file: 'koala.png' },
   { id: 5, name: '총 든 토끼', file: 'rabbit.png' },
+  { id: 6, name: '선글라스 쓴 고양이', file: 'cat.png' },
+  { id: 7, name: '조개 든 수달', file: 'otter.png' },
 ];
 
 export default PROFLELIST;
