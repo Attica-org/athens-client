@@ -76,7 +76,7 @@ const config: Config = {
     screens: {
       'under-mobile': { max: '359px' },
       mobile: '360px',
-      'under-foldable': { max: '522px', min: '410' },
+      'under-foldable': { max: '522px', min: '410px' },
       foldable: '523px',
       sm: '640px',
       'under-tablet': { max: '767px', min: '695px' },

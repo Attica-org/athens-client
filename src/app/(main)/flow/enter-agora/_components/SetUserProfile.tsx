@@ -43,7 +43,7 @@ export default function SetUserProfile() {
   return (
     <div className="flex flex-col justiy-start items-center">
       <SelectedProfile />
-      <ul aria-label="사용할 프로필 이미지 선택" className="grid grid-cols-5 under-mobile:grid-cols-4 mobile:grid-cols-4 foldable:grid-cols-5 gap-y-5  pl-1rem">
+      <ul aria-label="사용할 프로필 이미지 선택" className="grid grid-cols-5 under-mobile:grid-cols-4 mobile:grid-cols-4 foldable:grid-cols-5 tablet:flex gap-y-5  pl-1rem">
         {PROFLELIST.map((profileImageName) => (
           <li
             key={profileImageName.id}
