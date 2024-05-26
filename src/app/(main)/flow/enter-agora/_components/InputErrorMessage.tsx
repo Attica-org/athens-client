@@ -10,8 +10,8 @@ export default function InputErrorMessage() {
   return (
     <div>
       { message && (
-        <div role="alert" aria-live="polite" className="mb-12 dark:text-dark-con-color text-red-400 text-sm w-full flex justify-center items-center">
-          {`** ${message} **`}
+        <div role="alert" aria-live="polite" className="mb-16 dark:text-dark-con-color text-red-400 text-sm w-full flex justify-center items-center">
+          {`${message}`}
         </div>
       )}
     </div>

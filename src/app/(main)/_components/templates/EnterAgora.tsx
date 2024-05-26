@@ -16,9 +16,9 @@ export default function EnterAgora() {
       <p className="text-base p-1rem flex justify-center items-cener text-center break-keep font-medium">
         {selectedAgora.title}
       </p>
+      <ModalPosSelectContainer />
       <InputErrorMessage />
       <SetUserProfile />
-      <ModalPosSelectContainer />
       <EnterAgoraButton />
     </ModalBase>
   );
