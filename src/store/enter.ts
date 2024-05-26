@@ -7,7 +7,7 @@ type ProfileImage = {
   file: string,
 };
 
-type Position = 'cons' | 'pros' | 'observers';
+type Position = 'CONS' | 'PROS' | 'OBSERVERS';
 
 interface EnterState {
   nickname: string;
@@ -27,13 +27,13 @@ interface EnterState {
 
 const initialState: EnterState = {
   nickname: '',
-  message: '',
+  message: '관찰자는 프로필을 설정할 수 없습니다.',
   selectedProfileImage: {
     id: 1,
     name: '도끼 든 회색 곰',
     file: 'bear.png',
   },
-  selectedPosition: 'observers',
+  selectedPosition: 'OBSERVERS',
   setMessage: () => {},
   setSelectedPosition: () => {},
   setNickname: () => {},
@@ -50,12 +50,12 @@ export const useEnter = create(immer<EnterState>((set) => ({
   setProfileImage: (profileImage: ProfileImage) => set({ selectedProfileImage: profileImage }),
   reset: () => set({
     nickname: '',
-    message: '',
+    message: '관찰자는 프로필을 설정할 수 없습니다.',
     selectedProfileImage: {
       id: 1,
       name: '도끼 든 회색 곰',
       file: 'bear.png',
     },
-    selectedPosition: 'observers',
+    selectedPosition: 'OBSERVERS',
   }),
 })));
