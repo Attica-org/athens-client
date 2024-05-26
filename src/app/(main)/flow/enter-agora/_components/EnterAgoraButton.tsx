@@ -45,14 +45,17 @@ export default function EnterAgoraButton() {
   });
 
   const enterAgora = () => {
-    const { nickname, setMessage } = useEnter.getState();
-    if (nickname.length > 10) {
-      setMessage('닉네임은 10자 이내로 입력해주세요.');
-      return;
-    }
-    if (nickname.trim().length === 0) {
-      setMessage('닉네임을 입력해주세요.');
-      return;
+    const { nickname, setMessage, selectedPosition } = useEnter.getState();
+
+    if (selectedPosition !== 'OBSERVERS') {
+      if (nickname.length > 10) {
+        setMessage('닉네임은 10자 이내로 입력해주세요.');
+        return;
+      }
+      if (nickname.trim().length === 0) {
+        setMessage('닉네임을 입력해주세요.');
+        return;
+      }
     }
 
     setIsLoading(() => {
