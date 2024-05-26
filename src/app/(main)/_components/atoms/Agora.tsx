@@ -2,8 +2,10 @@
 
 import { Agora as IAgora } from '@/app/model/Agora';
 import { useAgora } from '@/store/agora';
-import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
+import { postEnterAgoraInfo } from '../../_lib/postEnterAgoraInfo';
 
 type Props = {
   agora: IAgora,
@@ -14,12 +16,40 @@ export default function Agora({ agora }: Props) {
     id, agoraTitle, agoraColor, participants, status,
   } = agora;
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { setSelectedAgora } = useAgora();
+
+  const routePage = () => {
+    router.push(`/agoras/${id}`);
+  };
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const info = {
+        role: 'OBSERVERS',
+      };
+      return postEnterAgoraInfo({ info, agoraId: id });
+    },
+    onSuccess: async () => {
+      routePage();
+    },
+    onError: () => {
+      // console.dir(error);
+      // alert('문제가 발생했습니다. 다시 시도해주세요.');
+    },
+  });
 
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
   const enterAgora = () => {
     setSelectedAgora({ id, title: agoraTitle });
-    router.push('/flow/enter-agora');
+
+    const AgoraStatus = searchParams.get('status');
+    if (AgoraStatus === 'active') {
+      router.push('/flow/enter-agora');
+    } else if (AgoraStatus === 'closed') {
+      // 바로 채팅방으로 이동
+      mutation.mutate();
+    }
   };
 
   return (

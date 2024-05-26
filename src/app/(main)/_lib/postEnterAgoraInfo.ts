@@ -1,10 +1,10 @@
 type Props = {
   info: {
-    name: string,
-    id: number,
-    file: string,
+    name?: string,
+    id?: number,
+    file?: string,
     role: string,
-    nickname: string,
+    nickname?: string,
   },
   agoraId: number,
 };
@@ -15,8 +15,8 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
     method: 'post',
     credentials: 'include',
     body: JSON.stringify({
-      nickname: info.nickname,
-      photo_num: info.id,
+      nickname: info.nickname ? info.nickname : '',
+      photo_num: info.id ? info.id : 0,
       role: info.role,
     }),
   });
