@@ -30,6 +30,7 @@ function CategoryButtonList() {
   );
 
   const changeParams = useCallback((id: number) => {
+    if (pathname !== '/home') return;
     const newSearchParams = new URLSearchParams(searchParams);
 
     newSearchParams.set('category', AGORACATEGORY[id].value);
@@ -37,7 +38,7 @@ function CategoryButtonList() {
     search.reset();
 
     router.replace(`/home?${newSearchParams.toString()}`);
-  }, [router, searchParams, search]);
+  }, [router, searchParams, search, pathname]);
 
   useEffect(() => {
     const swiper = new Swiper('.swiper', {

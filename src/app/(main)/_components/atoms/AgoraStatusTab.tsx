@@ -1,7 +1,7 @@
 'use client';
 
-import { useSearchParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import React, { useCallback, useEffect, useState } from 'react';
 
 type Status = 'active' | 'closed';
 
@@ -9,17 +9,22 @@ function AgoraStatusTab() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<Status>(searchParams.get('status') as Status || 'active');
   const router = useRouter();
+  const pathname = usePathname();
 
-  const changeParams = () => {
+  const changeParams = useCallback(() => {
+    if (pathname !== '/home') return;
     const newSearchParams = new URLSearchParams(searchParams);
 
     newSearchParams.set('status', status);
     router.push(`/home?${newSearchParams.toString()}`);
-  };
+  }, [router, searchParams, status, pathname]);
 
-  const changeStatus = async (state: Status) => {
-    await setStatus(state);
+  useEffect(() => {
     changeParams();
+  }, [status, changeParams]);
+
+  const changeStatus = (state: Status) => {
+    setStatus(state);
   };
 
   return (
