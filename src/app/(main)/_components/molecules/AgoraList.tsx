@@ -6,6 +6,7 @@ import { Agora as IAgora } from '@/app/model/Agora';
 import { useInView } from 'react-intersection-observer';
 import Agora from '../atoms/Agora';
 import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
+import NoAgoraMessage from '../atoms/NoAgoraMessage';
 
 type Props = {
   searchParams: { status?: string, category?: string, q?: string },
@@ -40,13 +41,15 @@ export default function AgoraList({ searchParams }: Props) {
   return (
     <>
       <div className="grid under-large:grid-cols-5 gap-x-1rem gap-y-1rem under-mobile:grid-cols-2 mobile:grid-cols-2 foldable:grid-cols-3 tablet:grid-cols-4 under-tablet:grid-cols-4 xl:grid-cols-6 sm:grid-cols-3 lg:grid-cols-5 under-xl:grid-cols-4">
-        {data?.pages.map((page) => (
-          <React.Fragment key={page.agoras[0]?.id}>
-            {page.agoras.map((agora) => (
-              <Agora key={agora.id} agora={agora} />
-            ))}
-          </React.Fragment>
-        ))}
+        {data?.pages[0].agoras.length < 1
+          ? <NoAgoraMessage />
+          : data?.pages.map((page) => (
+            <React.Fragment key={page.agoras[0]?.id}>
+              {page.agoras.map((agora) => (
+                <Agora key={agora.id} agora={agora} />
+              ))}
+            </React.Fragment>
+          ))}
       </div>
       <div ref={ref} />
     </>
