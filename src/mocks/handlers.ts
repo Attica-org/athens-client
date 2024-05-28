@@ -245,18 +245,20 @@ export const handlers = [
       },
     });
   }),
-  http.get('/api/v1/agorasId', async () => HttpResponse.json({
-    success: true,
-    response: {
-      agoras: [
-        { id: '5f9f1b9b9c9d1b0b8c8b4568', updatedAt: '2024-04-18T10:30:00Z' },
-        { id: '5f9f1b9b9c9d1b0b8c8b4569', updatedAt: '2024-04-18T10:30:00Z' },
-        { id: '5f9f1b9b9c9d1b0b8c8b4570', updatedAt: '2024-04-18T10:30:00Z' },
-        { id: '5f9f1b9b9c9d1b0b8c8b4571', updatedAt: '2024-04-18T10:30:00Z' },
-      ],
-    },
-    error: null,
-  })),
+  http.get('/api/v1/agorasId', async () => {
+    HttpResponse.json({
+      success: true,
+      response: {
+        agoras: [
+          { id: '5f9f1b9b9c9d1b0b8c8b4568', updatedAt: '2024-04-18T10:30:00Z' },
+          { id: '5f9f1b9b9c9d1b0b8c8b4569', updatedAt: '2024-04-18T10:30:00Z' },
+          { id: '5f9f1b9b9c9d1b0b8c8b4570', updatedAt: '2024-04-18T10:30:00Z' },
+          { id: '5f9f1b9b9c9d1b0b8c8b4571', updatedAt: '2024-04-18T10:30:00Z' },
+        ],
+      },
+      error: null,
+    });
+  }),
   http.post('/api/v1/agoras/:agoraId/participants', async () => {
     delay(500);
 
