@@ -7,7 +7,7 @@ type Props = {
 
 export default function Layout({ children, modal }: Props) {
   return (
-    <div className="overflow-x-hidden justify-center items-center w-full">
+    <div className="overflow-x-hidden justify-center items-center w-full h-full">
       {children}
       {modal}
     </div>
