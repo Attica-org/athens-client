@@ -6,6 +6,7 @@ import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
 import { usePathname } from 'next/navigation';
 import AgoraUserSuspense from './AgoraUserSuspense';
+import AgoraUserSideSkeleton from './AgoraUserSideSkeleton';
 
 export default function AgoraUserSide() {
   const agoraId = usePathname().split('/').pop();
@@ -45,7 +46,7 @@ export default function AgoraUserSide() {
         }`}
       >
         <section
-          className={`p-1rem right-0 transition duration-500 ease-in-out w-screen inset-y-0 bg-white dark:bg-dark-light-300 flex-1 flex-col h-dvh border-l-1 border-athens-gray dark:border-dark-light-300 max-w-15rem xl:w-15rem under-mobile:w-[70vw] ${
+          className={`overflow-y-scroll scrollbar-hide p-1rem right-0 transition duration-500 ease-in-out w-screen inset-y-0 bg-white dark:bg-dark-light-300 flex-1 flex-col h-dvh border-l-1 border-athens-gray dark:border-dark-light-300 max-w-15rem xl:w-15rem under-mobile:w-[70vw] ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
@@ -58,7 +59,7 @@ export default function AgoraUserSide() {
               <RemoveIcon className="w-22 cursor-pointer" />
             </button>
           </div>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<AgoraUserSideSkeleton />}>
             <AgoraUserSuspense agoraId={agoraId as string} />
           </Suspense>
         </section>

@@ -38,3 +38,18 @@ html {
 .swiper-slide {
   width: auto !important;
 }
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px) 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #adadad82 0%, #adadad82 25%, #d4d2d2ac 50%, #adadad82 75%, #adadad82 100%);
+  background-size: 200px 100%;
+  animation: skeleton-loading 2s infinite linear;
+}
