@@ -327,4 +327,40 @@ export const handlers = [
       error: null,
     });
   }),
+  http.post('/api/v1/agoras/:agoraId/start', async () => {
+    delay(500);
+
+    return HttpResponse.json({
+      success: true,
+      response: {
+        agoraId: 1,
+        startTime: '2024-05-26T15:54:27.979968',
+      },
+      error: null,
+    });
+  }),
+  http.post('/api/v1/agoras/:agoraId/end', async () => {
+    delay(500);
+
+    return HttpResponse.json({
+      success: true,
+      response: {
+        agoraId: 1,
+        endVoteCount: 2,
+        isClosed: true,
+      },
+      error: null,
+    });
+  }),
+  http.get('/api/v1/agoraTitle', async () => {
+    delay(500);
+
+    return HttpResponse.json({
+      success: true,
+      response: {
+        title: '소득 불평등 심화가 사회 양극화를 야기하는가?',
+      },
+      error: null,
+    });
+  }),
 ];
