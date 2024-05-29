@@ -25,6 +25,10 @@ export const getChatMessages:QueryFunction<
     },
     credentials: 'include',
     cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6ImQyZWI4ZTJlLTQwOGYtNGM4YS05NjZiLWE4MGU2YjFkZTE3MyIsInJvbGUiOiJST0xFX1RFTVBfVVNFUiIsImlhdCI6MTcxNjgwNzE3NCwiZXhwIjoxNzE2ODQzMTc0fQ.WC_YzkSzb49QRUIL_g6q8EJ4hiT331LVPNwZuqwvXQs',
+    },
   });
 
   if (!res.ok) {

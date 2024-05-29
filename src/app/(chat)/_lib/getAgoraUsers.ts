@@ -14,6 +14,10 @@ AgoraUser[], [string, string, string]
     },
     credentials: 'include',
     cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.API_TOKEN}`,
+    },
   });
 
   if (!res.ok) {
