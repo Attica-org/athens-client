@@ -327,19 +327,19 @@ export const handlers = [
       error: null,
     });
   }),
-  http.post('/api/v1/agoras/:agoraId/start', async () => {
+  http.patch('/api/v1/agoras/:agoraId/start', async () => {
     delay(500);
 
     return HttpResponse.json({
       success: true,
       response: {
         agoraId: 1,
-        startTime: '2024-05-26T15:54:27.979968',
+        startTime: '2024-05-31T12:46:26.251Z',
       },
       error: null,
     });
   }),
-  http.post('/api/v1/agoras/:agoraId/end', async () => {
+  http.patch('/api/v1/agoras/:agoraId/end', async () => {
     delay(500);
 
     return HttpResponse.json({
@@ -359,6 +359,29 @@ export const handlers = [
       success: true,
       response: {
         title: '소득 불평등 심화가 사회 양극화를 야기하는가?',
+      },
+      error: null,
+    });
+  }),
+  http.get('/api/v1/vote-result', async () => {
+    delay(500);
+
+    return HttpResponse.json({
+      success: true,
+      response: {
+        pros: 8,
+        cons: 2,
+      },
+      error: null,
+    });
+  }),
+  http.post('/api/v1/vote', async () => {
+    delay(500);
+
+    return HttpResponse.json({
+      success: true,
+      response: {
+        message: '투표가 완료되었습니다.',
       },
       error: null,
     });
