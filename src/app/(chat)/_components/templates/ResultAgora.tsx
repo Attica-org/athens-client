@@ -1,10 +1,18 @@
+'use client';
+
 import ModalBase from '@/app/_components/molecules/ModalBase';
+import { useVoteStore } from '@/store/vote';
 import Confetti from '@/utils/Confetti';
 import Link from 'next/link';
 import React from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function ResultAgora() {
-  const color = 'bg-blue-400';
+  const prosColor = 'bg-blue-400';
+  const consColor = 'bg-red-400';
+  const { voteResult } = useVoteStore(useShallow((state) => ({
+    voteResult: state.voteResult,
+  })));
 
   return (
     <>
@@ -15,13 +23,13 @@ export default function ResultAgora() {
             aria-label="토론 주제"
             className="break-keep text-center text-base font-semibold"
           >
-            국가 발전에 유능한 독재자가 필요한 시기가 있다.
+            기후 변화 대책에 대한 토론
           </h2>
           <div
             aria-label="더 많은 표를 얻은 측"
-            className={`${color} mt-1.5rem text-white p-5 pl-1.5rem pr-1.5rem text-sm rounded-lg`}
+            className={`${voteResult.cons > voteResult.pros ? consColor : prosColor} mt-1.5rem text-white p-5 pl-1.5rem pr-1.5rem text-sm rounded-lg`}
           >
-            찬성 13
+            {voteResult.cons > voteResult.pros ? `반대 ${voteResult.cons}` : `찬성 ${voteResult.pros}`}
           </div>
           <Link
             aria-label="홈으로 가기"
