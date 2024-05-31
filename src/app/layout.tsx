@@ -4,6 +4,7 @@ import './globals.css';
 import { Noto_Sans_KR } from 'next/font/google';
 import MSWComponent from './_components/utils/MSWComponent';
 import RQProvider from './_components/utils/RQProvider';
+import ServiceWorkerRegistration from './_components/utils/ServiceWorkerRegistration';
 
 export const viewport:Viewport = {
   themeColor: '#3A3A3B',
@@ -41,6 +42,7 @@ export default function RootLayout({
       <link rel="manifest" href="/manifest.json" />
       <body className={`h-dvh inset-y-full under-large:w-full lg:flex scrollbar-hide overflow-x-hidden justify-center items-start w-full dark:bg-dark-bg-light ${noto.className} antialiased`}>
         <MSWComponent />
+        <ServiceWorkerRegistration />
         <RQProvider>
           {children}
         </RQProvider>
