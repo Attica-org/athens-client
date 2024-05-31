@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from './_components/molecules/Header';
+import Header from './_components/organisms/Header';
 import MessageInput from './_components/molecules/MessageInput';
 import AgoraUserSide from './_components/organisms/AgoraUserSide';
 import RedirectCheck from '../_components/atoms/RedirectCheck';
