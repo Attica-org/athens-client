@@ -4,8 +4,9 @@ import { postEnterAgoraInfo } from '@/app/(main)/_lib/postEnterAgoraInfo';
 import Loading from '@/app/_components/atoms/loading';
 import { useAgora } from '@/store/agora';
 import { useEnter } from '@/store/enter';
+import tokenManager from '@/utils/tokenManager';
 import { useMutation } from '@tanstack/react-query';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 export default function EnterAgoraButton() {
@@ -13,16 +14,24 @@ export default function EnterAgoraButton() {
 
   const router = useRouter();
   const { selectedAgora } = useAgora();
-  const pathname = usePathname();
+  const redirectURL = tokenManager.getRedirectUrl();
 
   useEffect(() => {
-    if (!selectedAgora.id) {
+    // redirectURL과 agoraId가 모두 없으면 홈으로 이동
+    if (!selectedAgora.id && !redirectURL && !tokenManager.getToken()) {
       router.replace('/home');
     }
-  }, [selectedAgora.id, router, pathname]);
+  }, [selectedAgora.id, router, redirectURL]);
 
   const routePage = () => {
-    router.push(`/agoras/${selectedAgora.id}`);
+    if (!selectedAgora.id && redirectURL) {
+      const agoraId = redirectURL.split('/').pop();
+      router.push(`/agoras/${agoraId}`);
+    } else if (selectedAgora.id) {
+      router.push(`/agoras/${selectedAgora.id}`);
+    } else {
+      router.push('/home');
+    }
   };
 
   const mutation = useMutation({
@@ -59,6 +68,7 @@ export default function EnterAgoraButton() {
     }
 
     setIsLoading(() => {
+      tokenManager.clearRedirectUrl();
       mutation.mutate();
       return true;
     });

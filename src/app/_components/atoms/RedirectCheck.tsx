@@ -22,13 +22,9 @@ export default function RedirectCheck({ children }: Props) {
 
   const accessToken = tokenManager.getToken();
 
-  if(!accessToken) {
+  if (!accessToken) {
     return null;
   }
 
-  return (
-    <>
-     {children}
-    </>
-  );
+  return <div>{children}</div>;
 }
