@@ -5,24 +5,91 @@ import { useMessageStore } from '@/store/message';
 import React, {
   ChangeEventHandler, KeyboardEventHandler, useEffect, useRef, useState,
 } from 'react';
+import * as StompJs from '@stomp/stompjs';
+import { usePathname } from 'next/navigation';
+import tokenManager from '@/utils/tokenManager';
+import { InfiniteData, useQueryClient } from '@tanstack/react-query';
+import { Message } from '@/app/model/Message';
 
 export default function MessageInput() {
   const [message, setMessage] = useState<string>('');
   const [isComposing, setIsComposing] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { setGoDown } = useMessageStore();
+  const agoraId = usePathname().split('/').pop() as string;
+  const client = useRef<StompJs.Client>();
+  const queryClient = useQueryClient();
 
   const handleMessage: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setMessage(e.target.value);
   };
 
+  const pushMessage = (type: string, data?: any) => {
+    const newDate = new Date();
+    // 쿼리 데이터에 추가
+    const exMessages = queryClient.getQueryData(['chat', `${agoraId}`, 'messages']) as InfiniteData<{
+      chats: Message[], meta: { key: number, size: number }
+    }>;
+    if (exMessages && typeof exMessages === 'object') {
+      const newMessages = {
+        ...exMessages,
+        pages: [
+          ...exMessages.pages,
+        ],
+      };
+
+      const lastPage = newMessages.pages[newMessages.pages.length - 1];
+      // const lastPage = newMessages.pages.at(-1)?.chats;
+      const newLastPage = lastPage
+        ? { ...lastPage, chats: [...lastPage.chats] }
+        : { chats: [], meta: { key: 0, size: 20 } };
+      const lastMessageId = lastPage?.chats.at(-1)?.chatId;
+
+      if (type === 'received') {
+        newLastPage.chats.push(data.data);
+      } else {
+        newLastPage.chats.push({
+          chatId: lastMessageId ? lastMessageId - 1 : 0,
+          user: {
+            id: 0,
+            nickname: '나',
+            photoNumber: 2,
+            type: 'CONS',
+          },
+          content: message,
+          createdAt: `${newDate}`,
+        });
+      }
+
+      newMessages.pages[newMessages.pages.length - 1] = {
+        chats: newLastPage.chats,
+        meta: {
+          key: lastMessageId || 0,
+          size: 20,
+        },
+      };
+      queryClient.setQueryData(['chat', `${agoraId}`, 'messages'], newMessages);
+      setGoDown(true);
+      console.log('queryclient.getQueryData', queryClient.getQueryData(['chat', `${agoraId}`, 'messages']));
+    }
+  };
+
   const sendMessage = () => {
     if (message.trim().length < 1) return;
 
-    // TODO: 메시지 소켓 전송
+    if (client.current) {
+      client.current?.publish({
+        destination: `/app/agoras/${agoraId}/chats`,
+        body: JSON.stringify({
+          type: 'CHAT',
+          message,
+        }),
+      });
 
+      pushMessage('send');
+      console.log(`> Send message: ${message}`);
+    }
     setMessage('');
-    setGoDown(true);
   };
 
   const handleCompositionStart = () => {
@@ -56,6 +123,57 @@ export default function MessageInput() {
 
     return cleanup;
   }, []);
+
+  // 최초 렌더링 시 실행
+  useEffect(() => {
+    const disconnect = () => {
+      client.current?.deactivate();
+      console.log('Disconnected');
+    };
+
+    const subscribe = () => {
+      console.log('Subscribing...');
+      client.current?.subscribe(`/topic/agoras/${agoraId}/chats`, (received_message: StompJs.IFrame) => {
+        console.log(`> Received message: ${received_message.body}`);
+
+        pushMessage(received_message.body, 'received');
+      });
+    };
+
+    const connect = () => {
+      console.log('Connecting...');
+      client.current = new StompJs.Client({
+        brokerURL: 'ws://54.180.242.54:8080/ws',
+        connectHeaders: {
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE4Iiwicm9sZSI6IlJPTEVfVEVNUF9VU0VSIiwiaWF0IjoxNzE3MzkzMjg5LCJleHAiOjE3MTc3NTMyODksInN1YiI6ImFjY2Vzcy10b2tlbiJ9.wM51SieaGXhqc8Tclt2zObZMRe0-HQWcEGIYc8TiH64',
+        },
+        reconnectDelay: 200,
+        onConnect: () => {
+          console.log('connected');
+          subscribe();
+        },
+        onWebSocketError: (error) => {
+          console.log('Error with websocket', error);
+        },
+        onStompError: (frame) => {
+          console.dir(`Broker reported error: ${frame.headers.message}`);
+          console.dir(`Additional details: ${frame}`);
+        },
+      });
+      console.log('Activating...');
+      client.current.activate();
+    };
+
+    if (tokenManager.getToken() !== undefined) {
+      connect();
+    } else {
+      console.error('Token is not found');
+      // 토큰 발급
+      // POST /api/v1/temp-user
+    }
+
+    return () => disconnect();
+  }, [agoraId]);
 
   return (
     <section className="flex border-t-1 dark:border-dark-light-300 sticky bottom-0 right-0 left-0 w-full bg-white dark:bg-dark-light-300">
