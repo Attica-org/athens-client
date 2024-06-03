@@ -3,9 +3,11 @@ import React from 'react';
 
 type Props = {
   title: string;
+  pros?: number;
+  cons?: number;
 };
 
-export default function AgoraTitle({ title }: Props) {
+export default function AgoraTitle({ title, pros, cons }: Props) {
   return (
     <section className="flex flex-col justify-center items-center w-full dark:bg-dark-light-300 pb-5">
       <h1
@@ -23,8 +25,16 @@ export default function AgoraTitle({ title }: Props) {
         aria-label="현재 참여 인원"
         className="flex justify-around items-center w-full text-sm under-mobile:text-xxs p-6"
       >
-        <div className="text-blue-600 dark:text-dark-pro-color">찬성 10</div>
-        <div className="text-red-600 dark:text-dark-con-color">반대 10</div>
+        <div className="text-blue-600 dark:text-dark-pro-color">
+          찬성
+          {' '}
+          {pros}
+        </div>
+        <div className="text-red-600 dark:text-dark-con-color">
+          반대
+          {' '}
+          {cons}
+        </div>
       </div>
     </section>
   );
