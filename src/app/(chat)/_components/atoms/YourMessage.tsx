@@ -3,24 +3,35 @@ import React from 'react';
 import PROFLELIST from '@/constants/userProfileImage';
 import UserImage from '../../../_components/atoms/UserImage';
 
-export default function YourMessage({ message }: { message: Message }) {
+type Props = {
+  message: Message;
+  isSameUser: boolean;
+};
+
+export default function YourMessage({ message, isSameUser }: Props) {
   return (
-    <article className="flex justify-start items-start p-0.5rem pb-0 h-full">
-      <div aria-hidden className="border-1 border-gray-300 w-fit rounded-3xl dark:bg-white">
-        <UserImage
-          className="w-60 h-60 under-mobile:w-50 under-mobile:h-50 flex rounded-3xl"
-          name={message.user.nickname}
-          file={PROFLELIST[message.user.photoNumber].file}
-          w={60}
-          h={60}
-        />
-      </div>
-      <div className="p-0.5rem flex flex-col justify-center items-start">
+    <article className={`flex justify-start items-start p-0.5rem ${isSameUser && 'pt-0'} pl-12 pb-0 h-full`}>
+      {!isSameUser ? (
+        <div aria-hidden className="border-1 border-gray-300 w-fit rounded-3xl dark:bg-white">
+          <UserImage
+            className="w-60 h-60 under-mobile:w-50 under-mobile:h-50 flex rounded-3xl"
+            name={message.user.nickname}
+            file={PROFLELIST[message.user.photoNumber].file}
+            w={60}
+            h={60}
+          />
+        </div>
+      ) : (
+        <div className="w-60 under-mobile:w-50" />
+      )}
+      <div className={`p-0.5rem ${isSameUser && 'pt-0'} flex flex-col justify-center items-start`}>
+        {!isSameUser && (
         <div role="region" aria-label="사용자 이름" className="text-xs pb-5 dark:text-white">
           {message.user.nickname}
         </div>
+        )}
         <div className="flex justify-start items-end">
-          <div className="max-w-[50vw] whitespace-pre-line bg-blue-200 rounded-tr-xl rounded-bl-xl rounded-br-xl p-0.5rem pl-10 pr-10 text-sm under-mobile:text-xs">
+          <div className={`max-w-[60vw] whitespace-pre-line bg-blue-200 rounded-tr-xl ${isSameUser && 'rounded-tl-lg'} rounded-bl-xl rounded-br-xl p-0.5rem pl-10 pr-10 text-sm under-mobile:text-xs`}>
             {message.content}
           </div>
           <div className="flex flex-col justify-end items-end h-full">
