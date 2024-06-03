@@ -14,9 +14,9 @@ import EnterAgoraButton from '../../flow/enter-agora/_components/EnterAgoraButto
 export default function EnterAgoraContent() {
   const { selectedAgora, setSelectedAgora } = useAgora();
   const redirectUrl: string | null = tokenManager.getRedirectUrl();
-  const agoraId = redirectUrl?.split('/').pop() || '-1';
+  const agoraId = redirectUrl?.split('/').pop() as string;
 
-  const { data: title, isSuccess } = useQuery({
+  const { data, isSuccess } = useQuery({
     queryKey: ['agoraTitle', agoraId],
     queryFn: getAgoraTitle,
     enabled: !selectedAgora.id && agoraId !== '-1',
@@ -24,10 +24,10 @@ export default function EnterAgoraContent() {
 
   useEffect(() => {
     if (isSuccess) {
-      setSelectedAgora({ id: Number(agoraId), title });
+      setSelectedAgora({ id: Number(agoraId), title: data.title, status: data.status });
       tokenManager.clearRedirectUrl();
     }
-  }, [agoraId, title, setSelectedAgora, isSuccess]);
+  }, [agoraId, data, setSelectedAgora, isSuccess]);
 
   return (
     <>
