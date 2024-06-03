@@ -9,13 +9,13 @@ import useTimer from '@/hooks/useTimer';
 type Props = {
   duration: number;
   start: boolean;
-  agoraId: string;
+  agoraId: number;
 };
 
 export default function DiscussionTimer({ duration, start, agoraId }: Props) {
   const startTime = useChatInfo.getState().start;
-  const { isClosed, setIsClosed, voteEndCnt } = useChatInfo(useShallow((state) => ({
-    isClosed: state.isClosed, setIsClosed: state.setIsClosed, voteEndCnt: state.voteEndCnt,
+  const { isClosed, setIsClosed } = useChatInfo(useShallow((state) => ({
+    isClosed: state.isClosed, setIsClosed: state.setIsClosed,
   })));
   // const [time, setTime] = useState<string>(calculationRemainingTime(startTime, duration));
   const { formattedTime, isFinished, resetTimer } = useTimer(startTime, duration, start);
