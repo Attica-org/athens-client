@@ -37,7 +37,6 @@ export const getChatMessages:QueryFunction<
 
   const result = await res.json();
 
-  console.log('result', result);
   return {
     chats: result.response.chats,
     meta: result.response.meta,
