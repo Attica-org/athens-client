@@ -3,7 +3,7 @@
 import { Message as IMessage } from '@/app/model/Message';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  InfiniteData, useQueryClient, useSuspenseInfiniteQuery,
+  InfiniteData, useSuspenseInfiniteQuery,
 } from '@tanstack/react-query';
 import { usePathname } from 'next/navigation';
 import { useInView } from 'react-intersection-observer';
@@ -25,7 +25,6 @@ export default function Message() {
   const { shouldGoDown, setGoDown } = useMessageStore();
   const myRole = 'CONS';
   const agoraId = usePathname().split('/').pop();
-  const queryClient = useQueryClient();
 
   const {
     data, hasPreviousPage, isFetching, fetchPreviousPage,
@@ -87,23 +86,32 @@ export default function Message() {
       listRef.current?.scrollTo(0, listRef.current.scrollHeight);
       setGoDown(false);
     }
+  }, [shouldGoDown, setGoDown]);
 
-    return () => {
-      queryClient.removeQueries({ queryKey: ['chat', `${agoraId}`, 'messages'] });
-    };
-  }, [shouldGoDown, setGoDown, queryClient, agoraId]);
+  // const isSameDate = (prevCreatedAt: string, currentCreatedAt: string):boolean => {
+  //   const prev = new Date(prevCreatedAt).toLocaleTimeString().slice(0, -3);
+  //   const current = new Date(currentCreatedAt).toLocaleTimeString().slice(0, -3);
+
+  //   return prev === current;
+  // };
 
   return (
     <div ref={listRef} className="overflow-y-scroll flex-1">
       {!adjustScroll && pageRendered && <div ref={ref} className="h-1" />}
       {data?.pages.map((page) => (
         <React.Fragment key={page.chats[0]?.chatId}>
-          {page.chats.map((message) => (
+          {page.chats.map((message, idx) => (
             <div key={message.chatId}>
               {message.user.type === myRole ? (
-                <MyMessage message={message} />
+                <MyMessage
+                  message={message}
+                  isSameUser={idx > 0 && page.chats[idx - 1].user.id === message.user.id}
+                />
               ) : (
-                <YourMessage message={message} />
+                <YourMessage
+                  message={message}
+                  isSameUser={idx > 0 && page.chats[idx - 1].user.id === message.user.id}
+                />
               )}
             </div>
           ))}
