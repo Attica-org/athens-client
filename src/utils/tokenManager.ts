@@ -1,7 +1,7 @@
 // 클로저를 활용해 토큰 관리
 // 싱글톤 패턴으로 구현하여 전역에서 사용 가능
 const tokenManager = (() => {
-  let accessToken: string | null = `${process.env.API_TOKEN}`;
+  let accessToken: string | undefined = process.env.NEXT_PUBLIC_API_TOKEN;
   let redirectUrl: string | null = null;
 
   return {
@@ -17,7 +17,7 @@ const tokenManager = (() => {
       redirectUrl = null;
     },
     clearToken: () => {
-      accessToken = null;
+      accessToken = undefined;
     },
   };
 })();
