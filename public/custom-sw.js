@@ -25,14 +25,15 @@ self.addEventListener('message', event => {
   if (action === 'startTimer') {
     // Set a timeout to send the POST request after 15 seconds
     setTimeout(() => {
-      console.log('Sending vote data:', voteData);
-      console.log('Sending vote data to:', `${baseUrl}/api/v1/vote`)
-      fetch(`${baseUrl}/api/v1/vote`, {
-        method: 'POST',
+      console.log('Sending vote data:', data);
+      console.log('Sending vote data to:', `${data.baseUrl}/api/v1/auth/agoras/vote`)
+      fetch(`${data.baseUrl}/api/v1/auth/agoras/vote`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${data.token}`,
         },
-        body: JSON.stringify({voteData}),
+        body: JSON.stringify({voteType: data.voteType}),
       }).then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -51,8 +52,11 @@ self.addEventListener('message', event => {
 
           // Set another timeout to send the GET request after an additional 5 seconds
           setTimeout(() => {
-            console.log('Fetching vote result:', `${baseUrl}/api/v1/vote-result`)
-            fetch(`${baseUrl}/api/v1/vote-result`)
+            console.log('Fetching vote result:', `${data.baseUrl}/api/v1/auth/agoras/${data.agoraId}voteResult`, {
+              method: 'GET',
+              Authorization: `Bearer ${data.token}`,
+            })
+            fetch(`${data.baseUrl}/api/v1/auth/agoras/${data.agoraId}/voteResult`)
               .then(response => response.json())
               .then(result => {
                 self.clients.matchAll().then(clients => {

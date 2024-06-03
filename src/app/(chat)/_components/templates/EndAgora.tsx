@@ -3,15 +3,16 @@
 import Loading from '@/app/_components/atoms/loading';
 import ModalBase from '@/app/_components/molecules/ModalBase';
 import { useVoteStore } from '@/store/vote';
+import tokenManager from '@/utils/tokenManager';
 import { differenceInSeconds } from 'date-fns';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
-type ResultPosition = 'PROS' | 'CONS' | 'ABS';
+type ResultPosition = 'PROS' | 'CONS' | 'DEFAULT';
 
 export default function EndAgora() {
-  const [selectedResultPosition, setSelectedResultPosition] = useState<ResultPosition>('ABS');
+  const [selectedResultPosition, setSelectedResultPosition] = useState<ResultPosition>('DEFAULT');
   const [remainingTime, setRemainingTime] = useState(15);
   const [isFinished, setIsFinished] = useState(false);
   const [vote, setVote] = useState<string | null>(null);
@@ -28,7 +29,9 @@ export default function EndAgora() {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage({
         action: 'updateVote',
-        data: vote,
+        data: {
+          voteType: vote,
+        },
       });
     }
   }, [vote]);
@@ -40,6 +43,12 @@ export default function EndAgora() {
       navigator.serviceWorker.controller.postMessage({
         action: 'startTimer',
         startTime: startTime.toISOString(),
+        data: {
+          agoraId,
+          voteType: vote,
+          token: tokenManager.getToken(),
+          baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+        },
       });
     }
 
@@ -68,7 +77,7 @@ export default function EndAgora() {
       clearInterval(timerId);
       navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
     };
-  }, []);
+  }, [agoraId, router, setVoteEnd, setVoteResult, vote]);
 
   const selectResultPosition = (position: ResultPosition) => {
     setSelectedResultPosition(position);
