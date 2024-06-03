@@ -13,7 +13,7 @@ export default function EnterAgoraButton() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
-  const { selectedAgora } = useAgora();
+  const { selectedAgora, setEnterAgora } = useAgora();
   const redirectURL = tokenManager.getRedirectUrl();
 
   useEffect(() => {
@@ -45,6 +45,9 @@ export default function EnterAgoraButton() {
       return postEnterAgoraInfo({ info, agoraId: selectedAgora.id });
     },
     onSuccess: async () => {
+      setEnterAgora({
+        id: selectedAgora.id, title: selectedAgora.title, status: selectedAgora.status,
+      });
       routePage();
     },
     onError: () => {
