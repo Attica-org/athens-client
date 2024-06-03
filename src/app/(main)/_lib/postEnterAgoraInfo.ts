@@ -13,6 +13,10 @@ type Props = {
 export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/agoras/${agoraId}/participants`, {
     method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.API_TOKEN}`,
+    },
     credentials: 'include',
     body: JSON.stringify({
       nickname: info.nickname ? info.nickname : '',

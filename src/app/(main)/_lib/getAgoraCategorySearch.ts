@@ -21,6 +21,10 @@ export const getAgoraCategorySearch:QueryFunction<
     next: {
       tags: ['agoras', 'search', 'category', searchParams.category, searchParams.status],
     },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.API_TOKEN}`,
+    },
     credentials: 'include',
     cache: 'no-cache',
   });

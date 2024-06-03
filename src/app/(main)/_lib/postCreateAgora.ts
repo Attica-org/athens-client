@@ -10,6 +10,10 @@ type Props = {
 export const postCreateAgora = async (info: Props) => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/agoras`, {
     method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.API_TOKEN}`,
+    },
     credentials: 'include',
     body: JSON.stringify({
       title: info.title,
