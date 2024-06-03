@@ -10,6 +10,7 @@
     "mock": "npx tsx watch ./src/mocks/http.ts"
   },
   "dependencies": {
+    "@stomp/stompjs": "^7.0.0",
     "@tanstack/react-query": "^5.35.1",
     "@types/canvas-confetti": "^1.6.4",
     "canvas-confetti": "^1.9.2",
@@ -23,6 +24,7 @@
     "react-dom": "^18",
     "react-intersection-observer": "^9.10.2",
     "sharp": "^0.33.3",
+    "sockjs-client": "^1.6.1",
     "swiper": "^11.1.1",
     "zustand": "^4.5.2"
   },
@@ -36,6 +38,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/sockjs-client": "^1",
     "@typescript-eslint/eslint-plugin": "^7.8.0",
     "@typescript-eslint/parser": "^7.8.0",
     "autoprefixer": "^10.0.1",
