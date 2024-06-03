@@ -5,7 +5,7 @@ interface ChatState {
   start: string;
   isClosed: boolean;
   observer: number;
-  voteEndCnt: number;
+  endVoteCount: number;
   duration: number;
   setIsClosed: (isClosed: boolean) => void;
   setDiscussionStart: (start: string) => void;
@@ -20,7 +20,7 @@ const initialState: ChatState = {
   isClosed: false,
   duration: 30,
   observer: 0,
-  voteEndCnt: 0,
+  endVoteCount: 0,
   setIsClosed: () => {},
   setDiscussionStart: () => {},
   setDuration: () => {},
@@ -37,12 +37,12 @@ export const useChatInfo = create(immer<ChatState>((set) => ({
   setDiscussionStart: (start: string) => set({ start }),
   setDuration: (duration: number) => set({ duration }),
   setObserver: (observer: number) => set({ observer }),
-  setVoteEndCnt: (voteEndCnt: number) => set({ voteEndCnt }),
+  setVoteEndCnt: (endVoteCount: number) => set({ endVoteCount }),
   reset: () => set({
     start: '2024-05-31T12:46:26.251Z',
     isClosed: false,
     duration: 30,
     observer: 0,
-    voteEndCnt: 0,
+    endVoteCount: 0,
   }),
 })));
