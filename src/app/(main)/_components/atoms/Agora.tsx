@@ -41,7 +41,7 @@ export default function Agora({ agora }: Props) {
 
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
   const enterAgora = () => {
-    setSelectedAgora({ id, title: agoraTitle });
+    setSelectedAgora({ id, title: agoraTitle, status });
 
     const AgoraStatus = searchParams.get('status');
     if (AgoraStatus === 'active') {
