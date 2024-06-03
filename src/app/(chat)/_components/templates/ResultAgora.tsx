@@ -27,9 +27,9 @@ export default function ResultAgora() {
           </h2>
           <div
             aria-label="더 많은 표를 얻은 측"
-            className={`${voteResult.cons > voteResult.pros ? consColor : prosColor} mt-1.5rem text-white p-5 pl-1.5rem pr-1.5rem text-sm rounded-lg`}
+            className={`${voteResult.consCount > voteResult.prosCount ? consColor : prosColor} mt-1.5rem text-white p-5 pl-1.5rem pr-1.5rem text-sm rounded-lg`}
           >
-            {voteResult.cons > voteResult.pros ? `반대 ${voteResult.cons}` : `찬성 ${voteResult.pros}`}
+            {voteResult.consCount > voteResult.prosCount ? `반대 ${voteResult.consCount}` : `찬성 ${voteResult.prosCount}`}
           </div>
           <Link
             aria-label="홈으로 가기"

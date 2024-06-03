@@ -363,7 +363,7 @@ export const handlers = [
       error: null,
     });
   }),
-  http.get('/api/v1/vote-result', async () => {
+  http.get('/api/v1/auth/agoras/:agoraId/voteResult', async () => {
     delay(500);
 
     return HttpResponse.json({
@@ -375,7 +375,7 @@ export const handlers = [
       error: null,
     });
   }),
-  http.post('/api/v1/vote', async () => {
+  http.patch('/api/v1/auth/agoras/vote', async () => {
     delay(500);
 
     return HttpResponse.json({
