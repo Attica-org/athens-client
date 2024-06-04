@@ -5,6 +5,7 @@ import { Noto_Sans_KR } from 'next/font/google';
 import MSWComponent from './_components/utils/MSWComponent';
 import RQProvider from './_components/utils/RQProvider';
 import ServiceWorkerRegistration from './_components/utils/ServiceWorkerRegistration';
+import Toast from './_components/atoms/Toast';
 
 export const viewport:Viewport = {
   themeColor: '#3A3A3B',
@@ -44,6 +45,7 @@ export default function RootLayout({
         <MSWComponent />
         <ServiceWorkerRegistration />
         <RQProvider>
+          <Toast />
           {children}
         </RQProvider>
       </body>
