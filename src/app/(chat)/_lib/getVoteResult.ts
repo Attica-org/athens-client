@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
+import fetchWrapper from '@/lib/fetchWrapper';
+import { getToken } from '@/lib/getToken';
+import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
 
 type VoteResult = {
@@ -13,7 +16,13 @@ export const getVoteResult: QueryFunction<
 VoteResult, [string, string, string]
 > = async ({ queryKey }) => {
   const [_1, agoraId] = queryKey;
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/agoras/${agoraId}/voteResult`, {
+
+  // 토큰을 가지고 있는지 확인
+  if (tokenManager.getToken() === undefined) {
+    await getToken();
+  }
+
+  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/voteResult`, {
     next: {
       tags: ['agora', agoraId, 'closed'],
     },
@@ -21,15 +30,16 @@ VoteResult, [string, string, string]
     cache: 'no-cache',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.API_TOKEN}`,
+      Authorization: `Bearer ${tokenManager.getToken()}`,
     },
   });
 
-  if (!res.ok) {
+  if (res.success === false) {
+    console.log(res.error.message);
     throw new Error('Network response was not ok');
   }
 
-  const result = res.json().then((data) => data.response);
+  const result = res.response;
 
   return result;
 };

@@ -1,5 +1,8 @@
 import { Agora } from '@/app/model/Agora';
+import fetchWrapper from '@/lib/fetchWrapper';
+import errorMessage from '@/utils/errorMessage';
 import { QueryFunction } from '@tanstack/react-query';
+import { redirect } from 'next/navigation';
 
 type SearchParams = {
   status?: string,
@@ -17,26 +20,31 @@ export const getAgoraCategorySearch:QueryFunction<
 
   const urlSearchParams = new URLSearchParams(searchParams);
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/agoras?${urlSearchParams.toString()}&next=${pageParam.nextCursor ?? ''}`, {
+  const res = await fetchWrapper.call(`/api/v1/open/agoras?${urlSearchParams.toString()}&next=${pageParam.nextCursor ?? ''}`, {
     next: {
       tags: ['agoras', 'search', 'category', searchParams.category, searchParams.status],
     },
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.API_TOKEN}`,
     },
     credentials: 'include',
     cache: 'no-cache',
   });
 
-  if (!res.ok) {
-    throw new Error('Network response was not ok');
+  if (res.success === false) {
+    if (res.error.code === 1001) {
+      errorMessage.setMessage('허용되지 않는 status 입니다.');
+    }
+    if (res.error.code === 1301) {
+      errorMessage.setMessage('허용되지 않는 카테고리입니다.');
+    }
+    redirect('/home?status=active');
   }
 
-  const result = await res.json();
+  const result = res.response;
 
   return {
-    agoras: result.response.agoras,
-    nextCursor: result.response.hasNext ? result.response.next : null,
+    agoras: result.agoras,
+    nextCursor: result.hasNext ? result.next : null,
   };
 };

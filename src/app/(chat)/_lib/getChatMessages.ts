@@ -1,4 +1,7 @@
 import { Message } from '@/app/model/Message';
+import fetchWrapper from '@/lib/fetchWrapper';
+import { getToken } from '@/lib/getToken';
+import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
 
 type Meta = {
@@ -18,7 +21,12 @@ export const getChatMessages:QueryFunction<
   };
   const urlSearchParams = new URLSearchParams(Object.entries(searchParams));
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/agoras/${agoraId}/chats?${urlSearchParams.toString()}`, {
+  // 토큰을 가지고 있는지 확인
+  if (tokenManager.getToken() === undefined) {
+    await getToken();
+  }
+
+  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/chats?${urlSearchParams.toString()}`, {
     method: 'GET',
     next: {
       tags: ['chat', agoraId, 'messages'],
@@ -27,18 +35,19 @@ export const getChatMessages:QueryFunction<
     cache: 'no-cache',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6ImQyZWI4ZTJlLTQwOGYtNGM4YS05NjZiLWE4MGU2YjFkZTE3MyIsInJvbGUiOiJST0xFX1RFTVBfVVNFUiIsImlhdCI6MTcxNjgwNzE3NCwiZXhwIjoxNzE2ODQzMTc0fQ.WC_YzkSzb49QRUIL_g6q8EJ4hiT331LVPNwZuqwvXQs',
+      Authorization: `Bearer ${tokenManager.getToken()}`,
     },
   });
 
-  if (!res.ok) {
+  if (res.success === false) {
+    console.log(res.error.message);
     throw new Error('Network response was not ok');
   }
 
-  const result = await res.json();
+  const result = res.response;
 
   return {
-    chats: result.response.chats,
-    meta: result.response.meta,
+    chats: result.chats,
+    meta: result.meta,
   };
 };
