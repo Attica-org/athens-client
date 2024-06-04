@@ -58,16 +58,24 @@ export default function Header() {
       });
     };
 
+    const subscribeError = () => {
+      console.log('Subscribing Error...');
+      client.current?.subscribe('/user/queue/errors', (received_message: StompJs.IFrame) => {
+        console.log(`> Received message: ${received_message.body}`);
+      });
+    };
+
     const connect = () => {
       console.log('Connecting... metadata');
       client.current = new StompJs.Client({
-        brokerURL: 'ws://localhost:8080/ws',
+        brokerURL: `${process.env.NEXT_PUBLIC_SOCKET_URL}/ws`,
         connectHeaders: {
           Authorization: `Bearer ${tokenManager.getToken()}`,
         },
         reconnectDelay: 200,
         onConnect: () => {
           console.log('connected');
+          subscribeError();
           subscribe();
         },
         onWebSocketError: (error) => {
@@ -126,7 +134,7 @@ export default function Header() {
         </div>
       </div>
       <div className="flex justify-center items-center pt-0.5rem">
-        <AgoraTitle title={metaData?.agora.title || ''} pros={metaData?.participants[0].count} cons={metaData?.participants[1].count} />
+        <AgoraTitle title={metaData?.agora.title || ''} pros={metaData?.participants[0]?.count} cons={metaData?.participants[1]?.count} />
       </div>
     </div>
   );
