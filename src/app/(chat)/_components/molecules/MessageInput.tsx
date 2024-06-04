@@ -39,7 +39,6 @@ export default function MessageInput() {
       };
 
       const lastPage = newMessages.pages[newMessages.pages.length - 1];
-      // const lastPage = newMessages.pages.at(-1)?.chats;
       const newLastPage = lastPage
         ? { ...lastPage, chats: [...lastPage.chats] }
         : { chats: [], meta: { key: 0, size: 20 } };
@@ -70,7 +69,6 @@ export default function MessageInput() {
       };
       queryClient.setQueryData(['chat', `${agoraId}`, 'messages'], newMessages);
       setGoDown(true);
-      console.log('queryclient.getQueryData', queryClient.getQueryData(['chat', `${agoraId}`, 'messages']));
     }
   };
 
@@ -140,6 +138,13 @@ export default function MessageInput() {
       });
     };
 
+    const subscribeError = () => {
+      console.log('Subscribing Error...');
+      client.current?.subscribe('/user/queue/errors', (received_message: StompJs.IFrame) => {
+        console.log(`> Received message: ${received_message.body}`);
+      });
+    };
+
     const connect = () => {
       console.log('Connecting...');
       client.current = new StompJs.Client({
@@ -150,6 +155,7 @@ export default function MessageInput() {
         reconnectDelay: 200,
         onConnect: () => {
           console.log('connected');
+          subscribeError();
           subscribe();
         },
         onWebSocketError: (error) => {
