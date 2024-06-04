@@ -47,6 +47,7 @@ const config: Config = {
         1: '1px', // 1px 단위 추가
       },
       colors: {
+        'toast-bg': '#6a6a6c',
         'athens-main': '#10AE5D',
         'athens-gray': '#F1F3F5',
         'athens-button': '#21d2a1',
