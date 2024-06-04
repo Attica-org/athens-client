@@ -5,7 +5,7 @@ import ModalPosSelectBtn from '@/app/(main)/_components/atoms/ModalPosSelectBtn'
 import { useEnter } from '@/store/enter';
 import { useShallow } from 'zustand/react/shallow';
 
-type Position = 'CONS' | 'PROS' | 'OBSERVERS';
+type Position = 'CONS' | 'PROS' | 'OBSERVER';
 
 export default function ModalPosSelectContainer() {
   const {
@@ -19,7 +19,7 @@ export default function ModalPosSelectContainer() {
   );
 
   useEffect(() => {
-    if (selectedPosition === 'OBSERVERS') {
+    if (selectedPosition === 'OBSERVER') {
       setMessage('관찰자는 프로필을 설정할 수 없습니다.');
     } else if (selectedPosition === 'CONS' || selectedPosition === 'PROS') {
       setMessage('');
@@ -38,7 +38,7 @@ export default function ModalPosSelectContainer() {
       <ModalPosSelectBtn selectedPosition={selectedPosition} selectPosition={selectPosition} position="CONS" color="red">
         반대
       </ModalPosSelectBtn>
-      <ModalPosSelectBtn selectedPosition={selectedPosition} selectPosition={selectPosition} position="OBSERVERS" color="athens-main">
+      <ModalPosSelectBtn selectedPosition={selectedPosition} selectPosition={selectPosition} position="OBSERVER" color="athens-main">
         관찰자
       </ModalPosSelectBtn>
       <span className="pl-6 text-xs">로 입장</span>

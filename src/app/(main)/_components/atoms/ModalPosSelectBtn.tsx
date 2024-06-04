@@ -1,6 +1,6 @@
 import React from 'react';
 
-type Position = 'CONS' | 'PROS' | 'OBSERVERS';
+type Position = 'CONS' | 'PROS' | 'OBSERVER';
 
 type Props = {
   selectedPosition: string;
@@ -17,7 +17,7 @@ export default function ModalPosSelectBtn({
   color,
   children,
 }: Props) {
-  const bgColor = position !== 'OBSERVERS' ? `bg-${color}-400` : 'bg-athens-main';
+  const bgColor = position !== 'OBSERVER' ? `bg-${color}-400` : 'bg-athens-main';
   return (
     <button
       type="button"
