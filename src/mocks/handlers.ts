@@ -6,7 +6,7 @@ const delay = (ms: number) => new Promise((resolve) => {
 
 // eslint-disable-next-line import/prefer-default-export
 export const handlers = [
-  http.get('/api/v1/agoras/:agoraId/chats', async ({ request }) => {
+  http.get('/api/v1/auth/agoras/:agoraId/chats', async ({ request }) => {
     delay(500);
     const url = new URL(request.url);
     const cursor = parseInt(url.searchParams.get('key') as string, 10) || 0;
@@ -134,7 +134,7 @@ export const handlers = [
       error: null,
     });
   }),
-  http.get('/api/v1/agoras', async ({ request }) => {
+  http.get('/api/v1/open/agoras', async ({ request }) => {
     delay(500);
     const url = new URL(request.url);
     const cursor = parseInt(url.searchParams.get('next') as string, 10) || 0;
@@ -245,7 +245,7 @@ export const handlers = [
       },
     });
   }),
-  http.get('/api/v1/agorasId', async () => {
+  http.get('/api/v1/open/agorasId', async () => {
     HttpResponse.json({
       success: true,
       response: {
@@ -259,7 +259,7 @@ export const handlers = [
       error: null,
     });
   }),
-  http.post('/api/v1/agoras/:agoraId/participants', async () => {
+  http.post('/api/v1/auth/agoras/:agoraId/participants', async () => {
     delay(500);
 
     return HttpResponse.json({
@@ -290,7 +290,7 @@ export const handlers = [
       },
     });
   }),
-  http.get('/api/v1/agoras/:agoraId/users', async () => {
+  http.get('/api/v1/auth/agoras/:agoraId/users', async () => {
     delay(500);
 
     return HttpResponse.json({
@@ -327,7 +327,7 @@ export const handlers = [
       error: null,
     });
   }),
-  http.patch('/api/v1/agoras/:agoraId/start', async () => {
+  http.patch('/api/v1/auth/agoras/:agoraId/start', async () => {
     delay(500);
 
     return HttpResponse.json({
@@ -339,7 +339,7 @@ export const handlers = [
       error: null,
     });
   }),
-  http.patch('/api/v1/agoras/:agoraId/end', async () => {
+  http.patch('/api/v1/auth/agoras/:agoraId/end', async () => {
     delay(500);
 
     return HttpResponse.json({
@@ -352,7 +352,7 @@ export const handlers = [
       error: null,
     });
   }),
-  http.get('/api/v1/agoraTitle', async () => {
+  http.get('/api/v1/auth/agoraTitle', async () => {
     delay(500);
 
     return HttpResponse.json({
