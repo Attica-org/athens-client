@@ -1,4 +1,4 @@
-import errorMessage from '@/utils/errorMessage';
+import showToast from '@/utils/showToast';
 import { getToken } from './getToken';
 import { getReissuanceToken } from './getReissuanceToken';
 
@@ -18,7 +18,7 @@ const tokenErrorHandler = async (response: any) => {
       await getToken();
       break;
     default:
-      errorMessage.setMessage(error.message);
+      showToast('토큰 오류가 발생했습니다.', 'error');
       break;
   }
 };
