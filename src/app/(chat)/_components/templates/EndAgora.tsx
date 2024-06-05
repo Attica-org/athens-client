@@ -3,6 +3,7 @@
 import Loading from '@/app/_components/atoms/loading';
 import ModalBase from '@/app/_components/molecules/ModalBase';
 import { useVoteStore } from '@/store/vote';
+import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { differenceInSeconds } from 'date-fns';
 import { usePathname, useRouter } from 'next/navigation';
@@ -10,6 +11,7 @@ import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 type ResultPosition = 'PROS' | 'CONS' | 'DEFAULT';
+const DUPLICATE_VOTE = 'User has already voted for Opinion in this agora';
 
 export default function EndAgora() {
   const [selectedResultPosition, setSelectedResultPosition] = useState<ResultPosition>('DEFAULT');
@@ -58,8 +60,22 @@ export default function EndAgora() {
       } else if (event.data.action === 'voteResult') {
         setVoteResult(event.data.result);
         setVoteEnd(true);
-        console.log('투표 결과:', event.data.result);
         router.replace(`/agoras/${agoraId}/flow/result-agora`);
+      } else if (event.data.action === 'fetchError') {
+        switch (event.data.error.code) {
+          case 1301:
+            showToast('존재하지 않는 유저 혹은 아고라 입니다.', 'error');
+            break;
+          case 1002:
+            if (event.data.error.message === DUPLICATE_VOTE) {
+              showToast('이미 투표하였습니다.', 'error');
+            } else {
+              showToast('아직 토론이 진행중인 아고라 입니다.', 'error');
+            }
+            break;
+          default:
+            showToast(event.data.error.message, 'error');
+        }
       }
     };
 
