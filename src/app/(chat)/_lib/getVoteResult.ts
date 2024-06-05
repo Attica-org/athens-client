@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import fetchWrapper from '@/lib/fetchWrapper';
 import { getToken } from '@/lib/getToken';
+import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
 
@@ -35,8 +36,11 @@ VoteResult, [string, string, string]
   });
 
   if (res.success === false) {
-    console.log(res.error.message);
-    throw new Error('Network response was not ok');
+    if (res.error.code === 1301) {
+      showToast('아고라를 찾을 수 없습니다.', 'error');
+    } else {
+      showToast('투표 데이터를 얻어오는데 실패했습니다.\n다시 시도해주세요.', 'error');
+    }
   }
 
   const result = res.response;
