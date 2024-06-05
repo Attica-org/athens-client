@@ -1,3 +1,4 @@
+import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -8,8 +9,8 @@ export const getToken = async () => {
   });
 
   if (!res.ok) {
-    console.log(res);
-    throw new Error('Network response was not ok');
+    showToast('요청이 실패했습니다.\n 다시 시도해주세요.', 'error');
+    return;
   }
 
   const result = await res.json();
