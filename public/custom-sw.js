@@ -217,12 +217,12 @@ self.addEventListener('message', event => {
 
       // Set another timeout to send the GET request after an additional 5 seconds
       setTimeout(() => {
-        console.log('Fetching vote result:', `${data.baseUrl}/api/v1/auth/agoras/${data.agoraId}voteResult`, {
+        console.log('Fetching vote result:', `${data.baseUrl}/api/v1/auth/agoras/${data.agoraId}/results`, {
           method: 'GET',
           Authorization: `Bearer ${data.token}`,
         })
 
-        const res = call(`}/api/v1/auth/agoras/${data.agoraId}/voteResult`, {
+        const res = call(`/api/v1/auth/agoras/${data.agoraId}/results`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

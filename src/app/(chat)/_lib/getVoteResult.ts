@@ -23,7 +23,7 @@ VoteResult, [string, string, string]
     await getToken();
   }
 
-  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/voteResult`, {
+  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/results`, {
     next: {
       tags: ['agora', agoraId, 'closed'],
     },
