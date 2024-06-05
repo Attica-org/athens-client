@@ -1,6 +1,6 @@
 import { Agora } from '@/app/model/Agora';
 import fetchWrapper from '@/lib/fetchWrapper';
-import errorMessage from '@/utils/errorMessage';
+import showToast from '@/utils/showToast';
 import { QueryFunction } from '@tanstack/react-query';
 import { redirect } from 'next/navigation';
 
@@ -33,12 +33,17 @@ export const getAgoraCategorySearch:QueryFunction<
 
   if (res.success === false) {
     if (res.error.code === 1001) {
-      errorMessage.setMessage('허용되지 않는 status 입니다.');
+      showToast('허용되지 않는 status 입니다.', 'error');
     }
     if (res.error.code === 1301) {
-      errorMessage.setMessage('허용되지 않는 카테고리입니다.');
+      showToast('허용되지 않는 카테고리입니다.', 'error');
     }
-    redirect('/home?status=active');
+
+    // redirect('/home?status=active');
+    return {
+      agoras: [],
+      nextCursor: null,
+    };
   }
 
   const result = res.response;
