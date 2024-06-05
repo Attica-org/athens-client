@@ -150,7 +150,7 @@ export default function MessageInput() {
       client.current = new StompJs.Client({
         brokerURL: 'ws://54.180.242.54:8080/ws',
         connectHeaders: {
-          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE4Iiwicm9sZSI6IlJPTEVfVEVNUF9VU0VSIiwiaWF0IjoxNzE3MzkzMjg5LCJleHAiOjE3MTc3NTMyODksInN1YiI6ImFjY2Vzcy10b2tlbiJ9.wM51SieaGXhqc8Tclt2zObZMRe0-HQWcEGIYc8TiH64',
+          Authorization: `Bearer ${tokenManager.getToken()}`,
         },
         reconnectDelay: 200,
         onConnect: () => {
