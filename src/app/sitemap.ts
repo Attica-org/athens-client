@@ -5,7 +5,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const agoras = await getAgoraList();
 
   const urls: MetadataRoute.Sitemap = agoras.map((agora: number) => ({
-    url: `http://localhost:3000/agoras/${agora}`,
+    url: `${process.env.NEXT_PUBLIC_BASE_URL}/agoras/${agora}`,
     lastModified: new Date(),
     changeFrequency: 'daily',
     priority: 1,
@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     {
-      url: 'http://localhost:3000/',
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,

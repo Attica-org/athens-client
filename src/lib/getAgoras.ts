@@ -1,15 +1,20 @@
+import fetchWrapper from './fetchWrapper';
+
 // eslint-disable-next-line import/prefer-default-export
 export const getAgoraList = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/agoras/agoraIdList`, {
+  const res = await fetchWrapper.call('/api/v1/open/agoras/agoraIdList', {
     method: 'get',
     credentials: 'include',
   });
 
-  if (!res.ok) {
-    throw new Error('Network response was not ok');
+  if (res.success === false) {
+    if (res.error.code === 1301) {
+      // 아고라 id가 하나도 존재하지 않을 때
+      return [];
+    }
   }
 
-  const result = await res.json();
+  const result = res.response;
 
-  return result.response.id;
+  return result.id;
 };
