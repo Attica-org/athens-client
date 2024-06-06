@@ -1,5 +1,6 @@
 import fetchWrapper from '@/lib/fetchWrapper';
 import { getToken } from '@/lib/getToken';
+import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 
 type Props = {
@@ -34,8 +35,17 @@ export const postCreateAgora = async (info: Props) => {
   });
 
   if (res.success === false) {
-    console.log(res.error.message);
-    throw new Error('Network response was not ok');
+    if (res.error.code === 1001) {
+      if (Number(info.category) < 1) {
+        showToast('허용되지 않는 카테고리입니다.', 'error');
+      } else if (info.color === null) {
+        showToast('아고라 색상을 선택해주세요.', 'error');
+      } else if (info.capacity === null) {
+        showToast('카테고리를 선택해주세요.', 'error');
+      } else {
+        showToast('생성 실패했습니다.\n 다시 시도해주세요.', 'error');
+      }
+    }
   }
 
   const result = res.response;
