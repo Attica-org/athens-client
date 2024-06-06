@@ -5,11 +5,11 @@ type Props = {
   h?: string;
 };
 
-export default function Loading({ w = '45', h = '45' }: Props) {
+export default function Loader({ w = '45', h = '45' }: Props) {
   const size = `w-${w} h-${h}`;
 
   return (
-    <div role="status" className="m-5 flex justify-center items-center h-dvh">
+    <div role="status" className="flex justify-center items-center h-1/3">
       <svg
         aria-hidden="true"
         className={`${size} text-gray-200 animate-spin dark:text-gray-600 fill-athens-main`}
