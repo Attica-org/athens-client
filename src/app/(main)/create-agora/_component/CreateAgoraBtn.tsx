@@ -36,7 +36,7 @@ function CreateAgoraBtn() {
     },
     onSuccess: async (response) => {
       const { setSelectedAgora } = useAgora.getState();
-      setSelectedAgora({ id: response.id, title: createAgora.title });
+      setSelectedAgora({ id: response.id, title: createAgora.title, status: 'QUEUED' });
 
       const { reset } = useCreateAgora.getState();
       reset();
