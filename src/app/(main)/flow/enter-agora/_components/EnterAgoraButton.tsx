@@ -51,6 +51,7 @@ export default function EnterAgoraButton() {
       routePage();
     },
     onError: () => {
+      setIsLoading(false);
       // console.dir(error);
       // alert('문제가 발생했습니다. 다시 시도해주세요.');
     },

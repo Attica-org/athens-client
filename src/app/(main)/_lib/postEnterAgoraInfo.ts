@@ -1,5 +1,6 @@
 import fetchWrapper from '@/lib/fetchWrapper';
 import { getToken } from '@/lib/getToken';
+import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 
 type Props = {
@@ -29,16 +30,27 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
     credentials: 'include',
     body: JSON.stringify({
       nickname: info.nickname ? info.nickname : '',
-      photo_num: info.id ? info.id : 0,
+      photo_num: info.id ? info.id : 1,
       type: info.role,
       voteType: null,
     }),
   });
 
   if (res.success === false) {
-    const message = res.error;
-    console.log(message);
-    throw new Error('Network response was not ok');
+    console.log(res.error);
+    if (res.error.code === 1001) {
+      if (info.id === null) {
+        showToast('프로필을 선택해주세요.', 'error');
+      } else if (info.nickname === null) {
+        showToast('닉네임을 입력해주세요.', 'error');
+      } else if (info.role !== 'OBSERVER' && info.role !== 'PROS' && info.role !== 'CONS') {
+        showToast('허용되지 않는 입장 타입 입니다.', 'error');
+      } else {
+        showToast('입장 실패했습니다.\n 다시 시도해주세요.', 'error');
+      }
+
+      return null;
+    }
   }
 
   const result = res.response;
