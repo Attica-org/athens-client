@@ -3,6 +3,7 @@
 import { AgoraUser } from '@/app/model/AgoraUser';
 import fetchWrapper from '@/lib/fetchWrapper';
 import { getToken } from '@/lib/getToken';
+import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
 
@@ -17,7 +18,7 @@ AgoraUser[], [string, string, string]
     await getToken();
   }
 
-  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/users`, {
+  const res = await fetchWrapper.call(`/api/v1/open/agoras/${agoraId}/users`, {
     next: {
       tags: ['chat', 'users', `${agoraId}`],
     },
@@ -30,8 +31,13 @@ AgoraUser[], [string, string, string]
   });
 
   if (res.success === false) {
-    console.log(res.error.message);
-    throw new Error('Network response was not ok');
+    if (res.error.code === 1301) {
+      showToast('해당 아고라를 찾을 수 없습니다.', 'error');
+    } else {
+      showToast('참여 사용자를 불러올 수 없습니다.', 'error');
+    }
+
+    return [];
   }
 
   const result = res.response.participants;
