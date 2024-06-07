@@ -37,7 +37,6 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
   });
 
   if (res.success === false) {
-    console.log(res.error);
     if (res.error.code === 1001) {
       if (info.id === null) {
         showToast('프로필을 선택해주세요.', 'error');
@@ -48,9 +47,12 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
       } else {
         showToast('입장 실패했습니다.\n 다시 시도해주세요.', 'error');
       }
-
-      return null;
+    } else if (res.error.code === 1004) {
+      showToast('이미 참여한 아고라입니다.', 'error');
+    } else if (res.error.code === 2000) {
+      showToast('선택한 타입의 인원이 꽉 찼습니다.', 'error');
     }
+    return null;
   }
 
   const result = res.response;
