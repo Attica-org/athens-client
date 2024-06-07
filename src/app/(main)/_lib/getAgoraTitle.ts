@@ -25,13 +25,14 @@ export const getAgoraTitle:QueryFunction<
     cache: 'no-cache',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${tokenManager.getToken()}`,
     },
   });
 
   if (res.success === false) {
     if (res.error.code === 1301) {
       showToast('존재하지 않는 아고라입니다.', 'error');
+    } else {
+      showToast('아고라 제목을 불러오는데 실패했습니다.', 'error');
     }
 
     redirect('/home?status=active');

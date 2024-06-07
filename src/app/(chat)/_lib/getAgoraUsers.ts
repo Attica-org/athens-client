@@ -26,7 +26,6 @@ AgoraUser[], [string, string, string]
     cache: 'no-cache',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${tokenManager.getToken()}`,
     },
   });
 
