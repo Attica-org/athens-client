@@ -16,7 +16,7 @@ interface ChatState {
 }
 
 const initialState: ChatState = {
-  start: '2024-05-31T12:46:26.251Z',
+  start: '',
   isClosed: false,
   duration: 30,
   observer: 0,
@@ -39,7 +39,7 @@ export const useChatInfo = create(immer<ChatState>((set) => ({
   setObserver: (observer: number) => set({ observer }),
   setVoteEndCnt: (endVoteCount: number) => set({ endVoteCount }),
   reset: () => set({
-    start: '2024-05-31T12:46:26.251Z',
+    start: '',
     isClosed: false,
     duration: 30,
     observer: 0,
