@@ -41,6 +41,12 @@ VoteResult, [string, string, string]
     } else {
       showToast('투표 데이터를 얻어오는데 실패했습니다.\n다시 시도해주세요.', 'error');
     }
+
+    return {
+      id: agoraId,
+      prosCount: 0,
+      consCount: 0,
+    };
   }
 
   const result = res.response;
