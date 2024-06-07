@@ -15,7 +15,7 @@ import ChatNotification from '../atoms/ChatNotification';
 
 interface Meta {
   key: number | null;
-  size: number;
+  effectiveSize: number;
 }
 
 export default function Message() {
@@ -37,7 +37,7 @@ export default function Message() {
     queryFn: getChatMessages,
     staleTime: 60 * 1000,
     gcTime: 500 * 1000,
-    initialPageParam: { meta: { key: null, size: 20 } },
+    initialPageParam: { meta: { key: null, effectiveSize: 20 } },
     getPreviousPageParam: (firstPage) => (
       firstPage.meta.key !== -1 ? { meta: firstPage.meta } : undefined
     ),
@@ -52,16 +52,14 @@ export default function Message() {
     rootMargin: '100px',
   });
 
-  const [cnt, setCnt] = useState(0);
   useEffect(() => {
-    if (inView && hasPreviousPage && !isFetching && !adjustScroll && cnt < 1) {
+    if (inView && hasPreviousPage && !isFetching && !adjustScroll) {
       const prevHeight = listRef.current?.scrollHeight || 0;
       setAdjustScroll(() => true);
 
       fetchPreviousPage()
         .then(() => {
           setTimeout(() => {
-            setCnt((prev) => prev + 1);
             if (listRef.current) {
               const moveScroll = listRef.current.scrollHeight - prevHeight;
               listRef.current.scrollTop = moveScroll;
@@ -70,7 +68,7 @@ export default function Message() {
           }, 0);
         });
     }
-  }, [inView, fetchPreviousPage, isFetching, hasPreviousPage, adjustScroll, cnt]);
+  }, [inView, fetchPreviousPage, isFetching, hasPreviousPage, adjustScroll]);
 
   const hasMessage = data?.pages[0].chats.length > 0;
   useEffect(() => {
