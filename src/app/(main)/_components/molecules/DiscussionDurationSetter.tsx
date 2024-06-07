@@ -1,14 +1,14 @@
 'use client';
 
 import React, { ChangeEventHandler, useState } from 'react';
-import { DEFAULT_TIME, MIN_DISCUSSION_TIME, MIN_TIME_MESSAGE } from '@/constants/createAgora';
-import CheckIcon from '@/assets/icons/CheckIcon';
+import {
+  MIN_DISCUSSION_TIME, MIN_TIME_MESSAGE, MAX_TIME_MESSAGE, MAX_DISCUSSION_TIME,
+} from '@/constants/createAgora';
 import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 
 function DiscussionDurationSetter() {
   const [message, setMessage] = useState<string | null>(null);
-  const [timeCheck, setTimeCheck] = useState<boolean>(false);
   const { duration, setDuration } = useCreateAgora(
     useShallow((state) => ({ duration: state.duration, setDuration: state.setDuration })),
   );
@@ -18,21 +18,14 @@ function DiscussionDurationSetter() {
 
     if (value < MIN_DISCUSSION_TIME) {
       setMessage(MIN_TIME_MESSAGE);
+    } else if (value > MAX_DISCUSSION_TIME) {
+      setMessage(MAX_TIME_MESSAGE);
+    } else if (!value) {
+      setMessage('시간을 입력해주세요.');
     } else {
       setMessage(null);
     }
     setDuration(value);
-  };
-
-  const handleNoTime = () => {
-    if (timeCheck) {
-      setDuration(DEFAULT_TIME);
-      setTimeCheck(false);
-    } else {
-      setDuration(null);
-      setTimeCheck(true);
-      setMessage(null);
-    }
   };
 
   return (
@@ -43,7 +36,6 @@ function DiscussionDurationSetter() {
           type="number"
           value={duration || ''}
           onChange={handleAgoraTime}
-          disabled={timeCheck}
           className="input-number-hide focus-visible:outline-none text-sm mr-0.5rem text-center p-5 w-5rem border-1 border-athens-gray rounded-md dark:bg-dark-bg-light dark:border-gray-500"
         />
         <div className="under-mobile:text-xs">분</div>
@@ -57,20 +49,6 @@ function DiscussionDurationSetter() {
         {message}
       </div>
       )}
-      <button
-        type="button"
-        onClick={handleNoTime}
-        className="under-mobile:ml-1rem cursor-pointer mt-12 under-mobile:mt-0 flex justify-start items-center text-athens-gray-thick text-center"
-      >
-        <CheckIcon
-          className="w-1rem"
-          fill="rgb(107 114 128)"
-          check={timeCheck}
-        />
-        <div className="ml-8 text-sm under-mobile:text-xs dark:text-white dark:text-opacity-65">
-          제한 없음
-        </div>
-      </button>
     </div>
   );
 }

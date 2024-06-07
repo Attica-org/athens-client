@@ -6,6 +6,8 @@ import { useCreateAgora } from '@/store/create';
 import { useRouter } from 'next/navigation';
 import { useAgora } from '@/store/agora';
 import Loading from '@/app/_components/atoms/loading';
+import { MAX_DISCUSSION_TIME, MIN_DISCUSSION_TIME } from '@/constants/createAgora';
+import showToast from '@/utils/showToast';
 import { postCreateAgora } from '../../_lib/postCreateAgora';
 
 type Agora = {
@@ -44,9 +46,10 @@ function CreateAgoraBtn() {
       setIsLoading(false);
       router.push('/flow/enter-agora');
     },
-    onError: (error) => {
-      console.error(error);
-      alert('문제가 발생했습니다. 다시 시도해주세요.');
+    onError: () => {
+      showToast('아고라 생성에 실패했습니다.', 'error');
+      setIsLoading(false);
+      // alert('문제가 발생했습니다. 다시 시도해주세요.');
     },
   });
 
@@ -54,11 +57,15 @@ function CreateAgoraBtn() {
     const {
       title, category, color, capacity, duration,
     } = useCreateAgora.getState();
+
+    if (title.trim() === '' || !color || !category || !duration || duration > MAX_DISCUSSION_TIME || duration < MIN_DISCUSSION_TIME) {
+      showToast('입력값을 확인해주세요.', 'error');
+      return;
+    }
+
     setCreateAgora({
       title, category, color, capacity, duration,
     });
-
-    if (title.trim() === '') return;
 
     setIsLoading(true);
     mutation.mutate();
