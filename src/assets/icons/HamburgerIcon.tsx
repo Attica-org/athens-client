@@ -1,11 +1,15 @@
+'use client';
+
+import { useDarkMode } from '@/store/darkMode';
 import React from 'react';
-import DARKMODE from '@/constants/darkMode';
 
 type Props = {
   className: string;
 };
 
 export default function HamburgerIcon({ className }: Props) {
+  const { darkMode } = useDarkMode();
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -15,7 +19,7 @@ export default function HamburgerIcon({ className }: Props) {
       aria-hidden
     >
       <path
-        fill={DARKMODE ? '#fff' : '#000'}
+        fill={darkMode ? '#fff' : '#000'}
         d="M120-240v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z"
       />
     </svg>
