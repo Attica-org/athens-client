@@ -21,7 +21,7 @@ function CategoryButtonList() {
   const catSearchParams = searchParams.get('category');
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(
     catSearchParams
-      ? AGORACATEGORY.findIndex((category) => category.innerText === catSearchParams)
+      ? AGORACATEGORY.findIndex((category) => category.value === catSearchParams)
       : 0,
   );
 
