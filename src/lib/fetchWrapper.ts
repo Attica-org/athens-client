@@ -9,7 +9,7 @@ import { getReissuanceToken } from './getReissuanceToken';
 // const UNSUPPORTED_TOKEN = 'Unsupported JWT token.';
 
 const tokenErrorHandler = async (response: any) => {
-  const { error } = response;
+  const { error } = await response.json();
   switch (error.code) {
     case 1002:
       await getReissuanceToken();
@@ -31,24 +31,24 @@ class FetchWrapper {
   }
 
   async call(url: string, fetchNext: any, retry = 3) {
-    const response = await fetch(`${this.baseUrl}${url}`, fetchNext);
+    const response = await fetch(this.baseUrl + url, fetchNext);
+    const result = await response.json();
 
     if (!response.ok) {
-      const res = await response.json();
       // 인증 자격에 관한 오류 처리
       if (response.status === 401) {
-        await tokenErrorHandler(res);
+        await tokenErrorHandler(response);
         // 재발급 후 재요청
         if (retry !== 0) {
           this.call(url, fetchNext, retry - 1);
         }
       } else {
         // 인증 외 오류는 호출한 곳에서 처리
-        return res;
+        return result;
       }
     }
 
-    return response.json();
+    return result;
   }
 }
 
