@@ -49,7 +49,6 @@ function CreateAgoraBtn() {
     onError: () => {
       showToast('아고라 생성에 실패했습니다.', 'error');
       setIsLoading(false);
-      // alert('문제가 발생했습니다. 다시 시도해주세요.');
     },
   });
 

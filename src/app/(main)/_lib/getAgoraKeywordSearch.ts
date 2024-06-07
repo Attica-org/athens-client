@@ -2,7 +2,6 @@ import { Agora } from '@/app/model/Agora';
 import fetchWrapper from '@/lib/fetchWrapper';
 import showToast from '@/utils/showToast';
 import { QueryFunction } from '@tanstack/react-query';
-import { redirect } from 'next/navigation';
 
 type SearchParams = {
   status?: string,

@@ -59,7 +59,5 @@ export const postCreateAgora = async (info: Props) => {
 
   const result = res.response;
 
-  console.log(res);
-
   return result;
 };

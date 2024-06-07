@@ -35,8 +35,6 @@ export const getChatMessages:QueryFunction<
     await getToken();
   }
 
-  console.log(urlSearchParams.toString());
-
   const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/chats?${urlSearchParams.toString()}`, {
     next: {
       tags: ['chat', agoraId, 'messages'],
