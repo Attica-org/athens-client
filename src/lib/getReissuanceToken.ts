@@ -3,7 +3,7 @@ import tokenManager from '@/utils/tokenManager';
 
 // eslint-disable-next-line import/prefer-default-export
 export const getReissuanceToken = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/reissue`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/reissue`, {
     method: 'POST',
     credentials: 'include',
   });

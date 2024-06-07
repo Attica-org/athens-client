@@ -2,7 +2,7 @@ import fetchWrapper from './fetchWrapper';
 
 // eslint-disable-next-line import/prefer-default-export
 export const getAgoraList = async () => {
-  const res = await fetchWrapper.call('/api/v1/open/agoras/agoraIdList', {
+  const res = await fetchWrapper.call('/api/v1/open/agoras/ids', {
     method: 'get',
     credentials: 'include',
   });
