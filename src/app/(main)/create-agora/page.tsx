@@ -7,6 +7,26 @@ import AgoraTitleInput from './_component/AgoraTitleInput';
 import CreateAgoraBtn from './_component/CreateAgoraBtn';
 import CategoryButtonContainer from '../_components/organisms/CategoryButtonContainer';
 
+export async function generateMetadata() {
+  return {
+    title: '아고라 생성 - Athens',
+    description: '사람들과 이야기하고 싶은 주제로 아고라를 만들어보세요.',
+    openGraph: {
+      title: '아고라 생성 - Athens',
+      description: '사람들과 이야기하고 싶은 주제로 아고라를 만들어보세요.',
+      type: 'website',
+      images: [
+        {
+          url: '/logo.png',
+          width: 300,
+          height: 300,
+          alt: 'Athens 로고',
+        },
+      ],
+    },
+  };
+}
+
 export default function Page() {
   return (
     <section className="overflow-y-scroll scrollbar-hide flex flex-col pb-57 lg:pb-25 flex-1 h-dvh min-w-270 flex-grow">
