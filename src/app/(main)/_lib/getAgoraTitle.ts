@@ -5,6 +5,7 @@ import { getToken } from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
+import { redirect } from 'next/navigation';
 
 // eslint-disable-next-line import/prefer-default-export
 export const getAgoraTitle:QueryFunction<
@@ -16,7 +17,7 @@ export const getAgoraTitle:QueryFunction<
     await getToken();
   }
 
-  const res = await fetchWrapper.call('/api/v1/auth/title', {
+  const res = await fetchWrapper.call(`/api/v1/open/agoras/${agoraId}/title`, {
     next: {
       tags: [`${agoraId}`, 'agoraTitle'],
     },
@@ -32,6 +33,8 @@ export const getAgoraTitle:QueryFunction<
     if (res.error.code === 1301) {
       showToast('존재하지 않는 아고라입니다.', 'error');
     }
+
+    redirect('/home?status=active');
   }
 
   const result = res.response;
