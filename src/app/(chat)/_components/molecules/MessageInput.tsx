@@ -3,7 +3,7 @@
 import SendIcon from '@/assets/icons/SendIcon';
 import { useMessageStore } from '@/store/message';
 import React, {
-  ChangeEventHandler, KeyboardEventHandler, useEffect, useRef, useState,
+  ChangeEventHandler, KeyboardEventHandler, useCallback, useEffect, useRef, useState,
 } from 'react';
 import * as StompJs from '@stomp/stompjs';
 import { usePathname } from 'next/navigation';
@@ -11,9 +11,11 @@ import tokenManager from '@/utils/tokenManager';
 import { InfiniteData, useQueryClient } from '@tanstack/react-query';
 import { Message } from '@/app/model/Message';
 import { useAgora } from '@/store/agora';
+import showToast from '@/utils/showToast';
 
 export default function MessageInput() {
   const [message, setMessage] = useState<string>('');
+  const [isError, setIsError] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
   const { enterAgora } = useAgora();
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -26,7 +28,7 @@ export default function MessageInput() {
     setMessage(e.target.value);
   };
 
-  const pushMessage = (type: string, data?: any) => {
+  const pushMessage = useCallback((type: string, data?: any) => {
     const newDate = new Date();
     // 쿼리 데이터에 추가
     const exMessages = queryClient.getQueryData(['chat', `${agoraId}`, 'messages']) as InfiniteData<{
@@ -72,7 +74,7 @@ export default function MessageInput() {
       queryClient.setQueryData(['chat', `${agoraId}`, 'messages'], newMessages);
       setGoDown(true);
     }
-  };
+  }, [agoraId, message, queryClient, setGoDown]);
 
   const sendMessage = () => {
     if (message.trim().length < 1) return;
@@ -142,15 +144,15 @@ export default function MessageInput() {
 
     const subscribeError = () => {
       console.log('Subscribing Error...');
-      client.current?.subscribe('/user/queue/errors', (received_message: StompJs.IFrame) => {
-        console.log(`> Received message: ${received_message.body}`);
+      client.current?.subscribe('/user/queue/errors', () => {
+        // header에서 오류 처리
+        setIsError(true);
       });
     };
 
     const connect = () => {
-      console.log('Connecting...');
       client.current = new StompJs.Client({
-        brokerURL: 'ws://54.180.242.54:8080/ws',
+        brokerURL: `${process.env.NEXT_PUBLIC_SOCKET_URL}/ws`,
         connectHeaders: {
           Authorization: `Bearer ${tokenManager.getToken()}`,
         },
@@ -160,28 +162,28 @@ export default function MessageInput() {
           subscribeError();
           subscribe();
         },
-        onWebSocketError: (error) => {
-          console.log('Error with websocket', error);
+        onWebSocketError: () => {
+          showToast('웹소켓 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
         },
-        onStompError: (frame) => {
-          console.dir(`Broker reported error: ${frame.headers.message}`);
-          console.dir(`Additional details: ${frame}`);
+        onStompError: () => {
+          showToast('웹소켓 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
         },
       });
       console.log('Activating...');
       client.current.activate();
     };
 
-    if (tokenManager.getToken() !== undefined && enterAgora.status !== 'CLOSED') {
+    if (enterAgora.status !== 'CLOSED' && navigator.onLine) {
       connect();
-    } else {
-      console.error('Token is not found');
-      // 토큰 발급
-      // POST /api/v1/temp-user
+    }
+
+    if (isError) {
+      connect();
+      setIsError(false);
     }
 
     return () => disconnect();
-  }, [agoraId]);
+  }, [agoraId, isError, enterAgora.status, pushMessage]);
 
   return (
     enterAgora.status !== 'CLOSED' && (

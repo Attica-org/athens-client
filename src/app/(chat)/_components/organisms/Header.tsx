@@ -3,12 +3,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
-import { useVoteStore } from '@/store/vote';
+// import { useVoteStore } from '@/store/vote';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAgora } from '@/store/agora';
 import tokenManager from '@/utils/tokenManager';
 import * as StompJs from '@stomp/stompjs';
 import { AgoraMeta } from '@/app/model/AgoraMeta';
+import { useChatInfo } from '@/store/chatInfo';
+import toast from 'react-hot-toast';
+import showToast from '@/utils/showToast';
+import { getReissuanceToken } from '@/lib/getReissuanceToken';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../atoms/ShareButton';
 import AgoraTitle from '../molecules/AgoraTitle';
@@ -22,12 +26,18 @@ export default function Header() {
   const { enterAgora } = useAgora(
     useShallow((state) => ({ enterAgora: state.enterAgora })),
   );
-  const { voteEnd } = useVoteStore(useShallow((state) => ({
-    voteEnd: state.voteEnd,
-  })));
+  // const { voteEnd } = useVoteStore(useShallow((state) => ({
+  //   voteEnd: state.voteEnd,
+  // })));
+  const { setDiscussionStart } = useChatInfo(
+    useShallow((state) => ({
+      setDiscussionStart: state.setDiscussionStart,
+    })),
+  );
   const [metaData, setMetaData] = useState<AgoraMeta>();
+  const [isError, setIsError] = useState(false);
   const router = useRouter();
-  const agoraId = usePathname().split('/').pop() as string;
+  const [agoraId, setAgoraId] = useState<string>(usePathname().split('/').pop() as string);
   const client = useRef<StompJs.Client>();
 
   const toggleMenu = () => {
@@ -53,20 +63,36 @@ export default function Header() {
       console.log('Subscribing... metadata');
       getMetadata();
       client.current?.subscribe(`/topic/agoras/${agoraId}`, (received_message: StompJs.IFrame) => {
-        setMetaData(JSON.parse(received_message.body).data);
+        const data = JSON.parse(received_message.body);
+        if (data.type === 'META') {
+          setAgoraId(data.data.agora.id);
+          setMetaData(data.data);
+        } else if (data.type === 'DISCUSSION_START') {
+          setDiscussionStart(data.data.startTime);
+        } else if (data.type === 'DISCUSSION_END') {
+          toast('토론이 종료되었습니다.');
+          router.push(`/agoras/${data.data.agoraId}/flow/end-agora`);
+        }
         console.log(`> Received message: ${received_message.body}`);
       });
     };
 
-    const subscribeError = () => {
+    function subscribeError() {
       console.log('Subscribing Error...');
-      client.current?.subscribe('/user/queue/errors', (received_message: StompJs.IFrame) => {
-        console.log(`> Received message: ${received_message.body}`);
+      client.current?.subscribe('/user/queue/errors', async (received_message: StompJs.IFrame) => {
+        const data = JSON.parse(received_message.body);
+        if (data.code === 1201 || data.code === 1003) {
+          await getReissuanceToken();
+        } else if (data.code === 2000) {
+          showToast('오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'error');
+        } else if (data.code === 2001) {
+          showToast('연결이 불안정합니다. 잠시 후 다시 시도해주세요.', 'error');
+        }
+        setIsError(true);
       });
-    };
+    }
 
-    const connect = () => {
-      console.log('Connecting... metadata');
+    function connect() {
       client.current = new StompJs.Client({
         brokerURL: `${process.env.NEXT_PUBLIC_SOCKET_URL}/ws`,
         connectHeaders: {
@@ -78,28 +104,28 @@ export default function Header() {
           subscribeError();
           subscribe();
         },
-        onWebSocketError: (error) => {
-          console.log('Error with websocket', error);
+        onWebSocketError: () => {
+          showToast('웹소켓 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
         },
-        onStompError: (frame) => {
-          console.dir(`Broker reported error: ${frame.headers.message}`);
-          console.dir(`Additional details: ${frame}`);
+        onStompError: () => {
+          showToast('웹소켓 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
         },
       });
       console.log('Activating... metadata');
       client.current.activate();
-    };
+    }
 
-    if (tokenManager.getToken() !== undefined) {
+    if (enterAgora.status !== 'CLOSED' && navigator.onLine) {
       connect();
-    } else {
-      console.error('Token is not found');
-      // 토큰 발급
-      // POST /api/v1/temp-user
+    }
+
+    if (isError) {
+      connect();
+      setIsError(false);
     }
 
     return () => disconnect();
-  }, [agoraId]);
+  }, [agoraId, isError, router, setDiscussionStart, enterAgora.status]);
 
   useEffect(() => {
     if (enterAgora.status !== 'closed') {
@@ -112,14 +138,11 @@ export default function Header() {
     }
   }, [enterAgora.status]);
 
-  useEffect(() => {
-    if (voteEnd && enterAgora.status !== 'closed') {
-      console.log('최종 투표 종료');
-      // router.push(`/agoras/${agoraId}/flow/result-agora`);
-    }
-  }, [voteEnd, agoraId, router, enterAgora.status]);
-
-  // TODO: 메타데이터 웹 소켓 연결
+  // useEffect(() => {
+  //   if (voteEnd && enterAgora.status !== 'closed') {
+  //     router.push(`/agoras/${agoraId}/flow/result-agora`);
+  //   }
+  // }, [voteEnd, agoraId, router, enterAgora.status]);
 
   return (
     <div className="flex flex-col w-full justify-center dark:text-white dark:text-opacity-85">
