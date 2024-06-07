@@ -1,20 +1,9 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-// TODO: 전역 상태로 투표 종료를 확인한 후 모달을 열기 때문에 나중에 onClick은 제외될 것.
-
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
 
 export default function ChatNotification() {
-  const router = useRouter();
-  const pathname = usePathname();
   const [showMessage, setShowMessage] = useState(false);
-
-  // TODO: 전역 상태로 투표 종료 확인, 결과 모달 열기
-  const onClick = () => {
-    router.push(`${pathname}/flow/result-agora`);
-  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -25,8 +14,7 @@ export default function ChatNotification() {
   }, []);
 
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-    <div className="flex p-0.5rem pl-1rem pr-1rem" onClick={onClick}>
+    <div className="flex p-0.5rem pl-1rem pr-1rem">
       {!showMessage && (
         <div
           role="alert"
