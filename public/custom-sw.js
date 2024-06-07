@@ -193,7 +193,7 @@ self.addEventListener('message', event => {
         },
         body: JSON.stringify({
           voteType: data.voteType,
-          opinionVoted: 'true'
+          isOpinionVoted: 'true'
         }),
       }, `${data.baseUrl}`)
 
