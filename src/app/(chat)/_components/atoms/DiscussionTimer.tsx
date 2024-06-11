@@ -16,8 +16,9 @@ type Props = {
 
 export default function DiscussionTimer({ duration }: Props) {
   const startTime = useChatInfo.getState().start;
-  const { start } = useChatInfo(useShallow((state) => ({
+  const { start, end } = useChatInfo(useShallow((state) => ({
     start: state.start,
+    end: state.end,
   })));
   const { formattedTime, isFinished, resetTimer } = useTimer(startTime, duration);
   const { enterAgora, setEnterAgora } = useAgora();
@@ -41,14 +42,14 @@ export default function DiscussionTimer({ duration }: Props) {
   });
 
   useEffect(() => {
-    if (isFinished && start) {
+    if ((isFinished && start) || end) {
       resetTimer();
       // agoraEnd.mutate();
       setEnterAgora({ ...enterAgora, status: 'CLOSED' });
       router.push(`/agoras/${enterAgora.id}/flow/end-agora`);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFinished, enterAgora.id, router, start, resetTimer]);
+  }, [isFinished, enterAgora.id, router, start, resetTimer, end]);
 
   return (
     <div

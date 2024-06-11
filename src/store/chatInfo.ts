@@ -6,7 +6,9 @@ interface ChatState {
   observer: number;
   endVoteCount: number;
   duration: number;
+  end: string;
   setDiscussionStart: (start: string) => void;
+  setDiscussionEnd: (end: string) => void;
   setDuration: (duration: number) => void;
   setObserver: (observer: number) => void;
   setVoteEndCnt: (voteEndCnt: number) => void;
@@ -15,10 +17,12 @@ interface ChatState {
 
 const initialState: ChatState = {
   start: '',
+  end: '',
   duration: 30,
   observer: 0,
   endVoteCount: 0,
   setDiscussionStart: () => {},
+  setDiscussionEnd: () => {},
   setDuration: () => {},
   setObserver: () => {},
   setVoteEndCnt: () => {},
@@ -30,11 +34,13 @@ export const useChatInfo = create(immer<ChatState>((set) => ({
   ...initialState,
 
   setDiscussionStart: (start: string) => set({ start }),
+  setDiscussionEnd: (end: string) => set({ end }),
   setDuration: (duration: number) => set({ duration }),
   setObserver: (observer: number) => set({ observer }),
   setVoteEndCnt: (endVoteCount: number) => set({ endVoteCount }),
   reset: () => set({
     start: '',
+    end: '',
     duration: 30,
     observer: 0,
     endVoteCount: 0,
