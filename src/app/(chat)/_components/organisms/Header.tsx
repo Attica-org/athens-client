@@ -119,14 +119,13 @@ export default function Header() {
           subscribeError();
           subscribe();
         },
-        onWebSocketError: (error) => {
-          console.log('webSocketError', error);
-          showToast('웹소켓 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
+        onWebSocketError: () => {
+          showToast('네트워크가 불안정합니다.', 'error');
           router.replace('/home');
         },
-        onStompError: (error) => {
-          console.log('stompError', error);
-          showToast('웹소켓 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
+        onStompError: async () => {
+          await getReissuanceToken();
+          connect();
         },
       });
       // console.log('Activating... metadata');
