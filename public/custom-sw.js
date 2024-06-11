@@ -74,14 +74,13 @@ self.addEventListener('message', event => {
   }
 
   if (action === 'updateVote') {
-    console.log('Updating vote data:', data);
-    voteData = data;
+    console.log('Updating vote data:', data.voteType);
+    voteType = data.voteType;
   }
 
   if (action === 'startTimer') {
     // Set a timeout to send the POST request after 15 seconds
     setTimeout(async () => {
-      console.log('Sending vote data:', data);
       const res = await call(`${baseUrl}/api/v1/auth/agoras/${data.agoraId}/vote`, {
         method: 'PATCH',
         headers: {
@@ -89,7 +88,7 @@ self.addEventListener('message', event => {
           Authorization: `Bearer ${data.token}`,
         },
         body: JSON.stringify({
-          voteType: data.voteType || 'DEFAULT',
+          voteType: voteType || 'DEFAULT',
           isOpinionVoted: 'true'
         }),
       })
@@ -111,6 +110,8 @@ self.addEventListener('message', event => {
           });
         });
       }
+
+      voteType = '';
 
       // Set another timeout to send the GET request after an additional 5 seconds
       setTimeout(async () => {
