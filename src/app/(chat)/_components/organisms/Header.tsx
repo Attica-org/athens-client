@@ -3,8 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
-// import { useVoteStore } from '@/store/vote';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useAgora } from '@/store/agora';
 import tokenManager from '@/utils/tokenManager';
 import * as StompJs from '@stomp/stompjs';
@@ -26,18 +25,18 @@ export default function Header() {
   const { enterAgora } = useAgora(
     useShallow((state) => ({ enterAgora: state.enterAgora })),
   );
-  // const { voteEnd } = useVoteStore(useShallow((state) => ({
-  //   voteEnd: state.voteEnd,
-  // })));
   const { setDiscussionStart } = useChatInfo(
     useShallow((state) => ({
       setDiscussionStart: state.setDiscussionStart,
     })),
   );
   const [metaData, setMetaData] = useState<AgoraMeta>();
+  const [participants, setParticipants] = useState<{ pros: number; cons: number }>({
+    pros: 0, cons: 0,
+  });
   const [isError, setIsError] = useState(false);
   const router = useRouter();
-  const [agoraId, setAgoraId] = useState<string>(usePathname().split('/').pop() as string);
+  const [agoraId, setAgoraId] = useState(enterAgora.id);
   const client = useRef<StompJs.Client>();
 
   const toggleMenu = () => {
@@ -48,7 +47,7 @@ export default function Header() {
   useEffect(() => {
     const disconnect = () => {
       client.current?.deactivate();
-      console.log('Disconnected');
+      // console.log('Disconnected');
     };
 
     const getMetadata = () => {
@@ -60,14 +59,26 @@ export default function Header() {
     };
 
     const subscribe = () => {
-      console.log('Subscribing... metadata');
+      // console.log('Subscribing... metadata');
       getMetadata();
       client.current?.subscribe(`/topic/agoras/${agoraId}`, (received_message: StompJs.IFrame) => {
         const data = JSON.parse(received_message.body);
         if (data.type === 'META') {
           setAgoraId(data.data.agora.id);
           setMetaData(data.data);
+          if (data.data.agora.startAt) {
+            setDiscussionStart(data.data.agora.startAt);
+          }
+
+          data.data.participants.forEach((participant: { type: string; count: number }) => {
+            if (participant.type === 'PROS') {
+              setParticipants((prev) => ({ ...prev, pros: participant.count }));
+            } else if (participant.type === 'CONS') {
+              setParticipants((prev) => ({ ...prev, cons: participant.count }));
+            }
+          });
         } else if (data.type === 'DISCUSSION_START') {
+          // console.log(data.data);
           setDiscussionStart(data.data.startTime);
         } else if (data.type === 'DISCUSSION_END') {
           toast('토론이 종료되었습니다.');
@@ -84,6 +95,7 @@ export default function Header() {
         if (data.code === 1201 || data.code === 1003) {
           await getReissuanceToken();
         } else if (data.code === 2000) {
+          console.log(data.message);
           showToast('오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'error');
         } else if (data.code === 2001) {
           showToast('연결이 불안정합니다. 잠시 후 다시 시도해주세요.', 'error');
@@ -100,22 +112,25 @@ export default function Header() {
         },
         reconnectDelay: 200,
         onConnect: () => {
-          console.log('connected');
+          // console.log('connected');
           subscribeError();
           subscribe();
         },
-        onWebSocketError: () => {
+        onWebSocketError: (error) => {
+          console.log('webSocketError', error);
           showToast('웹소켓 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
+          router.replace('/home');
         },
-        onStompError: () => {
+        onStompError: (error) => {
+          console.log('stompError', error);
           showToast('웹소켓 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
         },
       });
-      console.log('Activating... metadata');
+      // console.log('Activating... metadata');
       client.current.activate();
     }
 
-    if (enterAgora.status !== 'CLOSED' && navigator.onLine) {
+    if (navigator.onLine) {
       connect();
     }
 
@@ -128,7 +143,7 @@ export default function Header() {
   }, [agoraId, isError, router, setDiscussionStart, enterAgora.status]);
 
   useEffect(() => {
-    if (enterAgora.status !== 'closed') {
+    if (enterAgora.status !== 'CLOSED') {
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
           action: 'initialize',
@@ -137,12 +152,6 @@ export default function Header() {
       }
     }
   }, [enterAgora.status]);
-
-  // useEffect(() => {
-  //   if (voteEnd && enterAgora.status !== 'closed') {
-  //     router.push(`/agoras/${agoraId}/flow/result-agora`);
-  //   }
-  // }, [voteEnd, agoraId, router, enterAgora.status]);
 
   return (
     <div className="flex flex-col w-full justify-center dark:text-white dark:text-opacity-85">
@@ -157,7 +166,7 @@ export default function Header() {
         </div>
       </div>
       <div className="flex justify-center items-center pt-0.5rem">
-        <AgoraTitle title={metaData?.agora.title || ''} pros={metaData?.participants[0]?.count} cons={metaData?.participants[1]?.count} />
+        <AgoraTitle title={metaData?.agora.title || ''} pros={participants.pros} cons={participants.cons} />
       </div>
     </div>
   );
