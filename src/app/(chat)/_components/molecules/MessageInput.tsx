@@ -6,12 +6,10 @@ import React, {
   ChangeEventHandler, KeyboardEventHandler, useCallback, useEffect, useRef, useState,
 } from 'react';
 import * as StompJs from '@stomp/stompjs';
-import { usePathname } from 'next/navigation';
 import tokenManager from '@/utils/tokenManager';
 import { InfiniteData, useQueryClient } from '@tanstack/react-query';
 import { Message } from '@/app/model/Message';
 import { useAgora } from '@/store/agora';
-import showToast from '@/utils/showToast';
 
 export default function MessageInput() {
   const [message, setMessage] = useState<string>('');
@@ -20,20 +18,20 @@ export default function MessageInput() {
   const { enterAgora } = useAgora();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { setGoDown } = useMessageStore();
-  const agoraId = usePathname().split('/').pop() as string;
   const client = useRef<StompJs.Client>();
   const queryClient = useQueryClient();
+  const agoraId = useAgora((state) => state.enterAgora.id);
 
   const handleMessage: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setMessage(e.target.value);
   };
 
-  const pushMessage = useCallback((type: string, data?: any) => {
-    const newDate = new Date();
+  const pushMessage = useCallback((data: any, type: string) => {
     // 쿼리 데이터에 추가
     const exMessages = queryClient.getQueryData(['chat', `${agoraId}`, 'messages']) as InfiniteData<{
       chats: Message[], meta: { key: number, size: number }
     }>;
+
     if (exMessages && typeof exMessages === 'object') {
       const newMessages = {
         ...exMessages,
@@ -49,19 +47,7 @@ export default function MessageInput() {
       const lastMessageId = lastPage?.chats.at(-1)?.chatId;
 
       if (type === 'received') {
-        newLastPage.chats.push(data.data);
-      } else {
-        newLastPage.chats.push({
-          chatId: lastMessageId ? lastMessageId - 1 : 0,
-          user: {
-            id: 0,
-            nickname: '나',
-            photoNumber: 2,
-            type: 'CONS',
-          },
-          content: message,
-          createdAt: `${newDate}`,
-        });
+        newLastPage.chats.push(JSON.parse(data).data);
       }
 
       newMessages.pages[newMessages.pages.length - 1] = {
@@ -74,12 +60,12 @@ export default function MessageInput() {
       queryClient.setQueryData(['chat', `${agoraId}`, 'messages'], newMessages);
       setGoDown(true);
     }
-  }, [agoraId, message, queryClient, setGoDown]);
+  }, [agoraId, queryClient, setGoDown]);
 
   const sendMessage = () => {
     if (message.trim().length < 1) return;
 
-    if (client.current) {
+    if (client.current && client.current.connected) {
       client.current?.publish({
         destination: `/app/agoras/${agoraId}/chats`,
         body: JSON.stringify({
@@ -87,11 +73,9 @@ export default function MessageInput() {
           message,
         }),
       });
-
-      pushMessage('send');
+      setMessage('');
       console.log(`> Send message: ${message}`);
     }
-    setMessage('');
   };
 
   const handleCompositionStart = () => {
@@ -158,18 +142,18 @@ export default function MessageInput() {
         },
         reconnectDelay: 200,
         onConnect: () => {
-          console.log('connected');
           subscribeError();
           subscribe();
         },
-        onWebSocketError: () => {
-          showToast('웹소켓 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
+        onWebSocketError: (error) => {
+          console.dir('webSocket', error);
+          // showToast('웹소켓 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
         },
-        onStompError: () => {
-          showToast('웹소켓 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
+        onStompError: (error) => {
+          console.dir('stomp', error);
+          // showToast('웹소켓 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
         },
       });
-      console.log('Activating...');
       client.current.activate();
     };
 
@@ -186,7 +170,7 @@ export default function MessageInput() {
   }, [agoraId, isError, enterAgora.status, pushMessage]);
 
   return (
-    enterAgora.status !== 'CLOSED' && (
+    enterAgora.status !== 'CLOSED' && enterAgora.role !== 'OBSERVER' && (
       <section className="flex border-t-1 dark:border-dark-light-300 sticky bottom-0 right-0 left-0 w-full bg-white dark:bg-dark-light-300">
         <form className="pl-1.5rem p-12 pb-0 flex flex-1 justify-start items-center">
           <textarea

@@ -7,7 +7,7 @@ const AGORA_STATUS_ERROR = 'Agora status must be RUNNING';
 const ALREADY_VOTED = 'User has already voted for ending the agora';
 
 // eslint-disable-next-line import/prefer-default-export
-export const patchAgoraEnd = async (agoraId: string) => {
+export const patchAgoraEnd = async (agoraId: number) => {
   // 토큰을 가지고 있는지 확인
   if (tokenManager.getToken() === undefined) {
     await getToken();
@@ -40,6 +40,7 @@ export const patchAgoraEnd = async (agoraId: string) => {
     } else {
       showToast('토론 종료에 실패했습니다.\n 다시 시도해주세요.', 'error');
     }
+    return null;
   }
 
   const result = res.response;

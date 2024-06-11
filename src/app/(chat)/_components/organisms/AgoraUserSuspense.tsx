@@ -7,12 +7,12 @@ import AgoraUserList from '../molecules/AgoraUserList';
 import { getAgoraUsers } from '../../_lib/getAgoraUsers';
 
 type Props = {
-  agoraId: string;
+  agoraId: number;
 };
 
 export default function AgoraUserSuspense({ agoraId }: Props) {
   const { data: userList } = useQuery<AgoraUser[], Object, AgoraUser[], [string, string, string]>({
-    queryKey: ['chat', 'users', agoraId as string],
+    queryKey: ['chat', 'users', `${agoraId}`],
     queryFn: getAgoraUsers,
     staleTime: 1000 * 30,
     gcTime: 60 * 1000,

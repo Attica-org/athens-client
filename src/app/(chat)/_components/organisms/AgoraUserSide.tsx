@@ -4,15 +4,15 @@ import RemoveIcon from '@/assets/icons/RemoveIcon';
 import React, { KeyboardEventHandler, MouseEventHandler, Suspense } from 'react';
 import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
-import { usePathname } from 'next/navigation';
+import { useAgora } from '@/store/agora';
 import AgoraUserSuspense from './AgoraUserSuspense';
 import AgoraUserSideSkeleton from './AgoraUserSideSkeleton';
 
 export default function AgoraUserSide() {
-  const agoraId = usePathname().split('/').pop();
   const { toggle, isOpen } = useSidebarStore(
     useShallow((state) => ({ toggle: state.toggle, isOpen: state.isOpen })),
   );
+  const agoraId = useAgora((state) => state.enterAgora.id);
 
   const toggleMenu = () => {
     toggle();
@@ -60,7 +60,9 @@ export default function AgoraUserSide() {
             </button>
           </div>
           <Suspense fallback={<AgoraUserSideSkeleton />}>
-            <AgoraUserSuspense agoraId={agoraId as string} />
+            <AgoraUserSuspense
+              agoraId={agoraId}
+            />
           </Suspense>
         </section>
       </div>

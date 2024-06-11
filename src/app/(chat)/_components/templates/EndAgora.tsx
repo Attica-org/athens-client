@@ -2,11 +2,12 @@
 
 import Loading from '@/app/_components/atoms/loading';
 import ModalBase from '@/app/_components/molecules/ModalBase';
+import { useAgora } from '@/store/agora';
 import { useVoteStore } from '@/store/vote';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { differenceInSeconds } from 'date-fns';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -23,8 +24,8 @@ export default function EndAgora() {
     voteEnd: state.voteEnd,
     setVoteResult: state.setVoteResult,
   })));
+  const agoraId = useAgora((state) => state.enterAgora.id);
   const router = useRouter();
-  const agoraId = usePathname().split('/').pop() as string;
 
   // 투표 상태 업데이트
   useEffect(() => {
@@ -58,23 +59,25 @@ export default function EndAgora() {
       if (event.data.action === 'voteSent') {
         setIsFinished(true);
       } else if (event.data.action === 'voteResult') {
+        console.log('voteResult', event.data);
         setVoteResult(event.data.result);
         setVoteEnd(true);
         router.replace(`/agoras/${agoraId}/flow/result-agora`);
       } else if (event.data.action === 'fetchError') {
-        switch (event.data.error.code) {
+        console.log('fetchError', event.data);
+        switch (event.data.message.code) {
           case 1301:
             showToast('존재하지 않는 유저 혹은 아고라 입니다.', 'error');
             break;
           case 1002:
-            if (event.data.error.message === DUPLICATE_VOTE) {
+            if (event.data.message.message === DUPLICATE_VOTE) {
               showToast('이미 투표하였습니다.', 'error');
             } else {
               showToast('아직 토론이 진행중인 아고라 입니다.', 'error');
             }
             break;
           default:
-            showToast(event.data.error.message, 'error');
+            showToast(event.data.message, 'error');
         }
       }
     };
@@ -93,14 +96,13 @@ export default function EndAgora() {
       clearInterval(timerId);
       navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
     };
-  }, [agoraId, router, setVoteEnd, setVoteResult, vote]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [agoraId, router, setVoteEnd, setVoteResult]);
 
   const selectResultPosition = (position: ResultPosition) => {
     setSelectedResultPosition(position);
     setVote(position);
   };
-
-  // TODO: 사용자가 선택하지 않고 화면을 이탈할 경우 abs로 처리
 
   return (
     <ModalBase title="토론 종료" removeIcon={false} animation={false}>
@@ -125,6 +127,7 @@ export default function EndAgora() {
           <button
             type="button"
             aria-label="찬성하기"
+            disabled={isFinished}
             onClick={() => selectResultPosition('PROS')}
             className={`${
               selectedResultPosition === 'PROS'
@@ -137,6 +140,7 @@ export default function EndAgora() {
           <button
             type="button"
             aria-label="반대하기"
+            disabled={isFinished}
             onClick={() => selectResultPosition('CONS')}
             className={`${
               selectedResultPosition === 'CONS'

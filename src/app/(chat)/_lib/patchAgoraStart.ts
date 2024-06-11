@@ -4,7 +4,7 @@ import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 
 // eslint-disable-next-line import/prefer-default-export
-export const patchAgoraStart = async (agoraId: string) => {
+export const patchAgoraStart = async (agoraId: number) => {
   // 토큰을 가지고 있는지 확인
   if (tokenManager.getToken() === undefined) {
     await getToken();

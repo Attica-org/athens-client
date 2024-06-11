@@ -5,9 +5,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   InfiniteData, useSuspenseInfiniteQuery,
 } from '@tanstack/react-query';
-import { usePathname } from 'next/navigation';
 import { useInView } from 'react-intersection-observer';
 import { useMessageStore } from '@/store/message';
+import { useAgora } from '@/store/agora';
 import MyMessage from '../atoms/MyMessage';
 import YourMessage from '../atoms/YourMessage';
 import { getChatMessages } from '../../_lib/getChatMessages';
@@ -23,8 +23,8 @@ export default function Message() {
   const [adjustScroll, setAdjustScroll] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
   const { shouldGoDown, setGoDown } = useMessageStore();
-  const myRole = 'CONS';
-  const agoraId = usePathname().split('/').pop();
+  const myRole = useAgora((state) => state.enterAgora.role);
+  const agoraId = useAgora((state) => state.enterAgora.id);
 
   const {
     data, hasPreviousPage, isFetching, fetchPreviousPage,
@@ -86,15 +86,8 @@ export default function Message() {
     }
   }, [shouldGoDown, setGoDown]);
 
-  // const isSameDate = (prevCreatedAt: string, currentCreatedAt: string):boolean => {
-  //   const prev = new Date(prevCreatedAt).toLocaleTimeString().slice(0, -3);
-  //   const current = new Date(currentCreatedAt).toLocaleTimeString().slice(0, -3);
-
-  //   return prev === current;
-  // };
-
   return (
-    <div ref={listRef} className="overflow-y-scroll flex-1">
+    <div ref={listRef} className="overflow-y-auto flex-1">
       {!adjustScroll && pageRendered && <div ref={ref} className="h-1" />}
       {data?.pages.map((page) => (
         <React.Fragment key={page.chats[0]?.chatId}>
