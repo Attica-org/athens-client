@@ -44,11 +44,18 @@ export default function EnterAgoraButton() {
       };
       return postEnterAgoraInfo({ info, agoraId: selectedAgora.id });
     },
-    onSuccess: async () => {
-      setEnterAgora({
-        id: selectedAgora.id, title: selectedAgora.title, status: selectedAgora.status,
-      });
-      routePage();
+    onSuccess: async (response) => {
+      if (response) {
+        setEnterAgora({
+          id: response.agoraId,
+          title: selectedAgora.title,
+          status: selectedAgora.status,
+          role: response.type,
+        });
+        routePage();
+      } else {
+        setIsLoading(false);
+      }
     },
     onError: () => {
       setIsLoading(false);

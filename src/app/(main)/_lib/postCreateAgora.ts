@@ -52,6 +52,7 @@ export const postCreateAgora = async (info: Props) => {
       } else {
         showToast('생성 실패했습니다.\n 다시 시도해주세요.', 'error');
       }
+      return null;
     }
 
     return null;

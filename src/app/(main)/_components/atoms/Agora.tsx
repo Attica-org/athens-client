@@ -5,6 +5,7 @@ import { useAgora } from '@/store/agora';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
+import showToast from '@/utils/showToast';
 import { postEnterAgoraInfo } from '../../_lib/postEnterAgoraInfo';
 
 type Props = {
@@ -30,8 +31,12 @@ export default function Agora({ agora }: Props) {
       };
       return postEnterAgoraInfo({ info, agoraId: id });
     },
-    onSuccess: async () => {
-      routePage();
+    onSuccess: async (response) => {
+      if (response) {
+        routePage();
+      } else {
+        showToast('데이터 연결에 실패했습니다. 다시 시도해주세요.', 'error');
+      }
     },
     onError: () => {
       // console.dir(error);
