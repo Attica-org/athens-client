@@ -6,6 +6,13 @@ type Agora = {
   status: string,
 };
 
+type EnterAgora = {
+  id: number,
+  title: string,
+  status: string,
+  role: string,
+};
+
 interface AgoraState {
   selectedAgora: {
     id: number,
@@ -16,8 +23,9 @@ interface AgoraState {
     id: number,
     title: string,
     status: string,
+    role: string,
   }
-  setEnterAgora: (agora: Agora) => void;
+  setEnterAgora: (agora: EnterAgora) => void;
   setSelectedAgora: (agora: Agora) => void;
   reset: () => void;
 }
@@ -33,8 +41,9 @@ export const useAgora = create<AgoraState>((set) => ({
     id: 0,
     title: '',
     status: '',
+    role: '',
   },
-  setEnterAgora(agora: Agora) {
+  setEnterAgora(agora: EnterAgora) {
     set({ enterAgora: agora });
   },
   setSelectedAgora(agora: Agora) {
