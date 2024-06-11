@@ -6,6 +6,7 @@ import MSWComponent from './_components/utils/MSWComponent';
 import RQProvider from './_components/utils/RQProvider';
 import ServiceWorkerRegistration from './_components/utils/ServiceWorkerRegistration';
 import ToasterContainer from './_components/utils/ToasterContainer';
+import SetTheme from './_components/utils/SetTheme';
 
 export const viewport:Viewport = {
   themeColor: '#3A3A3B',
@@ -45,6 +46,7 @@ export default function RootLayout({
         <MSWComponent />
         <ServiceWorkerRegistration />
         <RQProvider>
+          <SetTheme />
           {children}
           <ToasterContainer />
         </RQProvider>

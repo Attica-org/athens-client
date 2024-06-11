@@ -11,9 +11,10 @@ export const useDarkMode = create<ThemeState>((set, get) => ({
   darkMode: localStorage.getItem('theme') === 'dark',
   toggleTheme() {
     document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', get().darkMode ? 'light' : 'dark');
     set({ darkMode: !get().darkMode });
   },
   reset() {
-    set({ darkMode: localStorage.getItem('theme') === 'dark' });
+    set({ darkMode: localStorage.getItem('theme') !== 'dark' });
   },
 }));
