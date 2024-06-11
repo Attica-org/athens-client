@@ -13,7 +13,7 @@ export const patchAgoraEnd = async (agoraId: number) => {
     await getToken();
   }
 
-  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/end`, {
+  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/close`, {
     method: 'PATCH',
     next: {
       tags: [],
