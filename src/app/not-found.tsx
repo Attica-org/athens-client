@@ -1,11 +1,14 @@
+'use client';
+
 import PROFLELIST from '@/constants/userProfileImage';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 export default function NotFound() {
   const randomIndex = Math.floor(Math.random() * PROFLELIST.length);
   const randomProfile = PROFLELIST[randomIndex];
+  const router = useRouter();
 
   return (
     <div className="flex flex-col h-dvh w-dvw justify-center items-center scrollbar-hide">
@@ -20,8 +23,8 @@ export default function NotFound() {
       <p className="text-base dark:text-white mt-12">
         페이지를 찾을 수 없습니다.
       </p>
-      <button type="button" aria-label="홈으로 돌아가기" className="bg-athens-main text-white rounded-full px-16 py-7 mt-50 text-sm">
-        <Link href="/home">홈으로 돌아가기</Link>
+      <button onClick={() => router.replace('/home')} type="button" aria-label="홈으로 돌아가기" className="bg-athens-main text-white rounded-full px-16 py-7 mt-50 text-sm">
+        홈으로 돌아가기
       </button>
     </div>
   );
