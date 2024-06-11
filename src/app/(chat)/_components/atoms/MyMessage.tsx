@@ -21,7 +21,7 @@ export default function MyMessage({ message, isSameUser }: Props) {
             {message.user.nickname}
           </div>
           )}
-          <div className={`max-w-[60vw] whitespace-pre-line bg-red-200 rounded-tl-lg ${isSameUser && 'rounded-tr-lg'} rounded-bl-lg rounded-br-lg p-0.5rem  pl-10 pr-10 text-sm under-mobile:text-xs`}>
+          <div className={`max-w-[60vw] whitespace-pre-line ${message.user.type === 'CONS' ? 'bg-red-200' : 'bg-blue-200'} rounded-tl-lg ${isSameUser && 'rounded-tr-lg'} rounded-bl-lg rounded-br-lg p-0.5rem  pl-10 pr-10 text-sm under-mobile:text-xs`}>
             {message.content}
           </div>
         </div>
@@ -30,14 +30,16 @@ export default function MyMessage({ message, isSameUser }: Props) {
         <div aria-hidden className="border-1 border-gray-300 w-fit rounded-3xl dark:bg-white">
           <UserImage
             name={message.user.nickname}
-            file={PROFLELIST[message.user.photoNumber].file}
-            className="w-60 h-60 under-mobile:w-50 under-mobile:h-50 flex rounded-3xl"
-            w={60}
-            h={60}
+            file={message.user.photoNumber
+              ? PROFLELIST[message.user.photoNumber - 1].file
+              : PROFLELIST[0].file}
+            className="w-50 h-50 under-mobile:w-40 under-mobile:h-40 flex rounded-3xl"
+            w={50}
+            h={50}
           />
         </div>
       ) : (
-        <div className="w-60 under-mobile:w-50" />
+        <div className="w-50 under-mobile:w-40" />
       )}
     </article>
   );
