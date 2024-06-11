@@ -3,11 +3,9 @@ import { immer } from 'zustand/middleware/immer';
 
 interface ChatState {
   start: string;
-  isClosed: boolean;
   observer: number;
   endVoteCount: number;
   duration: number;
-  setIsClosed: (isClosed: boolean) => void;
   setDiscussionStart: (start: string) => void;
   setDuration: (duration: number) => void;
   setObserver: (observer: number) => void;
@@ -17,11 +15,9 @@ interface ChatState {
 
 const initialState: ChatState = {
   start: '',
-  isClosed: false,
   duration: 30,
   observer: 0,
   endVoteCount: 0,
-  setIsClosed: () => {},
   setDiscussionStart: () => {},
   setDuration: () => {},
   setObserver: () => {},
@@ -33,14 +29,12 @@ const initialState: ChatState = {
 export const useChatInfo = create(immer<ChatState>((set) => ({
   ...initialState,
 
-  setIsClosed: (isClosed: boolean) => set({ isClosed }),
   setDiscussionStart: (start: string) => set({ start }),
   setDuration: (duration: number) => set({ duration }),
   setObserver: (observer: number) => set({ observer }),
   setVoteEndCnt: (endVoteCount: number) => set({ endVoteCount }),
   reset: () => set({
     start: '',
-    isClosed: false,
     duration: 30,
     observer: 0,
     endVoteCount: 0,
