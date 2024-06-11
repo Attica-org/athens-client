@@ -22,7 +22,7 @@ interface AgoraState {
 
 const initialState: AgoraState = {
   title: '',
-  category: 'all',
+  category: '1',
   color: 'agora-point-color1',
   capacity: DEFAULT_PARTICIPANTS_CNT,
   duration: DEFAULT_TIME,
