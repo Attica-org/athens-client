@@ -1,10 +1,12 @@
 import { differenceInSeconds } from 'date-fns';
-import { useCallback, useEffect, useState } from 'react';
+import {
+  useCallback, useEffect, useRef, useState,
+} from 'react';
 
-const useTimer = (startTime: string, duration: number, start: boolean) => {
+const useTimer = (startTime: string, duration: number) => {
   const [remainingTime, setRemainingTime] = useState<number>(duration * 60);
   const [isFinished, setIsFinished] = useState<boolean>(false);
-  const [intervalId, setIntervalId] = useState<number | null>(null);
+  const intervalId = useRef<number | null>(null);
 
   const setTimerLabel = (time: number) => {
     const minutes = Math.floor(time / 60);
@@ -15,14 +17,13 @@ const useTimer = (startTime: string, duration: number, start: boolean) => {
 
   const calculateRemaining = useCallback(() => {
     const diffTime = differenceInSeconds(new Date(), new Date(startTime)); // s 차이
-
     const remainTime = duration * 60 - diffTime;
 
     if (remainTime <= 0) {
       setIsFinished(true);
       setRemainingTime(0);
-      if (intervalId) {
-        clearInterval(intervalId);
+      if (intervalId.current) {
+        clearInterval(intervalId.current);
       }
     } else {
       setRemainingTime(remainTime);
@@ -32,35 +33,28 @@ const useTimer = (startTime: string, duration: number, start: boolean) => {
   }, [startTime, duration, intervalId]);
 
   useEffect(() => {
-    let initialTimeout: NodeJS.Timeout;
-    const initiateTimer = () => {
-      const id = window.setInterval(() => {
-        calculateRemaining();
-      }, 1000);
-      setIntervalId(id);
-    };
-
-    if (start) {
+    if (startTime) {
       // 초기 실행 시의 지연 계산
-      const diffTime = differenceInSeconds(new Date(), new Date(startTime));
-      const delayForNextSecond = diffTime;
-      initialTimeout = setTimeout(() => {
-        calculateRemaining();
-        initiateTimer();
-      }, delayForNextSecond);
+      // const diffTime = differenceInSeconds(new Date(), new Date(startTime));
+      calculateRemaining();
+      if (remainingTime > 0) {
+        intervalId.current = window.setInterval(calculateRemaining, 1000);
+      }
+    } else {
+      setRemainingTime(duration * 60);
     }
 
     return () => {
-      clearTimeout(initialTimeout);
-      if (intervalId) {
-        clearInterval(intervalId);
+      if (intervalId.current) {
+        clearInterval(intervalId.current);
       }
     };
-  }, [startTime, duration, intervalId, calculateRemaining, start]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startTime, duration, calculateRemaining, remainingTime]);
 
   const resetTimer = () => {
-    if (intervalId) {
-      clearInterval(intervalId);
+    if (intervalId.current) {
+      clearInterval(intervalId.current);
     }
     setRemainingTime(duration * 60);
     setIsFinished(false);
