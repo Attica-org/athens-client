@@ -60,7 +60,7 @@ export default function Agora({ agora }: Props) {
   return (
     <article id={`${id}`} className="w-165 under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center dark:bg-dark-light-300 dark:border-gray-500">
       <div className={`under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-3xl under-mobile:rounded-2xl ${agoraColor} relative`}>
-        <div className={`w-0.5rem h-0.5rem rounded-full ${status === 'RUNNING' ? 'bg-athens-button' : 'bg-red-400'} absolute top-3 right-2 under-mobile:top-2 under-mobile:right-1 z-5`} />
+        {status !== 'CLOSED' && <div className={`w-0.5rem h-0.5rem rounded-full ${status === 'RUNNING' ? 'bg-athens-button' : 'bg-red-400'} absolute top-3 right-2 under-mobile:top-2 under-mobile:right-1 z-5`} />}
       </div>
       <h2 className="text-xs under-mobile:text-xs under-mobile:font-semibold pt-10 dark:text-white">
         {agoraTitle}
