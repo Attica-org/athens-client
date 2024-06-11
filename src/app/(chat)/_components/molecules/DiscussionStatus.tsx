@@ -9,11 +9,11 @@ import Loading from '@/app/_components/atoms/loading';
 import { AgoraMeta } from '@/app/model/AgoraMeta';
 import { useShallow } from 'zustand/react/shallow';
 import toast from 'react-hot-toast';
+import showToast from '@/utils/showToast';
 import { patchAgoraStart } from '../../_lib/patchAgoraStart';
 import { patchAgoraEnd } from '../../_lib/patchAgoraEnd';
 import DiscussionTimer from '../atoms/DiscussionTimer';
 import VoteResult from '../atoms/VoteResult';
-import showToast from '@/utils/showToast';
 
 type Props = {
   meta: AgoraMeta | undefined;
@@ -46,10 +46,6 @@ export default function DiscussionStatus({ meta }: Props) {
 
   const agoraEnd = useMutation({
     mutationFn: async () => patchAgoraEnd(enterAgora.id),
-    onMutate: () => {
-      // END 버튼을 누른 인원이 2/3 이상이면 종료
-      // router.push(`/agoras/${agoraId}/flow/end-agora`);
-    },
     onSuccess: async (response) => {
       if (response) {
         toast.success('토론 종료에 투표하였습니다.');
@@ -67,6 +63,9 @@ export default function DiscussionStatus({ meta }: Props) {
     if (!start) {
       // 시작 api 호출
       agoraStart.mutate();
+    } else {
+      // 종료 api 호출
+      agoraEnd.mutate();
     }
   };
 
