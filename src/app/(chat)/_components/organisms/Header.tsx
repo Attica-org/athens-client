@@ -25,9 +25,11 @@ export default function Header() {
   const { enterAgora } = useAgora(
     useShallow((state) => ({ enterAgora: state.enterAgora })),
   );
-  const { setDiscussionStart } = useChatInfo(
+  const { setDiscussionStart, setDiscurreionEnd, reset } = useChatInfo(
     useShallow((state) => ({
       setDiscussionStart: state.setDiscussionStart,
+      setDiscurreionEnd: state.setDiscussionEnd,
+      reset: state.reset,
     })),
   );
   const [metaData, setMetaData] = useState<AgoraMeta>();
@@ -81,6 +83,7 @@ export default function Header() {
           // console.log(data.data);
           setDiscussionStart(data.data.startTime);
         } else if (data.type === 'DISCUSSION_END') {
+          setDiscurreionEnd(data.data.endTime);
           toast('토론이 종료되었습니다.');
           router.push(`/agoras/${data.data.agoraId}/flow/end-agora`);
         }
@@ -139,7 +142,11 @@ export default function Header() {
       setIsError(false);
     }
 
-    return () => disconnect();
+    return () => {
+      disconnect();
+      reset();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agoraId, isError, router, setDiscussionStart, enterAgora.status]);
 
   useEffect(() => {
