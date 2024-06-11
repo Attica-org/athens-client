@@ -21,8 +21,8 @@ type Agora = {
 function CreateAgoraBtn() {
   const [createAgora, setCreateAgora] = useState<Agora>({
     title: '',
-    category: 'all',
-    color: 'agora-point-color1',
+    category: '1',
+    color: 'bg-agora-point-color1',
     capacity: 5,
     duration: 60,
   });
@@ -38,13 +38,18 @@ function CreateAgoraBtn() {
     },
     onSuccess: async (response) => {
       const { setSelectedAgora } = useAgora.getState();
-      setSelectedAgora({ id: response.id, title: createAgora.title, status: 'QUEUED' });
+      if (response) {
+        setSelectedAgora({ id: response.id, title: createAgora.title, status: 'QUEUED' });
 
-      const { reset } = useCreateAgora.getState();
-      reset();
+        const { reset } = useCreateAgora.getState();
+        reset();
 
-      setIsLoading(false);
-      router.push('/flow/enter-agora');
+        setIsLoading(false);
+        router.push('/flow/enter-agora');
+      } else {
+        showToast('아고라 생성에 실패했습니다.', 'error');
+        setIsLoading(false);
+      }
     },
     onError: () => {
       showToast('아고라 생성에 실패했습니다.', 'error');
