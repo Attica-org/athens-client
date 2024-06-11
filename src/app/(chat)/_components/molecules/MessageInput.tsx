@@ -10,6 +10,8 @@ import tokenManager from '@/utils/tokenManager';
 import { InfiniteData, useQueryClient } from '@tanstack/react-query';
 import { Message } from '@/app/model/Message';
 import { useAgora } from '@/store/agora';
+import showToast from '@/utils/showToast';
+import { getReissuanceToken } from '@/lib/getReissuanceToken';
 
 export default function MessageInput() {
   const [message, setMessage] = useState<string>('');
@@ -145,19 +147,18 @@ export default function MessageInput() {
           subscribeError();
           subscribe();
         },
-        onWebSocketError: (error) => {
-          console.dir('webSocket', error);
-          // showToast('웹소켓 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
+        onWebSocketError: () => {
+          showToast('네트워크가 불안정합니다.', 'error');
         },
-        onStompError: (error) => {
-          console.dir('stomp', error);
-          // showToast('웹소켓 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
+        onStompError: async () => {
+          await getReissuanceToken();
+          connect();
         },
       });
       client.current.activate();
     };
 
-    if (enterAgora.status !== 'CLOSED' && navigator.onLine) {
+    if (enterAgora.status !== 'CLOSED' && enterAgora.role !== 'OBSERVER' && navigator.onLine) {
       connect();
     }
 
@@ -167,7 +168,7 @@ export default function MessageInput() {
     }
 
     return () => disconnect();
-  }, [agoraId, isError, enterAgora.status, pushMessage]);
+  }, [agoraId, isError, enterAgora.status, pushMessage, enterAgora.role]);
 
   return (
     enterAgora.status !== 'CLOSED' && enterAgora.role !== 'OBSERVER' && (
