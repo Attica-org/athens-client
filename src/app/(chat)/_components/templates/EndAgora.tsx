@@ -3,6 +3,7 @@
 import Loading from '@/app/_components/atoms/loading';
 import ModalBase from '@/app/_components/molecules/ModalBase';
 import { useAgora } from '@/store/agora';
+import { useChatInfo } from '@/store/chatInfo';
 import { useVoteStore } from '@/store/vote';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
@@ -19,6 +20,9 @@ export default function EndAgora() {
   const [remainingTime, setRemainingTime] = useState(15);
   const [isFinished, setIsFinished] = useState(false);
   const [vote, setVote] = useState<string | null>(null);
+  const { title } = useChatInfo(useShallow((state) => ({
+    title: state.title,
+  })));
   const { setVoteResult, setVoteEnd, voteEnd } = useVoteStore(useShallow((state) => ({
     setVoteEnd: state.setVoteEnd,
     voteEnd: state.voteEnd,
@@ -121,7 +125,7 @@ export default function EndAgora() {
           aria-label="토론 주제"
           className="p-1rem pt-1rem text-base break-keep text-center"
         >
-          국가 발전에 유능한 독재자가 필요한 시기가 있다.
+          {title}
         </h2>
         <div className="pt-0.5rem pb-0.5rem">
           <button

@@ -1,6 +1,7 @@
 'use client';
 
 import ModalBase from '@/app/_components/molecules/ModalBase';
+import { useChatInfo } from '@/store/chatInfo';
 import { useVoteStore } from '@/store/vote';
 import Confetti from '@/utils/Confetti';
 import Link from 'next/link';
@@ -10,17 +11,17 @@ import { useShallow } from 'zustand/react/shallow';
 export default function ResultAgora() {
   const prosColor = 'bg-blue-400';
   const consColor = 'bg-red-400';
-  const { voteResult, setVoteEnd, reset } = useVoteStore(useShallow((state) => ({
+  const { voteResult, setVoteEnd } = useVoteStore(useShallow((state) => ({
     voteResult: state.voteResult,
     setVoteEnd: state.setVoteEnd,
     reset: state.reset,
   })));
+  const { title } = useChatInfo(useShallow((state) => ({
+    title: state.title,
+  })));
 
   useEffect(() => {
     setVoteEnd(false);
-    return () => {
-      reset();
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -33,7 +34,7 @@ export default function ResultAgora() {
             aria-label="토론 주제"
             className="break-keep text-center text-base font-semibold"
           >
-            기후 변화 대책에 대한 토론
+            {title}
           </h2>
           <div className="flex justify-center items-center">
             <div

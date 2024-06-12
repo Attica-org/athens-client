@@ -12,6 +12,7 @@ import { useChatInfo } from '@/store/chatInfo';
 import toast from 'react-hot-toast';
 import showToast from '@/utils/showToast';
 import { getReissuanceToken } from '@/lib/getReissuanceToken';
+import { useVoteStore } from '@/store/vote';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../atoms/ShareButton';
 import AgoraTitle from '../molecules/AgoraTitle';
@@ -25,13 +26,17 @@ export default function Header() {
   const { enterAgora } = useAgora(
     useShallow((state) => ({ enterAgora: state.enterAgora })),
   );
-  const { setDiscussionStart, setDiscurreionEnd, reset } = useChatInfo(
+  const {
+    setTitle, setDiscussionStart, setDiscurreionEnd, reset,
+  } = useChatInfo(
     useShallow((state) => ({
+      setTitle: state.setTitle,
       setDiscussionStart: state.setDiscussionStart,
       setDiscurreionEnd: state.setDiscussionEnd,
       reset: state.reset,
     })),
   );
+  const voteResultReset = useVoteStore(useShallow((state) => state.reset));
   const [metaData, setMetaData] = useState<AgoraMeta>();
   const [participants, setParticipants] = useState<{ pros: number; cons: number }>({
     pros: 0, cons: 0,
@@ -66,6 +71,7 @@ export default function Header() {
       client.current?.subscribe(`/topic/agoras/${agoraId}`, (received_message: StompJs.IFrame) => {
         const data = JSON.parse(received_message.body);
         if (data.type === 'META') {
+          setTitle(data.data.agora.title);
           setAgoraId(data.data.agora.id);
           setMetaData(data.data);
           if (data.data.agora.startAt) {
@@ -144,6 +150,7 @@ export default function Header() {
     return () => {
       disconnect();
       reset();
+      voteResultReset();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agoraId, isError, router, setDiscussionStart, enterAgora.status]);
