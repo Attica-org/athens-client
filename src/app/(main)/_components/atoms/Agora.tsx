@@ -50,7 +50,7 @@ export default function Agora({ agora }: Props) {
 
     const AgoraStatus = searchParams.get('status');
     if (AgoraStatus === 'active') {
-      router.push('/flow/enter-agora');
+      router.push(`/flow/enter-agora/${id}`);
     } else if (AgoraStatus === 'closed') {
       // 바로 채팅방으로 이동
       mutation.mutate();

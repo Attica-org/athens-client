@@ -45,7 +45,7 @@ function CreateAgoraBtn() {
         reset();
 
         setIsLoading(false);
-        router.push('/flow/enter-agora');
+        router.push(`/flow/enter-agora/${response.id}`);
       } else {
         showToast('아고라 생성에 실패했습니다.', 'error');
         setIsLoading(false);

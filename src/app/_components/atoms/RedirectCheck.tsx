@@ -11,14 +11,15 @@ type Props = {
 export default function RedirectCheck({ children }: Props) {
   const router = useRouter();
   const pathname = usePathname();
+  const agoraId = pathname.split('/')[2];
 
   useEffect(() => {
     const accessToken = tokenManager.getToken();
+    tokenManager.setRedirectUrl(pathname);
     if (!accessToken) {
-      tokenManager.setRedirectUrl(pathname);
-      router.push('/flow/enter-agora');
+      router.replace(`/flow/enter-agora/${agoraId}`);
     }
-  }, [pathname, router]);
+  }, [agoraId, router]);
 
   const accessToken = tokenManager.getToken();
 
