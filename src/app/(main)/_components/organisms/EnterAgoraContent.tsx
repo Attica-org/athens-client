@@ -5,6 +5,7 @@ import tokenManager from '@/utils/tokenManager';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import Loading from '@/app/_components/atoms/loading';
+import { usePathname } from 'next/navigation';
 import { getAgoraTitle } from '../../_lib/getAgoraTitle';
 import ModalPosSelectContainer from '../../flow/enter-agora/_components/ModalPosSelectContainer';
 import InputErrorMessage from '../../flow/enter-agora/_components/InputErrorMessage';
@@ -14,12 +15,13 @@ import EnterAgoraButton from '../../flow/enter-agora/_components/EnterAgoraButto
 export default function EnterAgoraContent() {
   const { selectedAgora, setSelectedAgora } = useAgora();
   const redirectUrl: string | null = tokenManager.getRedirectUrl();
-  const agoraId = redirectUrl?.split('/').pop() as string;
+  const pathname = usePathname();
+  const agoraId = redirectUrl?.split('/').pop() || pathname.split('/')[3];
 
   const { data, isSuccess } = useQuery({
     queryKey: ['agoraTitle', agoraId],
     queryFn: getAgoraTitle,
-    enabled: !selectedAgora.id && agoraId !== '-1',
+    enabled: !agoraId || !selectedAgora.id,
   });
 
   useEffect(() => {
