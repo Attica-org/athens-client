@@ -7,7 +7,7 @@ import { useEnter } from '@/store/enter';
 import tokenManager from '@/utils/tokenManager';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 export default function EnterAgoraButton() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -15,13 +15,6 @@ export default function EnterAgoraButton() {
   const router = useRouter();
   const { selectedAgora, setEnterAgora } = useAgora();
   const redirectURL = tokenManager.getRedirectUrl();
-
-  useEffect(() => {
-    // redirectURL과 agoraId가 모두 없으면 홈으로 이동
-    if (!selectedAgora.id && !redirectURL && !tokenManager.getToken()) {
-      router.replace('/home');
-    }
-  }, [selectedAgora.id, router, redirectURL]);
 
   const routePage = () => {
     if (!selectedAgora.id && redirectURL) {
