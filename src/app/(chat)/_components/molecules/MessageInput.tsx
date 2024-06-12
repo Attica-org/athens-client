@@ -76,7 +76,7 @@ export default function MessageInput() {
         }),
       });
       setMessage('');
-      console.log(`> Send message: ${message}`);
+      // console.log(`> Send message: ${message}`);
     }
   };
 
@@ -116,20 +116,20 @@ export default function MessageInput() {
   useEffect(() => {
     const disconnect = () => {
       client.current?.deactivate();
-      console.log('Disconnected');
+      // console.log('Disconnected');
     };
 
     const subscribe = () => {
-      console.log('Subscribing...');
+      // console.log('Subscribing...');
       client.current?.subscribe(`/topic/agoras/${agoraId}/chats`, (received_message: StompJs.IFrame) => {
-        console.log(`> Received message: ${received_message.body}`);
+        // console.log(`> Received message: ${received_message.body}`);
 
         pushMessage(received_message.body, 'received');
       });
     };
 
     const subscribeError = () => {
-      console.log('Subscribing Error...');
+      // console.log('Subscribing Error...');
       client.current?.subscribe('/user/queue/errors', () => {
         // header에서 오류 처리
         setIsError(true);

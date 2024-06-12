@@ -1,6 +1,7 @@
 'use client';
 
 import ShareIcon from '@/assets/icons/ShareIcon';
+import showToast from '@/utils/showToast';
 import { useParams } from 'next/navigation';
 import React, { MouseEventHandler } from 'react';
 
@@ -24,9 +25,9 @@ export default function ShareButton({ title }: Props) {
     } else {
       try {
         await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}/agoras/${pathname.agora}`);
-        alert('공유기능이 제공되지 않는 환경입니다.\n클립보드에 링크가 복사되었습니다.');
+        showToast('공유기능이 제공되지 않는 환경입니다.\n클립보드에 링크가 복사되었습니다.', 'error');
       } catch (error) {
-        alert('공유와 복사가 제공되지 않는 환경입니다.');
+        showToast('클립보드 복사에 실패했습니다.', 'error');
       }
     }
   };

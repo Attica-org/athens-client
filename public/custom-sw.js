@@ -74,7 +74,7 @@ self.addEventListener('message', event => {
   }
 
   if (action === 'updateVote') {
-    console.log('Updating vote data:', data.voteType);
+    // console.log('Updating vote data:', data.voteType);
     voteType = data.voteType;
   }
 
@@ -124,7 +124,7 @@ self.addEventListener('message', event => {
         });
 
         if (res.success === false) {
-          console.log('Error fetching vote result:', res.error)
+          // console.log('Error fetching vote result:', res.error)
           event.source.postMessage({
             action: 'fetchError',
             message: res.error
@@ -132,9 +132,8 @@ self.addEventListener('message', event => {
         }
         else {
           const result = res.response;
-          console.log(result);
           self.clients.matchAll().then(clients => {
-            console.log('Sending vote result:', result);
+            // console.log('Sending vote result:', result);
             clients.forEach(client => {
               client.postMessage({
                 action: 'voteResult',

@@ -93,18 +93,18 @@ export default function Header() {
           toast('토론이 종료되었습니다.');
           router.push(`/agoras/${data.data.agoraId}/flow/end-agora`);
         }
-        console.log(`> Received message: ${received_message.body}`);
+        // console.log(`> Received message: ${received_message.body}`);
       });
     };
 
     function subscribeError() {
-      console.log('Subscribing Error...');
+      // console.log('Subscribing Error...');
       client.current?.subscribe('/user/queue/errors', async (received_message: StompJs.IFrame) => {
         const data = JSON.parse(received_message.body);
         if (data.code === 1201 || data.code === 1003) {
           await getReissuanceToken();
         } else if (data.code === 2000) {
-          console.log(data.message);
+          // console.log(data.message);
           showToast('오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'error');
         } else if (data.code === 2001) {
           showToast('연결이 불안정합니다. 잠시 후 다시 시도해주세요.', 'error');

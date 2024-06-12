@@ -15,7 +15,7 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
-    console.dir(error);
+    // console.dir(error);
   }, [error]);
 
   const randomIndex = Math.floor(Math.random() * PROFLELIST.length);

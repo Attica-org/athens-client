@@ -19,6 +19,7 @@ export default function RedirectCheck({ children }: Props) {
     if (!accessToken) {
       router.replace(`/flow/enter-agora/${agoraId}`);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agoraId, router]);
 
   const accessToken = tokenManager.getToken();

@@ -63,12 +63,12 @@ export default function EndAgora() {
       if (event.data.action === 'voteSent') {
         setIsFinished(true);
       } else if (event.data.action === 'voteResult') {
-        console.log('voteResult', event.data);
+        // console.log('voteResult', event.data);
         setVoteResult(event.data.result);
         setVoteEnd(true);
         router.replace(`/agoras/${agoraId}/flow/result-agora`);
       } else if (event.data.action === 'fetchError') {
-        console.log('fetchError', event.data);
+        // console.log('fetchError', event.data);
         switch (event.data.message.code) {
           case 1301:
             showToast('존재하지 않는 유저 혹은 아고라 입니다.', 'error');
