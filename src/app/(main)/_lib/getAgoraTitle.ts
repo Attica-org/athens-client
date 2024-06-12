@@ -10,7 +10,7 @@ import { redirect } from 'next/navigation';
 // eslint-disable-next-line import/prefer-default-export
 export const getAgoraTitle:QueryFunction<
 { title: string, status: string }, [_1: string, _2: string]> = async ({ queryKey }) => {
-  const [agoraId, _] = queryKey;
+  const [_, agoraId] = queryKey;
 
   // 토큰을 가지고 있는지 확인
   if (tokenManager.getToken() === undefined) {
