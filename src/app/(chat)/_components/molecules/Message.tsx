@@ -87,10 +87,10 @@ export default function Message() {
   }, [shouldGoDown, setGoDown]);
 
   return (
-    <div ref={listRef} className="overflow-y-auto flex-1">
+    <div key={agoraId} ref={listRef} className="overflow-y-auto flex-1">
       {!adjustScroll && pageRendered && <div ref={ref} className="h-1" />}
-      {data?.pages.map((page) => (
-        <React.Fragment key={page.chats[0]?.chatId}>
+      {data.pages.length && data.pages.map((page) => (
+        <div key={page.chats[0]?.chatId || Math.random()}>
           {page.chats.map((message, idx) => (
             <div key={message.chatId}>
               {message.user.type === myRole ? (
@@ -106,7 +106,7 @@ export default function Message() {
               )}
             </div>
           ))}
-        </React.Fragment>
+        </div>
       ))}
       <ChatNotification />
     </div>

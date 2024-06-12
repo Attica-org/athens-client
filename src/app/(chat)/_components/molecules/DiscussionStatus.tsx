@@ -101,9 +101,9 @@ export default function DiscussionStatus({ meta }: Props) {
             className="flex justify-center items-center"
           >
             <EyeIcon className="w-1rem" />
-            {meta?.participants.map((participant) => (
+            {meta && meta.participants.map((participant) => (
               participant.type === 'OBSERVER' && (
-                <span className="pl-5 text-xs text-athens-gray-thick dark:text-white dark:text-opacity-85">
+                <span key={meta.agora.id} className="pl-5 text-xs text-athens-gray-thick dark:text-white dark:text-opacity-85">
                   {participant.count || 0}
                 </span>
               )
