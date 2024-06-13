@@ -20,7 +20,7 @@ export async function generateMetadata({ searchParams }: Props) {
       type: 'website',
       images: [
         {
-          url: '/logo.png',
+          url: 'https://athens-client-mu.vercel.app/logo.png',
           width: 300,
           height: 300,
           alt: 'Athens 로고',

@@ -10,7 +10,7 @@ export async function generateMetadata() {
       type: 'website',
       images: [
         {
-          url: '/logo.png',
+          url: 'https://athens-client-mu.vercel.app/logo.png',
           width: 300,
           height: 300,
           alt: 'Athens 로고',
