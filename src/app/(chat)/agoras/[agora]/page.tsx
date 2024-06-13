@@ -34,8 +34,8 @@ export async function generateMetadata() {
       images: [
         {
           url: 'https://athens-client-mu.vercel.app/logo.png',
-          width: 300,
-          height: 300,
+          width: 630,
+          height: 630,
           alt: 'Athens 로고',
         },
       ],
