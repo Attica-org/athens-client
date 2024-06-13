@@ -90,7 +90,7 @@ export default function Agora({ agora }: Props) {
         type="button"
         className="text-sm under-mobile:text-xs text-white bg-athens-main p-4 pt-5 pb-5 mt-10 w-9rem under-mobile:w-110 rounded-md"
       >
-        입장하기
+        {searchParams.get('status') === 'closed' ? '결과보기' : '입장하기'}
       </button>
     </article>
   );
