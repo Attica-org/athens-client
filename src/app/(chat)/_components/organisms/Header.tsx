@@ -125,9 +125,11 @@ export default function Header() {
           subscribeError();
           subscribe();
         },
-        onWebSocketError: () => {
-          showToast('네트워크가 불안정합니다.', 'error');
-          router.replace('/home');
+        onWebSocketError: async () => {
+          // showToast('네트워크가 불안정합니다.', 'error');
+          // await getReissuanceToken();
+          // connect();
+          // router.replace('/home');
         },
         onStompError: async () => {
           await getReissuanceToken();

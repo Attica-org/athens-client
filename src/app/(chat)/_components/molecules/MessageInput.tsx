@@ -10,7 +10,7 @@ import tokenManager from '@/utils/tokenManager';
 import { InfiniteData, useQueryClient } from '@tanstack/react-query';
 import { Message } from '@/app/model/Message';
 import { useAgora } from '@/store/agora';
-import showToast from '@/utils/showToast';
+// import showToast from '@/utils/showToast';
 import { getReissuanceToken } from '@/lib/getReissuanceToken';
 
 export default function MessageInput() {
@@ -147,8 +147,10 @@ export default function MessageInput() {
           subscribeError();
           subscribe();
         },
-        onWebSocketError: () => {
-          showToast('네트워크가 불안정합니다.', 'error');
+        onWebSocketError: async () => {
+          // showToast('네트워크가 불안정합니다.', 'error');
+          // await getReissuanceToken();
+          // connect();
         },
         onStompError: async () => {
           await getReissuanceToken();
