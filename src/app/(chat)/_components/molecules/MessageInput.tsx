@@ -169,7 +169,11 @@ export default function MessageInput() {
       setIsError(false);
     }
 
-    return () => disconnect();
+    return () => {
+      if (client.current && client.current.connected) {
+        disconnect();
+      }
+    };
   }, [agoraId, isError, enterAgora.status, pushMessage, enterAgora.role]);
 
   return (

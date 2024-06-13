@@ -150,7 +150,9 @@ export default function Header() {
     }
 
     return () => {
-      disconnect();
+      if (client.current && client.current.connected) {
+        disconnect();
+      }
       reset();
       voteResultReset();
     };
