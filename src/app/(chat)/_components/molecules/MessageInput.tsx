@@ -138,7 +138,7 @@ export default function MessageInput() {
 
     const connect = () => {
       client.current = new StompJs.Client({
-        brokerURL: `${process.env.NEXT_PUBLIC_SOCKET_URL}:8080/ws`,
+        brokerURL: `${process.env.NEXT_PUBLIC_SOCKET_URL}/ws`,
         connectHeaders: {
           Authorization: `Bearer ${tokenManager.getToken()}`,
         },
