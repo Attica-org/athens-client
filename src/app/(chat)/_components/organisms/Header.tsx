@@ -118,7 +118,7 @@ export default function Header() {
 
     function connect() {
       client.current = new StompJs.Client({
-        brokerURL: `${process.env.NEXT_PUBLIC_SOCKET_URL}/ws`,
+        brokerURL: `${process.env.NEXT_PUBLIC_SOCKET_URL}:8080/ws`,
         connectHeaders: {
           Authorization: `Bearer ${tokenManager.getToken()}`,
         },
