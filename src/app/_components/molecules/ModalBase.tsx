@@ -67,7 +67,7 @@ export default function ModalBase({
         aria-modal="true"
         className={`${
           animation && 'transition duration-500 transform scale-100 '
-        } ${opacity} under-mobile:mt-13rem bg-white dark:bg-dark-light-300 dark:text-dark-line-light bottom-7rem mobile:w-[70vw] pb-0.5rem under-mobile:pb-1rem under-mobile:w-[80vw] w-[50vw] lg:w-40rem relative rounded-2xl min-w-220`}
+        } ${opacity} top-50 bg-white under-mobile:top-35 dark:bg-dark-light-300 dark:text-dark-line-light bottom-7rem mobile:w-[80vw] pb-0.5rem under-mobile:pb-1rem under-mobile:w-[90vw] w-[50vw] lg:w-40rem fixed rounded-2xl min-w-220 h-fit`}
       >
         <h1 className="font-semibold flex justify-center items-center mt-2rem text-md">
           {title}
