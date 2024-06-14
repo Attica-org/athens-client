@@ -9,7 +9,15 @@ export const getToken = async () => {
   });
 
   if (!res.ok) {
-    showToast('요청이 실패했습니다.\n 다시 시도해주세요.', 'error');
+    const result = await res.json();
+    if (result.error.code === 1201 || result.error.code === 1002) {
+      if (result.error.message === 'Invalid JWT signature.' || result.error.message === 'Unsupported JWT token.') {
+        await getToken();
+      }
+    } else {
+      showToast('인증 오류가 발생했습니다.', 'error');
+    }
+
     return;
   }
 
