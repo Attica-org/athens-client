@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import showToast from '@/utils/showToast';
 import { getReissuanceToken } from '@/lib/getReissuanceToken';
 import { useVoteStore } from '@/store/vote';
+import { getToken } from '@/lib/getToken';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../atoms/ShareButton';
 import AgoraTitle from '../molecules/AgoraTitle';
@@ -101,7 +102,9 @@ export default function Header() {
       // console.log('Subscribing Error...');
       client.current?.subscribe('/user/queue/errors', async (received_message: StompJs.IFrame) => {
         const data = JSON.parse(received_message.body);
-        if (data.code === 1201 || data.code === 1003) {
+        if (data.code === 1201) {
+          await getToken();
+        } else if (data.code === 1003) {
           await getReissuanceToken();
         } else if (data.code === 2000) {
           // console.log(data.message);

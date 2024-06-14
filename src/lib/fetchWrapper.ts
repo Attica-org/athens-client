@@ -11,11 +11,14 @@ import { getReissuanceToken } from './getReissuanceToken';
 const tokenErrorHandler = async (response: any) => {
   const { error } = await response.json();
   switch (error.code) {
+    case 1003:
+      await getToken();
+      break;
     case 1002:
-      await getReissuanceToken();
+      await getToken();
       break;
     case 1201:
-      await getToken();
+      await getReissuanceToken();
       break;
     default:
       showToast('토큰 오류가 발생했습니다.', 'error');
