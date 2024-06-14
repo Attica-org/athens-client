@@ -149,7 +149,7 @@ export default function MessageInput() {
         },
         onWebSocketError: async () => {
           // showToast('네트워크가 불안정합니다.', 'error');
-          await getReissuanceToken();
+          // await getReissuanceToken();
           // connect();
         },
         onStompError: async () => {
