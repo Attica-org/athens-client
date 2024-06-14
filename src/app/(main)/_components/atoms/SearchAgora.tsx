@@ -6,6 +6,7 @@ import { Agora } from '@/app/model/Agora';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useAgora } from '@/store/agora';
+import COLOR from '@/constants/agoraColor';
 import UserImage from '../../../_components/atoms/UserImage';
 
 type Props = {
@@ -75,7 +76,7 @@ export default function SearchAgora({ agora }: Props) {
           </div>
         </div>
         <div className="relative">
-          <UserImage className={`w-67 h-67 ${agoraColor} rounded-3xl`} w={67} h={67} />
+          <UserImage className={`w-67 h-67 ${COLOR.some((color) => color.value === agoraColor) ? agoraColor : COLOR[0].value} rounded-3xl`} w={67} h={67} />
           {status !== 'CLOSED' && <span className={`absolute top-0 left-53 inline-block w-13 h-13 ${status === 'queued' ? 'bg-athens-button' : 'bg-red-400'} rounded-full ml-3`} />}
         </div>
       </div>
