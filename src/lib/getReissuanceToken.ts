@@ -4,7 +4,7 @@ import { getToken } from './getToken';
 
 // eslint-disable-next-line import/prefer-default-export
 export const getReissuanceToken = async () => {
-  if (tokenManager.getToken() === undefined) {
+  if (!tokenManager.getToken()) {
     await getToken();
   }
 
@@ -19,10 +19,10 @@ export const getReissuanceToken = async () => {
 
   if (!res.ok) {
     const result = await res.json();
-    if (result.error.code === 1003) {
+    if (result.error.code === 1003 || result.error.code === 1202) {
       await getToken();
       await getReissuanceToken();
-    } else if (result.error.code === 1201 || result.error.code === 1202) {
+    } else if (result.error.code === 1201) {
       if (result.error.message === 'Invalid JWT signature.' || result.error.message === 'Unsupported JWT token.') {
         await getToken();
         await getReissuanceToken();
