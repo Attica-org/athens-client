@@ -22,7 +22,7 @@ export const getReissuanceToken = async () => {
     if (result.error.code === 1003) {
       await getToken();
       await getReissuanceToken();
-    } else if (result.error.code === 1201) {
+    } else if (result.error.code === 1201 || result.error.code === 1202) {
       if (result.error.message === 'Invalid JWT signature.' || result.error.message === 'Unsupported JWT token.') {
         await getToken();
         await getReissuanceToken();

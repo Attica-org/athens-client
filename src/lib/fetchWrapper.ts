@@ -17,6 +17,9 @@ const tokenErrorHandler = async (response: any) => {
     case 1002:
       await getToken();
       break;
+    case 1202:
+      await getToken();
+      break;
     case 1201:
       await getReissuanceToken();
       break;
