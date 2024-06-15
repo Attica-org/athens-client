@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
 import showToast from '@/utils/showToast';
 import COLOR from '@/constants/agoraColor';
+import tokenManager from '@/utils/tokenManager';
 import { postEnterAgoraInfo } from '../../_lib/postEnterAgoraInfo';
 
 type Props = {
@@ -19,7 +20,7 @@ export default function Agora({ agora }: Props) {
   } = agora;
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { setSelectedAgora } = useAgora();
+  const { setSelectedAgora, setEnterAgora } = useAgora();
 
   const routePage = () => {
     router.push(`/agoras/${id}`);
@@ -34,6 +35,12 @@ export default function Agora({ agora }: Props) {
     },
     onSuccess: async (response) => {
       if (response) {
+        setEnterAgora({
+          id: response.agoraId,
+          title: agoraTitle,
+          status,
+          role: response.type,
+        });
         routePage();
       } else {
         showToast('데이터 연결에 실패했습니다. 다시 시도해주세요.', 'error');
@@ -41,7 +48,7 @@ export default function Agora({ agora }: Props) {
     },
     onError: () => {
       // console.dir(error);
-      // alert('문제가 발생했습니다. 다시 시도해주세요.');
+      showToast('문제가 발생했습니다. 다시 시도해주세요.', 'error');
     },
   });
 
@@ -54,6 +61,7 @@ export default function Agora({ agora }: Props) {
       router.push(`/flow/enter-agora/${id}`);
     } else if (AgoraStatus === 'closed') {
       // 바로 채팅방으로 이동
+      tokenManager.clearRedirectUrl();
       mutation.mutate();
     }
   };
