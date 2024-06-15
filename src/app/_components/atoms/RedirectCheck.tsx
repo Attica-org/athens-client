@@ -28,5 +28,5 @@ export default function RedirectCheck({ children }: Props) {
     return null;
   }
 
-  return <div>{children}</div>;
+  return <div className="w-full">{children}</div>;
 }
