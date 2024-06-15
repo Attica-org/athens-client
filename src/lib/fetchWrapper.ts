@@ -8,14 +8,13 @@ import { getReissuanceToken } from './getReissuanceToken';
 // const NOT_VALID_TOKEN = 'Authorization header is missing or does not start with Bearer';
 // const UNSUPPORTED_TOKEN = 'Unsupported JWT token.';
 
-const tokenErrorHandler = async (response: any) => {
-  const { error } = await response.json();
-  switch (error.code) {
+const tokenErrorHandler = async (result: any) => {
+  switch (result.error.code) {
     case 1003:
       await getToken();
       break;
     case 1002:
-      await getToken();
+      await getReissuanceToken();
       break;
     case 1202:
       await getToken();
@@ -43,7 +42,7 @@ class FetchWrapper {
     if (!response.ok) {
       // 인증 자격에 관한 오류 처리
       if (response.status === 401) {
-        await tokenErrorHandler(response);
+        await tokenErrorHandler(result);
         // 재발급 후 재요청
         if (retry !== 0) {
           this.call(url, fetchNext, retry - 1);
