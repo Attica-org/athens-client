@@ -11,10 +11,6 @@ export const getReissuanceToken = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/reissue`, {
     method: 'POST',
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${tokenManager.getToken()}`,
-    },
   });
 
   if (!res.ok) {
