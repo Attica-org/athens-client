@@ -29,14 +29,17 @@ export default function AgoraUserSide() {
   };
 
   return (
-    <aside aria-label="채팅 참여자 목록" aria-hidden={!isOpen}>
+    <aside
+      className={`absolute inset-0 bg-opacity-50 bg-dark-bg-dark duration-500 transition-opacity ${
+        !isOpen && 'pointer-events-none opacity-0'
+      }`}
+      aria-label="채팅 참여자 목록"
+      aria-hidden={!isOpen}
+    >
       <div
         role="button"
         tabIndex={0}
         aria-label="모달 외부 클릭으로 참여자 목록 닫기"
-        className={`absolute inset-0 bg-opacity-50 bg-dark-bg-dark duration-500 transition-opacity ${
-          !isOpen && 'pointer-events-none opacity-0'
-        }`}
         onClick={onClickOutside}
         onKeyDown={closeModal}
       />
