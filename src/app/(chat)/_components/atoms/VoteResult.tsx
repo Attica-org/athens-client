@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import { useAgora } from '@/store/agora';
 import { useVoteStore } from '@/store/vote';
+import showToast from '@/utils/showToast';
 import { getVoteResult } from '../../_lib/getVoteResult';
 
 type Props = {
@@ -13,9 +14,10 @@ type Props = {
 export default function VoteResult({ agoraId }: Props) {
   const result = useVoteStore((state) => state.voteResult);
   const { enterAgora } = useAgora();
-  const { data, refetch } = useQuery({
+  const { data, refetch, error } = useQuery({
     queryKey: ['agora', `${agoraId}`, 'closed'],
     queryFn: getVoteResult,
+    retry: 2,
   });
 
   useEffect(() => {
@@ -23,6 +25,10 @@ export default function VoteResult({ agoraId }: Props) {
       refetch();
     }
   }, [enterAgora.status, refetch]);
+
+  if (!data && error) {
+    showToast('투표 결과를 가져오는데 실패했습니다.', 'error');
+  }
 
   return (
     <div className="text-xs">
