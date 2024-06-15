@@ -142,14 +142,14 @@ export default function MessageInput() {
         connectHeaders: {
           Authorization: `Bearer ${tokenManager.getToken()}`,
         },
-        reconnectDelay: 200,
+        reconnectDelay: 500,
         onConnect: () => {
           subscribeError();
           subscribe();
         },
         onWebSocketError: async () => {
           // showToast('네트워크가 불안정합니다.', 'error');
-          // await getReissuanceToken();
+          await getReissuanceToken();
           // connect();
         },
         onStompError: async () => {
