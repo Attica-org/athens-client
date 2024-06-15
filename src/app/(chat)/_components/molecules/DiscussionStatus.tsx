@@ -119,7 +119,7 @@ export default function DiscussionStatus({ meta }: Props) {
         </div>
       )}
       >
-        <VoteResult agoraId={meta?.agora.id || 0} />
+        <VoteResult agoraId={meta?.agora.id || enterAgora.id} />
       </Suspense>
     )
   );
