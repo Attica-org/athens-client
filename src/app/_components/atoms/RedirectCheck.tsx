@@ -28,5 +28,5 @@ export default function RedirectCheck({ children }: Props) {
     return null;
   }
 
-  return <div className="w-full">{children}</div>;
+  return <div className="h-dvh flex w-full inset-y-full justify-center items-center xl:w-[1580px]">{children}</div>;
 }

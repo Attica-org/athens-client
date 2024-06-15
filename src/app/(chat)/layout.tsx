@@ -11,7 +11,7 @@ type Props = {
 export default function Layout({ children }: Props) {
   return (
     <RedirectCheck>
-      <div className="h-dvh flex w-full inset-y-full justify-center items-center xl:w-[1580px]">
+      <div className="w-full">
         <section className="w-full flex flex-1 h-dvh max-lg:pb-3rem min-w-270 flex-grow max-width-screen relative">
           <section className="flex flex-1 h-dvh flex-col w-full">
             <div className="overflow-y-hidden justify-center items-stretch flex flex-col w-full h-full flex-1 relative">
