@@ -33,7 +33,7 @@ export default function YourMessage({ message, isSameUser }: Props) {
         </div>
         )}
         <div className="flex justify-start items-end">
-          <div className={`max-w-[60vw] whitespace-pre-line ${message.user.type === 'CONS' ? 'bg-red-200' : 'bg-blue-200'} rounded-tr-xl ${isSameUser && 'rounded-tl-lg'} rounded-bl-xl rounded-br-xl p-0.5rem pl-10 pr-10 text-sm under-mobile:text-xs`}>
+          <div className={`max-w-[60vw] whitespace-pre-line ${message.user.type === 'CONS' ? 'bg-red-200' : 'bg-blue-200'} rounded-tr-lg ${isSameUser && 'rounded-tl-lg'} rounded-bl-lg rounded-br-lg p-7 pl-10 pr-10 text-xs`}>
             {message.content}
           </div>
           <div className="flex flex-col justify-end items-end h-full">

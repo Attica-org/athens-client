@@ -47,7 +47,7 @@ export default function SetUserProfile() {
         {PROFLELIST.map((profileImageName) => (
           <li
             key={profileImageName.id}
-            className="cursor-pointer mr-5 w-fit flex justify-center items-center border-1 border-gray-300 rounded-full"
+            className="cursor-pointer mr-5 w-fit flex justify-center items-center rounded-full"
           >
             <div
               role="button"

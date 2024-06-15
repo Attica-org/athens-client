@@ -185,7 +185,7 @@ export default function Header() {
           <HamburgerButton toggleMenu={toggleMenu} />
         </div>
       </div>
-      <div className="flex justify-center items-center pt-0.5rem">
+      <div className="flex justify-center items-center">
         <AgoraTitle title={metaData?.agora.title || ''} pros={participants.pros} cons={participants.cons} />
       </div>
     </div>

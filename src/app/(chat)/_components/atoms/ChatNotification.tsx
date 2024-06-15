@@ -25,7 +25,7 @@ export default function ChatNotification() {
       <div
         role="alert"
         aria-live="polite"
-        className="rounded-lg text-center flex justify-center items-center text-sm under-mobile:text-xs text-athens-gray-thick p-11 bg-athens-gray dark:bg-dark-light-200 dark:text-dark-line w-full break-keep"
+        className="rounded-lg text-center flex justify-center items-center text-xs under-mobile:text-xs text-athens-gray-thick p-11 bg-athens-gray dark:bg-dark-light-200 dark:text-dark-line w-full break-keep"
       >
         사용자들간의 쾌적한 토론 환경을 위해 바른말을 사용해주세요.
       </div>
