@@ -17,8 +17,8 @@ export async function generateMetadata() {
       type: 'website',
       images: [
         {
-          url: `${process.env.NEXT_PUBLIC_CLIENT_URL}/logo.png`,
-          width: 630,
+          url: `${process.env.NEXT_PUBLIC_CLIENT_URL}/opengraph.logo.png`,
+          width: 1200,
           height: 630,
           alt: 'Athens 로고',
         },
