@@ -14,8 +14,9 @@ import showToast from '@/utils/showToast';
 import { getReissuanceToken } from '@/lib/getReissuanceToken';
 import { useVoteStore } from '@/store/vote';
 import { getToken } from '@/lib/getToken';
+import { useQueryClient } from '@tanstack/react-query';
 import BackButton from '../../../_components/atoms/BackButton';
-import ShareButton from '../atoms/ShareButton';
+import ShareButton from '../molecules/ShareButton';
 import AgoraTitle from '../molecules/AgoraTitle';
 import HamburgerButton from '../atoms/HamburgerButton';
 import DiscussionStatus from '../molecules/DiscussionStatus';
@@ -46,6 +47,18 @@ export default function Header() {
   const router = useRouter();
   const [agoraId, setAgoraId] = useState(enterAgora.id);
   const client = useRef<StompJs.Client>();
+  const queryClient = useQueryClient();
+
+  const refetchAgoraUserList = async () => {
+    // 유저 리스트 캐시 무효화 및 재요청
+    await queryClient.invalidateQueries({
+      queryKey: ['chat', 'users', `${agoraId}`],
+    });
+    await queryClient.refetchQueries({
+      queryKey: ['chat', 'users', `${agoraId}`],
+      exact: true,
+    });
+  };
 
   const toggleMenu = () => {
     toggle();
@@ -75,6 +88,8 @@ export default function Header() {
           setTitle(data.data.agora.title);
           setAgoraId(data.data.agora.id);
           setMetaData(data.data);
+          refetchAgoraUserList();
+
           if (data.data.agora.startAt) {
             setDiscussionStart(data.data.agora.startAt);
           }
