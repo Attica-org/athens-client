@@ -1,10 +1,12 @@
 'use client';
 
+import CopyContentIcon from '@/assets/icons/CopyContentIcon';
 import ShareIcon from '@/assets/icons/ShareIcon';
 import showToast from '@/utils/showToast';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { MouseEventHandler, useState } from 'react';
 import { BottomSheet } from 'react-spring-bottom-sheet';
+import SocialShareLogos from '../atoms/SocialShareLogos';
 
 import 'react-spring-bottom-sheet/dist/style.css';
 
@@ -15,10 +17,15 @@ type Props = {
 export default function ShareButton({ title }: Props) {
   const pathname = useParams();
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+  const url = `${process.env.NEXT_PUBLIC_CLIENT_URL}/agoras/${pathname.agora}`;
+
+  const clipboardCopy = async () => {
+    await navigator.clipboard.writeText(url);
+    showToast('클립보드에 링크가 복사되었습니다.', 'error');
+  };
 
   const shareSNS:MouseEventHandler<HTMLButtonElement> = async () => {
-    const url = `${process.env.NEXT_PUBLIC_CLIENT_URL}/agoras/${pathname.agora}`;
-
     if (window.navigator.share) {
       try {
         await window.navigator.share({
@@ -27,13 +34,13 @@ export default function ShareButton({ title }: Props) {
           url,
         });
       } catch (error) {
-        await navigator.clipboard.writeText(url);
-        showToast('공유기능 미지원 환경으로, 클립보드에 링크가 복사되었습니다.', 'error');
+        clipboardCopy();
       }
     } else if (window.innerWidth < 1024) {
       setOpen(true);
     } else {
       // 모달로 공유하기 창 띄우기
+      router.push(`/agoras/${pathname.agora}/flow/social-share`);
     }
   };
 
@@ -50,7 +57,16 @@ export default function ShareButton({ title }: Props) {
     >
       <ShareIcon className="w-17 mr-1rem under-mobile:mr-0.5rem" />
       <BottomSheet onDismiss={handleDismiss} open={open}>
-        SNS 공유하기
+        <div className="px-10 pb-12 pl-20 text-sm border-b-1 border-athens-gray">
+          {title}
+          <div className="pt-5 flex justify-start items-center">
+            {url}
+            <button type="button" aria-label="url 클립보드에 복사하기" onClick={clipboardCopy}>
+              <CopyContentIcon className="w-17 ml-8" />
+            </button>
+          </div>
+        </div>
+        <SocialShareLogos title={title} url={url} />
       </BottomSheet>
     </button>
   );
