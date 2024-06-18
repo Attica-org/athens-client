@@ -18,7 +18,7 @@ const tokenErrorHandler = async (response, baseUrl) => {
       })
       break;
     case 1201:
-      fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/temp-user`, {
+      fetch(`${baseUrl}/api/v1/temp-user`, {
         method: 'POST',
         credentials: 'include',
       }).then(res => {
