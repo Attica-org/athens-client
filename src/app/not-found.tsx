@@ -14,7 +14,7 @@ export default function NotFound() {
     <div className="flex flex-col h-dvh w-dvw justify-center items-center scrollbar-hide">
       <h1 className="text-athens-sub text-9xl mt-12 flex justify-center items-center">
         4
-        <div className="w-110 h-110 rounded-full bg-white flex justify-center items-center ml-10 mr-10">
+        <div className="w-110 h-110 rounded-full bg-white border-1 border-orange-200 flex justify-center items-center ml-10 mr-10">
           <Image className="rounded-full object-contain" src={`/img/${randomProfile.file}`} alt={`${randomProfile.name} 프로필`} width={90} height={90} />
         </div>
         4
