@@ -49,7 +49,6 @@ export default function Agora({ agora }: Props) {
     onError: () => {
       // console.dir(error);
       showToast('문제가 발생했습니다. 다시 시도해주세요.', 'error');
-      console.log('lint test');
     },
   });
 
