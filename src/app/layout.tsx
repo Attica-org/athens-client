@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import React from 'react';
 import './globals.css';
 import { Noto_Sans_KR } from 'next/font/google';
+import Script from 'next/script';
 import MSWComponent from './_components/utils/MSWComponent';
 import RQProvider from './_components/utils/RQProvider';
 import ServiceWorkerRegistration from './_components/utils/ServiceWorkerRegistration';
@@ -34,6 +35,12 @@ const noto = Noto_Sans_KR({
   variable: '--noto_sans_kr',
 });
 
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -51,6 +58,10 @@ export default function RootLayout({
           <ToasterContainer />
         </RQProvider>
       </body>
+      <Script
+        src="https://developers.kakao.com/sdk/js/kakao.js"
+        strategy="afterInteractive"
+      />
     </html>
   );
 }

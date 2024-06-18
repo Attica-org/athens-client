@@ -1,5 +1,6 @@
 'use client';
 
+import getKey from '@/utils/getKey';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import React, { useEffect } from 'react';
@@ -29,10 +30,6 @@ export default function SocialShareLogos({ title, url }: Props) {
   const pathname = useParams();
   const sendUrl = url || `${process.env.NEXT_PUBLIC_CLIENT_URL}/agoras/${pathname.agora}`; // 공유할 URL
 
-  const shareKakao = () => {
-    console.log('shareKakao');
-  };
-
   useEffect(() => {
     const swiper = new Swiper('.swiper', {
       direction: 'horizontal',
@@ -53,6 +50,49 @@ export default function SocialShareLogos({ title, url }: Props) {
       swiper.destroy();
     };
   }, []);
+
+  useEffect(() => {
+    const setKakao = async () => {
+      const key = await getKey();
+
+      if (typeof window !== 'undefined') {
+        const { Kakao } = window;
+
+        if (!Kakao.isInitialized()) {
+          Kakao.init(key.kakaoKey);
+        }
+      }
+    };
+
+    setKakao();
+  }, []);
+
+  const shareKakao = () => {
+    const imgUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/opengraph.png`;
+    const { Kakao } = window;
+
+    Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: `${title}`,
+        description: '아고라에 참여하고 실시간 토론을 시작하세요.',
+        imageUrl: imgUrl,
+        link: {
+          mobileWebUrl: sendUrl,
+          webUrl: sendUrl,
+        },
+      },
+      buttons: [
+        {
+          title: '아고라 바로가기',
+          link: {
+            mobileWebUrl: sendUrl,
+            webUrl: sendUrl,
+          },
+        },
+      ],
+    });
+  };
 
   return (
     <div className="overflow-hidden text-nowrap w-full pl-16 lg:pl-0 pb-16 pt-10">
