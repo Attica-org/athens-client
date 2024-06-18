@@ -12,11 +12,15 @@ import { Message } from '@/app/model/Message';
 import { useAgora } from '@/store/agora';
 // import showToast from '@/utils/showToast';
 import { getReissuanceToken } from '@/lib/getReissuanceToken';
+import getKey from '@/utils/getKey';
 
 export default function MessageInput() {
   const [message, setMessage] = useState<string>('');
   const [isError, setIsError] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
+  const [URL, setURL] = useState({
+    SOCKET_URL: '',
+  });
   const { enterAgora } = useAgora();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { setGoDown } = useMessageStore();
@@ -96,6 +100,14 @@ export default function MessageInput() {
   };
 
   useEffect(() => {
+    const getUrl = async () => {
+      const key = await getKey();
+      setURL({
+        SOCKET_URL: key.SOCKET_URL || '',
+      });
+      console.log('key', key);
+    };
+
     inputRef.current?.focus();
     const handleOutSideClick = (e: MouseEvent) => {
       if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
@@ -108,6 +120,8 @@ export default function MessageInput() {
     const cleanup = () => {
       window.removeEventListener('click', handleOutSideClick);
     };
+
+    getUrl();
 
     return cleanup;
   }, []);
@@ -138,7 +152,7 @@ export default function MessageInput() {
 
     const connect = () => {
       client.current = new StompJs.Client({
-        brokerURL: `${process.env.NEXT_PUBLIC_SOCKET_URL}/ws`,
+        brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
           Authorization: `Bearer ${tokenManager.getToken()}`,
         },
@@ -160,7 +174,7 @@ export default function MessageInput() {
       client.current.activate();
     };
 
-    if (enterAgora.status !== 'CLOSED' && enterAgora.role !== 'OBSERVER' && navigator.onLine) {
+    if (enterAgora.status !== 'CLOSED' && enterAgora.role !== 'OBSERVER' && navigator.onLine && URL.SOCKET_URL !== '') {
       connect();
     }
 
@@ -174,7 +188,7 @@ export default function MessageInput() {
         disconnect();
       }
     };
-  }, [agoraId, isError, enterAgora.status, pushMessage, enterAgora.role]);
+  }, [agoraId, isError, enterAgora.status, pushMessage, enterAgora.role, URL.SOCKET_URL]);
 
   return (
     enterAgora.status !== 'CLOSED' && enterAgora.role !== 'OBSERVER' && (
@@ -190,7 +204,7 @@ export default function MessageInput() {
             onCompositionEnd={handleCompositionEnd}
             placeholder="메시지 보내기"
             className="placeholder:text-athens-gray-thick dark:placeholder:text-dark-light-400
-          dark:placeholder:text-opacity-85 dark:text-opacity-85 dark:text-white w-full text-sm
+          dark:placeholder:text-opacity-85 dark:text-opacity-85 dark:text-white w-full text-sm lg:text-base
           focus-visible:outline-none dark:bg-dark-light-300 resize-none overflow-hidden h-35"
           />
         </form>

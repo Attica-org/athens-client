@@ -5,6 +5,7 @@ import ModalBase from '@/app/_components/molecules/ModalBase';
 import { useAgora } from '@/store/agora';
 import { useChatInfo } from '@/store/chatInfo';
 import { useVoteStore } from '@/store/vote';
+import getKey from '@/utils/getKey';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { differenceInSeconds } from 'date-fns';
@@ -30,6 +31,19 @@ export default function EndAgora() {
   })));
   const agoraId = useAgora((state) => state.enterAgora.id);
   const router = useRouter();
+  const [URL, setURL] = useState({
+    BASE_URL: '',
+  });
+
+  useEffect(() => {
+    const getUrl = async () => {
+      const key = await getKey();
+      setURL({
+        BASE_URL: key.BASE_URL || '',
+      });
+    };
+    getUrl();
+  }, []);
 
   // 투표 상태 업데이트
   useEffect(() => {
@@ -54,7 +68,7 @@ export default function EndAgora() {
           agoraId,
           voteType: vote,
           token: tokenManager.getToken(),
-          baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+          baseUrl: URL.BASE_URL,
         },
       });
     }

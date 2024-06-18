@@ -1,4 +1,5 @@
 import showToast from '@/utils/showToast';
+import getKey from '@/utils/getKey';
 import { getToken } from './getToken';
 import { getReissuanceToken } from './getReissuanceToken';
 
@@ -28,11 +29,18 @@ const tokenErrorHandler = async (result: any) => {
   }
 };
 
+const getURL = async () => {
+  const key = await getKey();
+  return key.BASE_URL || '';
+};
+
 class FetchWrapper {
   baseUrl = '';
 
-  constructor(baseUrl: string) {
-    this.baseUrl = baseUrl;
+  constructor() {
+    getURL().then((url) => {
+      this.baseUrl = url;
+    });
   }
 
   async call(url: string, fetchNext: any, retry = 3) {
@@ -57,6 +65,6 @@ class FetchWrapper {
   }
 }
 
-const fetchWrapper = new FetchWrapper(`${process.env.NEXT_PUBLIC_BASE_URL}` || '');
+const fetchWrapper = new FetchWrapper();
 
 export default fetchWrapper;

@@ -15,6 +15,7 @@ import { getReissuanceToken } from '@/lib/getReissuanceToken';
 import { useVoteStore } from '@/store/vote';
 import { getToken } from '@/lib/getToken';
 import { useQueryClient } from '@tanstack/react-query';
+import getKey from '@/utils/getKey';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraTitle from '../molecules/AgoraTitle';
@@ -29,10 +30,11 @@ export default function Header() {
     useShallow((state) => ({ enterAgora: state.enterAgora })),
   );
   const {
-    setTitle, setDiscussionStart, setDiscurreionEnd, reset,
+    setTitle, setDiscussionStart, start, setDiscurreionEnd, reset,
   } = useChatInfo(
     useShallow((state) => ({
       setTitle: state.setTitle,
+      start: state.start,
       setDiscussionStart: state.setDiscussionStart,
       setDiscurreionEnd: state.setDiscussionEnd,
       reset: state.reset,
@@ -48,6 +50,22 @@ export default function Header() {
   const [agoraId, setAgoraId] = useState(enterAgora.id);
   const client = useRef<StompJs.Client>();
   const queryClient = useQueryClient();
+  const [URL, setURL] = useState({
+    BASE_URL: '',
+    SOCKET_URL: '',
+  });
+
+  const getUrl = async () => {
+    const key = await getKey();
+    setURL({
+      BASE_URL: key.BASE_URL || '',
+      SOCKET_URL: key.SOCKET_URL || '',
+    });
+  };
+
+  useEffect(() => {
+    getUrl();
+  }, []);
 
   const refetchAgoraUserList = async () => {
     // 유저 리스트 캐시 무효화 및 재요청
@@ -91,6 +109,7 @@ export default function Header() {
           refetchAgoraUserList();
 
           if (data.data.agora.startAt) {
+            if (start === null) showToast('토론이 시작되었습니다.', 'success');
             setDiscussionStart(data.data.agora.startAt);
           }
 
@@ -133,7 +152,7 @@ export default function Header() {
 
     function connect() {
       client.current = new StompJs.Client({
-        brokerURL: `${process.env.NEXT_PUBLIC_SOCKET_URL}/ws`,
+        brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
           Authorization: `Bearer ${tokenManager.getToken()}`,
         },
@@ -158,7 +177,7 @@ export default function Header() {
       client.current.activate();
     }
 
-    if (navigator.onLine) {
+    if (navigator.onLine && URL.SOCKET_URL !== '') {
       connect();
     }
 
@@ -175,17 +194,18 @@ export default function Header() {
       voteResultReset();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [agoraId, isError, router, setDiscussionStart, enterAgora.status]);
+  }, [agoraId, isError, router, setDiscussionStart, enterAgora.status, URL.SOCKET_URL]);
 
   useEffect(() => {
     if (enterAgora.status !== 'CLOSED') {
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
           action: 'initialize',
-          baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+          baseUrl: URL.BASE_URL,
         });
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enterAgora.status]);
 
   return (
