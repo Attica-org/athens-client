@@ -18,18 +18,20 @@ export default function EnterAgoraContent() {
   const pathname = usePathname();
   const agoraId = redirectUrl?.split('/').pop() || pathname.split('/')[3];
 
+  const shouldFetch = !!agoraId && !selectedAgora.id;
+
   const { data, isSuccess } = useQuery({
     queryKey: ['agoraTitle', agoraId],
     queryFn: getAgoraTitle,
-    enabled: !agoraId || !selectedAgora.id,
+    enabled: shouldFetch,
   });
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && data && !selectedAgora.id) {
       setSelectedAgora({ id: Number(agoraId), title: data.title, status: data.status });
       tokenManager.clearRedirectUrl();
     }
-  }, [agoraId, data, setSelectedAgora, isSuccess]);
+  }, [agoraId, data, setSelectedAgora, isSuccess, selectedAgora.id]);
 
   return (
     <>
