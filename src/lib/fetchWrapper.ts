@@ -44,6 +44,11 @@ class FetchWrapper {
   }
 
   async call(url: string, fetchNext: any, retry = 3) {
+    if(!this.baseUrl) {
+      await getURL().then((url) => {
+        this.baseUrl = url;
+      });
+    }
     const response = await fetch(this.baseUrl + url, fetchNext);
     const result = await response.json();
 
