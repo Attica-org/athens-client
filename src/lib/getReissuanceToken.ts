@@ -9,10 +9,6 @@ let retry = 3;
 export const getReissuanceToken = async () => {
   const key = await getKey();
 
-  if (!tokenManager.getToken()) {
-    await getToken();
-  }
-
   const res = await fetch(`${key.BASE_URL}/api/v1/auth/reissue`, {
     method: 'POST',
     credentials: 'include',
