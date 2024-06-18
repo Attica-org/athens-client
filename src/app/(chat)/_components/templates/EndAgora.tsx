@@ -59,6 +59,8 @@ export default function EndAgora() {
 
   // 타이머 시작 및 Service Worker와의 통신 설정
   useEffect(() => {
+    if (!URL.BASE_URL) return () => {};
+
     const startTime = new Date();
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage({
@@ -115,7 +117,7 @@ export default function EndAgora() {
       navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [agoraId, router, setVoteEnd, setVoteResult]);
+  }, [agoraId, router, setVoteEnd, setVoteResult, URL.BASE_URL]);
 
   const selectResultPosition = (position: ResultPosition) => {
     setSelectedResultPosition(position);

@@ -81,7 +81,7 @@ self.addEventListener('message', event => {
   if (action === 'startTimer') {
     // Set a timeout to send the POST request after 15 seconds
     setTimeout(async () => {
-      const res = await call(`${baseUrl}/api/v1/auth/agoras/${data.agoraId}/vote`, {
+      const res = await call(`${data.baseUrl}/api/v1/auth/agoras/${data.agoraId}/vote`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ self.addEventListener('message', event => {
 
       // Set another timeout to send the GET request after an additional 5 seconds
       setTimeout(async () => {
-        const res = await call(`${baseUrl}/api/v1/auth/agoras/${data.agoraId}/results`, {
+        const res = await call(`${data.baseUrl}/api/v1/auth/agoras/${data.agoraId}/results`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

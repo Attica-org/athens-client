@@ -197,6 +197,8 @@ export default function Header() {
   }, [agoraId, isError, router, setDiscussionStart, enterAgora.status, URL.SOCKET_URL]);
 
   useEffect(() => {
+    if (!URL.BASE_URL) return;
+
     if (enterAgora.status !== 'CLOSED') {
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
@@ -206,7 +208,7 @@ export default function Header() {
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enterAgora.status]);
+  }, [enterAgora.status, URL.BASE_URL]);
 
   return (
     <div className="flex flex-col w-full justify-center dark:text-white dark:text-opacity-85">
