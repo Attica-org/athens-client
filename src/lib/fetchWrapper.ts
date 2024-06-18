@@ -37,11 +37,11 @@ const getURL = async () => {
 class FetchWrapper {
   baseUrl = '';
 
-  constructor() {
-    getURL().then((url) => {
-      this.baseUrl = url;
-    });
-  }
+  // constructor() {
+  // getURL().then((url) => {
+  //   this.baseUrl = url;
+  // });
+  // }
 
   async call(url: string, fetchNext: any, retry = 3) {
     if (!this.baseUrl) {
