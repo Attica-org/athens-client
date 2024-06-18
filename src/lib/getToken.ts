@@ -40,7 +40,5 @@ export const getToken = async () => {
   retry = 3;
   const result = await res.json();
 
-  console.log('accessToken 발급: ', result.response.accessToken);
-
   tokenManager.setToken(result.response.accessToken);
 };

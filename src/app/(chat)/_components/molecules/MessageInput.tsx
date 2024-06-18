@@ -105,7 +105,6 @@ export default function MessageInput() {
       setURL({
         SOCKET_URL: key.SOCKET_URL || '',
       });
-      console.log('key', key);
     };
 
     inputRef.current?.focus();

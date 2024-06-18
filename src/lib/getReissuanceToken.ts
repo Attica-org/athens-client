@@ -53,5 +53,5 @@ export const getReissuanceToken = async () => {
   retry = 3;
   const result = await res.json();
 
-  tokenManager.setToken(result.accessToken);
+  tokenManager.setToken(result.response);
 };
