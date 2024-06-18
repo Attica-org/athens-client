@@ -55,7 +55,7 @@ export default function ShareButton({ title }: Props) {
       onClick={shareSNS}
       className="cursor-pointer"
     >
-      <ShareIcon className="w-17 mr-1rem under-mobile:mr-0.5rem" />
+      <ShareIcon className="w-17 lg:w-20 mr-1rem under-mobile:mr-0.5rem" />
       <BottomSheet onDismiss={handleDismiss} open={open}>
         <div className="px-10 pb-12 pl-20 text-sm border-b-1 border-athens-gray">
           {title}

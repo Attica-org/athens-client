@@ -31,7 +31,7 @@ export default function VoteResult({ agoraId }: Props) {
   }
 
   return (
-    <div className="text-xs">
+    <div className="text-xs lg:text-sm">
       최종 투표 결과 |
       <span className="dark:text-dark-pro-color text-blue-400"> 찬성 </span>
       { result.prosCount || data?.prosCount || 0}

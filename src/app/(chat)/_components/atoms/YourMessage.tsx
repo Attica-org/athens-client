@@ -28,12 +28,12 @@ export default function YourMessage({ message, isSameUser }: Props) {
       )}
       <div className={`p-0.5rem ${isSameUser && 'pt-0'} flex flex-col justify-center items-start`}>
         {!isSameUser && (
-        <div role="region" aria-label="사용자 이름" className="text-xs pb-5 dark:text-white">
+        <div role="region" aria-label="사용자 이름" className="text-xs pb-5 lg:text-sm dark:text-white">
           {message.user.nickname}
         </div>
         )}
         <div className="flex justify-start items-end">
-          <div className={`max-w-[60vw] whitespace-pre-line ${message.user.type === 'CONS' ? 'bg-red-200' : 'bg-blue-200'} rounded-tr-lg ${isSameUser && 'rounded-tl-lg'} rounded-bl-lg rounded-br-lg p-7 pl-10 pr-10 text-xs`}>
+          <div className={`max-w-[60vw] whitespace-pre-line ${message.user.type === 'CONS' ? 'bg-red-200' : 'bg-blue-200'} rounded-tr-lg ${isSameUser && 'rounded-tl-lg'} rounded-bl-lg rounded-br-lg p-7 pl-10 pr-10 text-xs lg:text-sm`}>
             {message.content}
           </div>
           <div className="flex flex-col justify-end items-end h-full">
