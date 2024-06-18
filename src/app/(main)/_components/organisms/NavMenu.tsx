@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import React from 'react';
+import Athens from '@/assets/icons/Athens';
 import NavLinks from '../molecules/NavLinks';
 
 export default function SideNav() {
@@ -12,14 +13,16 @@ export default function SideNav() {
             <Link
               aria-label="로고로 홈 돌아가기"
               href="/"
-              className="flex flex-row text-2xl pt-1rem pb-1rem p-1rem"
+              className="flex flex-row items-center text-2xl pt-1rem pb-1rem p-1rem"
             >
               <Image
                 src="/logo.png"
                 alt="Athens 로고"
+                className="mr-14"
                 width={32}
                 height={32}
               />
+              <Athens className="w-65" />
             </Link>
             <NavLinks />
           </div>
