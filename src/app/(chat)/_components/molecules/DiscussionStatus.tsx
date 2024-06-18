@@ -32,9 +32,7 @@ export default function DiscussionStatus({ meta }: Props) {
     },
     onSuccess: async (response) => {
       // 타이머 시작
-      if (response) {
-        toast.success('토론이 시작되었습니다.');
-      } else {
+      if (!response) {
         showToast('토론 시작에 실패했습니다.', 'error');
       }
     },
@@ -72,14 +70,16 @@ export default function DiscussionStatus({ meta }: Props) {
   return (
     enterAgora.status !== 'CLOSED' ? (
       <>
+        {enterAgora.role !== 'OBSERVER' && (
         <button
           type="button"
           onClick={toggleProgress}
           aria-label={`토론 ${start ? '종료하기' : '시작하기'}`}
-          className={`text-xs italic ${start ? 'bg-athens-main' : 'bg-red-500'} p-4 pl-15 pr-15 under-mobile:pl-10 under-mobile:pr-10 rounded-lg text-white mr-0.5rem`}
+          className={`text-xs lg:text-sm italic ${start ? 'bg-athens-main' : 'bg-red-500'} p-4 pl-15 pr-15 under-mobile:pl-10 under-mobile:pr-10 rounded-lg text-white mr-0.5rem`}
         >
           {start ? 'END' : 'START'}
         </button>
+        )}
         <div
           role="group"
           aria-label="아고라 정보"
