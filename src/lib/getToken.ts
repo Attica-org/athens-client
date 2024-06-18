@@ -20,8 +20,8 @@ export const getToken = async () => {
     const result = await res.json();
     if (result.error.code === 1201 || result.error.code === 1002 || result.error.code === 1202) {
       if (result.error.message === 'Invalid JWT signature.' || result.error.message === 'Unsupported JWT token.') {
-        if(retry > 0) {
-          retry--;
+        if (retry > 0) {
+          retry -= 1;
           await getToken();
         }
       }
@@ -29,7 +29,7 @@ export const getToken = async () => {
       showToast('인증 오류가 발생했습니다.', 'error');
     }
 
-    if(retry <= 0) {
+    if (retry <= 0) {
       showToast('인증 오류가 발생했습니다.', 'error');
       retry = 3;
     }

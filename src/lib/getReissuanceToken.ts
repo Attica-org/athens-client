@@ -25,15 +25,15 @@ export const getReissuanceToken = async () => {
   if (!res.ok) {
     const result = await res.json();
     if (result.error.code === 1003 || result.error.code === 1202) {
-      if(retry > 0) {
+      if (retry > 0) {
         await getToken();
         await getReissuanceToken();
-        retry--;
+        retry -= 1;
       }
     } else if (result.error.code === 1201) {
       if (result.error.message === 'Invalid JWT signature.' || result.error.message === 'Unsupported JWT token.') {
-        if(retry > 0) {
-          retry--;
+        if (retry > 0) {
+          retry -= 1;
           await getToken();
           await getReissuanceToken();
         }
@@ -42,7 +42,7 @@ export const getReissuanceToken = async () => {
       showToast('인증 오류가 발생했습니다.', 'error');
     }
 
-    if(retry <= 0) {
+    if (retry <= 0) {
       showToast('인증 오류가 발생했습니다.', 'error');
       retry = 3;
     }
