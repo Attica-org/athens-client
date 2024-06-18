@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import Loading from '../atoms/loading';
 
 const SearchAgoraList = dynamic(() => import('./SearchAgoraList'));
 const AgoraList = dynamic(() => import('./AgoraList'));
@@ -14,7 +15,16 @@ export default function SearchDecider({ searchParams }: Props) {
   const { q } = searchParams;
 
   if (q) {
-    return <SearchAgoraList searchParams={searchParams} />;
+    return (
+      <Suspense fallback={<Loading />}>
+        <SearchAgoraList searchParams={searchParams} />
+      </Suspense>
+    );
   }
-  return <AgoraList searchParams={searchParams} />;
+
+  return (
+    <Suspense fallback={<Loading />}>
+      <AgoraList searchParams={searchParams} />
+    </Suspense>
+  );
 }
