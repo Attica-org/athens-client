@@ -49,6 +49,5 @@ export const getReissuanceToken = async () => {
   retry = 3;
   const result = await res.json();
 
-  console.log('result.response', result.response);
   tokenManager.setToken(result.response);
 };
