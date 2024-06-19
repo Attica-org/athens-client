@@ -53,17 +53,21 @@ export default function ShareButton({ title }: Props) {
       type="button"
       aria-label="SNS 공유하기"
       onClick={shareSNS}
-      className="cursor-pointer"
+      className="cursor-pointer pr-3"
     >
-      <ShareIcon className="w-17 lg:w-20 mr-1rem under-mobile:mr-0.5rem" />
+      <ShareIcon className="w-18 lg:w-20 mr-1rem under-mobile:mr-0.5rem" />
       <BottomSheet onDismiss={handleDismiss} open={open}>
-        <div className="px-10 pb-12 pl-20 text-sm border-b-1 border-athens-gray">
-          {title}
-          <div className="pt-5 flex justify-start items-center">
-            {url}
-            <button type="button" aria-label="url 클립보드에 복사하기" onClick={clipboardCopy}>
-              <CopyContentIcon className="w-17 ml-8" />
-            </button>
+        <div className="px-10 pb-22 pl-20 text-sm border-b-1 border-dark-light-500 text-white">
+          <div className="pt-5 text-xs flex justify-between items-center">
+            <div>
+              다양한 사람들과 토론에 함께하세요!
+              <div>{url}</div>
+            </div>
+            <div>
+              <button type="button" aria-label="url 클립보드에 복사하기" onClick={clipboardCopy}>
+                <CopyContentIcon className="w-20 mr-5" />
+              </button>
+            </div>
           </div>
         </div>
         <SocialShareLogos title={title} url={url} />

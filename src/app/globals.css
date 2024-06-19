@@ -26,7 +26,7 @@ html {
   display: flex;
   min-height: 100%;
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 @layer utilities {
@@ -52,4 +52,41 @@ html {
   background: linear-gradient(90deg, #adadad82 0%, #adadad82 25%, #d4d2d2ac 50%, #adadad82 75%, #adadad82 100%);
   background-size: 200px 100%;
   animation: skeleton-loading 2s infinite linear;
+}
+
+[data-rsbs-header] {
+  flex-shrink: 1;
+  flex-grow: 1;
+  -webkit-tap-highlight-color: revert;
+  -webkit-touch-callout: revert;
+  -webkit-user-select: auto;
+  -ms-user-select: auto;
+  -moz-user-select: auto;
+       user-select: auto;
+  overflow: auto;
+  -ms-scroll-chaining: none;
+      overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  /* 커스텀할 내용 추가 */
+  background-color: #2a2929;
+  border-radius: 13px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+[data-rsbs-scroll] {
+  flex-shrink: 1;
+  flex-grow: 1;
+  -webkit-tap-highlight-color: revert;
+  -webkit-touch-callout: revert;
+  -webkit-user-select: auto;
+  -ms-user-select: auto;
+  -moz-user-select: auto;
+       user-select: auto;
+  overflow: auto;
+  -ms-scroll-chaining: none;
+      overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  /* 커스텀할 내용 추가 */
+  background-color: #2a2929;
 }
