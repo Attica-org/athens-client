@@ -36,9 +36,9 @@ function DiscussionDurationSetter() {
           type="number"
           value={duration || ''}
           onChange={handleAgoraTime}
-          className="input-number-hide focus-visible:outline-none text-sm mr-0.5rem text-center p-5 w-5rem border-1 border-athens-gray rounded-md dark:bg-dark-bg-light dark:border-gray-500"
+          className="input-number-hide focus-visible:outline-none text-sm mr-0.5rem text-center p-5 w-4rem lg:w-5rem border-1 border-athens-gray rounded-md dark:bg-dark-bg-light dark:border-gray-500"
         />
-        <div className="under-mobile:text-xs">분</div>
+        <div className="text-xs lg:text-base">분</div>
       </div>
       {message && (
       <div

@@ -52,9 +52,9 @@ function SearchBar() {
   }, [router, search]);
 
   return (
-    <div className="bg-athens-gray rounded-md p-4 flex justify-center items-center dark:bg-dark-light-300">
+    <div className="bg-athens-gray rounded-md p-3 flex justify-center items-center dark:bg-dark-light-300">
       <button type="button" aria-label="검색하기" onClick={handleSearch}>
-        <SearchIcon className="w-22 ml-10" />
+        <SearchIcon className="w-20 ml-10" />
       </button>
       <form onSubmit={handleSearch} className="w-full">
         <input
@@ -68,7 +68,7 @@ function SearchBar() {
       </form>
       <button type="button" aria-label="입력한 검색 텍스트 전체 삭제" className="flex justify-center items-center w-1.5rem h-1.5rem">
         <RemoveIcon
-          className="w-20 cursor-pointer"
+          className="w-19 cursor-pointer"
           onClick={removeInputText}
         />
       </button>

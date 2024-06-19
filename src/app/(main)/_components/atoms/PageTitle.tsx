@@ -13,14 +13,14 @@ function PageTitle({ title, desc, children = null }: Props) {
       <div className="flex justify-between items-center">
         <h1
           aria-label="페이지 제목"
-          className="text-xl font-bold w-full flex justify-start items-center dark:text-white"
+          className="text-lg lg:text-xl font-bold w-full flex justify-start items-center dark:text-white"
         >
           {title}
         </h1>
         <ThemeSwitcher />
       </div>
       <div className="flex justify-between items-center break-words">
-        <p className="under-mobile:mt-0.5rem under-mobile:mb-0 mt-1rem text-sm text-gray-700 mb-1rem break-keep dark:text-white dark:text-opacity-85">
+        <p className="under-mobile:mt-0.5rem under-mobile:mb-0 mt-1rem text-xs lg:text-sm text-gray-700 mb-1rem break-keep dark:text-white dark:text-opacity-85">
           {desc}
         </p>
         {children}

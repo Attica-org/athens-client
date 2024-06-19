@@ -69,7 +69,7 @@ export default function ModalBase({
           animation && 'transition duration-500 transform scale-100 '
         } ${opacity} top-50 bg-white under-mobile:top-35 dark:bg-dark-light-300 dark:text-dark-line-light bottom-7rem mobile:w-[80vw] pb-0.5rem under-mobile:pb-1rem under-mobile:w-[90vw] w-[50vw] lg:w-40rem fixed rounded-2xl min-w-220 h-fit`}
       >
-        <h1 className="font-semibold flex justify-center items-center mt-2rem text-md">
+        <h1 className="font-semibold flex justify-center items-center mt-2rem text-sm lg:text-md">
           {title}
         </h1>
         {removeIcon && <RemoveButton className="absolute right-20 top-20" />}

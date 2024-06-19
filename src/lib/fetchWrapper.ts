@@ -57,12 +57,13 @@ class FetchWrapper {
       if (response.status === 401) {
         await tokenErrorHandler(result);
         // 재발급 후 재요청
-        if (retry !== 0) {
-          this.call(url, fetchNext, retry - 1);
-        }
       } else {
         // 인증 외 오류는 호출한 곳에서 처리
         return result;
+      }
+
+      if (retry !== 0) {
+        this.call(url, fetchNext, retry - 1);
       }
     }
 

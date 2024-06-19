@@ -9,7 +9,7 @@ type Props = {
 export default function AgoraPointColor({ isCheck, color }: Props) {
   return (
     <div
-      className={`${color} cursor-pointer w-2rem h-2rem under-mobile:w-1.5rem under-mobile:h-1.5rem rounded-full mr-5`}
+      className={`${color} cursor-pointer lg:w-2rem lg:h-2rem w-1.5rem h-1.5rem rounded-full lg:mr-5 mr-7`}
     >
       {isCheck && (
       <svg

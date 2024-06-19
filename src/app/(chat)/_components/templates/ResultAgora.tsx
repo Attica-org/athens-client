@@ -32,7 +32,7 @@ export default function ResultAgora() {
         <div className="flex justify-center items-center flex-col">
           <h2
             aria-label="토론 주제"
-            className="break-keep text-center text-base font-semibold"
+            className="break-keep text-center text-sm lg:text-base font-semibold"
           >
             {title}
           </h2>
