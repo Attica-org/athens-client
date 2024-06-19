@@ -37,19 +37,19 @@ export default function Page() {
               <AgoraTitleInput />
             </section>
             <section className="mt-1.5rem w-full">
-              <div role="region" className="text-md mb-10 under-mobile:text-sm">
+              <div role="region" className="text-sm lg:text-md mb-10 under-mobile:text-sm">
                 아고라 카테고리 분류
               </div>
               <CategoryButtonContainer />
             </section>
             <section className="mt-1.5rem w-full">
-              <div role="region" className="text-md mb-10 under-mobile:text-sm">
+              <div role="region" className="text-sm lg:text-md mb-10 under-mobile:text-sm">
                 포인트 색상
               </div>
               <AgoraPointColorList />
             </section>
             <section className="mt-2rem w-full">
-              <div role="region" className="mb-8 text-md under-mobile:text-sm">
+              <div role="region" className="mb-8 text-sm lg:text-md under-mobile:text-sm">
                 최대 참여 인원
               </div>
               <ParticipantCapacitySetter />
@@ -61,7 +61,7 @@ export default function Page() {
               </div>
             </section>
             <section className="mt-2rem w-full">
-              <div role="region" className="mb-10 under-mobile:text-sm text-md">
+              <div role="region" className="mb-10 text-sm lg:text-md">
                 토론 제한시간
               </div>
               <DiscussionDurationSetter />
