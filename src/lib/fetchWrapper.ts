@@ -3,13 +3,8 @@ import getKey from '@/utils/getKey';
 import { getToken } from './getToken';
 import { getReissuanceToken } from './getReissuanceToken';
 
-// const TOKEN_EXPIRED = 'The token has expired.';
-// const REFRESH_NOT_EXIST = 'Refresh Token Not Exist.';
-// const NOT_VALID_REFRESH_TOKEN = 'Invalid JWT signature.';
-// const NOT_VALID_TOKEN = 'Authorization header is missing or does not start with Bearer';
-// const UNSUPPORTED_TOKEN = 'Unsupported JWT token.';
-
 const tokenErrorHandler = async (result: any) => {
+  if(fetchWrapper.retry < 1) return;
   switch (result.error.code) {
     case 1003:
       await getToken();
@@ -36,35 +31,37 @@ const getURL = async () => {
 
 class FetchWrapper {
   baseUrl = '';
+  retry = 3;
 
-  // constructor() {
-  // getURL().then((url) => {
-  //   this.baseUrl = url;
-  // });
-  // }
+  async call(url: string, fetchNext: any): Promise<any> {
+    console.log('retry는', this.retry);
 
-  async call(url: string, fetchNext: any, retry = 3) {
     if (!this.baseUrl) {
       await getURL().then((baseUrl) => {
         this.baseUrl = baseUrl;
       });
     }
+    if(this.retry < 1){
+      return new Error;
+    }
+
     const response = await fetch(this.baseUrl + url, fetchNext);
     const result = await response.json();
 
     if (!response.ok) {
-      // 인증 자격에 관한 오류 처리
-      if (response.status === 401) {
+      this.retry -= 1;
+      if (response.status === 401 && this.retry > 0) {
+        console.log('토큰 요청');
         await tokenErrorHandler(result);
         // 재발급 후 재요청
+        return this.call(url, fetchNext);
       } else {
         // 인증 외 오류는 호출한 곳에서 처리
         return result;
       }
-
-      if (retry !== 0) {
-        this.call(url, fetchNext, retry - 1);
-      }
+    } else { 
+      // 정상 동작일 때는 retry 초기화.
+      this.retry = 3;
     }
 
     return result;
