@@ -1,7 +1,10 @@
-import Message from '@/app/(chat)/_components/molecules/Message';
 import fetchWrapper from '@/lib/fetchWrapper';
 import { headers } from 'next/headers';
 import React from 'react';
+import ErrorBoundaryMessage from '../../_components/organisms/ErrorBoundaryMessage';
+
+
+
 
 export async function generateMetadata() {
   const agoraId = headers().get('x-pathname')?.split('/').pop();
@@ -43,13 +46,14 @@ export async function generateMetadata() {
   };
 }
 
+
 export default function Page() {
   return (
     <main
       aria-label="채팅"
       className="flex flex-col justify-between h-full items-stretch"
     >
-      <Message />
+      <ErrorBoundaryMessage/>
     </main>
   );
 }

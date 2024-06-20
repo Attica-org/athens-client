@@ -1,5 +1,5 @@
 {
-  "extends": ["next/core-web-vitals", "airbnb", "airbnb-typescript"],
+  "extends": ["next/core-web-vitals", "airbnb", "airbnb-typescript", "plugin:prettier/recommended"],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
@@ -10,6 +10,12 @@
     // Support for defaultProps will be removed from function components in a future major release. 
     // Use JavaScript default parameters instead. 로 인해 default-props 를 off 로 설정
     "react/require-default-props": "off",
-    "quotes": ["error", "single"]
+    "quotes": ["error", "single"],
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ]
   }
 }
