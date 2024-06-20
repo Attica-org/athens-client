@@ -4,7 +4,6 @@ import { getToken } from './getToken';
 import { getReissuanceToken } from './getReissuanceToken';
 
 const tokenErrorHandler = async (result: any) => {
-  if(fetchWrapper.retry < 1) return;
   switch (result.error.code) {
     case 1003:
       await getToken();
@@ -29,8 +28,17 @@ const getURL = async () => {
   return key.BASE_URL || '';
 };
 
+const customError = {
+  success: false,
+  error: {
+    code: -1,
+    message: 'API 요청 재시도 횟수를 초과했습니다. 다시 시도해주세요.',
+  },
+};
+
 class FetchWrapper {
   baseUrl = '';
+
   retry = 3;
 
   async call(url: string, fetchNext: any): Promise<any> {
@@ -41,8 +49,9 @@ class FetchWrapper {
         this.baseUrl = baseUrl;
       });
     }
-    if(this.retry < 1){
-      return new Error;
+
+    if (this.retry < 1) {
+      return customError;
     }
 
     const response = await fetch(this.baseUrl + url, fetchNext);
@@ -50,19 +59,17 @@ class FetchWrapper {
 
     if (!response.ok) {
       this.retry -= 1;
-      if (response.status === 401 && this.retry > 0) {
+      if (response.status === 401) {
         console.log('토큰 요청');
         await tokenErrorHandler(result);
         // 재발급 후 재요청
         return this.call(url, fetchNext);
-      } else {
-        // 인증 외 오류는 호출한 곳에서 처리
-        return result;
       }
-    } else { 
-      // 정상 동작일 때는 retry 초기화.
-      this.retry = 3;
+      // 인증 외 오류는 호출한 곳에서 처리
+      return result;
     }
+    // 정상 동작일 때는 retry 초기화.
+    this.retry = 3;
 
     return result;
   }
