@@ -11,7 +11,10 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "src/**/*.{js,tsx,ts}": "eslint --fix"
+    "src/**/*.{js,tsx,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@mswjs/http-middleware": "^0.10.1",
