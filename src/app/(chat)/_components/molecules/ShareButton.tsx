@@ -2,7 +2,6 @@
 
 import CopyContentIcon from '@/assets/icons/CopyContentIcon';
 import ShareIcon from '@/assets/icons/ShareIcon';
-import showToast from '@/utils/showToast';
 import { useParams, useRouter } from 'next/navigation';
 import React, { MouseEventHandler, useState } from 'react';
 import { BottomSheet } from 'react-spring-bottom-sheet';
@@ -22,10 +21,9 @@ export default function ShareButton({ title }: Props) {
 
   const clipboardCopy = async () => {
     await navigator.clipboard.writeText(url);
-    showToast('클립보드에 링크가 복사되었습니다.', 'error');
   };
 
-  const shareSNS:MouseEventHandler<HTMLButtonElement> = async () => {
+  const shareSNS: MouseEventHandler<HTMLButtonElement> = async () => {
     if (window.navigator.share) {
       try {
         await window.navigator.share({
@@ -64,7 +62,11 @@ export default function ShareButton({ title }: Props) {
               <div>{url}</div>
             </div>
             <div>
-              <button type="button" aria-label="url 클립보드에 복사하기" onClick={clipboardCopy}>
+              <button
+                type="button"
+                aria-label="url 클립보드에 복사하기"
+                onClick={clipboardCopy}
+              >
                 <CopyContentIcon className="w-20 mr-5" />
               </button>
             </div>
