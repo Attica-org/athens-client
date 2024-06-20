@@ -28,6 +28,8 @@ export const patchAgoraStart = async (agoraId: number) => {
       showToast('이미 진행중이거나 종료된 아고라입니다.', 'error');
     } else if (res.error.code === 1301) {
       showToast('존재하지 않는 아고라이거나 사용자입니다.', 'error');
+    } else if (res.error.code === 1102) {
+      showToast('관찰자는 토론을 시작할 수 없습니다.', 'error');
     } else {
       showToast('토론 시작에 실패했습니다.\n 다시 시도해주세요.', 'error');
     }

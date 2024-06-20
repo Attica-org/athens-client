@@ -37,6 +37,8 @@ export const patchAgoraEnd = async (agoraId: number) => {
       } else {
         showToast('토론 종료에 실패했습니다.\n 다시 시도해주세요.', 'error');
       }
+    } else if (res.error.code === 1102) {
+      showToast('관찰자는 토론을 종료할 수 없습니다.', 'error');
     } else {
       showToast('토론 종료에 실패했습니다.\n 다시 시도해주세요.', 'error');
     }
