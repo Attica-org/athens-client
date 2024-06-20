@@ -9,7 +9,8 @@ import { QueryFunction } from '@tanstack/react-query';
 
 // eslint-disable-next-line import/prefer-default-export
 export const getAgoraUsers: QueryFunction<
-AgoraUser[], [string, string, string]
+  AgoraUser[],
+  [string, string, string]
 > = async ({ queryKey }) => {
   const [_1, _2, agoraId] = queryKey;
 
@@ -32,6 +33,8 @@ AgoraUser[], [string, string, string]
   if (res.success === false) {
     if (res.error.code === 1301) {
       showToast('해당 아고라를 찾을 수 없습니다.', 'error');
+    } else if (res.error.code === -1) {
+      throw new Error(res.error.message);
     } else {
       showToast('참여 사용자를 불러올 수 없습니다.', 'error');
     }
