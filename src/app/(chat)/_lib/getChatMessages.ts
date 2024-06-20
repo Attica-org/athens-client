@@ -16,12 +16,13 @@ type Search = {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const getChatMessages:QueryFunction<
-{ chats: Message[], meta: Meta },
-[_1: string, _2: string, _3: string],
-{ meta: Meta }> = async ({ queryKey, pageParam }) => {
+export const getChatMessages: QueryFunction<
+  { chats: Message[]; meta: Meta },
+  [_1: string, _2: string, _3: string],
+  { meta: Meta }
+> = async ({ queryKey, pageParam }) => {
   const [, agoraId] = queryKey;
-  const searchParams:Search = {
+  const searchParams: Search = {
     size: pageParam.meta.effectiveSize.toString(),
   };
 
@@ -35,21 +36,26 @@ export const getChatMessages:QueryFunction<
     await getToken();
   }
 
-  const res = await fetchWrapper.call(`/api/v1/open/agoras/${agoraId}/chats?${urlSearchParams.toString()}`, {
-    next: {
-      tags: ['chat', agoraId, 'messages'],
+  const res = await fetchWrapper.call(
+    `/api/v1/open/agoras/${agoraId}/chats?${urlSearchParams.toString()}`,
+    {
+      next: {
+        tags: ['chat', agoraId, 'messages'],
+      },
+      credentials: 'include',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tokenManager.getToken()}`,
+      },
     },
-    credentials: 'include',
-    cache: 'no-cache',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${tokenManager.getToken()}`,
-    },
-  });
+  );
 
   if (res.success === false) {
     if (res.error.code === 1301) {
       showToast('해당 아고라를 찾을 수 없습니다.', 'error');
+    } else if (res.error.code === -1) {
+      throw new Error(res.error.message);
     } else {
       showToast('채팅 내역을 불러올 수 없습니다.', 'error');
     }
