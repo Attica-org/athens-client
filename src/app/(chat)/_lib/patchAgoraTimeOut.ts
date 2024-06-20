@@ -10,18 +10,20 @@ export const patchAgoraTimeOut = async (agoraId: number) => {
     await getToken();
   }
 
-  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/timeOut`, {
-    method: 'PATCH',
-    next: {
-      tags: [],
+  const res = await fetchWrapper.call(
+    `/api/v1/open/agoras/${agoraId}/time-out`,
+    {
+      method: 'PATCH',
+      next: {
+        tags: [],
+      },
+      credentials: 'include',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     },
-    credentials: 'include',
-    cache: 'no-cache',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${tokenManager.getToken()}`,
-    },
-  });
+  );
 
   if (res.success === false) {
     if (res.error.code === 1301) {

@@ -29,21 +29,24 @@ export default function Header() {
   const { enterAgora } = useAgora(
     useShallow((state) => ({ enterAgora: state.enterAgora })),
   );
-  const {
-    setTitle, setDiscussionStart, start, setDiscurreionEnd, reset,
-  } = useChatInfo(
-    useShallow((state) => ({
-      setTitle: state.setTitle,
-      start: state.start,
-      setDiscussionStart: state.setDiscussionStart,
-      setDiscurreionEnd: state.setDiscussionEnd,
-      reset: state.reset,
-    })),
-  );
+  const { setTitle, setDiscussionStart, start, setDiscurreionEnd, reset } =
+    useChatInfo(
+      useShallow((state) => ({
+        setTitle: state.setTitle,
+        start: state.start,
+        setDiscussionStart: state.setDiscussionStart,
+        setDiscurreionEnd: state.setDiscussionEnd,
+        reset: state.reset,
+      })),
+    );
   const voteResultReset = useVoteStore(useShallow((state) => state.reset));
   const [metaData, setMetaData] = useState<AgoraMeta>();
-  const [participants, setParticipants] = useState<{ pros: number; cons: number }>({
-    pros: 0, cons: 0,
+  const [participants, setParticipants] = useState<{
+    pros: number;
+    cons: number;
+  }>({
+    pros: 0,
+    cons: 0,
   });
   const [isError, setIsError] = useState(false);
   const router = useRouter();
@@ -100,54 +103,82 @@ export default function Header() {
     const subscribe = () => {
       // console.log('Subscribing... metadata');
       getMetadata();
-      client.current?.subscribe(`/topic/agoras/${agoraId}`, (received_message: StompJs.IFrame) => {
-        const data = JSON.parse(received_message.body);
-        if (data.type === 'META') {
-          setTitle(data.data.agora.title);
-          setAgoraId(data.data.agora.id);
-          setMetaData(data.data);
-          refetchAgoraUserList();
+      client.current?.subscribe(
+        `/topic/agoras/${agoraId}`,
+        (received_message: StompJs.IFrame) => {
+          const data = JSON.parse(received_message.body);
+          if (data.type === 'META') {
+            setTitle(data.data.agora.title);
+            setAgoraId(data.data.agora.id);
+            setMetaData(data.data);
+            refetchAgoraUserList();
 
-          if (data.data.agora.startAt) {
-            if (start === null) showToast('토론이 시작되었습니다.', 'success');
-            setDiscussionStart(data.data.agora.startAt);
-          }
-
-          data.data.participants.forEach((participant: { type: string; count: number }) => {
-            if (participant.type === 'PROS') {
-              setParticipants((prev) => ({ ...prev, pros: participant.count }));
-            } else if (participant.type === 'CONS') {
-              setParticipants((prev) => ({ ...prev, cons: participant.count }));
+            if (data.data.agora.startAt) {
+              if (start === null)
+                showToast('토론이 시작되었습니다.', 'success');
+              setDiscussionStart(data.data.agora.startAt);
             }
-          });
-        } else if (data.type === 'DISCUSSION_START') {
-          // console.log(data.data);
-          setDiscussionStart(data.data.startTime);
-        } else if (data.type === 'DISCUSSION_END') {
-          setDiscurreionEnd(data.data.endTime);
-          toast('토론이 종료되었습니다.');
-          router.push(`/agoras/${data.data.agoraId}/flow/end-agora`);
-        }
-        // console.log(`> Received message: ${received_message.body}`);
-      });
+
+            data.data.participants.forEach(
+              (participant: { type: string; count: number }) => {
+                if (participant.type === 'PROS') {
+                  setParticipants((prev) => ({
+                    ...prev,
+                    pros: participant.count,
+                  }));
+                } else if (participant.type === 'CONS') {
+                  setParticipants((prev) => ({
+                    ...prev,
+                    cons: participant.count,
+                  }));
+                }
+              },
+            );
+          } else if (data.type === 'DISCUSSION_START') {
+            // console.log(data.data);
+            setDiscussionStart(data.data.startTime);
+          } else if (data.type === 'DISCUSSION_END') {
+            setDiscurreionEnd(data.data.endTime);
+            toast('토론이 종료되었습니다.');
+            router.push(`/agoras/${data.data.agoraId}/flow/end-agora`);
+          }
+          // console.log(`> Received message: ${received_message.body}`);
+        },
+      );
     };
 
     function subscribeError() {
       // console.log('Subscribing Error...');
-      client.current?.subscribe('/user/queue/errors', async (received_message: StompJs.IFrame) => {
-        const data = JSON.parse(received_message.body);
-        if (data.code === 1201) {
-          await getToken();
-        } else if (data.code === 1003) {
-          await getReissuanceToken();
-        } else if (data.code === 2000) {
-          // console.log(data.message);
-          showToast('오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'error');
-        } else if (data.code === 2001) {
-          showToast('연결이 불안정합니다. 잠시 후 다시 시도해주세요.', 'error');
-        }
-        setIsError(true);
-      });
+      client.current?.subscribe(
+        '/user/queue/errors',
+        async (received_message: StompJs.IFrame) => {
+          const data = JSON.parse(received_message.body);
+          if (data.code === 1201) {
+            await getToken();
+          } else if (data.code === 1003) {
+            await getReissuanceToken();
+          } else if (data.code === 2000) {
+            showToast(
+              '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+              'error',
+            );
+          } else if (data.code === 2001) {
+            showToast(
+              '연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
+              'error',
+            );
+          } else if (data.code === 1102) {
+            showToast('관찰자는 메시지를 보낼 수 없습니다.', 'error');
+          } else if (data.code === 1301) {
+            if (data.message === 'Session not found') {
+              showToast('현재 아고라에 존재하지 않는 유저입니다.', 'error');
+            } else {
+              showToast('존재하지 않는 아고라입니다.', 'error');
+            }
+          }
+          setIsError(true);
+        },
+      );
     }
 
     function connect() {
@@ -155,6 +186,7 @@ export default function Header() {
         brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
           Authorization: `Bearer ${tokenManager.getToken()}`,
+          AgoraId: `${agoraId}`,
         },
         reconnectDelay: 500,
         onConnect: () => {
@@ -193,8 +225,15 @@ export default function Header() {
       reset();
       voteResultReset();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [agoraId, isError, router, setDiscussionStart, enterAgora.status, URL.SOCKET_URL]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    agoraId,
+    isError,
+    router,
+    setDiscussionStart,
+    enterAgora.status,
+    URL.SOCKET_URL,
+  ]);
 
   useEffect(() => {
     if (!URL.BASE_URL) return;
@@ -207,7 +246,7 @@ export default function Header() {
         });
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enterAgora.status, URL.BASE_URL]);
 
   return (
@@ -223,7 +262,11 @@ export default function Header() {
         </div>
       </div>
       <div className="flex justify-center items-center">
-        <AgoraTitle title={metaData?.agora.title || ''} pros={participants.pros} cons={participants.cons} />
+        <AgoraTitle
+          title={metaData?.agora.title || ''}
+          pros={participants.pros}
+          cons={participants.cons}
+        />
       </div>
     </div>
   );

@@ -3,7 +3,12 @@
 import SendIcon from '@/assets/icons/SendIcon';
 import { useMessageStore } from '@/store/message';
 import React, {
-  ChangeEventHandler, KeyboardEventHandler, useCallback, useEffect, useRef, useState,
+  ChangeEventHandler,
+  KeyboardEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
 } from 'react';
 import * as StompJs from '@stomp/stompjs';
 import tokenManager from '@/utils/tokenManager';
@@ -32,41 +37,50 @@ export default function MessageInput() {
     setMessage(e.target.value);
   };
 
-  const pushMessage = useCallback((data: any, type: string) => {
-    // 쿼리 데이터에 추가
-    const exMessages = queryClient.getQueryData(['chat', `${agoraId}`, 'messages']) as InfiniteData<{
-      chats: Message[], meta: { key: number, size: number }
-    }>;
+  const pushMessage = useCallback(
+    (data: any, type: string) => {
+      // 쿼리 데이터에 추가
+      const exMessages = queryClient.getQueryData([
+        'chat',
+        `${agoraId}`,
+        'messages',
+      ]) as InfiniteData<{
+        chats: Message[];
+        meta: { key: number; size: number };
+      }>;
 
-    if (exMessages && typeof exMessages === 'object') {
-      const newMessages = {
-        ...exMessages,
-        pages: [
-          ...exMessages.pages,
-        ],
-      };
+      if (exMessages && typeof exMessages === 'object') {
+        const newMessages = {
+          ...exMessages,
+          pages: [...exMessages.pages],
+        };
 
-      const lastPage = newMessages.pages[newMessages.pages.length - 1];
-      const newLastPage = lastPage
-        ? { ...lastPage, chats: [...lastPage.chats] }
-        : { chats: [], meta: { key: 0, size: 20 } };
-      const lastMessageId = lastPage?.chats.at(-1)?.chatId;
+        const lastPage = newMessages.pages[newMessages.pages.length - 1];
+        const newLastPage = lastPage
+          ? { ...lastPage, chats: [...lastPage.chats] }
+          : { chats: [], meta: { key: 0, size: 20 } };
+        const lastMessageId = lastPage?.chats.at(-1)?.chatId;
 
-      if (type === 'received') {
-        newLastPage.chats.push(JSON.parse(data).data);
+        if (type === 'received') {
+          newLastPage.chats.push(JSON.parse(data).data);
+        }
+
+        newMessages.pages[newMessages.pages.length - 1] = {
+          chats: newLastPage.chats,
+          meta: {
+            key: lastMessageId || 0,
+            size: 20,
+          },
+        };
+        queryClient.setQueryData(
+          ['chat', `${agoraId}`, 'messages'],
+          newMessages,
+        );
+        setGoDown(true);
       }
-
-      newMessages.pages[newMessages.pages.length - 1] = {
-        chats: newLastPage.chats,
-        meta: {
-          key: lastMessageId || 0,
-          size: 20,
-        },
-      };
-      queryClient.setQueryData(['chat', `${agoraId}`, 'messages'], newMessages);
-      setGoDown(true);
-    }
-  }, [agoraId, queryClient, setGoDown]);
+    },
+    [agoraId, queryClient, setGoDown],
+  );
 
   const sendMessage = () => {
     if (message.trim().length < 1) return;
@@ -92,7 +106,7 @@ export default function MessageInput() {
     setIsComposing(false);
   };
 
-  const handleKeyDown:KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
+  const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
     if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
       e.preventDefault();
       sendMessage();
@@ -134,11 +148,14 @@ export default function MessageInput() {
 
     const subscribe = () => {
       // console.log('Subscribing...');
-      client.current?.subscribe(`/topic/agoras/${agoraId}/chats`, (received_message: StompJs.IFrame) => {
-        // console.log(`> Received message: ${received_message.body}`);
+      client.current?.subscribe(
+        `/topic/agoras/${agoraId}/chats`,
+        (received_message: StompJs.IFrame) => {
+          // console.log(`> Received message: ${received_message.body}`);
 
-        pushMessage(received_message.body, 'received');
-      });
+          pushMessage(received_message.body, 'received');
+        },
+      );
     };
 
     const subscribeError = () => {
@@ -154,6 +171,7 @@ export default function MessageInput() {
         brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
           Authorization: `Bearer ${tokenManager.getToken()}`,
+          AgoraId: `${agoraId}`,
         },
         reconnectDelay: 500,
         onConnect: () => {
@@ -173,7 +191,12 @@ export default function MessageInput() {
       client.current.activate();
     };
 
-    if (enterAgora.status !== 'CLOSED' && enterAgora.role !== 'OBSERVER' && navigator.onLine && URL.SOCKET_URL !== '') {
+    if (
+      enterAgora.status !== 'CLOSED' &&
+      enterAgora.role !== 'OBSERVER' &&
+      navigator.onLine &&
+      URL.SOCKET_URL !== ''
+    ) {
       connect();
     }
 
@@ -187,10 +210,18 @@ export default function MessageInput() {
         disconnect();
       }
     };
-  }, [agoraId, isError, enterAgora.status, pushMessage, enterAgora.role, URL.SOCKET_URL]);
+  }, [
+    agoraId,
+    isError,
+    enterAgora.status,
+    pushMessage,
+    enterAgora.role,
+    URL.SOCKET_URL,
+  ]);
 
   return (
-    enterAgora.status !== 'CLOSED' && enterAgora.role !== 'OBSERVER' && (
+    enterAgora.status !== 'CLOSED' &&
+    enterAgora.role !== 'OBSERVER' && (
       <section className="flex border-t-1 dark:border-dark-light-300 sticky bottom-0 right-0 left-0 w-full bg-white dark:bg-dark-light-300">
         <form className="pl-1rem p-10 pb-0 flex flex-1 justify-start items-center">
           <textarea

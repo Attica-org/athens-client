@@ -6,8 +6,15 @@ import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import ErrorFallback from '@/app/_components/templates/ErrorFallback';
 import Loading from '../atoms/loading';
 
-const SearchAgoraList = dynamic(() => import('./SearchAgoraList'));
-const AgoraList = dynamic(() => import('./AgoraList'));
+const SearchAgoraList = dynamic(() => import('./SearchAgoraList'), {
+  loading: () => <Loading w="25" h="25" />,
+  ssr: false,
+});
+
+const AgoraList = dynamic(() => import('./AgoraList'), {
+  loading: () => <Loading w="25" h="25" />,
+  ssr: false,
+});
 
 type Props = {
   searchParams: { status?: string; category?: string; q?: string };
@@ -27,7 +34,7 @@ export default function SearchDecider({ searchParams }: Props) {
   if (q) {
     return (
       <ErrorBoundary FallbackComponent={FallbackComponent}>
-        <Suspense fallback={<Loading />}>
+        <Suspense fallback={<Loading w="25" h="25" />}>
           <SearchAgoraList searchParams={searchParams} />
         </Suspense>
       </ErrorBoundary>
@@ -36,7 +43,7 @@ export default function SearchDecider({ searchParams }: Props) {
 
   return (
     <ErrorBoundary FallbackComponent={FallbackComponent}>
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<Loading w="25" h="25" />}>
         <AgoraList searchParams={searchParams} />
       </Suspense>
     </ErrorBoundary>
