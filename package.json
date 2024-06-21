@@ -11,7 +11,10 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "src/**/*.{js,tsx,ts}": "eslint --fix"
+    "src/**/*.{js,tsx,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@mswjs/http-middleware": "^0.10.1",
@@ -61,7 +64,7 @@
     "lint-staged": "^15.2.7",
     "next-pwa": "^5.6.0",
     "postcss": "^8",
-    "prettier": "^3.2.5",
+    "prettier": "^3.3.2",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
   },
