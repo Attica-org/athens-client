@@ -28,7 +28,8 @@ type Props = {
 
 export default function SocialShareLogos({ title, url }: Props) {
   const pathname = useParams();
-  const sendUrl = url || `${process.env.NEXT_PUBLIC_CLIENT_URL}/agoras/${pathname.agora}`; // 공유할 URL
+  const sendUrl =
+    url || `${process.env.NEXT_PUBLIC_CLIENT_URL}/agoras/${pathname.agora}`; // 공유할 URL
 
   useEffect(() => {
     const swiper = new Swiper('.swiper', {
@@ -105,7 +106,9 @@ export default function SocialShareLogos({ title, url }: Props) {
               aria-label="페이스북으로 공유하기"
             >
               <FacebookIcon size={45} round />
-              <div className="text-xs pt-5 text-white">Facebook</div>
+              <div className="text-xs pt-5 text-white lg:text-black lg:dark:text-white">
+                Facebook
+              </div>
             </FacebookShareButton>
           </div>
           <div className="swiper-slide">
@@ -116,7 +119,9 @@ export default function SocialShareLogos({ title, url }: Props) {
               aria-label="페이스북 메신저로 공유하기"
             >
               <FacebookMessengerIcon size={45} round />
-              <div className="text-xs pt-5 text-white">Messanger</div>
+              <div className="text-xs pt-5 text-white lg:text-black lg:dark:text-white">
+                Messanger
+              </div>
             </FacebookMessengerShareButton>
           </div>
           <div className="swiper-slide">
@@ -127,13 +132,27 @@ export default function SocialShareLogos({ title, url }: Props) {
               aria-label="트위터로 공유하기"
             >
               <XIcon size={45} round />
-              <div className="text-xs pt-5 text-white">X</div>
+              <div className="text-xs pt-5 text-white lg:text-black lg:dark:text-white">
+                X
+              </div>
             </TwitterShareButton>
           </div>
           <div className="swiper-slide">
-            <button aria-label="카카오톡으로 공유하기" type="button" className="mr-20 flex flex-col justify-center items-center" onClick={shareKakao}>
-              <Image src="/img/kakao_logo.png" alt="카카오톡 로고" width={45} height={45} />
-              <div className="text-xs pt-5 text-white">Kakao Talk</div>
+            <button
+              aria-label="카카오톡으로 공유하기"
+              type="button"
+              className="mr-20 flex flex-col justify-center items-center"
+              onClick={shareKakao}
+            >
+              <Image
+                src="/img/kakao_logo.png"
+                alt="카카오톡 로고"
+                width={45}
+                height={45}
+              />
+              <div className="text-xs pt-5 text-white lg:text-black lg:dark:text-white">
+                Kakao Talk
+              </div>
             </button>
           </div>
           <div className="swiper-slide">
@@ -145,7 +164,9 @@ export default function SocialShareLogos({ title, url }: Props) {
               aria-label="이메일로 공유하기"
             >
               <EmailIcon size={45} round />
-              <div className="text-xs pt-5 text-white">Email</div>
+              <div className="text-xs pt-5 text-white lg:text-black lg:dark:text-white">
+                Email
+              </div>
             </EmailShareButton>
           </div>
           <div className="swiper-slide">
@@ -156,7 +177,9 @@ export default function SocialShareLogos({ title, url }: Props) {
               aria-label="라인으로 공유하기"
             >
               <LineIcon size={45} round />
-              <div className="text-xs pt-5 text-white">Line</div>
+              <div className="text-xs pt-5 text-white lg:text-black lg:dark:text-white">
+                Line
+              </div>
             </LineShareButton>
           </div>
         </div>
