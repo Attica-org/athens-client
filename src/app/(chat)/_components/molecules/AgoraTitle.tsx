@@ -5,9 +5,10 @@ type Props = {
   title: string;
   pros?: number;
   cons?: number;
+  isClosed?: boolean;
 };
 
-export default function AgoraTitle({ title, pros, cons }: Props) {
+export default function AgoraTitle({ title, pros, cons, isClosed }: Props) {
   return (
     <section className="flex flex-col justify-center items-center w-full dark:bg-dark-light-300 pb-5">
       <h1
@@ -20,22 +21,20 @@ export default function AgoraTitle({ title, pros, cons }: Props) {
         />
         {title}
       </h1>
-      <div
-        role="status"
-        aria-label="현재 참여 인원"
-        className="flex justify-around items-center w-full text-xs lg:text-sm under-mobile:text-xxs p-6 pt-0"
-      >
-        <div className="text-blue-600 dark:text-dark-pro-color">
-          찬성
-          {' '}
-          {pros}
+      {!isClosed && (
+        <div
+          role="status"
+          aria-label="현재 참여 인원"
+          className="flex justify-around items-center w-full text-xs lg:text-sm under-mobile:text-xxs p-6 pt-0"
+        >
+          <div className="text-blue-600 dark:text-dark-pro-color">
+            찬성 {pros}
+          </div>
+          <div className="text-red-600 dark:text-dark-con-color">
+            반대 {cons}
+          </div>
         </div>
-        <div className="text-red-600 dark:text-dark-con-color">
-          반대
-          {' '}
-          {cons}
-        </div>
-      </div>
+      )}
     </section>
   );
 }
