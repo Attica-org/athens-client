@@ -4,7 +4,6 @@ import getKey from '@/utils/getKey';
 import { getToken } from './getToken';
 
 let retry = 3;
-
 // eslint-disable-next-line import/prefer-default-export
 export const getReissuanceToken = async () => {
   const key = await getKey();
@@ -27,7 +26,10 @@ export const getReissuanceToken = async () => {
         retry -= 1;
       }
     } else if (result.error.code === 1201) {
-      if (result.error.message === 'Invalid JWT signature.' || result.error.message === 'Unsupported JWT token.') {
+      if (
+        result.error.message === 'Invalid JWT signature.' ||
+        result.error.message === 'Unsupported JWT token.'
+      ) {
         if (retry > 0) {
           retry -= 1;
           await getToken();
