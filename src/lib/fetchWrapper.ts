@@ -51,6 +51,7 @@ class FetchWrapper {
     }
 
     if (this.retry < 1) {
+      this.retry = 3; // retry 초기화
       return customError;
     }
 
