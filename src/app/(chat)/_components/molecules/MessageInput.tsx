@@ -85,7 +85,11 @@ export default function MessageInput() {
   const sendMessage = () => {
     if (message.trim().length < 1) return;
 
-    if (client.current && client.current.connected) {
+    if (
+      client.current &&
+      client.current.connected &&
+      enterAgora.role !== 'OBSERVER'
+    ) {
       client.current?.publish({
         destination: `/app/agoras/${agoraId}/chats`,
         body: JSON.stringify({
@@ -193,7 +197,6 @@ export default function MessageInput() {
 
     if (
       enterAgora.status !== 'CLOSED' &&
-      enterAgora.role !== 'OBSERVER' &&
       navigator.onLine &&
       URL.SOCKET_URL !== ''
     ) {
