@@ -29,7 +29,8 @@ export default function EnterAgoraButton() {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const { selectedProfileImage, selectedPosition, nickname } = useEnter.getState();
+      const { selectedProfileImage, selectedPosition, nickname } =
+        useEnter.getState();
       const info = {
         ...selectedProfileImage,
         nickname,
@@ -37,7 +38,7 @@ export default function EnterAgoraButton() {
       };
       return postEnterAgoraInfo({ info, agoraId: selectedAgora.id });
     },
-    onSuccess: async (response) => {
+    onSuccess: (response) => {
       if (response) {
         setEnterAgora({
           id: response.agoraId,

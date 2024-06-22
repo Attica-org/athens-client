@@ -92,21 +92,14 @@ export default function Header() {
       // console.log('Disconnected');
     };
 
-    const getMetadata = () => {
-      if (client.current) {
-        client.current?.publish({
-          destination: `/app/agoras/${agoraId}`,
-        });
-      }
-    };
-
     const subscribe = () => {
-      // console.log('Subscribing... metadata');
-      getMetadata();
+      // getMetadata();
+      // console.log('Subscribing...');
       client.current?.subscribe(
-        `/topic/agoras/${agoraId}`,
+        `/topic/agoras/${agoraId}/meta`,
         (received_message: StompJs.IFrame) => {
           const data = JSON.parse(received_message.body);
+          // console.log('received_message', received_message);
           if (data.type === 'META') {
             setTitle(data.data.agora.title);
             setAgoraId(data.data.agora.id);
@@ -195,21 +188,24 @@ export default function Header() {
           subscribe();
         },
         onWebSocketError: async () => {
-          // showToast('네트워크가 불안정합니다.', 'error');
+          showToast('네트워크가 불안정합니다.', 'error');
           await getReissuanceToken();
-          // connect();
           // router.replace('/home');
         },
         onStompError: async () => {
+          showToast('서버 연결이 불안정합니다.', 'error');
           await getReissuanceToken();
-          connect();
         },
       });
       // console.log('Activating... metadata');
       client.current.activate();
     }
 
-    if (navigator.onLine && URL.SOCKET_URL !== '') {
+    if (
+      navigator.onLine &&
+      URL.SOCKET_URL !== '' &&
+      enterAgora.status !== 'CLOSED'
+    ) {
       connect();
     }
 
@@ -263,7 +259,8 @@ export default function Header() {
       </div>
       <div className="flex justify-center items-center">
         <AgoraTitle
-          title={metaData?.agora.title || ''}
+          title={metaData?.agora.title || enterAgora.title || ''}
+          isClosed={enterAgora.status === 'CLOSED'}
           pros={participants.pros}
           cons={participants.cons}
         />
