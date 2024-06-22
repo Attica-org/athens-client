@@ -2,6 +2,7 @@ import showToast from '@/utils/showToast';
 import getKey from '@/utils/getKey';
 import { getToken } from './getToken';
 import { getReissuanceToken } from './getReissuanceToken';
+import retryConfig from './retryConfig';
 
 const tokenErrorHandler = async (result: any) => {
   switch (result.error.code) {
@@ -39,19 +40,15 @@ const customError = {
 class FetchWrapper {
   baseUrl = '';
 
-  retry = 3;
-
   async call(url: string, fetchNext: any): Promise<any> {
-    console.log('retry는', this.retry);
-
     if (!this.baseUrl) {
       await getURL().then((baseUrl) => {
         this.baseUrl = baseUrl;
       });
     }
 
-    if (this.retry < 1) {
-      this.retry = 3; // retry 초기화
+    if (retryConfig.retry < 1) {
+      retryConfig.retry = 3; // retry 초기화
       return customError;
     }
 
@@ -59,9 +56,8 @@ class FetchWrapper {
     const result = await response.json();
 
     if (!response.ok) {
-      this.retry -= 1;
-      if (response.status === 401) {
-        console.log('토큰 요청');
+      retryConfig.retry -= 1;
+      if (response.status === 401 || response.status === 400) {
         await tokenErrorHandler(result);
         // 재발급 후 재요청
         return this.call(url, fetchNext);
@@ -70,7 +66,7 @@ class FetchWrapper {
       return result;
     }
     // 정상 동작일 때는 retry 초기화.
-    this.retry = 3;
+    retryConfig.retry = 3;
 
     return result;
   }
