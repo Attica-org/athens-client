@@ -9,9 +9,9 @@ type Props = {
 
 export default function Layout({ children }: Props) {
   return (
-    <div className="w-full overflow-y-hidden overflow-x-hidden h-full flex justify-center items-center xl:w-[1580px] relative">
+    <div className="w-full overflow-y-hidden overflow-x-hidden h-dvh flex justify-center items-center xl:w-[1580px] relative">
       <section className="w-full flex flex-1 h-full max-lg:pb-3rem min-w-270 flex-grow max-width-screen absolute top-0">
-        <section className="overflow-y-hidden flex flex-1 h-full flex-col w-full relative">
+        <section className="overflow-y-hidden flex flex-1 flex-col w-full relative">
           <section className="sticky w-full top-0 bg-white dark:bg-dark-bg-light pt-10 min-w-270 border-b-1 border-gray-200 dark:border-dark-light-300">
             <Header />
           </section>
