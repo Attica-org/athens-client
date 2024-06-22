@@ -1,5 +1,5 @@
 import fetchWrapper from '@/lib/fetchWrapper';
-import { getToken } from '@/lib/getToken';
+import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 

@@ -13,7 +13,7 @@ import toast from 'react-hot-toast';
 import showToast from '@/utils/showToast';
 import { getReissuanceToken } from '@/lib/getReissuanceToken';
 import { useVoteStore } from '@/store/vote';
-import { getToken } from '@/lib/getToken';
+import getToken from '@/lib/getToken';
 import { useQueryClient } from '@tanstack/react-query';
 import getKey from '@/utils/getKey';
 import BackButton from '../../../_components/atoms/BackButton';

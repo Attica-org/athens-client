@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AgoraUser } from '@/app/model/AgoraUser';
 import fetchWrapper from '@/lib/fetchWrapper';
-import { getToken } from '@/lib/getToken';
+import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';

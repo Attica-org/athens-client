@@ -1,11 +1,10 @@
 import getKey from '@/utils/getKey';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
-
-let retry = 3;
-
+import retryConfig from './retryConfig';
 // eslint-disable-next-line import/prefer-default-export
-export const getToken = async () => {
+
+const getToken = async () => {
   const key = await getKey();
 
   const res = await fetch(`${key.BASE_URL}/api/v1/temp-user`, {
@@ -27,8 +26,8 @@ export const getToken = async () => {
         result.error.message === 'Invalid JWT signature.' ||
         result.error.message === 'Unsupported JWT token.'
       ) {
-        if (retry > 0) {
-          retry -= 1;
+        if (retryConfig.retry > 0) {
+          retryConfig.retry -= 1;
           await getToken();
         }
       }
@@ -36,16 +35,18 @@ export const getToken = async () => {
       showToast('인증 오류가 발생했습니다.', 'error');
     }
 
-    if (retry <= 0) {
+    if (retryConfig.retry < 1) {
       showToast('인증 오류가 발생했습니다.', 'error');
-      retry = 3;
+      retryConfig.retry = 3;
     }
 
     return;
   }
 
-  retry = 3;
+  retryConfig.retry = 3;
   const result = await res.json();
 
   tokenManager.setToken(result.response.accessToken);
 };
+
+export default getToken;
