@@ -4,7 +4,6 @@ about: 스프린트 백로그 생성을 위해 이 템플릿을 선택하세요.
 title: ''
 labels: ''
 assignees: H-sooyeon
-
 ---
 
 ## Description
@@ -15,4 +14,5 @@ assignees: H-sooyeon
 - [ ] Item 2
 
 ## References
+
 - [sample](https://www.google.com/)

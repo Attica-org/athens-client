@@ -7,7 +7,7 @@ type Props = {
   position: Position;
   color: string;
   children: React.ReactNode;
-  selectPosition: (position: Position) => void,
+  selectPosition: (position: Position) => void;
 };
 
 export default function ModalPosSelectBtn({
@@ -17,7 +17,8 @@ export default function ModalPosSelectBtn({
   color,
   children,
 }: Props) {
-  const bgColor = position !== 'OBSERVER' ? `bg-${color}-400` : 'bg-athens-main';
+  const bgColor =
+    position !== 'OBSERVER' ? `bg-${color}-400` : 'bg-athens-main';
   return (
     <button
       type="button"

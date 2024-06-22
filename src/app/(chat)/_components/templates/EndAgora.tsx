@@ -17,18 +17,23 @@ type ResultPosition = 'PROS' | 'CONS' | 'DEFAULT';
 const DUPLICATE_VOTE = 'User has already voted for Opinion in this agora';
 
 export default function EndAgora() {
-  const [selectedResultPosition, setSelectedResultPosition] = useState<ResultPosition>('DEFAULT');
+  const [selectedResultPosition, setSelectedResultPosition] =
+    useState<ResultPosition>('DEFAULT');
   const [remainingTime, setRemainingTime] = useState(15);
   const [isFinished, setIsFinished] = useState(false);
   const [vote, setVote] = useState<string | null>(null);
-  const { title } = useChatInfo(useShallow((state) => ({
-    title: state.title,
-  })));
-  const { setVoteResult, setVoteEnd, voteEnd } = useVoteStore(useShallow((state) => ({
-    setVoteEnd: state.setVoteEnd,
-    voteEnd: state.voteEnd,
-    setVoteResult: state.setVoteResult,
-  })));
+  const { title } = useChatInfo(
+    useShallow((state) => ({
+      title: state.title,
+    })),
+  );
+  const { setVoteResult, setVoteEnd, voteEnd } = useVoteStore(
+    useShallow((state) => ({
+      setVoteEnd: state.setVoteEnd,
+      voteEnd: state.voteEnd,
+      setVoteResult: state.setVoteResult,
+    })),
+  );
   const agoraId = useAgora((state) => state.enterAgora.id);
   const router = useRouter();
   const [URL, setURL] = useState({
@@ -102,7 +107,10 @@ export default function EndAgora() {
       }
     };
 
-    navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
+    navigator.serviceWorker.addEventListener(
+      'message',
+      handleServiceWorkerMessage,
+    );
 
     const timerId = setInterval(() => {
       const diffTime = differenceInSeconds(new Date(), startTime);
@@ -114,9 +122,12 @@ export default function EndAgora() {
 
     return () => {
       clearInterval(timerId);
-      navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
+      navigator.serviceWorker.removeEventListener(
+        'message',
+        handleServiceWorkerMessage,
+      );
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agoraId, router, setVoteEnd, setVoteResult, URL.BASE_URL]);
 
   const selectResultPosition = (position: ResultPosition) => {
@@ -172,10 +183,10 @@ export default function EndAgora() {
           </button>
         </div>
         {isFinished && !voteEnd && (
-        <div className="flex p-10 text-sm">
-          투표 결과 집계 중...
-          <Loading w="16" h="16" />
-        </div>
+          <div className="flex p-10 text-sm">
+            투표 결과 집계 중...
+            <Loading w="16" h="16" />
+          </div>
         )}
       </div>
     </ModalBase>

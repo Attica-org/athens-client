@@ -1,7 +1,11 @@
 'use client';
 
 import RemoveIcon from '@/assets/icons/RemoveIcon';
-import React, { KeyboardEventHandler, MouseEventHandler, Suspense } from 'react';
+import React, {
+  KeyboardEventHandler,
+  MouseEventHandler,
+  Suspense,
+} from 'react';
 import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgora } from '@/store/agora';
@@ -22,7 +26,7 @@ export default function AgoraUserSide() {
     if (e.target === e.currentTarget) toggleMenu();
   };
 
-  const closeModal:KeyboardEventHandler<HTMLDivElement> = (e) => {
+  const closeModal: KeyboardEventHandler<HTMLDivElement> = (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
       toggleMenu();
     }
@@ -57,15 +61,19 @@ export default function AgoraUserSide() {
             aria-hidden={!isOpen}
             className="flex justify-between items-center pb-1rem"
           >
-            <h2 className="text-base font-semibold dark:text-white">대화상대</h2>
-            <button type="button" aria-label="아이콘으로 참여자 목록 닫기" onClick={toggleMenu}>
+            <h2 className="text-base font-semibold dark:text-white">
+              대화상대
+            </h2>
+            <button
+              type="button"
+              aria-label="아이콘으로 참여자 목록 닫기"
+              onClick={toggleMenu}
+            >
               <RemoveIcon className="w-22 cursor-pointer" />
             </button>
           </div>
           <Suspense fallback={<AgoraUserSideSkeleton />}>
-            <AgoraUserSuspense
-              agoraId={agoraId}
-            />
+            <AgoraUserSuspense agoraId={agoraId} />
           </Suspense>
         </section>
       </div>

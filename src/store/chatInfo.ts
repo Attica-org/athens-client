@@ -34,21 +34,24 @@ const initialState: ChatState = {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const useChatInfo = create(immer<ChatState>((set) => ({
-  ...initialState,
+export const useChatInfo = create(
+  immer<ChatState>((set) => ({
+    ...initialState,
 
-  setTitle: (title: string) => set({ title }),
-  setDiscussionStart: (start: string) => set({ start }),
-  setDiscussionEnd: (end: string) => set({ end }),
-  setDuration: (duration: number) => set({ duration }),
-  setObserver: (observer: number) => set({ observer }),
-  setVoteEndCnt: (endVoteCount: number) => set({ endVoteCount }),
-  reset: () => set({
-    title: '',
-    start: '',
-    end: '',
-    duration: 30,
-    observer: 0,
-    endVoteCount: 0,
-  }),
-})));
+    setTitle: (title: string) => set({ title }),
+    setDiscussionStart: (start: string) => set({ start }),
+    setDiscussionEnd: (end: string) => set({ end }),
+    setDuration: (duration: number) => set({ duration }),
+    setObserver: (observer: number) => set({ observer }),
+    setVoteEndCnt: (endVoteCount: number) => set({ endVoteCount }),
+    reset: () =>
+      set({
+        title: '',
+        start: '',
+        end: '',
+        duration: 30,
+        observer: 0,
+        endVoteCount: 0,
+      }),
+  })),
+);

@@ -6,9 +6,7 @@ import { useEnter } from '@/store/enter';
 import { useShallow } from 'zustand/react/shallow';
 
 export default function SelectedProfile() {
-  const {
-    nickname, setNickname, profileImage, selectedPosition,
-  } = useEnter(
+  const { nickname, setNickname, profileImage, selectedPosition } = useEnter(
     useShallow((state) => ({
       selectedPosition: state.selectedPosition,
       nickname: state.nickname,
@@ -19,7 +17,7 @@ export default function SelectedProfile() {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const nicknameChange:ChangeEventHandler<HTMLInputElement> = (e) => {
+  const nicknameChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setNickname(e.target.value);
   };
 
@@ -43,8 +41,23 @@ export default function SelectedProfile() {
 
   return (
     <div className="flex justify-start items-center mb-10">
-      <UserImage className="w-65 h-65 bg-white" name={profileImage.name} file={profileImage.file} w={65} h={65} />
-      <input disabled={selectedPosition === 'OBSERVER'} ref={inputRef} aria-label="닉네임 입력창" type="text" value={nickname} placeholder={profileImage.name} onChange={nicknameChange} className="ml-12 text-sm dark:bg-dark-light-500 outline-none w-120 placeholder:text-sm p-3 rounded-md" />
+      <UserImage
+        className="w-65 h-65 bg-white"
+        name={profileImage.name}
+        file={profileImage.file}
+        w={65}
+        h={65}
+      />
+      <input
+        disabled={selectedPosition === 'OBSERVER'}
+        ref={inputRef}
+        aria-label="닉네임 입력창"
+        type="text"
+        value={nickname}
+        placeholder={profileImage.name}
+        onChange={nicknameChange}
+        className="ml-12 text-sm dark:bg-dark-light-500 outline-none w-120 placeholder:text-sm p-3 rounded-md"
+      />
     </div>
   );
 }

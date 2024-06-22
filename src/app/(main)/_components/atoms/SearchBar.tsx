@@ -5,7 +5,10 @@ import SearchIcon from '@/assets/icons/SearchIcon';
 import { useSearchStore } from '@/store/search';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, {
-  ChangeEventHandler, FormEventHandler, useEffect, useState,
+  ChangeEventHandler,
+  FormEventHandler,
+  useEffect,
+  useState,
 } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -34,7 +37,7 @@ function SearchBar() {
     setSearchText(e.target.value);
   };
 
-  const handleSearch:FormEventHandler = (e) => {
+  const handleSearch: FormEventHandler = (e) => {
     e.preventDefault();
     setSearch(searchText);
 
@@ -66,11 +69,12 @@ function SearchBar() {
           onChange={changeInputText}
         />
       </form>
-      <button type="button" aria-label="입력한 검색 텍스트 전체 삭제" className="flex justify-center items-center w-1.5rem h-1.5rem">
-        <RemoveIcon
-          className="w-19 cursor-pointer"
-          onClick={removeInputText}
-        />
+      <button
+        type="button"
+        aria-label="입력한 검색 텍스트 전체 삭제"
+        className="flex justify-center items-center w-1.5rem h-1.5rem"
+      >
+        <RemoveIcon className="w-19 cursor-pointer" onClick={removeInputText} />
       </button>
     </div>
   );

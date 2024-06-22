@@ -2,7 +2,10 @@
 
 import React, {
   KeyboardEventHandler,
-  MouseEventHandler, useEffect, useRef, useState,
+  MouseEventHandler,
+  useEffect,
+  useRef,
+  useState,
 } from 'react';
 import { useRouter } from 'next/navigation';
 import RemoveButton from '../atoms/RemoveButton';
@@ -49,8 +52,9 @@ export default function ModalBase({
     if (e.target === e.currentTarget && removeIcon) router.back();
   };
 
-  const keyDownOutSideModal:KeyboardEventHandler<HTMLElement> = (e) => {
-    if (e.key === 'Enter' && e.target === e.currentTarget && removeIcon) router.back();
+  const keyDownOutSideModal: KeyboardEventHandler<HTMLElement> = (e) => {
+    if (e.key === 'Enter' && e.target === e.currentTarget && removeIcon)
+      router.back();
   };
 
   return (

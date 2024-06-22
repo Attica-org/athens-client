@@ -3,13 +3,17 @@ import AGORACATEGORY from '@/constants/agoraCategory';
 import Main from '../_components/templates/Main';
 
 type Props = {
-  searchParams: { status?: string, category?: string, q?: string }
+  searchParams: { status?: string; category?: string; q?: string };
 };
 
 export async function generateMetadata({ searchParams }: Props) {
-  const value = AGORACATEGORY.find((category) => category.value === searchParams.category);
+  const value = AGORACATEGORY.find(
+    (category) => category.value === searchParams.category,
+  );
   const title = searchParams.q ? `${searchParams.q} - Athens` : '';
-  const category = searchParams.category ? `${value?.innerText} - Athens` : 'Athens';
+  const category = searchParams.category
+    ? `${value?.innerText} - Athens`
+    : 'Athens';
 
   return {
     title: title || category,
@@ -31,7 +35,5 @@ export async function generateMetadata({ searchParams }: Props) {
 }
 
 export default function Page({ searchParams }: Props) {
-  return (
-    <Main searchParams={searchParams} />
-  );
+  return <Main searchParams={searchParams} />;
 }

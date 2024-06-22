@@ -7,14 +7,15 @@ import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
 
 type VoteResult = {
-  id: number,
+  id: number;
   prosCount: number;
   consCount: number;
 };
 
 // eslint-disable-next-line import/prefer-default-export
 export const getVoteResult: QueryFunction<
-VoteResult, [string, string, string]
+  VoteResult,
+  [string, string, string]
 > = async ({ queryKey }) => {
   const [_1, agoraId] = queryKey;
 
@@ -23,23 +24,29 @@ VoteResult, [string, string, string]
     await getToken();
   }
 
-  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/results`, {
-    next: {
-      tags: ['agora', agoraId, 'closed'],
+  const res = await fetchWrapper.call(
+    `/api/v1/auth/agoras/${agoraId}/results`,
+    {
+      next: {
+        tags: ['agora', agoraId, 'closed'],
+      },
+      credentials: 'include',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tokenManager.getToken()}`,
+      },
     },
-    credentials: 'include',
-    cache: 'no-cache',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${tokenManager.getToken()}`,
-    },
-  });
+  );
 
   if (res.success === false) {
     if (res.error.code === 1301) {
       showToast('아고라를 찾을 수 없습니다.', 'error');
     } else {
-      showToast('투표 데이터를 얻어오는데 실패했습니다.\n다시 시도해주세요.', 'error');
+      showToast(
+        '투표 데이터를 얻어오는데 실패했습니다.\n다시 시도해주세요.',
+        'error',
+      );
     }
 
     return {

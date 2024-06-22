@@ -15,9 +15,7 @@ export default function AgoraUserSideSkeleton() {
       <h3 className="text-sm pb-1rem dark:text-white dark:text-opacity-85">
         찬성측
       </h3>
-      <ul
-        className="flex flex-col justify-center items-start"
-      >
+      <ul className="flex flex-col justify-center items-start">
         <UserSkeleton />
         <UserSkeleton />
         <UserSkeleton />
@@ -27,9 +25,7 @@ export default function AgoraUserSideSkeleton() {
       <h3 className="text-sm pb-1rem dark:text-white dark:text-opacity-85">
         반대측
       </h3>
-      <ul
-        className="flex flex-col justify-center items-start"
-      >
+      <ul className="flex flex-col justify-center items-start">
         <UserSkeleton />
         <UserSkeleton />
         <UserSkeleton />

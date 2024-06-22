@@ -5,13 +5,13 @@ import tokenManager from '@/utils/tokenManager';
 
 type Props = {
   info: {
-    name?: string,
-    id?: number,
-    file?: string,
-    role: 'PROS' | 'CONS' | 'OBSERVER',
-    nickname?: string,
-  },
-  agoraId: number,
+    name?: string;
+    id?: number;
+    file?: string;
+    role: 'PROS' | 'CONS' | 'OBSERVER';
+    nickname?: string;
+  };
+  agoraId: number;
 };
 
 const ALREADY_PARTICIPATED = 'User has already participated';
@@ -29,20 +29,23 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
     await getToken();
   }
 
-  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/participants`, {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${tokenManager.getToken()}`,
+  const res = await fetchWrapper.call(
+    `/api/v1/auth/agoras/${agoraId}/participants`,
+    {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tokenManager.getToken()}`,
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        nickname: info.nickname ? info.nickname : '',
+        photoNum: info.id ? info.id : 1,
+        type: info.role,
+        voteType: null,
+      }),
     },
-    credentials: 'include',
-    body: JSON.stringify({
-      nickname: info.nickname ? info.nickname : '',
-      photoNum: info.id ? info.id : 1,
-      type: info.role,
-      voteType: null,
-    }),
-  });
+  );
 
   if (res.success === false) {
     if (res.error.code === 1001) {
@@ -50,7 +53,11 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
         showToast('프로필을 선택해주세요.', 'error');
       } else if (info.nickname === null) {
         showToast('닉네임을 입력해주세요.', 'error');
-      } else if (info.role !== 'OBSERVER' && info.role !== 'PROS' && info.role !== 'CONS') {
+      } else if (
+        info.role !== 'OBSERVER' &&
+        info.role !== 'PROS' &&
+        info.role !== 'CONS'
+      ) {
         showToast('허용되지 않는 입장 타입 입니다.', 'error');
       } else {
         showToast('입장 실패했습니다.\n 다시 시도해주세요.', 'error');

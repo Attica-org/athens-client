@@ -4,11 +4,11 @@ import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 
 type Props = {
-  title: string,
-  category: string,
-  color: string,
-  capacity: number,
-  duration: number | null,
+  title: string;
+  category: string;
+  color: string;
+  capacity: number;
+  duration: number | null;
 };
 
 const TITLE_NULL = '{"title":"공백일 수 없습니다"}';
@@ -45,9 +45,15 @@ export const postCreateAgora = async (info: Props) => {
         showToast('허용되지 않는 카테고리입니다.', 'error');
       } else if (info.color === null || res.error.message === COLOR_NULL) {
         showToast('아고라 색상을 선택해주세요.', 'error');
-      } else if (info.capacity === null || res.error.message === CAPACITY_NULL) {
+      } else if (
+        info.capacity === null ||
+        res.error.message === CAPACITY_NULL
+      ) {
         showToast('카테고리를 선택해주세요.', 'error');
-      } else if (info.title.trim() === null || res.error.message === TITLE_NULL) {
+      } else if (
+        info.title.trim() === null ||
+        res.error.message === TITLE_NULL
+      ) {
         showToast('아고라 제목을 입력해주세요.', 'error');
       } else {
         showToast('생성 실패했습니다.\n 다시 시도해주세요.', 'error');

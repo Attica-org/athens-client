@@ -2,7 +2,10 @@
 
 import React, { ChangeEventHandler, useState } from 'react';
 import {
-  MIN_DISCUSSION_TIME, MIN_TIME_MESSAGE, MAX_TIME_MESSAGE, MAX_DISCUSSION_TIME,
+  MIN_DISCUSSION_TIME,
+  MIN_TIME_MESSAGE,
+  MAX_TIME_MESSAGE,
+  MAX_DISCUSSION_TIME,
 } from '@/constants/createAgora';
 import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
@@ -10,7 +13,10 @@ import { useShallow } from 'zustand/react/shallow';
 function DiscussionDurationSetter() {
   const [message, setMessage] = useState<string | null>(null);
   const { duration, setDuration } = useCreateAgora(
-    useShallow((state) => ({ duration: state.duration, setDuration: state.setDuration })),
+    useShallow((state) => ({
+      duration: state.duration,
+      setDuration: state.setDuration,
+    })),
   );
 
   const handleAgoraTime: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -41,13 +47,13 @@ function DiscussionDurationSetter() {
         <div className="text-xs lg:text-base">분</div>
       </div>
       {message && (
-      <div
-        role="alert"
-        aria-live="polite"
-        className="text-xs text-red-600 p-5 pb-0 pl-0 dark:text-dark-con-color"
-      >
-        {message}
-      </div>
+        <div
+          role="alert"
+          aria-live="polite"
+          className="text-xs text-red-600 p-5 pb-0 pl-0 dark:text-dark-con-color"
+        >
+          {message}
+        </div>
       )}
     </div>
   );

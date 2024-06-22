@@ -8,7 +8,5 @@ export default function NetworkErrorPage() {
     showToast('네트워크 연결이 끊겼습니다.', 'error');
   }, []);
 
-  return (
-    null
-  );
+  return null;
 }

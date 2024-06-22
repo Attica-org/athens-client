@@ -2,9 +2,7 @@ import React from 'react';
 
 function CategoryButton() {
   return (
-    <div
-      className="bg-opacity-50 skeleton bg-athens-gray dark:bg-dark-bg-light dark:border-1 dark:border-gray-500 p-16 pl-38 pr-38 rounded-full mr-7"
-    />
+    <div className="bg-opacity-50 skeleton bg-athens-gray dark:bg-dark-bg-light dark:border-1 dark:border-gray-500 p-16 pl-38 pr-38 rounded-full mr-7" />
   );
 }
 

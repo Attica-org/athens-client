@@ -10,7 +10,8 @@ interface SidebarState {
 // eslint-disable-next-line
 export const useSidebarStore = create<SidebarState>((set) => ({
   isOpen: false,
-  toggle: () => set((state: { isOpen: boolean }) => ({ isOpen: !state.isOpen })),
+  toggle: () =>
+    set((state: { isOpen: boolean }) => ({ isOpen: !state.isOpen })),
   close: () => set({ isOpen: false }),
   reset: () => set({ isOpen: false }),
 }));

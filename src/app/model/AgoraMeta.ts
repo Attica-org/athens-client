@@ -10,6 +10,6 @@ export interface AgoraMeta {
     createdAt: string;
     duration: number;
     startAt: string;
-  }
+  };
   participants: Participants[];
 }

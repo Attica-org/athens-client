@@ -20,7 +20,10 @@ export default function ModifyNumberInput({
   inputLabel,
 }: Props) {
   return (
-    <label htmlFor="modify-number-input" className="lg:text-sm text-xs flex justify-center items-center">
+    <label
+      htmlFor="modify-number-input"
+      className="lg:text-sm text-xs flex justify-center items-center"
+    >
       {label}
       <div className="ml-0.5rem pl-7 pr-7 border-1 border-athens-gray rounded-md dark:border-gray-500 flex justify-center items-center">
         <button

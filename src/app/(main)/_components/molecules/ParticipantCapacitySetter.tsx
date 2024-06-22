@@ -12,7 +12,10 @@ import ControlNumberInput from '../atoms/ControlNumberInput';
 function ParticipantCapacitySetter() {
   const [message, setMessage] = useState<string | null>('');
   const { capacity, setCapacity } = useCreateAgora(
-    useShallow((state) => ({ capacity: state.capacity, setCapacity: state.setCapacity })),
+    useShallow((state) => ({
+      capacity: state.capacity,
+      setCapacity: state.setCapacity,
+    })),
   );
 
   const handleMessage = (value: number, state?: 'INCREASE' | 'DECREASE') => {
@@ -63,13 +66,13 @@ function ParticipantCapacitySetter() {
       </div>
       <div>
         {message && (
-        <div
-          aria-live="polite"
-          role="alert"
-          className="text-xs text-red-600 p-5 pl-0 dark:text-dark-con-color"
-        >
-          {message}
-        </div>
+          <div
+            aria-live="polite"
+            role="alert"
+            className="text-xs text-red-600 p-5 pl-0 dark:text-dark-con-color"
+          >
+            {message}
+          </div>
         )}
       </div>
     </div>

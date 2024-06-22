@@ -21,15 +21,16 @@ type Props = {
 
 export default function DiscussionStatus({ meta }: Props) {
   const { enterAgora } = useAgora();
-  const { endVoteCount, start } = useChatInfo(useShallow((state) => ({
-    endVoteCount: state.endVoteCount,
-    start: state.start,
-  })));
+  const { endVoteCount, start } = useChatInfo(
+    useShallow((state) => ({
+      endVoteCount: state.endVoteCount,
+      start: state.start,
+    })),
+  );
 
   const agoraStart = useMutation({
     mutationFn: async () => patchAgoraStart(enterAgora.id),
-    onMutate: () => {
-    },
+    onMutate: () => {},
     onSuccess: async (response) => {
       // 타이머 시작
       if (!response) {
@@ -67,10 +68,9 @@ export default function DiscussionStatus({ meta }: Props) {
     }
   };
 
-  return (
-    enterAgora.status !== 'CLOSED' ? (
-      <>
-        {enterAgora.role !== 'OBSERVER' && (
+  return enterAgora.status !== 'CLOSED' ? (
+    <>
+      {enterAgora.role !== 'OBSERVER' && (
         <button
           type="button"
           onClick={toggleProgress}
@@ -79,48 +79,51 @@ export default function DiscussionStatus({ meta }: Props) {
         >
           {start ? 'END' : 'START'}
         </button>
-        )}
+      )}
+      <div
+        role="group"
+        aria-label="아고라 정보"
+        className="flex justify-center items-center"
+      >
+        <DiscussionTimer duration={meta?.agora.duration || 0} />
         <div
-          role="group"
-          aria-label="아고라 정보"
+          role="status"
+          aria-label="토론 종료 버튼을 누른 인원 수"
+          className="text-xs text-athens-gray-thick pl-0.5rem pr-0.5rem dark:text-white dark:text-opacity-85"
+        >
+          {endVoteCount}
+        </div>
+        <div
+          role="status"
+          aria-label="관찰자 수"
           className="flex justify-center items-center"
         >
-          <DiscussionTimer
-            duration={meta?.agora.duration || 0}
-          />
-          <div
-            role="status"
-            aria-label="토론 종료 버튼을 누른 인원 수"
-            className="text-xs text-athens-gray-thick pl-0.5rem pr-0.5rem dark:text-white dark:text-opacity-85"
-          >
-            {endVoteCount}
-          </div>
-          <div
-            role="status"
-            aria-label="관찰자 수"
-            className="flex justify-center items-center"
-          >
-            <EyeIcon className="w-1rem" />
-            {meta && meta.participants.map((participant) => (
-              participant.type === 'OBSERVER' && (
-                <span key={meta.agora.id} className="pl-5 text-xs text-athens-gray-thick dark:text-white dark:text-opacity-85">
-                  {participant.count || 0}
-                </span>
-              )
-            ))}
-          </div>
+          <EyeIcon className="w-1rem" />
+          {meta &&
+            meta.participants.map(
+              (participant) =>
+                participant.type === 'OBSERVER' && (
+                  <span
+                    key={meta.agora.id}
+                    className="pl-5 text-xs text-athens-gray-thick dark:text-white dark:text-opacity-85"
+                  >
+                    {participant.count || 0}
+                  </span>
+                ),
+            )}
         </div>
-      </>
-    ) : (
-      <Suspense fallback={(
+      </div>
+    </>
+  ) : (
+    <Suspense
+      fallback={
         <div className="flex text-sm justify-center items-center">
           결과 불러오는 중...
           <Loading w="12" h="12" />
         </div>
-      )}
-      >
-        <VoteResult agoraId={meta?.agora.id || enterAgora.id} />
-      </Suspense>
-    )
+      }
+    >
+      <VoteResult agoraId={meta?.agora.id || enterAgora.id} />
+    </Suspense>
   );
 }
