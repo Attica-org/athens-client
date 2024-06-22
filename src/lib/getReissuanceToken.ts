@@ -1,7 +1,7 @@
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import getKey from '@/utils/getKey';
-import { getToken } from './getToken';
+import getToken from './getToken';
 
 let retry = 3;
 // eslint-disable-next-line import/prefer-default-export
