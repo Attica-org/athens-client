@@ -53,7 +53,7 @@ export default function AgoraUserSide() {
         }`}
       >
         <section
-          className={`overflow-y-scroll scrollbar-hide p-1rem right-0 transition duration-500 ease-in-out w-screen inset-y-0 bg-white dark:bg-dark-light-300 flex-1 flex-col h-dvh border-l-1 border-athens-gray dark:border-dark-light-300 max-w-15rem xl:w-15rem under-mobile:w-[70vw] ${
+          className={`overflow-y-scroll scrollbar-hide p-1rem right-0 transition duration-500 ease-in-out w-screen inset-y-0 bg-white dark:bg-dark-light-300 flex-1 flex-col h-full border-l-1 border-athens-gray dark:border-dark-light-300 max-w-15rem xl:w-15rem under-mobile:w-[70vw] ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >

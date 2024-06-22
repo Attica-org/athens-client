@@ -21,9 +21,8 @@ type Props = {
 
 export default function DiscussionStatus({ meta }: Props) {
   const { enterAgora } = useAgora();
-  const { endVoteCount, start } = useChatInfo(
+  const { start } = useChatInfo(
     useShallow((state) => ({
-      endVoteCount: state.endVoteCount,
       start: state.start,
     })),
   );
@@ -88,15 +87,8 @@ export default function DiscussionStatus({ meta }: Props) {
         <DiscussionTimer duration={meta?.agora.duration || 0} />
         <div
           role="status"
-          aria-label="토론 종료 버튼을 누른 인원 수"
-          className="text-xs text-athens-gray-thick pl-0.5rem pr-0.5rem dark:text-white dark:text-opacity-85"
-        >
-          {endVoteCount}
-        </div>
-        <div
-          role="status"
           aria-label="관찰자 수"
-          className="flex justify-center items-center"
+          className="flex justify-center items-center ml-10"
         >
           <EyeIcon className="w-1rem" />
           {meta &&
