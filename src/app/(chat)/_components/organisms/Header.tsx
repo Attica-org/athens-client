@@ -68,6 +68,10 @@ export default function Header() {
 
   useEffect(() => {
     getUrl();
+
+    return () => {
+      reset();
+    };
   }, []);
 
   const refetchAgoraUserList = async () => {
@@ -96,9 +100,9 @@ export default function Header() {
       // getMetadata();
       // console.log('Subscribing...');
       client.current?.subscribe(
-        `/topic/agoras/${agoraId}/meta`,
-        (received_message: StompJs.IFrame) => {
-          const data = JSON.parse(received_message.body);
+        `/topic/agoras/${agoraId}`,
+        async (received_message: StompJs.IFrame) => {
+          const data = await JSON.parse(received_message.body);
           // console.log('received_message', received_message);
           if (data.type === 'META') {
             setTitle(data.data.agora.title);
@@ -132,7 +136,7 @@ export default function Header() {
             setDiscussionStart(data.data.startTime);
           } else if (data.type === 'DISCUSSION_END') {
             setDiscurreionEnd(data.data.endTime);
-            toast('토론이 종료되었습니다.');
+            toast('2/3 이상 토론 종료를 선택하여 토론이 종료되었습니다.');
             router.push(`/agoras/${data.data.agoraId}/flow/end-agora`);
           }
           // console.log(`> Received message: ${received_message.body}`);
@@ -218,7 +222,6 @@ export default function Header() {
       if (client.current && client.current.connected) {
         disconnect();
       }
-      reset();
       voteResultReset();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
