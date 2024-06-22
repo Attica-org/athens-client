@@ -11,14 +11,18 @@ import { useShallow } from 'zustand/react/shallow';
 export default function ResultAgora() {
   const prosColor = 'bg-blue-400';
   const consColor = 'bg-red-400';
-  const { voteResult, setVoteEnd } = useVoteStore(useShallow((state) => ({
-    voteResult: state.voteResult,
-    setVoteEnd: state.setVoteEnd,
-    reset: state.reset,
-  })));
-  const { title } = useChatInfo(useShallow((state) => ({
-    title: state.title,
-  })));
+  const { voteResult, setVoteEnd } = useVoteStore(
+    useShallow((state) => ({
+      voteResult: state.voteResult,
+      setVoteEnd: state.setVoteEnd,
+      reset: state.reset,
+    })),
+  );
+  const { title } = useChatInfo(
+    useShallow((state) => ({
+      title: state.title,
+    })),
+  );
 
   useEffect(() => {
     setVoteEnd(false);
@@ -41,17 +45,13 @@ export default function ResultAgora() {
               aria-label="찬성 표 수"
               className={`${prosColor} mt-1.5rem text-white p-5 pl-1.5rem pr-1.5rem text-sm rounded-lg mr-16`}
             >
-              찬성
-              {' '}
-              {voteResult.prosCount || 0}
+              찬성 {voteResult.prosCount || 0}
             </div>
             <div
               aria-label="반대 표 수"
               className={`${consColor} mt-1.5rem text-white p-5 pl-1.5rem pr-1.5rem text-sm rounded-lg`}
             >
-              반대
-              {' '}
-              {voteResult.consCount || 0}
+              반대 {voteResult.consCount || 0}
             </div>
           </div>
           <Link

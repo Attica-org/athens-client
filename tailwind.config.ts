@@ -4,9 +4,13 @@ type Acc = {
   [key: string]: string;
 };
 
-const range = (start: number, end: number) => Array.from({
-  length: end - start + 1,
-}, (_, i) => start + i);
+const range = (start: number, end: number) =>
+  Array.from(
+    {
+      length: end - start + 1,
+    },
+    (_, i) => start + i,
+  );
 
 const pxToRem = (px: number, base = 16) => `${px / base}rem`;
 const remToPx = (rem: number, base = 16) => `${rem * base}px`;

@@ -11,7 +11,11 @@ type Props = {
 
 // min-w-5rem h-5rem bg-yellow-400
 export default function UserImage({
-  className, file = null, name = null, w, h,
+  className,
+  file = null,
+  name = null,
+  w,
+  h,
 }: Props) {
   return (
     <div

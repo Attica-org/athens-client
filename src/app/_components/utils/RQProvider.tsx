@@ -36,7 +36,9 @@ export default function RQProvider({ children }: Props) {
     <QueryClientProvider client={client}>
       {isNetworkOffline && <NetworkErrorPage />}
       {children}
-      <ReactQueryDevtools initialIsOpen={process.env.NODE_ENV === 'development'} />
+      <ReactQueryDevtools
+        initialIsOpen={process.env.NODE_ENV === 'development'}
+      />
     </QueryClientProvider>
   );
 }

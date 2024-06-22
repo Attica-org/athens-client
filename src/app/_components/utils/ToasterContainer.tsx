@@ -10,7 +10,5 @@ export default function ToasterContainer() {
     setHasMounted(true);
   }, []);
 
-  return hasMounted ? (
-    <Toaster />
-  ) : null;
+  return hasMounted ? <Toaster /> : null;
 }

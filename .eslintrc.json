@@ -1,5 +1,10 @@
 {
-  "extends": ["next/core-web-vitals", "airbnb", "airbnb-typescript", "plugin:prettier/recommended"],
+  "extends": [
+    "next/core-web-vitals",
+    "airbnb",
+    "airbnb-typescript",
+    "plugin:prettier/recommended"
+  ],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
@@ -7,7 +12,7 @@
   "rules": {
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "error",
-    // Support for defaultProps will be removed from function components in a future major release. 
+    // Support for defaultProps will be removed from function components in a future major release.
     // Use JavaScript default parameters instead. 로 인해 default-props 를 off 로 설정
     "react/require-default-props": "off",
     "quotes": ["error", "single"],

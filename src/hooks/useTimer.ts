@@ -1,7 +1,5 @@
 import { differenceInSeconds } from 'date-fns';
-import {
-  useCallback, useEffect, useRef, useState,
-} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const useTimer = (startTime: string, duration: number) => {
   const [remainingTime, setRemainingTime] = useState<number>(duration * 60);
@@ -49,7 +47,7 @@ const useTimer = (startTime: string, duration: number) => {
         clearInterval(intervalId.current);
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startTime, duration, calculateRemaining, remainingTime]);
 
   const resetTimer = () => {

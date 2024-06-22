@@ -7,7 +7,9 @@ type Status = 'active' | 'closed';
 
 function AgoraStatusTab() {
   const searchParams = useSearchParams();
-  const [status, setStatus] = useState<Status>(searchParams.get('status') as Status || 'active');
+  const [status, setStatus] = useState<Status>(
+    (searchParams.get('status') as Status) || 'active',
+  );
   const router = useRouter();
   const pathname = usePathname();
 
@@ -34,7 +36,9 @@ function AgoraStatusTab() {
         onClick={() => changeStatus('active')}
         type="button"
         className={`border-b-1 ${
-          status === 'active' ? 'border-athens-sub' : 'dark:border-dark-light-300'
+          status === 'active'
+            ? 'border-athens-sub'
+            : 'dark:border-dark-light-300'
         } flex flex-1 justify-center p-6`}
       >
         활성화
@@ -44,7 +48,9 @@ function AgoraStatusTab() {
         onClick={() => changeStatus('closed')}
         type="button"
         className={`flex flex-1 justify-center p-6 border-b-1 ${
-          status === 'closed' ? 'border-athens-sub' : 'dark:border-dark-light-300'
+          status === 'closed'
+            ? 'border-athens-sub'
+            : 'dark:border-dark-light-300'
         }`}
       >
         종료

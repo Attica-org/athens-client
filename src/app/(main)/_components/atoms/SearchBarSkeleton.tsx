@@ -16,9 +16,7 @@ export default function SearchBarSkeleton() {
         </div>
       </div>
       <div className="flex justify-center items-center w-1.5rem h-1.5rem">
-        <RemoveIcon
-          className="w-20 cursor-pointer"
-        />
+        <RemoveIcon className="w-20 cursor-pointer" />
       </div>
     </div>
   );

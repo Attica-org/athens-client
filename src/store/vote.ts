@@ -2,13 +2,17 @@ import { create } from 'zustand';
 
 interface VoteState {
   voteResult: {
-    id: number,
+    id: number;
     prosCount: number;
     consCount: number;
-  },
+  };
   voteEnd: boolean;
   setVoteEnd: (voteEnd: boolean) => void;
-  setVoteResult: (voteResult: { id: number; prosCount: number; consCount: number }) => void;
+  setVoteResult: (voteResult: {
+    id: number;
+    prosCount: number;
+    consCount: number;
+  }) => void;
   reset: () => void;
 }
 
@@ -23,7 +27,11 @@ export const useVoteStore = create<VoteState>((set) => ({
   setVoteEnd(voteEnd: boolean) {
     set({ voteEnd });
   },
-  setVoteResult(voteResult: { id: number; prosCount: number; consCount: number }) {
+  setVoteResult(voteResult: {
+    id: number;
+    prosCount: number;
+    consCount: number;
+  }) {
     set({ voteResult });
   },
   reset() {

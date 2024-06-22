@@ -1,8 +1,9 @@
 import { HttpResponse, http } from 'msw';
 
-const delay = (ms: number) => new Promise((resolve) => {
-  setTimeout(resolve, ms);
-});
+const delay = (ms: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 
 // eslint-disable-next-line import/prefer-default-export
 export const handlers = [
@@ -56,7 +57,8 @@ export const handlers = [
               photoNumber: 3,
               type: 'CONS',
             },
-            content: '코테 어렵지 않았나요? 너무 구현 문제가 많아서 시간이 오래 걸리던데',
+            content:
+              '코테 어렵지 않았나요? 너무 구현 문제가 많아서 시간이 오래 걸리던데',
             createdAt: '2024-05-23T16:03:15.601187',
           },
           {

@@ -16,7 +16,9 @@ const COLOR = [
 
 function AgoraPointColorList() {
   const [isCheck, setIsCheck] = useState<number>(0);
-  const { setColor } = useCreateAgora(useShallow((state) => ({ setColor: state.setColor })));
+  const { setColor } = useCreateAgora(
+    useShallow((state) => ({ setColor: state.setColor })),
+  );
 
   const selectColor = (id: number) => {
     setIsCheck(id);

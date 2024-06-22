@@ -8,9 +8,7 @@ import { useShallow } from 'zustand/react/shallow';
 type Position = 'CONS' | 'PROS' | 'OBSERVER';
 
 export default function ModalPosSelectContainer() {
-  const {
-    selectedPosition, setSelectedPosition, setMessage,
-  } = useEnter(
+  const { selectedPosition, setSelectedPosition, setMessage } = useEnter(
     useShallow((state) => ({
       setMessage: state.setMessage,
       selectedPosition: state.selectedPosition,
@@ -32,13 +30,28 @@ export default function ModalPosSelectContainer() {
 
   return (
     <div className="mb-15 mt-8 flex justify-center items-center text-sm under-mobile:text-xs min-w-200">
-      <ModalPosSelectBtn selectedPosition={selectedPosition} selectPosition={selectPosition} position="PROS" color="blue">
+      <ModalPosSelectBtn
+        selectedPosition={selectedPosition}
+        selectPosition={selectPosition}
+        position="PROS"
+        color="blue"
+      >
         찬성
       </ModalPosSelectBtn>
-      <ModalPosSelectBtn selectedPosition={selectedPosition} selectPosition={selectPosition} position="CONS" color="red">
+      <ModalPosSelectBtn
+        selectedPosition={selectedPosition}
+        selectPosition={selectPosition}
+        position="CONS"
+        color="red"
+      >
         반대
       </ModalPosSelectBtn>
-      <ModalPosSelectBtn selectedPosition={selectedPosition} selectPosition={selectPosition} position="OBSERVER" color="athens-main">
+      <ModalPosSelectBtn
+        selectedPosition={selectedPosition}
+        selectPosition={selectPosition}
+        position="OBSERVER"
+        color="athens-main"
+      >
         관찰자
       </ModalPosSelectBtn>
       <span className="pl-6 text-xs">로 입장</span>

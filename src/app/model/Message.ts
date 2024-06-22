@@ -7,13 +7,13 @@
 // }
 
 export interface Message {
-  chatId: number,
+  chatId: number;
   user: {
-    id: number,
-    nickname: string,
-    photoNumber: number,
-    type: string,
-  },
-  content: string,
-  createdAt: string,
+    id: number;
+    nickname: string;
+    photoNumber: number;
+    type: string;
+  };
+  content: string;
+  createdAt: string;
 }

@@ -28,23 +28,27 @@ export default function EnterAgoraContent() {
 
   useEffect(() => {
     if (isSuccess && data && !selectedAgora.id) {
-      setSelectedAgora({ id: Number(agoraId), title: data.title, status: data.status });
+      setSelectedAgora({
+        id: Number(agoraId),
+        title: data.title,
+        status: data.status,
+      });
       tokenManager.clearRedirectUrl();
     }
   }, [agoraId, data, setSelectedAgora, isSuccess, selectedAgora.id]);
 
   return (
     <>
-      {selectedAgora.title
-        ? (<p className="text-base p-1rem pt-5 flex justify-center items-center text-center break-keep font-medium">{selectedAgora.title}</p>)
-        : (
-          <div className="mb-1rem flex justify-center items-center">
-            <p className="mr-8">
-              불러오는 중...
-            </p>
-            <Loading w="16" h="16" />
-          </div>
-        )}
+      {selectedAgora.title ? (
+        <p className="text-base p-1rem pt-5 flex justify-center items-center text-center break-keep font-medium">
+          {selectedAgora.title}
+        </p>
+      ) : (
+        <div className="mb-1rem flex justify-center items-center">
+          <p className="mr-8">불러오는 중...</p>
+          <Loading w="16" h="16" />
+        </div>
+      )}
       <ModalPosSelectContainer />
       <InputErrorMessage />
       <SetUserProfile />

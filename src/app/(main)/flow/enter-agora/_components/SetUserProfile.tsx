@@ -14,16 +14,14 @@ type ProfileImageName = {
 };
 
 export default function SetUserProfile() {
-  const {
-    setProfileImage, reset,
-  } = useEnter(
+  const { setProfileImage, reset } = useEnter(
     useShallow((state) => ({
       setProfileImage: state.setProfileImage,
       reset: state.reset,
     })),
   );
 
-  const selectProfile = (profile: ProfileImageName):void => {
+  const selectProfile = (profile: ProfileImageName): void => {
     setProfileImage(profile);
   };
 
@@ -36,14 +34,20 @@ export default function SetUserProfile() {
     }
   };
 
-  useEffect(() => () => {
-    reset();
-  }, [reset]);
+  useEffect(
+    () => () => {
+      reset();
+    },
+    [reset],
+  );
 
   return (
     <div className="flex flex-col justiy-start items-center">
       <SelectedProfile />
-      <ul aria-label="사용할 프로필 이미지 선택" className="grid grid-cols-5 under-mobile:grid-cols-4 mobile:grid-cols-4 foldable:grid-cols-5 tablet:flex gap-y-5  pl-1rem">
+      <ul
+        aria-label="사용할 프로필 이미지 선택"
+        className="grid grid-cols-5 under-mobile:grid-cols-4 mobile:grid-cols-4 foldable:grid-cols-5 tablet:flex gap-y-5  pl-1rem"
+      >
         {PROFLELIST.map((profileImageName) => (
           <li
             key={profileImageName.id}
@@ -56,7 +60,13 @@ export default function SetUserProfile() {
               onClick={() => selectProfile(profileImageName)}
               onKeyDown={(e) => handleKeyDownSetProfile(e, profileImageName)}
             >
-              <UserImage className="rounded-full w-45 h-45 bg-white" file={profileImageName.file} name={profileImageName.name} w={45} h={45} />
+              <UserImage
+                className="rounded-full w-45 h-45 bg-white"
+                file={profileImageName.file}
+                name={profileImageName.name}
+                w={45}
+                h={45}
+              />
             </div>
           </li>
         ))}

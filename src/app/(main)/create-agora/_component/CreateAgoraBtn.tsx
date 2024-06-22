@@ -6,16 +6,19 @@ import { useCreateAgora } from '@/store/create';
 import { useRouter } from 'next/navigation';
 import { useAgora } from '@/store/agora';
 import Loading from '@/app/_components/atoms/loading';
-import { MAX_DISCUSSION_TIME, MIN_DISCUSSION_TIME } from '@/constants/createAgora';
+import {
+  MAX_DISCUSSION_TIME,
+  MIN_DISCUSSION_TIME,
+} from '@/constants/createAgora';
 import showToast from '@/utils/showToast';
 import { postCreateAgora } from '../../_lib/postCreateAgora';
 
 type Agora = {
-  title: string,
-  category: string,
-  color: string,
-  capacity: number,
-  duration: number | null,
+  title: string;
+  category: string;
+  color: string;
+  capacity: number;
+  duration: number | null;
 };
 
 function CreateAgoraBtn() {
@@ -39,7 +42,11 @@ function CreateAgoraBtn() {
     onSuccess: async (response) => {
       const { setSelectedAgora } = useAgora.getState();
       if (response) {
-        setSelectedAgora({ id: response.id, title: createAgora.title, status: 'QUEUED' });
+        setSelectedAgora({
+          id: response.id,
+          title: createAgora.title,
+          status: 'QUEUED',
+        });
 
         const { reset } = useCreateAgora.getState();
         reset();
@@ -58,17 +65,27 @@ function CreateAgoraBtn() {
   });
 
   const handleClick = () => {
-    const {
-      title, category, color, capacity, duration,
-    } = useCreateAgora.getState();
+    const { title, category, color, capacity, duration } =
+      useCreateAgora.getState();
 
-    if (title.trim() === '' || !color || !category || !duration || duration > MAX_DISCUSSION_TIME || duration < MIN_DISCUSSION_TIME) {
+    if (
+      title.trim() === '' ||
+      !color ||
+      !category ||
+      !duration ||
+      duration > MAX_DISCUSSION_TIME ||
+      duration < MIN_DISCUSSION_TIME
+    ) {
       showToast('입력값을 확인해주세요.', 'error');
       return;
     }
 
     setCreateAgora({
-      title, category, color, capacity, duration,
+      title,
+      category,
+      color,
+      capacity,
+      duration,
     });
 
     setIsLoading(true);

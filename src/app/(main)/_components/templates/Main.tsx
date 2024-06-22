@@ -3,10 +3,12 @@ import dynamic from 'next/dynamic';
 import Loading from '../atoms/loading';
 
 type Props = {
-  searchParams: { status?: string, category?: string, q?: string }
+  searchParams: { status?: string; category?: string; q?: string };
 };
 
-const SearchDeciderSuspense = dynamic(() => import('../organisms/SearchDeciderSuspense'));
+const SearchDeciderSuspense = dynamic(
+  () => import('../organisms/SearchDeciderSuspense'),
+);
 
 export default function Main({ searchParams }: Props) {
   return (

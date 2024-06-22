@@ -6,11 +6,14 @@ import { useShallow } from 'zustand/react/shallow';
 
 function AgoraTitleInput() {
   const [message, setMessage] = useState<string | null>('주제를 입력해주세요.');
-  const { title, setTitle } = useCreateAgora(useShallow((state) => ({
-    title: state.title, setTitle: state.setTitle,
-  })));
+  const { title, setTitle } = useCreateAgora(
+    useShallow((state) => ({
+      title: state.title,
+      setTitle: state.setTitle,
+    })),
+  );
 
-  const changeInput:ChangeEventHandler<HTMLInputElement> = (e) => {
+  const changeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     setTitle(e.target.value);
 
     if (e.target.value.trim().length === 0) {

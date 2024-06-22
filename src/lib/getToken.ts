@@ -18,8 +18,15 @@ export const getToken = async () => {
 
   if (!res.ok) {
     const result = await res.json();
-    if (result.error.code === 1201 || result.error.code === 1002 || result.error.code === 1202) {
-      if (result.error.message === 'Invalid JWT signature.' || result.error.message === 'Unsupported JWT token.') {
+    if (
+      result.error.code === 1201 ||
+      result.error.code === 1002 ||
+      result.error.code === 1202
+    ) {
+      if (
+        result.error.message === 'Invalid JWT signature.' ||
+        result.error.message === 'Unsupported JWT token.'
+      ) {
         if (retry > 0) {
           retry -= 1;
           await getToken();

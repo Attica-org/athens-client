@@ -10,7 +10,12 @@ export default function ToggleButton() {
   };
 
   return (
-    <button type="button" aria-label="다크모드 토글 버튼" className="cursor-pointer w-full" onClick={handleToggle}>
+    <button
+      type="button"
+      aria-label="다크모드 토글 버튼"
+      className="cursor-pointer w-full"
+      onClick={handleToggle}
+    >
       <div
         className={`relative w-50 h-24 rounded-xl border-1 border-gray-300 bg-opacity-75 transition-opaticy duration-500 ${
           isOn ? 'bg-black' : 'bg-slate-100'

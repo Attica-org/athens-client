@@ -49,7 +49,14 @@ html {
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #adadad82 0%, #adadad82 25%, #d4d2d2ac 50%, #adadad82 75%, #adadad82 100%);
+  background: linear-gradient(
+    90deg,
+    #adadad82 0%,
+    #adadad82 25%,
+    #d4d2d2ac 50%,
+    #adadad82 75%,
+    #adadad82 100%
+  );
   background-size: 200px 100%;
   animation: skeleton-loading 2s infinite linear;
 }
@@ -62,10 +69,10 @@ html {
   -webkit-user-select: auto;
   -ms-user-select: auto;
   -moz-user-select: auto;
-       user-select: auto;
+  user-select: auto;
   overflow: auto;
   -ms-scroll-chaining: none;
-      overscroll-behavior: contain;
+  overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   /* 커스텀할 내용 추가 */
   background-color: #2a2929;
@@ -82,10 +89,10 @@ html {
   -webkit-user-select: auto;
   -ms-user-select: auto;
   -moz-user-select: auto;
-       user-select: auto;
+  user-select: auto;
   overflow: auto;
   -ms-scroll-chaining: none;
-      overscroll-behavior: contain;
+  overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   /* 커스텀할 내용 추가 */
   background-color: #2a2929;

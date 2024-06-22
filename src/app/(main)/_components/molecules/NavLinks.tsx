@@ -28,8 +28,7 @@ export default function NavLinks() {
             href="/home"
             label="홈으로 가기"
           >
-            <HomeIcon className="w-23 pb-2" />
-            홈
+            <HomeIcon className="w-23 pb-2" />홈
           </MobileNavLink>
           <MobileNavLink
             label="아고라 생성하기"

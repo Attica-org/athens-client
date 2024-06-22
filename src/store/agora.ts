@@ -1,30 +1,30 @@
 import { create } from 'zustand';
 
 type Agora = {
-  id: number,
-  title: string,
-  status: string,
+  id: number;
+  title: string;
+  status: string;
 };
 
 type EnterAgora = {
-  id: number,
-  title: string,
-  status: string,
-  role: string,
+  id: number;
+  title: string;
+  status: string;
+  role: string;
 };
 
 interface AgoraState {
   selectedAgora: {
-    id: number,
-    title: string
-    status: string
+    id: number;
+    title: string;
+    status: string;
   };
   enterAgora: {
-    id: number,
-    title: string,
-    status: string,
-    role: string,
-  }
+    id: number;
+    title: string;
+    status: string;
+    role: string;
+  };
   setEnterAgora: (agora: EnterAgora) => void;
   setSelectedAgora: (agora: Agora) => void;
   reset: () => void;

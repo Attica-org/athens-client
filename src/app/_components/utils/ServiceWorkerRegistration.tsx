@@ -25,20 +25,26 @@ export default function ServiceWorkerRegistration() {
           if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
             // console.log('ServiceWorkerRegistration 실행');
             try {
-              navigator.serviceWorker.register('/custom-sw.js').then(() => {
-                // registration
-                // console.log('Custom SW registered: ', regist);
-              }).catch(() => {
-                // registrationError
-                // console.log('SW registration failed: ', registrationError);
-              });
+              navigator.serviceWorker
+                .register('/custom-sw.js')
+                .then(() => {
+                  // registration
+                  // console.log('Custom SW registered: ', regist);
+                })
+                .catch(() => {
+                  // registrationError
+                  // console.log('SW registration failed: ', registrationError);
+                });
             } catch (error) {
               // console.log('error', error);
             }
           }
         }
       } catch (registrationError) {
-        showToast('Service Worker 등록에 실패했습니다. 잠시 후 다시 시도해주세요.', 'error');
+        showToast(
+          'Service Worker 등록에 실패했습니다. 잠시 후 다시 시도해주세요.',
+          'error',
+        );
         // console.log('registration failed: ', registrationError);
       }
     };

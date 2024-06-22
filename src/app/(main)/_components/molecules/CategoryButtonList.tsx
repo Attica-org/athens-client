@@ -21,7 +21,9 @@ function CategoryButtonList() {
   const catSearchParams = searchParams.get('category');
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(
     catSearchParams
-      ? AGORACATEGORY.findIndex((category) => category.value === catSearchParams)
+      ? AGORACATEGORY.findIndex(
+          (category) => category.value === catSearchParams,
+        )
       : 0,
   );
 
@@ -29,16 +31,19 @@ function CategoryButtonList() {
     useShallow((state) => ({ setCategory: state.setCategory })),
   );
 
-  const changeParams = useCallback((id: number) => {
-    if (pathname !== '/home') return;
-    const newSearchParams = new URLSearchParams(searchParams);
+  const changeParams = useCallback(
+    (id: number) => {
+      if (pathname !== '/home') return;
+      const newSearchParams = new URLSearchParams(searchParams);
 
-    newSearchParams.set('category', AGORACATEGORY[id].value);
-    newSearchParams.delete('q');
-    search.reset();
+      newSearchParams.set('category', AGORACATEGORY[id].value);
+      newSearchParams.delete('q');
+      search.reset();
 
-    router.replace(`/home?${newSearchParams.toString()}`);
-  }, [router, searchParams, search, pathname]);
+      router.replace(`/home?${newSearchParams.toString()}`);
+    },
+    [router, searchParams, search, pathname],
+  );
 
   useEffect(() => {
     const swiper = new Swiper('.swiper', {
