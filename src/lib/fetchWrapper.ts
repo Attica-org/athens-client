@@ -1,6 +1,6 @@
 import showToast from '@/utils/showToast';
 import getKey from '@/utils/getKey';
-import { getToken } from './getToken';
+import getToken from './getToken';
 import { getReissuanceToken } from './getReissuanceToken';
 import retryConfig from './retryConfig';
 
