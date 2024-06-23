@@ -249,7 +249,7 @@ export default function Header() {
   }, [enterAgora.status, URL.BASE_URL]);
 
   return (
-    <div className="flex flex-col w-full justify-center dark:text-white dark:text-opacity-85">
+    <div className="flex flex-col w-full h-full justify-center dark:text-white dark:text-opacity-85">
       <div className="flex justify-between items-center pb-10 border-b-1 border-gray-200 dark:border-dark-bg-light">
         <BackButton />
         <div className="flex justify-center items-center text-sm under-mobile:text-xs">
