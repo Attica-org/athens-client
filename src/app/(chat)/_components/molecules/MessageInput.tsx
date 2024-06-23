@@ -16,7 +16,7 @@ import { InfiniteData, useQueryClient } from '@tanstack/react-query';
 import { Message } from '@/app/model/Message';
 import { useAgora } from '@/store/agora';
 // import showToast from '@/utils/showToast';
-import { getReissuanceToken } from '@/lib/getReissuanceToken';
+// import { getReissuanceToken } from '@/lib/getReissuanceToken';
 import getKey from '@/utils/getKey';
 
 export default function MessageInput() {
@@ -184,12 +184,12 @@ export default function MessageInput() {
         },
         onWebSocketError: async () => {
           // showToast('네트워크가 불안정합니다.', 'error');
-          await getReissuanceToken();
+          // await getReissuanceToken();
           // connect();
         },
         onStompError: async () => {
-          await getReissuanceToken();
-          connect();
+          // await getReissuanceToken();
+          // connect();
         },
       });
       client.current.activate();
