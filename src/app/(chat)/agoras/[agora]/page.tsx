@@ -45,7 +45,10 @@ export async function generateMetadata() {
 
 export default function Page() {
   return (
-    <main aria-label="채팅" className="flex flex-col justify-between h-full">
+    <main
+      aria-label="채팅"
+      className="flex flex-col justify-between h-full pt-105"
+    >
       <ErrorBoundaryMessage />
     </main>
   );
