@@ -192,13 +192,13 @@ export default function Header() {
           subscribe();
         },
         onWebSocketError: async () => {
-          showToast('네트워크가 불안정합니다.', 'error');
-          await getReissuanceToken();
+          // showToast('네트워크가 불안정합니다.', 'error');
+          // await getReissuanceToken();
           // router.replace('/home');
         },
         onStompError: async () => {
-          showToast('서버 연결이 불안정합니다.', 'error');
-          await getReissuanceToken();
+          // showToast('서버 연결이 불안정합니다.', 'error');
+          // await getReissuanceToken();
         },
       });
       // console.log('Activating... metadata');
