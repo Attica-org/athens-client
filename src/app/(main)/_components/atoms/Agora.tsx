@@ -2,13 +2,10 @@
 
 import { Agora as IAgora } from '@/app/model/Agora';
 import { useAgora } from '@/store/agora';
-import { useMutation } from '@tanstack/react-query';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
-import showToast from '@/utils/showToast';
 import COLOR from '@/constants/agoraColor';
 import tokenManager from '@/utils/tokenManager';
-import { postEnterAgoraInfo } from '../../_lib/postEnterAgoraInfo';
 
 type Props = {
   agora: IAgora;
@@ -24,31 +21,15 @@ export default function Agora({ agora }: Props) {
     router.push(`/agoras/${id}`);
   };
 
-  const mutation = useMutation({
-    mutationFn: async () => {
-      const info = {
-        role: 'OBSERVER' as const,
-      };
-      return postEnterAgoraInfo({ info, agoraId: id });
-    },
-    onSuccess: async (response) => {
-      if (response) {
-        setEnterAgora({
-          id: response.agoraId,
-          title: agoraTitle,
-          status,
-          role: response.type,
-        });
-        routePage();
-      } else {
-        showToast('데이터 연결에 실패했습니다. 다시 시도해주세요.', 'error');
-      }
-    },
-    onError: () => {
-      // console.dir(error);
-      showToast('문제가 발생했습니다. 다시 시도해주세요.', 'error');
-    },
-  });
+  const redirectChat = () => {
+    setEnterAgora({
+      id,
+      title: agoraTitle,
+      status,
+      role: 'OBSERVER' as const,
+    });
+    routePage();
+  };
 
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
   const enterAgora = () => {
@@ -60,7 +41,7 @@ export default function Agora({ agora }: Props) {
     } else if (AgoraStatus === 'closed') {
       // 바로 채팅방으로 이동
       tokenManager.clearRedirectUrl();
-      mutation.mutate();
+      redirectChat();
     }
   };
 
