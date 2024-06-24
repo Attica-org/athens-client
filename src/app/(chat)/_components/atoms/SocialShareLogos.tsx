@@ -1,5 +1,6 @@
 'use client';
 
+import { useChatInfo } from '@/store/chatInfo';
 import getKey from '@/utils/getKey';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
@@ -68,6 +69,11 @@ export default function SocialShareLogos({ title, url }: Props) {
     setKakao();
   }, []);
 
+  const getTitleFromState = () => {
+    const agoraTitle = useChatInfo.getState().title;
+    return agoraTitle;
+  };
+
   const shareKakao = () => {
     const imgUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/opengraph.png`;
     const { Kakao } = window;
@@ -75,7 +81,7 @@ export default function SocialShareLogos({ title, url }: Props) {
     Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
-        title: `${title}`,
+        title: `${title || getTitleFromState()}`,
         description: '아고라에 참여하고 실시간 토론을 시작하세요.',
         imageUrl: imgUrl,
         link: {
