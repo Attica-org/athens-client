@@ -92,8 +92,10 @@ function CreateAgoraBtn() {
     mutation.mutate();
   };
   useEffect(() => {
-    const { reset } = useCreateAgora.getState();
-    reset(); // 색상이나 카테고리를 눌러놓고, 채팅방에 나갔다 들어와서 다시 생성시 초기화 되도록 하기 위함
+    return () => {
+      const { reset } = useCreateAgora.getState();
+      reset(); // 언마운트시 초기화
+    };
   }, []);
   return (
     <div className="mt-1rem w-full">
