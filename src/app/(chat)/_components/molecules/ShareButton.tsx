@@ -24,17 +24,7 @@ export default function ShareButton({ title }: Props) {
   };
 
   const shareSNS: MouseEventHandler<HTMLButtonElement> = async () => {
-    if (window.navigator.share) {
-      try {
-        await window.navigator.share({
-          title,
-          text: '다양한 사람들과 토론에 함께하세요!',
-          url,
-        });
-      } catch (error) {
-        clipboardCopy();
-      }
-    } else if (window.innerWidth < 1024) {
+    if (window.innerWidth < 1024) {
       setOpen(true);
     } else {
       // 모달로 공유하기 창 띄우기
