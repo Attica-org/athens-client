@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import ModalBase from '@/app/_components/molecules/ModalBase';
 import SocialShareLogos from '../atoms/SocialShareLogos';
