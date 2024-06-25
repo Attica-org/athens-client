@@ -46,8 +46,8 @@ export const useCreateAgora = create(
     reset: () =>
       set({
         title: '',
-        category: '',
-        color: '',
+        category: '1',
+        color: 'agora-point-color1',
         capacity: DEFAULT_PARTICIPANTS_CNT,
         duration: DEFAULT_TIME,
       }),

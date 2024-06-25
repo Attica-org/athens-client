@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCreateAgora } from '@/store/create';
 import { useRouter } from 'next/navigation';
 import { useAgora } from '@/store/agora';
@@ -91,7 +91,12 @@ function CreateAgoraBtn() {
     setIsLoading(true);
     mutation.mutate();
   };
-
+  useEffect(() => {
+    return () => {
+      const { reset } = useCreateAgora.getState();
+      reset(); // 언마운트시 초기화
+    };
+  }, []);
   return (
     <div className="mt-1rem w-full">
       <button
