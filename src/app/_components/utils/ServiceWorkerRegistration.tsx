@@ -26,7 +26,7 @@ export default function ServiceWorkerRegistration() {
             // console.log('ServiceWorkerRegistration 실행');
             try {
               navigator.serviceWorker
-                .register('/custom-sw.js')
+                .register(customSwUrl)
                 .then(() => {
                   // registration
                   // console.log('Custom SW registered: ', regist);

@@ -27,6 +27,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "next.config.js"
-  ],
+, "public/custom-sw.js", "src/app/_components/utils/indexedDB.ts"  ],
   "exclude": ["node_modules"]
 }

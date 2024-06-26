@@ -2,9 +2,11 @@
 
 import Loading from '@/app/_components/atoms/loading';
 import ModalBase from '@/app/_components/molecules/ModalBase';
+import { deleteTabId } from '@/app/_components/utils/indexedDB';
 import { useAgora } from '@/store/agora';
 import { useChatInfo } from '@/store/chatInfo';
 import { useVoteStore } from '@/store/vote';
+import SWManager from '@/utils/SWManager';
 import getKey from '@/utils/getKey';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
@@ -22,9 +24,10 @@ export default function EndAgora() {
   const [remainingTime, setRemainingTime] = useState(15);
   const [isFinished, setIsFinished] = useState(false);
   const [vote, setVote] = useState<string | null>(null);
-  const { title } = useChatInfo(
+  const { title, end } = useChatInfo(
     useShallow((state) => ({
       title: state.title,
+      end: state.end,
     })),
   );
   const { setVoteResult, setVoteEnd, voteEnd } = useVoteStore(
@@ -39,6 +42,7 @@ export default function EndAgora() {
   const [URL, setURL] = useState({
     BASE_URL: '',
   });
+  const tabId = SWManager.getTabId();
 
   useEffect(() => {
     const getUrl = async () => {
@@ -58,35 +62,54 @@ export default function EndAgora() {
         data: {
           voteType: vote,
         },
+        tabId,
       });
     }
-  }, [vote]);
+  }, [vote, tabId]);
 
   // 타이머 시작 및 Service Worker와의 통신 설정
   useEffect(() => {
     if (!URL.BASE_URL) return () => {};
 
-    const startTime = new Date();
+    const endTime = new Date(end);
+    const voteEndTime = new Date(end).getTime() + 15 * 1000;
+
+    const timerId = setInterval(() => {
+      const diffTime = differenceInSeconds(new Date(), endTime);
+      setRemainingTime(15 - diffTime > 0 ? 15 - diffTime : 0);
+      if (15 - diffTime <= 0) {
+        clearInterval(timerId);
+      }
+    }, 1000);
+
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage({
         action: 'startTimer',
-        startTime: startTime.toISOString(),
         data: {
+          voteEndTime,
           agoraId,
           voteType: vote,
           token: tokenManager.getToken(),
           baseUrl: URL.BASE_URL,
         },
+        tabId,
       });
     }
 
     const handleServiceWorkerMessage = (event: MessageEvent) => {
+      if (event.data.tabId !== tabId) return; // 다른 탭에서 온 메시지는 무시
+
       if (event.data.action === 'voteSent') {
         setIsFinished(true);
       } else if (event.data.action === 'voteResult') {
         // console.log('voteResult', event.data);
         setVoteResult(event.data.result);
         setVoteEnd(true);
+
+        if (tabId) {
+          deleteTabId(tabId);
+        }
+
         router.replace(`/agoras/${agoraId}/flow/result-agora`);
       } else if (event.data.action === 'fetchError') {
         // console.log('fetchError', event.data);
@@ -111,14 +134,6 @@ export default function EndAgora() {
       'message',
       handleServiceWorkerMessage,
     );
-
-    const timerId = setInterval(() => {
-      const diffTime = differenceInSeconds(new Date(), startTime);
-      setRemainingTime(15 - diffTime > 0 ? 15 - diffTime : 0);
-      if (15 - diffTime <= 0) {
-        clearInterval(timerId);
-      }
-    }, 1000);
 
     return () => {
       clearInterval(timerId);
