@@ -16,6 +16,8 @@ import { useVoteStore } from '@/store/vote';
 import getToken from '@/lib/getToken';
 import { useQueryClient } from '@tanstack/react-query';
 import getKey from '@/utils/getKey';
+import SWManager from '@/utils/SWManager';
+import { saveTabId } from '@/app/_components/utils/indexedDB';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraTitle from '../molecules/AgoraTitle';
@@ -72,7 +74,7 @@ export default function Header() {
     return () => {
       reset();
     };
-  }, []);
+  }, [reset]);
 
   const refetchAgoraUserList = async () => {
     // 유저 리스트 캐시 무효화 및 재요청
@@ -238,9 +240,14 @@ export default function Header() {
     if (!URL.BASE_URL) return;
 
     if (enterAgora.status !== 'CLOSED') {
+      const tabId = new Date().getTime().toString();
+      saveTabId(tabId);
+      SWManager.setTabId(tabId);
+
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
           action: 'initialize',
+          tabId,
           baseUrl: URL.BASE_URL,
         });
       }
