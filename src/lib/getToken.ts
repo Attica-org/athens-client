@@ -26,8 +26,8 @@ const getToken = async () => {
         result.error.message === 'Invalid JWT signature.' ||
         result.error.message === 'Unsupported JWT token.'
       ) {
-        if (retryConfig.retry > 0) {
-          retryConfig.retry -= 1;
+        if (retryConfig.tokenRetry > 0) {
+          retryConfig.tokenRetry -= 1;
           await getToken();
         }
       }
@@ -35,15 +35,15 @@ const getToken = async () => {
       showToast('인증 오류가 발생했습니다.', 'error');
     }
 
-    if (retryConfig.retry < 1) {
+    if (retryConfig.tokenRetry < 1) {
       showToast('인증 오류가 발생했습니다.', 'error');
-      retryConfig.retry = 3;
+      retryConfig.tokenRetry = 3;
     }
 
     return;
   }
 
-  retryConfig.retry = 3;
+  retryConfig.tokenRetry = 3;
   const result = await res.json();
 
   tokenManager.setToken(result.response.accessToken);

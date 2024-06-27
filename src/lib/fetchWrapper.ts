@@ -57,6 +57,7 @@ class FetchWrapper {
 
     if (!response.ok) {
       retryConfig.retry -= 1;
+
       if (response.status === 401 || response.status === 400) {
         await tokenErrorHandler(result);
         // 재발급 후 재요청

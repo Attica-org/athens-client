@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import EyeIcon from '@/assets/icons/EyeIcon';
 import { useChatInfo } from '@/store/chatInfo';
 import { useAgora } from '@/store/agora';
@@ -19,6 +19,7 @@ type Props = {
 };
 
 export default function DiscussionStatus({ meta }: Props) {
+  const [isEndClicked, setIsEndClicked] = useState(false);
   const { enterAgora } = useAgora();
   const { start } = useChatInfo(
     useShallow((state) => ({
@@ -45,6 +46,7 @@ export default function DiscussionStatus({ meta }: Props) {
     mutationFn: async () => patchAgoraEnd(enterAgora.id),
     onSuccess: async (response) => {
       if (response) {
+        setIsEndClicked(true);
         showToast('토론 종료에 투표하였습니다.', 'success');
       } else {
         showToast('토론 종료 투표에 실패했습니다.', 'error');
@@ -73,7 +75,11 @@ export default function DiscussionStatus({ meta }: Props) {
           type="button"
           onClick={toggleProgress}
           aria-label={`토론 ${start ? '종료하기' : '시작하기'}`}
-          className={`text-xs lg:text-sm italic ${start ? 'bg-athens-main' : 'bg-red-500'} p-4 pl-15 pr-15 under-mobile:pl-10 under-mobile:pr-10 rounded-lg text-white mr-0.5rem`}
+          className={`text-xs lg:text-sm italic 
+            ${start ? 'bg-athens-main' : 'bg-red-500'} 
+            ${isEndClicked ? 'opacity-60' : 'opacity-100'}
+          p-4 pl-15 pr-15 under-mobile:pl-10 under-mobile:pr-10 rounded-lg text-white mr-0.5rem`}
+          disabled={isEndClicked}
         >
           {start ? 'END' : 'START'}
         </button>
