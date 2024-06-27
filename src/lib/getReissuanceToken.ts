@@ -19,7 +19,7 @@ export const getReissuanceToken = async () => {
 
   if (!res.ok) {
     const result = await res.json();
-    console.log('getReissuance에서 retry', retryConfig.tokenReissuance);
+
     if (result.error.code === 1003 || result.error.code === 1202) {
       if (retryConfig.tokenReissuance > 0) {
         retryConfig.tokenReissuance -= 1;
