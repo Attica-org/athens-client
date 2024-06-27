@@ -9,7 +9,6 @@ import tokenManager from '@/utils/tokenManager';
 import * as StompJs from '@stomp/stompjs';
 import { AgoraMeta } from '@/app/model/AgoraMeta';
 import { useChatInfo } from '@/store/chatInfo';
-import toast from 'react-hot-toast';
 import showToast from '@/utils/showToast';
 import { getReissuanceToken } from '@/lib/getReissuanceToken';
 import { useVoteStore } from '@/store/vote';
@@ -31,11 +30,10 @@ export default function Header() {
   const { enterAgora } = useAgora(
     useShallow((state) => ({ enterAgora: state.enterAgora })),
   );
-  const { setTitle, setDiscussionStart, start, setDiscurreionEnd, reset } =
+  const { setTitle, setDiscussionStart, setDiscurreionEnd, reset } =
     useChatInfo(
       useShallow((state) => ({
         setTitle: state.setTitle,
-        start: state.start,
         setDiscussionStart: state.setDiscussionStart,
         setDiscurreionEnd: state.setDiscussionEnd,
         reset: state.reset,
@@ -113,8 +111,6 @@ export default function Header() {
             refetchAgoraUserList();
 
             if (data.data.agora.startAt) {
-              if (start === null)
-                showToast('토론이 시작되었습니다.', 'success');
               setDiscussionStart(data.data.agora.startAt);
             }
 
@@ -135,10 +131,14 @@ export default function Header() {
             );
           } else if (data.type === 'DISCUSSION_START') {
             // console.log(data.data);
+            showToast('토론이 시작되었습니다.', 'success');
             setDiscussionStart(data.data.startTime);
           } else if (data.type === 'DISCUSSION_END') {
             setDiscurreionEnd(data.data.endTime);
-            toast('2/3 이상 토론 종료를 선택하여 토론이 종료되었습니다.');
+            showToast(
+              '유저의 2/3 이상이 토론 종료를 선택하여 종료되었습니다.',
+              'success',
+            );
             router.push(`/agoras/${data.data.agoraId}/flow/end-agora`);
           }
           // console.log(`> Received message: ${received_message.body}`);
