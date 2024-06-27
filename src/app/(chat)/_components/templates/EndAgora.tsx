@@ -10,7 +10,6 @@ import SWManager from '@/utils/SWManager';
 import getKey from '@/utils/getKey';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
-import { differenceInSeconds } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
@@ -71,13 +70,12 @@ export default function EndAgora() {
   useEffect(() => {
     if (!URL.BASE_URL) return () => {};
 
-    const endTime = new Date(end);
     const voteEndTime = new Date(end).getTime() + 15 * 1000;
 
     const timerId = setInterval(() => {
-      const diffTime = differenceInSeconds(new Date(), endTime);
-      setRemainingTime(15 - diffTime > 0 ? 15 - diffTime : 0);
-      if (15 - diffTime <= 0) {
+      const diffTime = voteEndTime - new Date().getTime();
+      setRemainingTime(diffTime > 0 ? Math.floor(diffTime / 1000) : 0);
+      if (diffTime <= 0) {
         clearInterval(timerId);
       }
     }, 1000);
