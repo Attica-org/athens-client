@@ -8,7 +8,6 @@ import { useAgora } from '@/store/agora';
 import Loading from '@/app/_components/atoms/loading';
 import { AgoraMeta } from '@/app/model/AgoraMeta';
 import { useShallow } from 'zustand/react/shallow';
-import toast from 'react-hot-toast';
 import showToast from '@/utils/showToast';
 import { patchAgoraStart } from '../../_lib/patchAgoraStart';
 import { patchAgoraEnd } from '../../_lib/patchAgoraEnd';
@@ -46,9 +45,9 @@ export default function DiscussionStatus({ meta }: Props) {
     mutationFn: async () => patchAgoraEnd(enterAgora.id),
     onSuccess: async (response) => {
       if (response) {
-        toast.success('토론 종료에 투표하였습니다.');
+        showToast('토론 종료에 투표하였습니다.', 'success');
       } else {
-        toast.error('토론 종료 투표에 실패했습니다.');
+        showToast('토론 종료 투표에 실패했습니다.', 'error');
       }
     },
     onError: () => {
