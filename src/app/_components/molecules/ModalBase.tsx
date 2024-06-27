@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import { useRouter } from 'next/navigation';
+import { useCreateAgora } from '@/store/create';
 import RemoveButton from '../atoms/RemoveButton';
 
 type Props = {
@@ -53,8 +54,11 @@ export default function ModalBase({
   };
 
   const keyDownOutSideModal: KeyboardEventHandler<HTMLElement> = (e) => {
-    if (e.key === 'Enter' && e.target === e.currentTarget && removeIcon)
+    if (e.key === 'Enter' && e.target === e.currentTarget && removeIcon) {
+      const { reset } = useCreateAgora.getState();
+      reset(); // 언마운트시 초기화
       router.back();
+    }
   };
 
   return (
