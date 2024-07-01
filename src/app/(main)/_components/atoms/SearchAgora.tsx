@@ -21,7 +21,13 @@ export default function SearchAgora({ agora }: Props) {
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
   const enterAgora = () => {
     setSelectedAgora({ id, title: agoraTitle, status });
-    router.push(`/flow/enter-agora/${id}`);
+
+    if (status === 'QUEUED' || status === 'RUNNING') {
+      router.push(`/flow/enter-agora/${id}`);
+    } else if (status === 'CLOSED') {
+      // 만약 status가 closed라면, /agoras/${id}로 이동
+      router.push(`/agoras/${id}`);
+    }
   };
 
   const handleKeyDownEnterAgora: KeyboardEventHandler<HTMLElement> = (e) => {
