@@ -1,4 +1,4 @@
-import { Agora } from '@/app/model/Agora';
+import { AgoraData } from '@/app/model/Agora';
 import fetchWrapper from '@/lib/fetchWrapper';
 import showToast from '@/utils/showToast';
 import { QueryFunction } from '@tanstack/react-query';
@@ -11,7 +11,7 @@ type SearchParams = {
 
 // eslint-disable-next-line import/prefer-default-export
 export const getAgoraCategorySearch: QueryFunction<
-  { agoras: Agora[]; nextCursor: number | null },
+  { agoras: AgoraData[]; nextCursor: number | null },
   [_1: string, _2: string, _3: string, searchParams: SearchParams],
   { nextCursor: number | null }
 > = async ({ queryKey, pageParam = { nextCursor: null } }) => {
