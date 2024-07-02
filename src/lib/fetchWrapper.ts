@@ -1,5 +1,6 @@
 import showToast from '@/utils/showToast';
 import getKey from '@/utils/getKey';
+import tokenManager from '@/utils/tokenManager';
 import getToken from './getToken';
 import { getReissuanceToken } from './getReissuanceToken';
 import retryConfig from './retryConfig';
@@ -61,7 +62,21 @@ class FetchWrapper {
       if (response.status === 401 || response.status === 400) {
         await tokenErrorHandler(result);
         // 재발급 후 재요청
-        return this.call(url, fetchNext);
+
+        if (!fetchNext.headers.Authorization) {
+          // Authorization이 없을 경우, fetchNext를 동일하게 재요청
+          return this.call(url, fetchNext);
+        }
+
+        const newFetchNext = {
+          ...fetchNext,
+          headers: {
+            ...fetchNext.headers,
+            Authorization: `Bearer ${tokenManager.getToken()}`,
+          },
+        };
+
+        return this.call(url, newFetchNext);
       }
       // 인증 외 오류는 호출한 곳에서 처리
       return result;
