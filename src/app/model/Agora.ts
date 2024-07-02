@@ -10,3 +10,15 @@ export interface Agora {
   createdAt?: string;
   status: string;
 }
+
+export interface ClosedAgora {
+  id: number;
+  agoraTitle: string;
+  agoraColor: string;
+  prosCount: number;
+  consCount: number;
+  createdAt: string;
+  status: string;
+}
+
+export type AgoraData = Agora | ClosedAgora;

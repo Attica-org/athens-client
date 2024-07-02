@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
-import { Agora as IAgora } from '@/app/model/Agora';
+import { AgoraData } from '@/app/model/Agora';
 import { useInView } from 'react-intersection-observer';
 import Agora from '../atoms/Agora';
 import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
@@ -15,9 +15,9 @@ type Props = {
 export default function AgoraList({ searchParams }: Props) {
   const { data, hasNextPage, fetchNextPage, isFetching } =
     useSuspenseInfiniteQuery<
-      { agoras: IAgora[]; nextCursor: number | null },
+      { agoras: AgoraData[]; nextCursor: number | null },
       Object,
-      InfiniteData<{ agoras: IAgora[]; nextCursor: number | null }>,
+      InfiniteData<{ agoras: AgoraData[]; nextCursor: number | null }>,
       [_1: string, _2: string, _3: string, Props['searchParams']],
       { nextCursor: number | null }
     >({
