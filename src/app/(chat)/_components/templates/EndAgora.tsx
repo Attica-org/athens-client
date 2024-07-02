@@ -149,7 +149,11 @@ export default function EndAgora() {
   };
 
   return (
-    <ModalBase title="토론 종료" removeIcon={false} animation={false}>
+    <ModalBase
+      title="토론 종료"
+      removeIcon={remainingTime <= 0}
+      animation={false}
+    >
       <div className="flex justify-center items-center flex-col">
         <p className="text-xs text-athens-gray-thick dark:text-dark-line-light">
           최종 투표를 진행해주세요.

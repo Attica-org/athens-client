@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 export default function ServiceWorkerRegistration() {
   useEffect(() => {
-    const getRegisterServiceWorker = async () => {
+    const registerServiceWorker = async () => {
       try {
         const registration = await navigator.serviceWorker.getRegistrations();
 
@@ -36,7 +36,10 @@ export default function ServiceWorkerRegistration() {
                   // console.log('SW registration failed: ', registrationError);
                 });
             } catch (error) {
-              // console.log('error', error);
+              showToast(
+                'Service Worker 등록에 실패했습니다. 잠시 후 다시 시도해주세요.',
+                'error',
+              );
             }
           }
         }
@@ -49,7 +52,20 @@ export default function ServiceWorkerRegistration() {
       }
     };
 
-    getRegisterServiceWorker();
+    const monitorServiceWorker = () => {
+      navigator.serviceWorker.ready.then(() => {
+        // 서비스 워커 active, ready
+        navigator.serviceWorker.oncontrollerchange = () => {
+          if (!navigator.serviceWorker.controller) {
+            // 서비스 워커가 동작하지 않고 있기 때문에 재등록
+            registerServiceWorker();
+          }
+        };
+      });
+    };
+
+    registerServiceWorker();
+    monitorServiceWorker();
   }, []);
 
   return null;
