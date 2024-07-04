@@ -5,17 +5,39 @@ import { useEffect } from 'react';
 
 export default function ServiceWorkerRegistration() {
   useEffect(() => {
-    const registerServiceWorker = async () => {
+    const customSwUrl = '/custom-sw.js';
+
+    function monitorServiceWorker(worker: ServiceWorker) {
+      if (worker) {
+        // Service Worker 상태 변경 감지
+        worker.addEventListener('statechange', async (e: Event) => {
+          const sw = e.target as ServiceWorker;
+
+          // Service Worker 상태가 redundant가 되면 다시 등록
+          if (sw.state === 'redundant') {
+            try {
+              await navigator.serviceWorker.register(customSwUrl);
+            } catch (error) {
+              showToast(
+                'Service Worker 등록 실패로 일부 기능이 동작하지 않을 수 있습니다. 잠시 후 다시 시도해주세요.',
+                'error',
+              );
+            }
+          }
+        });
+      }
+    }
+
+    async function registerServiceWorker() {
       try {
         const registration = await navigator.serviceWorker.getRegistrations();
-
-        const customSwUrl = '/custom-sw.js';
         let needsRegistration = true;
 
         registration.some((regist) => {
           if (regist.active && regist.active.scriptURL.includes(customSwUrl)) {
             needsRegistration = false;
-            // console.log('Custom SW already registered: ', regist);
+            monitorServiceWorker(regist.active);
+
             return true;
           }
           return false;
@@ -23,21 +45,20 @@ export default function ServiceWorkerRegistration() {
 
         if (needsRegistration) {
           if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-            // console.log('ServiceWorkerRegistration 실행');
             try {
-              navigator.serviceWorker
-                .register(customSwUrl)
-                .then(() => {
-                  // registration
-                  // console.log('Custom SW registered: ', regist);
-                })
-                .catch(() => {
-                  // registrationError
-                  // console.log('SW registration failed: ', registrationError);
-                });
+              const regist =
+                await navigator.serviceWorker.register(customSwUrl);
+
+              if (regist.installing) {
+                monitorServiceWorker(regist.installing);
+              } else if (regist.waiting) {
+                monitorServiceWorker(regist.waiting);
+              } else if (regist.active) {
+                monitorServiceWorker(regist.active);
+              }
             } catch (error) {
               showToast(
-                'Service Worker 등록에 실패했습니다. 잠시 후 다시 시도해주세요.',
+                'Service Worker 등록 실패로 일부 기능이 동작하지 않을 수 있습니다. 잠시 후 다시 시도해주세요.',
                 'error',
               );
             }
@@ -45,27 +66,21 @@ export default function ServiceWorkerRegistration() {
         }
       } catch (registrationError) {
         showToast(
-          'Service Worker 등록에 실패했습니다. 잠시 후 다시 시도해주세요.',
+          'Service Worker 등록 실패로 일부 기능이 동작하지 않을 수 있습니다. 잠시 후 다시 시도해주세요.',
           'error',
         );
-        // console.log('registration failed: ', registrationError);
       }
-    };
-
-    const monitorServiceWorker = () => {
-      navigator.serviceWorker.ready.then(() => {
-        // 서비스 워커 active, ready
-        navigator.serviceWorker.oncontrollerchange = () => {
-          if (!navigator.serviceWorker.controller) {
-            // 서비스 워커가 동작하지 않고 있기 때문에 재등록
-            registerServiceWorker();
-          }
-        };
-      });
-    };
+    }
 
     registerServiceWorker();
-    monitorServiceWorker();
+
+    // Service Worker가 업데이트 되면 서비스워커 모니터링하여 서비스워커 체크 및 재등록 로직 실행
+    navigator.serviceWorker.oncontrollerchange = () => {
+      const { controller } = navigator.serviceWorker;
+      if (controller) {
+        monitorServiceWorker(controller);
+      }
+    };
   }, []);
 
   return null;
