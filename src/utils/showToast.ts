@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 export default function showToast(message: string, type: string) {
   if (type === 'error') {
     toast(message, {
+      duration: 2000,
       icon: '❌',
       ariaProps: {
         role: 'alert',
@@ -17,6 +18,7 @@ export default function showToast(message: string, type: string) {
     });
   } else if (type === 'success') {
     toast(message, {
+      duration: 2000,
       icon: '✅',
       ariaProps: {
         role: 'alert',

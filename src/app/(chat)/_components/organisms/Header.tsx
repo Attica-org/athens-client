@@ -114,21 +114,21 @@ export default function Header() {
               setDiscussionStart(data.data.agora.startAt);
             }
 
+            const partcipantsCnt = {
+              pros: 0,
+              cons: 0,
+            };
             data.data.participants.forEach(
               (participant: { type: string; count: number }) => {
                 if (participant.type === 'PROS') {
-                  setParticipants((prev) => ({
-                    ...prev,
-                    pros: participant.count,
-                  }));
+                  partcipantsCnt.pros = participant.count;
                 } else if (participant.type === 'CONS') {
-                  setParticipants((prev) => ({
-                    ...prev,
-                    cons: participant.count,
-                  }));
+                  partcipantsCnt.cons = participant.count;
                 }
               },
             );
+
+            setParticipants(partcipantsCnt);
           } else if (data.type === 'DISCUSSION_START') {
             // console.log(data.data);
             showToast('토론이 시작되었습니다.', 'success');

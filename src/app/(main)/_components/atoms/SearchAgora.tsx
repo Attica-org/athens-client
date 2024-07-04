@@ -2,7 +2,7 @@
 
 import React, { KeyboardEventHandler } from 'react';
 import { useRouter } from 'next/navigation';
-import { Agora } from '@/app/model/Agora';
+import { Agora as IAgora, AgoraData } from '@/app/model/Agora';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useAgora } from '@/store/agora';
@@ -10,23 +10,30 @@ import COLOR from '@/constants/agoraColor';
 import UserImage from '../../../_components/atoms/UserImage';
 
 type Props = {
-  agora: Agora;
+  agora: AgoraData;
 };
+
+function isAgora(agora: AgoraData): agora is IAgora {
+  return (agora as IAgora).participants !== undefined;
+}
 
 export default function SearchAgora({ agora }: Props) {
   const router = useRouter();
-  const { id, agoraTitle, agoraColor, participants, createdAt, status } = agora;
   const { setSelectedAgora } = useAgora();
 
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
   const enterAgora = () => {
-    setSelectedAgora({ id, title: agoraTitle, status });
+    setSelectedAgora({
+      id: agora.id,
+      title: agora.agoraTitle,
+      status: agora.status,
+    });
 
-    if (status === 'QUEUED' || status === 'RUNNING') {
-      router.push(`/flow/enter-agora/${id}`);
-    } else if (status === 'CLOSED') {
+    if (agora.status === 'QUEUED' || agora.status === 'RUNNING') {
+      router.push(`/flow/enter-agora/${agora.id}`);
+    } else if (agora.status === 'CLOSED') {
       // 만약 status가 closed라면, /agoras/${id}로 이동
-      router.push(`/agoras/${id}`);
+      router.push(`/agoras/${agora.id}`);
     }
   };
 
@@ -37,7 +44,7 @@ export default function SearchAgora({ agora }: Props) {
   };
 
   const getRelativeTime = () => {
-    const relativeDate = formatDistanceToNow(createdAt as string, {
+    const relativeDate = formatDistanceToNow(agora.createdAt as string, {
       addSuffix: true,
       locale: ko,
     });
@@ -45,7 +52,7 @@ export default function SearchAgora({ agora }: Props) {
   };
 
   return (
-    <article id={`${id}`} className="w-full">
+    <article id={`${agora.id}`} className="w-full">
       <div
         role="button"
         tabIndex={0}
@@ -57,7 +64,7 @@ export default function SearchAgora({ agora }: Props) {
         <div className="flex-1 p-0.5rem pl-0">
           <div className="flex justify-between items-start mb-12">
             <h3 className="text-base under-mobile:text-xs break-words break-keep line-clamp-2 max-w-prose dark:text-white dark:text-opacity-85">
-              {agoraTitle}
+              {agora.agoraTitle}
             </h3>
           </div>
           <div className="flex justify-between items-center">
@@ -65,21 +72,25 @@ export default function SearchAgora({ agora }: Props) {
               <span className="text-blue-500 dark:text-dark-pro-color">
                 찬성
                 <span className="text-athens-gray-thick pl-3 dark:text-dark-line">
-                  {participants.pros}명<span aria-hidden> | </span>
+                  {isAgora(agora) ? agora.participants.pros : agora.prosCount}명
+                  <span aria-hidden> | </span>
                 </span>
               </span>
               <span className="text-red-500 dark:text-dark-con-color">
                 반대
                 <span className="text-athens-gray-thick pl-3 dark:text-dark-line">
-                  {participants.cons}명<span aria-hidden> | </span>
+                  {isAgora(agora) ? agora.participants.cons : agora.consCount}명
+                  <span aria-hidden> | </span>
                 </span>
               </span>
-              <span className="dark:text-white dark:text-opacity-80">
-                관찰자
-                <span className="pl-3 text-athens-gray-thick dark:text-dark-line">
-                  {participants.observer}명
+              {isAgora(agora) && (
+                <span className="dark:text-white dark:text-opacity-80">
+                  관찰자
+                  <span className="pl-3 text-athens-gray-thick dark:text-dark-line">
+                    {agora.participants.observer}명
+                  </span>
                 </span>
-              </span>
+              )}
             </div>
             <div className="text-xs dark:text-dark-line">
               {getRelativeTime()}
@@ -88,13 +99,13 @@ export default function SearchAgora({ agora }: Props) {
         </div>
         <div className="relative">
           <UserImage
-            className={`w-67 h-67 ${COLOR.some((color) => color.value === agoraColor) ? agoraColor : COLOR[0].value} rounded-3xl`}
+            className={`w-67 h-67 ${COLOR.some((color) => color.value === agora.agoraColor) ? agora.agoraColor : COLOR[0].value} rounded-3xl`}
             w={67}
             h={67}
           />
-          {status !== 'CLOSED' && (
+          {agora.status !== 'CLOSED' && (
             <span
-              className={`absolute top-0 left-53 inline-block w-13 h-13 ${status === 'queued' ? 'bg-athens-button' : 'bg-red-400'} rounded-full ml-3`}
+              className={`absolute top-0 left-53 inline-block w-13 h-13 ${agora.status === 'queued' ? 'bg-athens-button' : 'bg-red-400'} rounded-full ml-3`}
             />
           )}
         </div>
