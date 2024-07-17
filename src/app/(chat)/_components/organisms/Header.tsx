@@ -57,7 +57,6 @@ export default function Header() {
     BASE_URL: '',
     SOCKET_URL: '',
   });
-  const tabId = useRef(new Date().getTime().toString());
 
   const getUrl = async () => {
     const key = await getKey();
@@ -73,9 +72,10 @@ export default function Header() {
     return () => {
       reset();
 
-      if (tabId.current) {
+      const tabId = SWManager.getTabId();
+      if (tabId) {
         SWManager.clearTabId();
-        deleteTabId(tabId.current);
+        deleteTabId(tabId);
       }
     };
   }, [reset]);
@@ -246,13 +246,14 @@ export default function Header() {
     if (!URL.BASE_URL) return;
 
     if (enterAgora.status !== 'CLOSED') {
-      saveTabId(tabId.current);
-      SWManager.setTabId(tabId.current);
+      const tabId = new Date().getTime().toString();
+      SWManager.setTabId(tabId);
+      saveTabId(tabId);
 
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
           action: 'initialize',
-          tabId: tabId.current,
+          tabId,
           baseUrl: URL.BASE_URL,
         });
       }
