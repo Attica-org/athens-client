@@ -1,5 +1,5 @@
 import React from 'react';
-import PageTitle from '../_components/atoms/PageTitle';
+import PageTitle from '../_components/molecules/PageTitle';
 import AgoraStatus from '../_components/atoms/AgoraStatus';
 import SideNav from '../_components/organisms/NavMenu';
 import SearchBarSuspense from '../_components/molecules/SearchBarSuspense';

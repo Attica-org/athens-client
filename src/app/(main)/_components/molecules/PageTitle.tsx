@@ -1,5 +1,5 @@
 import React from 'react';
-import ThemeSwitcher from './ThemeSwitcher';
+import ThemeSwitcher from '../atoms/ThemeSwitcher';
 
 type Props = {
   title: string;
