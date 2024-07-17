@@ -4,7 +4,7 @@ import AgoraStatusSkeleton from '../atoms/AgoraStatusSkeleton';
 
 const AgoraStatusTab = dynamic(() => import('../atoms/AgoraStatusTab'));
 
-export default function AgoraStatusSuspense() {
+export default function AgoraStatusTabSuspense() {
   return (
     <Suspense fallback={<AgoraStatusSkeleton />}>
       <AgoraStatusTab />
