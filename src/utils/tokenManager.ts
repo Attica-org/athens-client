@@ -2,20 +2,12 @@
 // 싱글톤 패턴으로 구현하여 전역에서 사용 가능
 const tokenManager = (() => {
   let accessToken: string | undefined;
-  let redirectUrl: string | null = null;
 
   return {
     setToken: (token: string) => {
       accessToken = token;
     },
     getToken: () => accessToken,
-    setRedirectUrl: (url: string) => {
-      redirectUrl = url;
-    },
-    getRedirectUrl: () => redirectUrl,
-    clearRedirectUrl: () => {
-      redirectUrl = null;
-    },
     clearToken: () => {
       accessToken = undefined;
     },
