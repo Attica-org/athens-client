@@ -10,7 +10,7 @@ type Props = {
   inputLabel: string;
 };
 
-export default function ModifyNumberInput({
+export default function ControlNumberInput({
   label,
   value,
   handleChange,
