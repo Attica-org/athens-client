@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { AgoraData } from '@/app/model/Agora';
 import { useInView } from 'react-intersection-observer';
-import Agora from '../atoms/Agora';
+import Agora from '../atoms/CategoryAgora';
 import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
 

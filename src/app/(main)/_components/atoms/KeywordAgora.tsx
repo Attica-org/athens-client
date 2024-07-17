@@ -14,7 +14,7 @@ type Props = {
   agora: AgoraData;
 };
 
-export default function SearchAgora({ agora }: Props) {
+export default function KeywordAgora({ agora }: Props) {
   const router = useRouter();
   const { setSelectedAgora } = useAgora();
 

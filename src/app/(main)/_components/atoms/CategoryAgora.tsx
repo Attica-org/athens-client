@@ -12,7 +12,7 @@ type Props = {
   agora: AgoraData;
 };
 
-export default function Agora({ agora }: Props) {
+export default function CategoryAgora({ agora }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { setSelectedAgora, setEnterAgora } = useAgora();
