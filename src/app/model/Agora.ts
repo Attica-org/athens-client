@@ -22,3 +22,18 @@ export interface ClosedAgora {
 }
 
 export type AgoraData = Agora | ClosedAgora;
+
+export interface AgoraUserProfileType {
+  id: number;
+  nickname: string;
+  photoNumber: number;
+  type: 'PROS' | 'CONS' | 'OBSERVER';
+}
+
+export type ParticipantCountAction = 'DECREASE' | 'INCREASE';
+
+export interface SearchParams {
+  status?: string;
+  category?: string;
+  q?: string;
+}

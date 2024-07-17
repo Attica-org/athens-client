@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { AgoraUser } from '@/app/model/AgoraUser';
+import { AgoraUserProfileType } from '@/app/model/Agora';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import ErrorFallback from '@/app/_components/templates/ErrorFallback';
 import { useChatInfo } from '@/store/chatInfo';
@@ -31,9 +31,9 @@ export default function AgoraUserSuspense({ agoraId }: Props) {
   );
 
   const { data: userList } = useQuery<
-    AgoraUser[],
+    AgoraUserProfileType[],
     Object,
-    AgoraUser[],
+    AgoraUserProfileType[],
     [string, string, string]
   >({
     queryKey: ['chat', 'users', `${agoraId}`],
