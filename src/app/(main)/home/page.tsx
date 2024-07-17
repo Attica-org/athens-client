@@ -1,15 +1,20 @@
 import React from 'react';
-import AGORACATEGORY from '@/constants/agoraCategory';
+import { AGORACATEGORY, isValidCategoryKey } from '@/constants/agoraCategory';
+import { SearchParams } from '@/app/model/Agora';
 import Main from '../_components/templates/Main';
 
 type Props = {
-  searchParams: { status?: string; category?: string; q?: string };
+  searchParams: SearchParams;
 };
 
 export async function generateMetadata({ searchParams }: Props) {
-  const value = AGORACATEGORY.find(
-    (category) => category.value === searchParams.category,
-  );
+  const categoryKey = searchParams.category || '1';
+  let value = Object.assign(AGORACATEGORY['1']);
+
+  if (isValidCategoryKey(categoryKey)) {
+    value = AGORACATEGORY[categoryKey];
+  }
+
   const title = searchParams.q ? `${searchParams.q} - Athens` : '';
   const category = searchParams.category
     ? `${value?.innerText} - Athens`
