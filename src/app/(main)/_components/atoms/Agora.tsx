@@ -1,37 +1,33 @@
 'use client';
 
-import { Agora as IAgora, AgoraData } from '@/app/model/Agora';
+import { AgoraData } from '@/app/model/Agora';
 import { useAgora } from '@/store/agora';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
 import COLOR from '@/constants/agoraColor';
 import tokenManager from '@/utils/tokenManager';
+import isAgoraActive from '@/app/_components/utils/isAgoraActive';
 
 type Props = {
   agora: AgoraData;
 };
-
-function isAgora(agora: AgoraData): agora is IAgora {
-  return (agora as IAgora).participants !== undefined;
-}
 
 export default function Agora({ agora }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { setSelectedAgora, setEnterAgora } = useAgora();
 
-  const routePage = () => {
+  const routeAgoraPage = () => {
     router.push(`/agoras/${agora.id}`);
   };
 
-  const redirectChat = () => {
+  const setAgoraData = () => {
     setEnterAgora({
       id: agora.id,
       title: agora.agoraTitle,
       status: agora.status,
       role: 'OBSERVER' as const,
     });
-    routePage();
   };
 
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
@@ -43,12 +39,14 @@ export default function Agora({ agora }: Props) {
     });
 
     const AgoraStatus = searchParams.get('status');
+
     if (AgoraStatus === 'active') {
       router.push(`/flow/enter-agora/${agora.id}`);
     } else if (AgoraStatus === 'closed') {
       // 바로 채팅방으로 이동
       tokenManager.clearRedirectUrl();
-      redirectChat();
+      setAgoraData();
+      routeAgoraPage();
     }
   };
 
@@ -74,15 +72,15 @@ export default function Agora({ agora }: Props) {
           <span className="text-blue-600 pr-3 dark:text-dark-pro-color">
             찬성
           </span>
-          {isAgora(agora) ? agora.participants.pros : agora.prosCount}명
+          {isAgoraActive(agora) ? agora.participants.pros : agora.prosCount}명
         </span>
         <span className="pr-5 text-athens-gray-thick text-nowrap dark:text-dark-line">
           <span className="text-red-600 pr-3 dark:text-dark-con-color">
             반대
           </span>
-          {isAgora(agora) ? agora.participants.cons : agora.consCount}명
+          {isAgoraActive(agora) ? agora.participants.cons : agora.consCount}명
         </span>
-        {isAgora(agora) && (
+        {isAgoraActive(agora) && (
           <span className="under-mobile:bloc break-keep">
             <span className="pr-3 dark:text-white dark:text-opacity-85">
               관찰자

@@ -2,20 +2,17 @@
 
 import React, { KeyboardEventHandler } from 'react';
 import { useRouter } from 'next/navigation';
-import { Agora as IAgora, AgoraData } from '@/app/model/Agora';
+import { AgoraData } from '@/app/model/Agora';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useAgora } from '@/store/agora';
 import COLOR from '@/constants/agoraColor';
+import isAgoraActive from '@/app/_components/utils/isAgoraActive';
 import UserImage from '../../../_components/atoms/UserImage';
 
 type Props = {
   agora: AgoraData;
 };
-
-function isAgora(agora: AgoraData): agora is IAgora {
-  return (agora as IAgora).participants !== undefined;
-}
 
 export default function SearchAgora({ agora }: Props) {
   const router = useRouter();
@@ -72,18 +69,22 @@ export default function SearchAgora({ agora }: Props) {
               <span className="text-blue-500 dark:text-dark-pro-color">
                 찬성
                 <span className="text-athens-gray-thick pl-3 dark:text-dark-line">
-                  {isAgora(agora) ? agora.participants.pros : agora.prosCount}명
-                  <span aria-hidden> | </span>
+                  {isAgoraActive(agora)
+                    ? agora.participants.pros
+                    : agora.prosCount}
+                  명<span aria-hidden> | </span>
                 </span>
               </span>
               <span className="text-red-500 dark:text-dark-con-color">
                 반대
                 <span className="text-athens-gray-thick pl-3 dark:text-dark-line">
-                  {isAgora(agora) ? agora.participants.cons : agora.consCount}명
-                  <span aria-hidden> | </span>
+                  {isAgoraActive(agora)
+                    ? agora.participants.cons
+                    : agora.consCount}
+                  명<span aria-hidden> | </span>
                 </span>
               </span>
-              {isAgora(agora) && (
+              {isAgoraActive(agora) && (
                 <span className="dark:text-white dark:text-opacity-80">
                   관찰자
                   <span className="pl-3 text-athens-gray-thick dark:text-dark-line">

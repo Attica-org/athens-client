@@ -75,12 +75,12 @@ export default function ServiceWorkerRegistration() {
     registerServiceWorker();
 
     // Service Worker가 업데이트 되면 서비스워커 모니터링하여 서비스워커 체크 및 재등록 로직 실행
-    navigator.serviceWorker.oncontrollerchange = () => {
-      const { controller } = navigator.serviceWorker;
-      if (controller) {
-        monitorServiceWorker(controller);
-      }
-    };
+    // navigator.serviceWorker.oncontrollerchange = () => {
+    //   const { controller } = navigator.serviceWorker;
+    //   if (controller) {
+    //     monitorServiceWorker(controller);
+    //   }
+    // };
   }, []);
 
   return null;
