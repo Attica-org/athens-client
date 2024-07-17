@@ -10,7 +10,7 @@ type Props = {
   selectPosition: (position: Position) => void;
 };
 
-export default function ModalPosSelectBtn({
+export default function ModalPositionSelectBtn({
   selectedPosition,
   selectPosition,
   position,

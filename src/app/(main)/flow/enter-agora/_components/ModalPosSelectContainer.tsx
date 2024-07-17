@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import ModalPosSelectBtn from '@/app/(main)/_components/atoms/ModalPosSelectBtn';
+import ModalPosSelectBtn from '@/app/(main)/_components/atoms/ModalPositionSelectBtn';
 import { useEnter } from '@/store/enter';
 import { useShallow } from 'zustand/react/shallow';
 
