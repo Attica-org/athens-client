@@ -1,3 +1,5 @@
+type Status = 'RUNNING' | 'CLOSED' | 'QUEUED';
+
 export interface Agora {
   id: number;
   agoraTitle: string;
@@ -8,7 +10,7 @@ export interface Agora {
     observer: number;
   };
   createdAt?: string;
-  status: string;
+  status: Status;
 }
 
 export interface ClosedAgora {

@@ -25,7 +25,7 @@ function SearchBar() {
   const [searchText, setSearchText] = useState<string>(search || q || '');
   const router = useRouter();
 
-  const removeInputText = () => {
+  const removeAllInputText = () => {
     reset();
     setSearchText('');
     const newSearchParams = new URLSearchParams(searchParams);
@@ -74,7 +74,10 @@ function SearchBar() {
         aria-label="입력한 검색 텍스트 전체 삭제"
         className="flex justify-center items-center w-1.5rem h-1.5rem"
       >
-        <RemoveIcon className="w-19 cursor-pointer" onClick={removeInputText} />
+        <RemoveIcon
+          className="w-19 cursor-pointer"
+          onClick={removeAllInputText}
+        />
       </button>
     </div>
   );

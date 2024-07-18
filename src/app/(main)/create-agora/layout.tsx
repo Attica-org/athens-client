@@ -1,5 +1,5 @@
 import React from 'react';
-import PageTitle from '../_components/atoms/PageTitle';
+import PageTitle from '../_components/molecules/PageTitle';
 import SideNav from '../_components/organisms/NavMenu';
 
 type Props = {
