@@ -5,7 +5,7 @@ import { useSearchStore } from '@/store/search';
 import CategoryButtonList from '../molecules/CategoryButtonList';
 import CategoryButtonListSkeleton from '../atoms/CategoryButtonListSkeleton';
 
-function CategoryButtonContainer() {
+export default function CategoryButtonContainer() {
   const { search } = useSearchStore();
 
   if (!search) {
@@ -18,5 +18,3 @@ function CategoryButtonContainer() {
 
   return null;
 }
-
-export default React.memo(CategoryButtonContainer);

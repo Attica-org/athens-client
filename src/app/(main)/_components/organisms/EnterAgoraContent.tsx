@@ -1,7 +1,6 @@
 'use client';
 
 import { useAgora } from '@/store/agora';
-import tokenManager from '@/utils/tokenManager';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import Loading from '@/app/_components/atoms/loading';
@@ -14,9 +13,8 @@ import EnterAgoraButton from '../../flow/enter-agora/_components/EnterAgoraButto
 
 export default function EnterAgoraContent() {
   const { selectedAgora, setSelectedAgora } = useAgora();
-  const redirectUrl: string | null = tokenManager.getRedirectUrl();
   const pathname = usePathname();
-  const agoraId = redirectUrl?.split('/').pop() || pathname.split('/')[3];
+  const agoraId = pathname.split('/')[3];
 
   const shouldFetch = !!agoraId && !selectedAgora.id;
 
@@ -33,7 +31,6 @@ export default function EnterAgoraContent() {
         title: data.title,
         status: data.status,
       });
-      tokenManager.clearRedirectUrl();
     }
   }, [agoraId, data, setSelectedAgora, isSuccess, selectedAgora.id]);
 

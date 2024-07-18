@@ -7,6 +7,7 @@ import {
 } from '@/constants/createAgora';
 import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
+import { ParticipantCountAction } from '@/app/model/Agora';
 import ControlNumberInput from '../atoms/ControlNumberInput';
 
 function ParticipantCapacitySetter() {
@@ -18,7 +19,7 @@ function ParticipantCapacitySetter() {
     })),
   );
 
-  const handleMessage = (value: number, state?: 'INCREASE' | 'DECREASE') => {
+  const validateCapacity = (value: number, state?: ParticipantCountAction) => {
     if (state === 'INCREASE' || value < MIN_PARTICIPANTS_CNT) {
       setMessage('최소 참여 인원은 각 1명입니다.');
       return;
@@ -33,18 +34,18 @@ function ParticipantCapacitySetter() {
     setCapacity(value);
   };
 
-  const inputParticipants: ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleParticipants: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = parseInt(e.target.value, 10);
-    handleMessage(value);
+    validateCapacity(value);
   };
 
-  const clickParticipantsBtn = (action: 'DECLEASE' | 'INCREASE') => {
+  const handleParticipantsBtn = (action: ParticipantCountAction) => {
     switch (action) {
-      case 'DECLEASE':
-        handleMessage(capacity - 1);
+      case 'DECREASE':
+        validateCapacity(capacity - 1);
         break;
       case 'INCREASE':
-        handleMessage(capacity + 1);
+        validateCapacity(capacity + 1);
         break;
       default:
         break;
@@ -57,8 +58,8 @@ function ParticipantCapacitySetter() {
         <ControlNumberInput
           label="찬성 / 반대"
           value={capacity}
-          handleChange={inputParticipants}
-          handleButtonClick={clickParticipantsBtn}
+          handleChange={handleParticipants}
+          handleButtonClick={handleParticipantsBtn}
           increaseLabel="참여 인원 증가"
           decreaseLabel="참여 인원 감소"
           inputLabel="설정한 최대 참여 인원"

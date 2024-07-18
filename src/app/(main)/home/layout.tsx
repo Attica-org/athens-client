@@ -3,7 +3,7 @@ import PageTitle from '../_components/atoms/PageTitle';
 import AgoraStatus from '../_components/atoms/AgoraStatus';
 import SideNav from '../_components/organisms/NavMenu';
 import SearchBarSuspense from '../_components/molecules/SearchBarSuspense';
-import AgoraStatusSuspense from '../_components/molecules/AgoraStatusSuspense';
+import AgoraStatusSuspense from '../_components/molecules/AgoraStatusTabSuspense';
 import CategoryButtonContainer from '../_components/organisms/CategoryButtonContainer';
 
 type Props = {

@@ -2,27 +2,27 @@
 
 import React, { useEffect } from 'react';
 import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
-import { AgoraData } from '@/app/model/Agora';
+import { Agora as IAgora, SearchParams } from '@/app/model/Agora';
 import { useInView } from 'react-intersection-observer';
-import Agora from '../atoms/Agora';
-import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
+import SearchAgora from '../atoms/SearchAgora';
+import { getAgoraKeywordSearch } from '../../_lib/getAgoraKeywordSearch';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
 
 type Props = {
-  searchParams: { status?: string; category?: string; q?: string };
+  searchParams: SearchParams;
 };
 
-export default function AgoraList({ searchParams }: Props) {
+export default function KeywordAgoraList({ searchParams }: Props) {
   const { data, hasNextPage, fetchNextPage, isFetching } =
     useSuspenseInfiniteQuery<
-      { agoras: AgoraData[]; nextCursor: number | null },
+      { agoras: IAgora[]; nextCursor: number | null },
       Object,
-      InfiniteData<{ agoras: AgoraData[]; nextCursor: number | null }>,
+      InfiniteData<{ agoras: IAgora[]; nextCursor: number | null }>,
       [_1: string, _2: string, _3: string, Props['searchParams']],
       { nextCursor: number | null }
     >({
-      queryKey: ['agoras', 'search', 'category', searchParams],
-      queryFn: getAgoraCategorySearch,
+      queryKey: ['agoras', 'search', 'keyword', searchParams],
+      queryFn: getAgoraKeywordSearch,
       staleTime: 60 * 1000,
       gcTime: 500 * 1000,
       initialPageParam: { nextCursor: null },
@@ -49,15 +49,13 @@ export default function AgoraList({ searchParams }: Props) {
       {data?.pages[0].agoras.length < 1 ? (
         <NoAgoraMessage />
       ) : (
-        <div className="grid under-large:grid-cols-5 gap-x-1rem gap-y-1rem under-mobile:grid-cols-2 mobile:grid-cols-2 foldable:grid-cols-3 tablet:grid-cols-4 under-tablet:grid-cols-4 xl:grid-cols-6 sm:grid-cols-3 lg:grid-cols-5 under-xl:grid-cols-4">
-          {data?.pages.map((page) => (
-            <React.Fragment key={page.agoras[0]?.id}>
-              {page.agoras.map((agora) => (
-                <Agora key={agora.id} agora={agora} />
-              ))}
-            </React.Fragment>
-          ))}
-        </div>
+        data?.pages.map((page) => (
+          <React.Fragment key={page.agoras[0]?.id || 0}>
+            {page.agoras.map((agora) => (
+              <SearchAgora key={agora.id} agora={agora} />
+            ))}
+          </React.Fragment>
+        ))
       )}
       <div ref={ref} />
     </>

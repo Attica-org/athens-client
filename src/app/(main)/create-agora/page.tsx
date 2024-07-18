@@ -1,6 +1,6 @@
 import NotificationIcon from '@/assets/icons/NotificationIcon';
 import React from 'react';
-import AgoraPointColorList from '@/app/(main)/_components/molecules/AgoraPointColorList';
+import AgoraPointColorList from '@/app/(main)/_components/molecules/SelectAgoraColor';
 import ParticipantCapacitySetter from '../_components/molecules/ParticipantCapacitySetter';
 import DiscussionDurationSetter from '../_components/molecules/DiscussionDurationSetter';
 import AgoraTitleInput from './_component/AgoraTitleInput';

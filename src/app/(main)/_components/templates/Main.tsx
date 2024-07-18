@@ -1,13 +1,14 @@
 import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import { SearchParams } from '@/app/model/Agora';
 import Loading from '../atoms/loading';
 
 type Props = {
-  searchParams: { status?: string; category?: string; q?: string };
+  searchParams: SearchParams;
 };
 
-const SearchDeciderSuspense = dynamic(
-  () => import('../organisms/SearchDeciderSuspense'),
+const AgoraListDeciderSuspense = dynamic(
+  () => import('../organisms/AgoraListDeciderSuspense'),
 );
 
 export default function Main({ searchParams }: Props) {
@@ -18,7 +19,7 @@ export default function Main({ searchParams }: Props) {
         className="flex flex-1 flex-col p-5 pt-3 pb-5rem justify-start items-center"
       >
         <Suspense fallback={<Loading />}>
-          <SearchDeciderSuspense searchParams={searchParams} />
+          <AgoraListDeciderSuspense searchParams={searchParams} />
         </Suspense>
       </section>
     </main>
