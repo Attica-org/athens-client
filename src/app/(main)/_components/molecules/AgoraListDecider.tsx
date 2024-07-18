@@ -4,20 +4,19 @@ import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import ErrorFallback from '@/app/_components/templates/ErrorFallback';
+import { SearchParams } from '@/app/model/Agora';
 import Loading from '../atoms/loading';
 
-const SearchAgoraList = dynamic(() => import('./SearchAgoraList'), {
+const KeywordAgoraList = dynamic(() => import('./KeywordAgoraList'), {
   loading: () => <Loading w="25" h="25" />,
-  ssr: false,
 });
 
-const AgoraList = dynamic(() => import('./AgoraList'), {
+const CategoryAgoraList = dynamic(() => import('./CategoryAgoraList'), {
   loading: () => <Loading w="25" h="25" />,
-  ssr: false,
 });
 
 type Props = {
-  searchParams: { status?: string; category?: string; q?: string };
+  searchParams: SearchParams;
 };
 
 const errorFallbackProps = {
@@ -28,14 +27,14 @@ const errorFallbackProps = {
 function FallbackComponent(props: FallbackProps) {
   return <ErrorFallback {...props} {...errorFallbackProps} />;
 }
-export default function SearchDecider({ searchParams }: Props) {
+export default function AgoraListDecider({ searchParams }: Props) {
   const { q } = searchParams;
 
   if (q) {
     return (
       <ErrorBoundary FallbackComponent={FallbackComponent}>
         <Suspense fallback={<Loading w="25" h="25" />}>
-          <SearchAgoraList searchParams={searchParams} />
+          <KeywordAgoraList searchParams={searchParams} />
         </Suspense>
       </ErrorBoundary>
     );
@@ -44,7 +43,7 @@ export default function SearchDecider({ searchParams }: Props) {
   return (
     <ErrorBoundary FallbackComponent={FallbackComponent}>
       <Suspense fallback={<Loading w="25" h="25" />}>
-        <AgoraList searchParams={searchParams} />
+        <CategoryAgoraList searchParams={searchParams} />
       </Suspense>
     </ErrorBoundary>
   );

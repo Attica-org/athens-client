@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { AgoraUser } from '@/app/model/AgoraUser';
+import { AgoraUserProfileType } from '@/app/model/Agora';
 import fetchWrapper from '@/lib/fetchWrapper';
 import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
@@ -9,7 +9,7 @@ import { QueryFunction } from '@tanstack/react-query';
 
 // eslint-disable-next-line import/prefer-default-export
 export const getAgoraUsers: QueryFunction<
-  AgoraUser[],
+  AgoraUserProfileType[],
   [string, string, string]
 > = async ({ queryKey }) => {
   const [_1, _2, agoraId] = queryKey;

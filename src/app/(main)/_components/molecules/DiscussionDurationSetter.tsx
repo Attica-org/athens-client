@@ -10,7 +10,7 @@ import {
 import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 
-function DiscussionDurationSetter() {
+export default function DiscussionDurationSetter() {
   const [message, setMessage] = useState<string | null>(null);
   const { duration, setDuration } = useCreateAgora(
     useShallow((state) => ({
@@ -19,7 +19,7 @@ function DiscussionDurationSetter() {
     })),
   );
 
-  const handleAgoraTime: ChangeEventHandler<HTMLInputElement> = (e) => {
+  const validateAgoraDuration: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = parseInt(e.target.value, 10);
 
     if (value < MIN_DISCUSSION_TIME) {
@@ -41,7 +41,7 @@ function DiscussionDurationSetter() {
           aria-label="토론 제한시간 입력창"
           type="number"
           value={duration || ''}
-          onChange={handleAgoraTime}
+          onChange={validateAgoraDuration}
           className="input-number-hide focus-visible:outline-none text-sm mr-0.5rem text-center p-5 w-4rem lg:w-5rem border-1 border-athens-gray rounded-md dark:bg-dark-bg-light dark:border-gray-500"
         />
         <div className="text-xs lg:text-base">분</div>
@@ -58,5 +58,3 @@ function DiscussionDurationSetter() {
     </div>
   );
 }
-
-export default React.memo(DiscussionDurationSetter);

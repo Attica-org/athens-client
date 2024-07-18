@@ -1,10 +1,11 @@
+import { ParticipantCountAction } from '@/app/model/Agora';
 import React from 'react';
 
 type Props = {
   label: string;
   value: number;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleButtonClick: (action: 'DECLEASE' | 'INCREASE') => void;
+  handleButtonClick: (action: ParticipantCountAction) => void;
   increaseLabel: string;
   decreaseLabel: string;
   inputLabel: string;
@@ -30,7 +31,7 @@ export default function ControlNumberInput({
           type="button"
           aria-label={decreaseLabel}
           className="text-xl cursor-pointer"
-          onClick={() => handleButtonClick('DECLEASE')}
+          onClick={() => handleButtonClick('DECREASE')}
         >
           -
         </button>

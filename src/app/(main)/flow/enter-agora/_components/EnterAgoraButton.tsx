@@ -4,21 +4,21 @@ import { postEnterAgoraInfo } from '@/app/(main)/_lib/postEnterAgoraInfo';
 import Loading from '@/app/_components/atoms/loading';
 import { useAgora } from '@/store/agora';
 import { useEnter } from '@/store/enter';
-import tokenManager from '@/utils/tokenManager';
 import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 export default function EnterAgoraButton() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const pathname = usePathname();
 
   const router = useRouter();
   const { selectedAgora, setEnterAgora } = useAgora();
-  const redirectURL = tokenManager.getRedirectUrl();
 
   const routePage = () => {
-    if (!selectedAgora.id && redirectURL) {
-      const agoraId = redirectURL.split('/').pop();
+    if (!selectedAgora.id) {
+      const agoraId = pathname.split('/')[3];
+
       router.push(`/agoras/${agoraId}`);
     } else if (selectedAgora.id) {
       router.push(`/agoras/${selectedAgora.id}`);
@@ -73,7 +73,6 @@ export default function EnterAgoraButton() {
     }
 
     setIsLoading(() => {
-      tokenManager.clearRedirectUrl();
       mutation.mutate();
       return true;
     });

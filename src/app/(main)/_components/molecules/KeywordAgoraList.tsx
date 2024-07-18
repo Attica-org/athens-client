@@ -2,17 +2,17 @@
 
 import React, { useEffect } from 'react';
 import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
-import { Agora as IAgora } from '@/app/model/Agora';
+import { Agora as IAgora, SearchParams } from '@/app/model/Agora';
 import { useInView } from 'react-intersection-observer';
-import SearchAgora from '../atoms/KeywordAgora';
+import SearchAgora from '../atoms/SearchAgora';
 import { getAgoraKeywordSearch } from '../../_lib/getAgoraKeywordSearch';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
 
 type Props = {
-  searchParams: { status?: string; category?: string; q?: string };
+  searchParams: SearchParams;
 };
 
-export default function SearchAgoraList({ searchParams }: Props) {
+export default function KeywordAgoraList({ searchParams }: Props) {
   const { data, hasNextPage, fetchNextPage, isFetching } =
     useSuspenseInfiniteQuery<
       { agoras: IAgora[]; nextCursor: number | null },

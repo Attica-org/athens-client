@@ -4,14 +4,17 @@ import {
   dehydrate,
 } from '@tanstack/react-query';
 import React from 'react';
+import { SearchParams } from '@/app/model/Agora';
 import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
-import SearchDecider from '../molecules/SearchDecider';
+import AgoraListDecider from '../molecules/AgoraListDecider';
 
 type Props = {
-  searchParams: { status?: string; category?: string; q?: string };
+  searchParams: SearchParams;
 };
 
-export default async function SearchDeciderSuspense({ searchParams }: Props) {
+export default async function AgoraListDeciderSuspense({
+  searchParams,
+}: Props) {
   const queryClient = new QueryClient();
   await queryClient.prefetchInfiniteQuery({
     queryKey: ['agoras', 'search', 'category', searchParams],
@@ -22,7 +25,7 @@ export default async function SearchDeciderSuspense({ searchParams }: Props) {
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <SearchDecider searchParams={searchParams} />
+      <AgoraListDecider searchParams={searchParams} />
     </HydrationBoundary>
   );
 }
