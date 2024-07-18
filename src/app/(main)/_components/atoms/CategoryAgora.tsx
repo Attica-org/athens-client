@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
 import COLOR from '@/constants/agoraColor';
 import tokenManager from '@/utils/tokenManager';
-import isAgoraActive from '@/app/_components/utils/isAgoraActive';
+import isActiveAgora from '@/app/_components/utils/isActiveAgora';
 
 type Props = {
   agora: AgoraData;
@@ -72,15 +72,15 @@ export default function CategoryAgora({ agora }: Props) {
           <span className="text-blue-600 pr-3 dark:text-dark-pro-color">
             찬성
           </span>
-          {isAgoraActive(agora) ? agora.participants.pros : agora.prosCount}명
+          {isActiveAgora(agora) ? agora.participants.pros : agora.prosCount}명
         </span>
         <span className="pr-5 text-athens-gray-thick text-nowrap dark:text-dark-line">
           <span className="text-red-600 pr-3 dark:text-dark-con-color">
             반대
           </span>
-          {isAgoraActive(agora) ? agora.participants.cons : agora.consCount}명
+          {isActiveAgora(agora) ? agora.participants.cons : agora.consCount}명
         </span>
-        {isAgoraActive(agora) && (
+        {isActiveAgora(agora) && (
           <span className="under-mobile:bloc break-keep">
             <span className="pr-3 dark:text-white dark:text-opacity-85">
               관찰자

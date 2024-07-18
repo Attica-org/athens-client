@@ -7,7 +7,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useAgora } from '@/store/agora';
 import COLOR from '@/constants/agoraColor';
-import isAgoraActive from '@/app/_components/utils/isAgoraActive';
+import isActiveAgora from '@/app/_components/utils/isActiveAgora';
 import UserImage from '../../../_components/atoms/UserImage';
 
 type Props = {
@@ -69,7 +69,7 @@ export default function KeywordAgora({ agora }: Props) {
               <span className="text-blue-500 dark:text-dark-pro-color">
                 찬성
                 <span className="text-athens-gray-thick pl-3 dark:text-dark-line">
-                  {isAgoraActive(agora)
+                  {isActiveAgora(agora)
                     ? agora.participants.pros
                     : agora.prosCount}
                   명<span aria-hidden> | </span>
@@ -78,13 +78,13 @@ export default function KeywordAgora({ agora }: Props) {
               <span className="text-red-500 dark:text-dark-con-color">
                 반대
                 <span className="text-athens-gray-thick pl-3 dark:text-dark-line">
-                  {isAgoraActive(agora)
+                  {isActiveAgora(agora)
                     ? agora.participants.cons
                     : agora.consCount}
                   명<span aria-hidden> | </span>
                 </span>
               </span>
-              {isAgoraActive(agora) && (
+              {isActiveAgora(agora) && (
                 <span className="dark:text-white dark:text-opacity-80">
                   관찰자
                   <span className="pl-3 text-athens-gray-thick dark:text-dark-line">
