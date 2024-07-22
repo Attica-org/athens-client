@@ -43,7 +43,11 @@ export default function EnterAgoraContent() {
       ) : (
         <div className="mb-1rem flex justify-center items-center">
           <p className="mr-8">불러오는 중...</p>
-          <Loading w="16" h="16" />
+          <Loading
+            w="16"
+            h="16"
+            className="m-2 flex justify-center items-center"
+          />
         </div>
       )}
       <ModalPosSelectContainer />

@@ -86,7 +86,15 @@ export default function EnterAgoraButton() {
       onClick={enterAgora}
       className="mt-2rem text-sm bg-athens-main p-0.5rem w-full text-white rounded-lg"
     >
-      {isLoading ? <Loading w="16" h="16" /> : '입장하기'}
+      {isLoading ? (
+        <Loading
+          w="16"
+          h="16"
+          className="m-2 flex justify-center items-center"
+        />
+      ) : (
+        '입장하기'
+      )}
     </button>
   );
 }

@@ -5,7 +5,6 @@ import { useAgora } from '@/store/agora';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
 import COLOR from '@/constants/agoraColor';
-import tokenManager from '@/utils/tokenManager';
 import isActiveAgora from '@/app/_components/utils/isActiveAgora';
 
 type Props = {
@@ -44,7 +43,6 @@ export default function CategoryAgora({ agora }: Props) {
       router.push(`/flow/enter-agora/${agora.id}`);
     } else if (AgoraStatus === 'closed') {
       // 바로 채팅방으로 이동
-      tokenManager.clearRedirectUrl();
       setAgoraData();
       routeAgoraPage();
     }

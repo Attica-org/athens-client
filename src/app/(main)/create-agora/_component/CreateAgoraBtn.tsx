@@ -106,7 +106,15 @@ function CreateAgoraBtn() {
         aria-label="아고라 생성하기"
         className="w-full bg-athens-main text-white font-semibold pt-10 pb-10 under-mobile:pt-10 under-mobile:pb-10 under-mobile:mt-1rem text-base rounded-lg"
       >
-        {isLoading ? <Loading w="16" h="16" /> : '아고라 생성'}
+        {isLoading ? (
+          <Loading
+            w="16"
+            h="16"
+            className="m-2 flex justify-center items-center"
+          />
+        ) : (
+          '아고라 생성'
+        )}
       </button>
     </div>
   );

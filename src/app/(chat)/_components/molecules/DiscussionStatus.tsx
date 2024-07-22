@@ -116,7 +116,11 @@ export default function DiscussionStatus({ meta }: Props) {
       fallback={
         <div className="flex text-sm justify-center items-center">
           결과 불러오는 중...
-          <Loading w="12" h="12" />
+          <Loading
+            w="12"
+            h="12"
+            className="m-2 flex justify-center items-center"
+          />
         </div>
       }
     >
