@@ -18,17 +18,15 @@ export default function AgoraUserSide() {
   );
   const agoraId = useAgora((state) => state.enterAgora.id);
 
-  const toggleMenu = () => {
-    toggle();
+  const onClickOutSide: MouseEventHandler<HTMLDivElement> = (e) => {
+    if (e.target === e.currentTarget) {
+      toggle();
+    }
   };
 
-  const onClickOutside: MouseEventHandler<HTMLDivElement> = (e) => {
-    if (e.target === e.currentTarget) toggleMenu();
-  };
-
-  const closeModal: KeyboardEventHandler<HTMLDivElement> = (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      toggleMenu();
+  const onKeyDownOutSide: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (e.key === 'Enter' && e.target === e.currentTarget) {
+      toggle();
     }
   };
 
@@ -41,8 +39,8 @@ export default function AgoraUserSide() {
       aria-label="참여자 목록"
     >
       <div
-        onKeyDown={closeModal}
-        onClick={onClickOutside}
+        onKeyDown={onKeyDownOutSide}
+        onClick={onClickOutSide}
         className="w-full h-full"
         role="button"
         tabIndex={0}
@@ -68,7 +66,7 @@ export default function AgoraUserSide() {
               <button
                 type="button"
                 aria-label="아이콘으로 참여자 목록 닫기"
-                onClick={toggleMenu}
+                onClick={toggle}
               >
                 <RemoveIcon className="w-22 cursor-pointer" />
               </button>
