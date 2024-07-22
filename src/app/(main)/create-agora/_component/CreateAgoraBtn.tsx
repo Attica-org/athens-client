@@ -11,18 +11,11 @@ import {
   MIN_DISCUSSION_TIME,
 } from '@/constants/createAgora';
 import showToast from '@/utils/showToast';
+import { AgoraConfig } from '@/app/model/Agora';
 import { postCreateAgora } from '../../_lib/postCreateAgora';
 
-type Agora = {
-  title: string;
-  category: string;
-  color: string;
-  capacity: number;
-  duration: number | null;
-};
-
 function CreateAgoraBtn() {
-  const [createAgora, setCreateAgora] = useState<Agora>({
+  const [createAgora, setCreateAgora] = useState<AgoraConfig>({
     title: '',
     category: '1',
     color: 'bg-agora-point-color1',
