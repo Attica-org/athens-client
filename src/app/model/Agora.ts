@@ -49,3 +49,9 @@ export type AgoraConfig = {
 };
 
 export type ParticipationPosition = 'PROS' | 'CONS' | 'OBSERVER';
+
+export type ProfileImage = {
+  id: number;
+  name: string;
+  file: string;
+};

@@ -1,21 +1,11 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import { ParticipationPosition } from '@/app/model/Agora';
-
-type ProfileImage = {
-  id: number;
-  name: string;
-  file: string;
-};
+import { ParticipationPosition, ProfileImage } from '@/app/model/Agora';
 
 interface EnterState {
   nickname: string;
   message: string;
-  selectedProfileImage: {
-    id: number;
-    name: string;
-    file: string;
-  };
+  selectedProfileImage: ProfileImage;
   selectedPosition: ParticipationPosition;
   setMessage: (message: string) => void;
   setNickname: (nickname: string) => void;

@@ -5,13 +5,8 @@ import UserImage from '@/app/_components/atoms/UserImage';
 import PROFLELIST from '@/constants/userProfileImage';
 import { useShallow } from 'zustand/react/shallow';
 import { useEnter } from '@/store/enter';
+import { ProfileImage } from '@/app/model/Agora';
 import SelectedProfile from './SelectedProfile';
-
-type ProfileImageName = {
-  id: number;
-  name: string;
-  file: string;
-};
 
 export default function SetUserProfile() {
   const { setProfileImage, reset } = useEnter(
@@ -21,13 +16,13 @@ export default function SetUserProfile() {
     })),
   );
 
-  const selectProfile = (profile: ProfileImageName): void => {
+  const selectProfile = (profile: ProfileImage): void => {
     setProfileImage(profile);
   };
 
   const handleKeyDownSetProfile = (
     e: React.KeyboardEvent<HTMLElement>,
-    profile: ProfileImageName,
+    profile: ProfileImage,
   ) => {
     if (e.key === 'Enter') {
       selectProfile(profile);
