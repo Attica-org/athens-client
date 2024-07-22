@@ -121,4 +121,4 @@ function CreateAgoraBtn() {
   );
 }
 
-export default React.memo(CreateAgoraBtn);
+export default CreateAgoraBtn;

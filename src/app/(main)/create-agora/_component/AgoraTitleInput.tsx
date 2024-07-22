@@ -48,4 +48,4 @@ function AgoraTitleInput() {
   );
 }
 
-export default React.memo(AgoraTitleInput);
+export default AgoraTitleInput;
