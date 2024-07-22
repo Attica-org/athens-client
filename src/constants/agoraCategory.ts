@@ -1,4 +1,11 @@
-export const AGORACATEGORY = {
+type Category = {
+  readonly [key: string | number]: {
+    readonly innerText: string;
+    readonly value: string;
+  };
+};
+
+export const AGORACATEGORY: Category = {
   '1': { innerText: '전체', value: '1' },
   '2': { innerText: '사회/복지', value: '2' },
   '3': { innerText: '지식/공부', value: '3' },
@@ -9,6 +16,6 @@ export const AGORACATEGORY = {
 
 type CategoryKey = keyof typeof AGORACATEGORY;
 
-export function isValidCategoryKey(key: string): key is CategoryKey {
+export function isValidCategoryKey(key: string | number): key is CategoryKey {
   return key in AGORACATEGORY;
 }
