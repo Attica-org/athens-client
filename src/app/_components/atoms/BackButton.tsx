@@ -1,5 +1,3 @@
-'use client';
-
 import BackIcon from '@/assets/icons/BackIcon';
 import React from 'react';
 
