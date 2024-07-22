@@ -19,7 +19,6 @@ export function middleware(request: NextRequest) {
     const token = tokenManager.getToken();
 
     if (!token) {
-      tokenManager.setRedirectUrl(refererPathname);
       return NextResponse.redirect(
         `${process.env.NEXT_CLIENT_URL}/flow/enter-agora/${agoraId}`,
       );
