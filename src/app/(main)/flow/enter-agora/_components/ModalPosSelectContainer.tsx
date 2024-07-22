@@ -4,8 +4,7 @@ import React, { useEffect } from 'react';
 import ModalPosSelectBtn from '@/app/(main)/_components/atoms/ModalPositionSelectBtn';
 import { useEnter } from '@/store/enter';
 import { useShallow } from 'zustand/react/shallow';
-
-type Position = 'CONS' | 'PROS' | 'OBSERVER';
+import { ParticipationPosition } from '@/app/model/Agora';
 
 export default function ModalPosSelectContainer() {
   const { selectedPosition, setSelectedPosition, setMessage } = useEnter(
@@ -24,7 +23,7 @@ export default function ModalPosSelectContainer() {
     }
   }, [selectedPosition, setMessage]);
 
-  const selectPosition = (position: Position) => {
+  const selectPosition = (position: ParticipationPosition) => {
     setSelectedPosition(position);
   };
 

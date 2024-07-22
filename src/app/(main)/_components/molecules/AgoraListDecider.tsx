@@ -5,14 +5,18 @@ import dynamic from 'next/dynamic';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import ErrorFallback from '@/app/_components/templates/ErrorFallback';
 import { SearchParams } from '@/app/model/Agora';
-import Loading from '../atoms/loading';
+import Loading from '@/app/_components/atoms/loading';
 
 const KeywordAgoraList = dynamic(() => import('./KeywordAgoraList'), {
-  loading: () => <Loading w="25" h="25" />,
+  loading: () => (
+    <Loading w="25" h="25" className="m-5 flex justify-center items-center" />
+  ),
 });
 
 const CategoryAgoraList = dynamic(() => import('./CategoryAgoraList'), {
-  loading: () => <Loading w="25" h="25" />,
+  loading: () => (
+    <Loading w="25" h="25" className="m-5 flex justify-center items-center" />
+  ),
 });
 
 type Props = {
@@ -33,7 +37,15 @@ export default function AgoraListDecider({ searchParams }: Props) {
   if (q) {
     return (
       <ErrorBoundary FallbackComponent={FallbackComponent}>
-        <Suspense fallback={<Loading w="25" h="25" />}>
+        <Suspense
+          fallback={
+            <Loading
+              w="25"
+              h="25"
+              className="m-5 flex justify-center items-center"
+            />
+          }
+        >
           <KeywordAgoraList searchParams={searchParams} />
         </Suspense>
       </ErrorBoundary>
@@ -42,7 +54,15 @@ export default function AgoraListDecider({ searchParams }: Props) {
 
   return (
     <ErrorBoundary FallbackComponent={FallbackComponent}>
-      <Suspense fallback={<Loading w="25" h="25" />}>
+      <Suspense
+        fallback={
+          <Loading
+            w="25"
+            h="25"
+            className="m-5 flex justify-center items-center"
+          />
+        }
+      >
         <CategoryAgoraList searchParams={searchParams} />
       </Suspense>
     </ErrorBoundary>

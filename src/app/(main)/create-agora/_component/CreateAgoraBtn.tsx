@@ -12,18 +12,10 @@ import {
 } from '@/constants/createAgora';
 import showToast from '@/utils/showToast';
 import COLOR from '@/constants/agoraColor';
-import { postCreateAgora } from '../../_lib/postCreateAgora';
-
-type Agora = {
-  title: string;
-  category: string;
-  color: string;
-  capacity: number;
-  duration: number | null;
-};
+import { AgoraConfig } from '@/app/model/Agora';
 
 function CreateAgoraBtn() {
-  const [createAgora, setCreateAgora] = useState<Agora>({
+  const [createAgora, setCreateAgora] = useState<AgoraConfig>({
     title: '',
     category: '1',
     color: COLOR[0].value,
@@ -71,6 +63,7 @@ function CreateAgoraBtn() {
 
     if (
       title.trim() === '' ||
+      title.length > 15 ||
       !color ||
       !category ||
       !duration ||
@@ -107,10 +100,18 @@ function CreateAgoraBtn() {
         aria-label="아고라 생성하기"
         className="w-full bg-athens-main text-white font-semibold pt-10 pb-10 under-mobile:pt-10 under-mobile:pb-10 under-mobile:mt-1rem text-base rounded-lg"
       >
-        {isLoading ? <Loading w="16" h="16" /> : '아고라 생성'}
+        {isLoading ? (
+          <Loading
+            w="16"
+            h="16"
+            className="m-2 flex justify-center items-center"
+          />
+        ) : (
+          '아고라 생성'
+        )}
       </button>
     </div>
   );
 }
 
-export default React.memo(CreateAgoraBtn);
+export default CreateAgoraBtn;

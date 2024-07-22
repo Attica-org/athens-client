@@ -2,14 +2,7 @@ import fetchWrapper from '@/lib/fetchWrapper';
 import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
-
-type Props = {
-  title: string;
-  category: string;
-  color: string;
-  capacity: number;
-  duration: number | null;
-};
+import { AgoraConfig } from '@/app/model/Agora';
 
 const TITLE_NULL = '{"title":"공백일 수 없습니다"}';
 const CATEGORY_ERROR = '{"capacity":"1 이상이어야 합니다"}';
@@ -17,7 +10,7 @@ const COLOR_NULL = '{"color":"공백일 수 없습니다"}';
 const CAPACITY_NULL = '{"categoryId":"널이어서는 안됩니다"}';
 
 // eslint-disable-next-line import/prefer-default-export
-export const postCreateAgora = async (info: Props) => {
+export const postCreateAgora = async (info: AgoraConfig) => {
   // 토큰을 가지고 있는지 확인
   if (tokenManager.getToken() === undefined) {
     await getToken();
