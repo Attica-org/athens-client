@@ -8,20 +8,19 @@ import React, {
   useState,
 } from 'react';
 import { useRouter } from 'next/navigation';
-import { useCreateAgora } from '@/store/create';
-import RemoveButton from '../atoms/RemoveButton';
+import CloseButton from '../atoms/CloseButton';
 
 type Props = {
   children: React.ReactNode;
   title: string;
-  removeIcon: boolean;
+  closeIcon: boolean;
   animation: boolean;
 };
 
 export default function ModalBase({
   children,
   title,
-  removeIcon,
+  closeIcon,
   animation,
 }: Props) {
   const router = useRouter();
@@ -49,14 +48,14 @@ export default function ModalBase({
     }
   }, [modalRef]);
 
-  const clickOutSideModal: MouseEventHandler<HTMLDivElement> = (e) => {
-    if (e.target === e.currentTarget && removeIcon) router.back();
+  const onClickOutSide: MouseEventHandler<HTMLDivElement> = (e) => {
+    if (e.target === e.currentTarget && closeIcon) {
+      router.back();
+    }
   };
 
-  const keyDownOutSideModal: KeyboardEventHandler<HTMLElement> = (e) => {
-    if (e.key === 'Enter' && e.target === e.currentTarget && removeIcon) {
-      const { reset } = useCreateAgora.getState();
-      reset(); // 언마운트시 초기화
+  const onKeyDownOutSide: KeyboardEventHandler<HTMLElement> = (e) => {
+    if (e.key === 'Enter' && e.target === e.currentTarget && closeIcon) {
       router.back();
     }
   };
@@ -66,8 +65,8 @@ export default function ModalBase({
       role="button"
       tabIndex={0}
       ref={modalRef}
-      onClick={clickOutSideModal}
-      onKeyDown={keyDownOutSideModal}
+      onClick={onClickOutSide}
+      onKeyDown={onKeyDownOutSide}
       className="w-full h-full flex absolute justify-center items-center z-20 top-0 right-0 left-0 bottom-0 bg-opacity-50 bg-dark-bg-dark"
     >
       <div
@@ -80,7 +79,7 @@ export default function ModalBase({
         <h1 className="font-semibold flex justify-center items-center mt-2rem text-sm lg:text-md">
           {title}
         </h1>
-        {removeIcon && <RemoveButton className="absolute right-20 top-20" />}
+        {closeIcon && <CloseButton className="absolute right-20 top-20" />}
         <div className="p-14">{children}</div>
       </div>
     </div>
