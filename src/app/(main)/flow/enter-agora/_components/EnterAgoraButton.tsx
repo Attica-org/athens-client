@@ -27,17 +27,19 @@ export default function EnterAgoraButton() {
     }
   };
 
+  const callEnterAgoraAPI = async () => {
+    const { selectedProfileImage, selectedPosition, nickname } =
+      useEnter.getState();
+    const info = {
+      ...selectedProfileImage,
+      nickname,
+      role: selectedPosition,
+    };
+    return postEnterAgoraInfo({ info, agoraId: selectedAgora.id });
+  };
+
   const mutation = useMutation({
-    mutationFn: async () => {
-      const { selectedProfileImage, selectedPosition, nickname } =
-        useEnter.getState();
-      const info = {
-        ...selectedProfileImage,
-        nickname,
-        role: selectedPosition,
-      };
-      return postEnterAgoraInfo({ info, agoraId: selectedAgora.id });
-    },
+    mutationFn: callEnterAgoraAPI,
     onSuccess: (response) => {
       if (response) {
         setEnterAgora({
@@ -72,10 +74,8 @@ export default function EnterAgoraButton() {
       }
     }
 
-    setIsLoading(() => {
-      mutation.mutate();
-      return true;
-    });
+    setIsLoading(true);
+    mutation.mutate();
   };
 
   return (
