@@ -1,18 +1,18 @@
 'use client';
 
-import { useNetworkOffline } from '@/hooks/useNetworkOffline';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 // import { useQueryError } from '@/hooks/useQueryError';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React, { useState } from 'react';
-import NetworkErrorPage from './NetworkErrorPage';
+import NetworkErrorNotification from './NetworkErrorNotification';
 
 type Props = {
   children: React.ReactNode;
 };
 
 export default function RQProvider({ children }: Props) {
-  const { isNetworkOffline } = useNetworkOffline();
+  const { isNetworkOffline } = useNetworkStatus();
   // const { handleError } = useQueryError();
 
   const [client] = useState(
@@ -34,7 +34,7 @@ export default function RQProvider({ children }: Props) {
 
   return (
     <QueryClientProvider client={client}>
-      {isNetworkOffline && <NetworkErrorPage />}
+      {isNetworkOffline && <NetworkErrorNotification />}
       {children}
       <ReactQueryDevtools
         initialIsOpen={process.env.NODE_ENV === 'development'}

@@ -5,6 +5,7 @@ import {
   DEFAULT_PARTICIPANTS_CNT,
   DEFAULT_TIME,
 } from '@/constants/createAgora';
+import COLOR from '@/constants/agoraColor';
 import { AgoraConfig } from '@/app/model/Agora';
 
 interface AgoraState extends AgoraConfig {
@@ -19,7 +20,7 @@ interface AgoraState extends AgoraConfig {
 const initialState: AgoraState = {
   title: '',
   category: '1',
-  color: 'agora-point-color1',
+  color: COLOR[0].value,
   capacity: DEFAULT_PARTICIPANTS_CNT,
   duration: DEFAULT_TIME,
   setTitle: () => {},
@@ -43,7 +44,7 @@ export const useCreateAgora = create(
       set({
         title: '',
         category: '1',
-        color: 'agora-point-color1',
+        color: COLOR[0].value,
         capacity: DEFAULT_PARTICIPANTS_CNT,
         duration: DEFAULT_TIME,
       }),

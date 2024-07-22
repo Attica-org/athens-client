@@ -1,4 +1,4 @@
-import SWManager from '@/utils/SWManager';
+import swManager from '@/utils/swManager';
 import { useEffect, useState } from 'react';
 
 const useVote = () => {
@@ -9,7 +9,7 @@ const useVote = () => {
       navigator.serviceWorker.controller.postMessage({
         action: 'updateVote',
         data: vote,
-        tabId: SWManager.getTabId(),
+        tabId: swManager.getTabId(),
       });
     }
   }, [vote]);

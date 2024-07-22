@@ -4,7 +4,7 @@ import SocialShareLogos from '../atoms/SocialShareLogos';
 
 export default function SocialShare() {
   return (
-    <ModalBase title="공유하기" removeIcon animation>
+    <ModalBase title="공유하기" closeIcon animation>
       <SocialShareLogos />
     </ModalBase>
   );

@@ -7,7 +7,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useAgora } from '@/store/agora';
 import COLOR from '@/constants/agoraColor';
-import isActiveAgora from '@/app/_components/utils/isActiveAgora';
+import isActiveAgora from '@/utils/isActiveAgora';
 import UserImage from '../../../_components/atoms/UserImage';
 
 type Props = {

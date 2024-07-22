@@ -1,4 +1,3 @@
-// import { COLOR } from "@/constants/color";
 import React from 'react';
 
 type Props = {

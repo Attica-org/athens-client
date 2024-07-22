@@ -15,8 +15,8 @@ import { useVoteStore } from '@/store/vote';
 import getToken from '@/lib/getToken';
 import { useQueryClient } from '@tanstack/react-query';
 import getKey from '@/utils/getKey';
-import SWManager from '@/utils/SWManager';
-import { saveTabId, deleteTabId } from '@/app/_components/utils/indexedDB';
+import swManager from '@/utils/swManager';
+import { saveTabId, deleteTabId } from '@/utils/indexedDB';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraTitle from '../molecules/AgoraTitle';
@@ -72,9 +72,9 @@ export default function Header() {
     return () => {
       reset();
 
-      const tabId = SWManager.getTabId();
+      const tabId = swManager.getTabId();
       if (tabId) {
-        SWManager.clearTabId();
+        swManager.clearTabId();
         deleteTabId(tabId);
       }
     };
@@ -247,7 +247,7 @@ export default function Header() {
 
     if (enterAgora.status !== 'CLOSED') {
       const tabId = new Date().getTime().toString();
-      SWManager.setTabId(tabId);
+      swManager.setTabId(tabId);
       saveTabId(tabId);
 
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
