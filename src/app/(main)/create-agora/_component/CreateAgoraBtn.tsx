@@ -70,6 +70,7 @@ function CreateAgoraBtn() {
 
     if (
       title.trim() === '' ||
+      title.length > 15 ||
       !color ||
       !category ||
       !duration ||
