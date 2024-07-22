@@ -47,3 +47,5 @@ export type AgoraConfig = {
   capacity: number;
   duration: number | null;
 };
+
+export type ParticipationPosition = 'PROS' | 'CONS' | 'OBSERVER';
