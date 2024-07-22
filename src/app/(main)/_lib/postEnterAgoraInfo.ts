@@ -2,13 +2,14 @@ import fetchWrapper from '@/lib/fetchWrapper';
 import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
+import { ParticipationPosition } from '@/app/model/Agora';
 
 type Props = {
   info: {
     name?: string;
     id?: number;
     file?: string;
-    role: 'PROS' | 'CONS' | 'OBSERVER';
+    role: ParticipationPosition;
     nickname?: string;
   };
   agoraId: number;

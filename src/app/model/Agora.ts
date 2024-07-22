@@ -29,7 +29,7 @@ export interface AgoraUserProfileType {
   id: number;
   nickname: string;
   photoNumber: number;
-  type: 'PROS' | 'CONS' | 'OBSERVER';
+  type: ParticipationPosition;
 }
 
 export type ParticipantCountAction = 'DECREASE' | 'INCREASE';
