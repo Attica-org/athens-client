@@ -39,3 +39,19 @@ export interface SearchParams {
   category?: string;
   q?: string;
 }
+
+export type AgoraConfig = {
+  title: string;
+  category: string;
+  color: string;
+  capacity: number;
+  duration: number | null;
+};
+
+export type ParticipationPosition = 'PROS' | 'CONS' | 'OBSERVER';
+
+export type ProfileImage = {
+  id: number;
+  name: string;
+  file: string;
+};

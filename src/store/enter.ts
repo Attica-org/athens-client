@@ -1,27 +1,16 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-
-type ProfileImage = {
-  id: number;
-  name: string;
-  file: string;
-};
-
-type Position = 'CONS' | 'PROS' | 'OBSERVER';
+import { ParticipationPosition, ProfileImage } from '@/app/model/Agora';
 
 interface EnterState {
   nickname: string;
   message: string;
-  selectedProfileImage: {
-    id: number;
-    name: string;
-    file: string;
-  };
-  selectedPosition: Position;
+  selectedProfileImage: ProfileImage;
+  selectedPosition: ParticipationPosition;
   setMessage: (message: string) => void;
   setNickname: (nickname: string) => void;
   setProfileImage: (profileImage: ProfileImage) => void;
-  setSelectedPosition: (selectedPosition: Position) => void;
+  setSelectedPosition: (selectedPosition: ParticipationPosition) => void;
   reset: () => void;
 }
 
@@ -46,7 +35,7 @@ export const useEnter = create(
   immer<EnterState>((set) => ({
     ...initialState,
     setMessage: (message: string) => set({ message }),
-    setSelectedPosition: (selectedPosition: Position) =>
+    setSelectedPosition: (selectedPosition: ParticipationPosition) =>
       set({ selectedPosition }),
     setNickname: (nickname: string) => set({ nickname }),
     setProfileImage: (profileImage: ProfileImage) =>

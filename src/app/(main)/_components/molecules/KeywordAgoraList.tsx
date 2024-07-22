@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { Agora as IAgora, SearchParams } from '@/app/model/Agora';
 import { useInView } from 'react-intersection-observer';
-import SearchAgora from '../atoms/SearchAgora';
+import KeywordAgora from '../atoms/KeywordAgora';
 import { getAgoraKeywordSearch } from '../../_lib/getAgoraKeywordSearch';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
 
@@ -52,7 +52,7 @@ export default function KeywordAgoraList({ searchParams }: Props) {
         data?.pages.map((page) => (
           <React.Fragment key={page.agoras[0]?.id || 0}>
             {page.agoras.map((agora) => (
-              <SearchAgora key={agora.id} agora={agora} />
+              <KeywordAgora key={agora.id} agora={agora} />
             ))}
           </React.Fragment>
         ))

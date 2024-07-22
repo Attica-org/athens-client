@@ -27,17 +27,19 @@ export default function EnterAgoraButton() {
     }
   };
 
+  const callEnterAgoraAPI = async () => {
+    const { selectedProfileImage, selectedPosition, nickname } =
+      useEnter.getState();
+    const info = {
+      ...selectedProfileImage,
+      nickname,
+      role: selectedPosition,
+    };
+    return postEnterAgoraInfo({ info, agoraId: selectedAgora.id });
+  };
+
   const mutation = useMutation({
-    mutationFn: async () => {
-      const { selectedProfileImage, selectedPosition, nickname } =
-        useEnter.getState();
-      const info = {
-        ...selectedProfileImage,
-        nickname,
-        role: selectedPosition,
-      };
-      return postEnterAgoraInfo({ info, agoraId: selectedAgora.id });
-    },
+    mutationFn: callEnterAgoraAPI,
     onSuccess: (response) => {
       if (response) {
         setEnterAgora({
@@ -72,10 +74,8 @@ export default function EnterAgoraButton() {
       }
     }
 
-    setIsLoading(() => {
-      mutation.mutate();
-      return true;
-    });
+    setIsLoading(true);
+    mutation.mutate();
   };
 
   return (
@@ -86,7 +86,15 @@ export default function EnterAgoraButton() {
       onClick={enterAgora}
       className="mt-2rem text-sm bg-athens-main p-0.5rem w-full text-white rounded-lg"
     >
-      {isLoading ? <Loading w="16" h="16" /> : '입장하기'}
+      {isLoading ? (
+        <Loading
+          w="16"
+          h="16"
+          className="m-2 flex justify-center items-center"
+        />
+      ) : (
+        '입장하기'
+      )}
     </button>
   );
 }

@@ -3,13 +3,14 @@ import React from 'react';
 type Props = {
   w?: string;
   h?: string;
+  className?: string;
 };
 
-export default function Loading({ w = '45', h = '45' }: Props) {
+export default function Loading({ w = '45', h = '45', className = '' }: Props) {
   const size = `w-${w} h-${h}`;
 
   return (
-    <div role="status" className="m-2 flex justify-center items-center">
+    <div role="status" className={className}>
       <svg
         aria-hidden="true"
         className={`${size} text-gray-200 animate-spin dark:text-gray-600 fill-athens-main`}

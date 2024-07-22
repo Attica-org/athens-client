@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { AgoraData, SearchParams } from '@/app/model/Agora';
 import { useInView } from 'react-intersection-observer';
-import Agora from '../atoms/Agora';
+import CategoryAgora from '../atoms/CategoryAgora';
 import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
 
@@ -53,7 +53,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
           {data?.pages.map((page) => (
             <React.Fragment key={page.agoras[0]?.id}>
               {page.agoras.map((agora) => (
-                <Agora key={agora.id} agora={agora} />
+                <CategoryAgora key={agora.id} agora={agora} />
               ))}
             </React.Fragment>
           ))}

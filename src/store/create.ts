@@ -5,13 +5,9 @@ import {
   DEFAULT_PARTICIPANTS_CNT,
   DEFAULT_TIME,
 } from '@/constants/createAgora';
+import { AgoraConfig } from '@/app/model/Agora';
 
-interface AgoraState {
-  title: string;
-  category: string;
-  color: string;
-  capacity: number;
-  duration: number | null;
+interface AgoraState extends AgoraConfig {
   setTitle: (title: string) => void;
   setCategory: (category: string) => void;
   setColor: (color: string) => void;

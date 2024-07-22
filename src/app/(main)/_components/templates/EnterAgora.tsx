@@ -6,7 +6,9 @@ import EnterAgoraContent from '../organisms/EnterAgoraContent';
 export default function EnterAgora() {
   return (
     <ModalBase title="아고라 입장" removeIcon animation={false}>
-      <Suspense fallback={<Loading />}>
+      <Suspense
+        fallback={<Loading className="m-2 flex justify-center items-center" />}
+      >
         <EnterAgoraContent />
       </Suspense>
     </ModalBase>

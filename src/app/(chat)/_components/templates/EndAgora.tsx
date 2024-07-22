@@ -202,7 +202,11 @@ export default function EndAgora() {
         {isFinished && !voteEnd && (
           <div className="flex p-10 text-sm">
             투표 결과 집계 중...
-            <Loading w="16" h="16" />
+            <Loading
+              w="16"
+              h="16"
+              className="m-2 flex justify-center items-center"
+            />
           </div>
         )}
       </div>
