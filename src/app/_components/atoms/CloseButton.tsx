@@ -8,7 +8,7 @@ type Props = {
   className?: string;
 };
 
-export default function RemoveButton({ className = '' }: Props) {
+export default function CloseButton({ className = '' }: Props) {
   const router = useRouter();
 
   const onClickClose = () => {

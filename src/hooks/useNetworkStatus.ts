@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 // eslint-disable-next-line import/prefer-default-export
-export const useNetworkOffline = () => {
+export const useNetworkStatus = () => {
   const [isNetworkOffline, setIsNetworkOffline] = useState(false);
 
   const handleOnOffLine = () => {

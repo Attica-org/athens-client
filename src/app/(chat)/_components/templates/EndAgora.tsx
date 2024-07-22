@@ -2,11 +2,11 @@
 
 import Loading from '@/app/_components/atoms/loading';
 import ModalBase from '@/app/_components/molecules/ModalBase';
-import { deleteTabId } from '@/app/_components/utils/indexedDB';
+import { deleteTabId } from '@/utils/indexedDB';
 import { useAgora } from '@/store/agora';
 import { useChatInfo } from '@/store/chatInfo';
 import { useVoteStore } from '@/store/vote';
-import SWManager from '@/utils/SWManager';
+import swManager from '@/utils/swManager';
 import getKey from '@/utils/getKey';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
@@ -41,7 +41,7 @@ export default function EndAgora() {
   const [URL, setURL] = useState({
     BASE_URL: '',
   });
-  const tabId = SWManager.getTabId();
+  const tabId = swManager.getTabId();
 
   useEffect(() => {
     const getUrl = async () => {
@@ -151,7 +151,7 @@ export default function EndAgora() {
   return (
     <ModalBase
       title="토론 종료"
-      removeIcon={remainingTime <= 0}
+      closeIcon={remainingTime <= 0}
       animation={false}
     >
       <div className="flex justify-center items-center flex-col">

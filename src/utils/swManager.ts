@@ -1,6 +1,6 @@
 // 클로저를 활용해 서비스워커의 tabId 관리
 // 싱글톤 패턴으로 구현하여 전역에서 사용 가능
-const SWManager = (() => {
+const swManager = (() => {
   let tabId: string | null;
 
   return {
@@ -14,4 +14,4 @@ const SWManager = (() => {
   };
 })();
 
-export default SWManager;
+export default swManager;

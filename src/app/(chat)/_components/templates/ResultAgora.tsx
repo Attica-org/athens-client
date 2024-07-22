@@ -3,7 +3,7 @@
 import ModalBase from '@/app/_components/molecules/ModalBase';
 import { useChatInfo } from '@/store/chatInfo';
 import { useVoteStore } from '@/store/vote';
-import Confetti from '@/utils/Confetti';
+import Confetti from '@/app/_components/utils/Confetti';
 import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
@@ -32,7 +32,7 @@ export default function ResultAgora() {
   return (
     <>
       <Confetti />
-      <ModalBase title="투표 결과" removeIcon animation>
+      <ModalBase title="투표 결과" closeIcon animation>
         <div className="flex justify-center items-center flex-col">
           <h2
             aria-label="토론 주제"
