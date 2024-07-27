@@ -1,4 +1,4 @@
-import ServiceWorkerRegistration from '@/app/_components/utils/ServiceWorkerRegistration';
+import ServiceWorkerRegistration from '@/app/config/ServiceWorkerRegistration';
 import React from 'react';
 
 type Props = {
