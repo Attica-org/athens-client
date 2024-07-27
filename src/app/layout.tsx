@@ -3,10 +3,10 @@ import React from 'react';
 import './globals.css';
 import { Noto_Sans_KR } from 'next/font/google';
 import Script from 'next/script';
-import MSWComponent from './_components/utils/MSWComponent';
-import RQProvider from './_components/utils/RQProvider';
-import ServiceWorkerRegistration from './_components/utils/ServiceWorkerRegistration';
-import ToasterContainer from './_components/utils/ToasterContainer';
+import MSWComponent from './config/MSWComponent';
+import RQProvider from './config/RQProvider';
+import ServiceWorkerRegistration from './config/ServiceWorkerRegistration';
+import ToasterContainer from './config/ToasterContainer';
 import SetTheme from './_components/utils/SetTheme';
 
 export const viewport: Viewport = {
