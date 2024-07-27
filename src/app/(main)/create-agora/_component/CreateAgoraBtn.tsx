@@ -1,6 +1,10 @@
 'use client';
 
-import { useMutation } from '@tanstack/react-query';
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { useCreateAgora } from '@/store/create';
 import { useRouter } from 'next/navigation';
@@ -13,6 +17,7 @@ import {
 import showToast from '@/utils/showToast';
 import COLOR from '@/constants/agoraColor';
 import { AgoraConfig } from '@/app/model/Agora';
+import { postCreateAgora } from '../../_lib/postCreateAgora';
 
 function CreateAgoraBtn() {
   const [createAgora, setCreateAgora] = useState<AgoraConfig>({
@@ -24,6 +29,16 @@ function CreateAgoraBtn() {
   });
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const queryClient = useQueryClient();
+
+  const invalidAgora = (client: QueryClient, queryKey: string[]) => {
+    client.invalidateQueries({ queryKey });
+  };
+
+  const failedCreateAgora = () => {
+    showToast('아고라 생성에 실패했습니다.', 'error');
+    setIsLoading(false);
+  };
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -33,27 +48,27 @@ function CreateAgoraBtn() {
       return postCreateAgora(info);
     },
     onSuccess: async (response) => {
+      const { reset } = useCreateAgora.getState();
       const { setSelectedAgora } = useAgora.getState();
-      if (response) {
+      reset();
+
+      if (response.id) {
         setSelectedAgora({
           id: response.id,
           title: createAgora.title,
           status: 'QUEUED',
         });
 
-        const { reset } = useCreateAgora.getState();
-        reset();
-
         setIsLoading(false);
+
+        invalidAgora(queryClient, ['agora']);
         router.push(`/flow/enter-agora/${response.id}`);
       } else {
-        showToast('아고라 생성에 실패했습니다.', 'error');
-        setIsLoading(false);
+        failedCreateAgora();
       }
     },
     onError: () => {
-      showToast('아고라 생성에 실패했습니다.', 'error');
-      setIsLoading(false);
+      failedCreateAgora();
     },
   });
 
@@ -91,6 +106,7 @@ function CreateAgoraBtn() {
       reset(); // 언마운트시 초기화
     };
   }, []);
+
   return (
     <div className="mt-1rem w-full">
       <button
