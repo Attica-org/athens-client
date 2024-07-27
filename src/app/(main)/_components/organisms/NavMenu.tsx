@@ -11,6 +11,7 @@ export default function SideNav() {
         <div className="w-lg flex flex-col">
           <div className="flex-col">
             <Link
+              prefetch
               aria-label="로고로 홈 돌아가기"
               href="/"
               className="flex flex-row items-center text-2xl pt-1rem pb-1rem p-1rem"

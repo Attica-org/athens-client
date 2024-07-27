@@ -55,6 +55,7 @@ export default function ResultAgora() {
             </div>
           </div>
           <Link
+            prefetch
             aria-label="홈으로 가기"
             href="/"
             className="pt-1.5rem text-sm text-athens-gray-thick dark:text-dark-line"
