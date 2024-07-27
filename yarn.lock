@@ -2808,6 +2808,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@npm:^5.51.14":
+  version: 5.51.14
+  resolution: "@tanstack/query-core@npm:5.51.14"
+  checksum: 10c0/5d21037905e0ed96796088de2bcbd1c96ddf37bda5a98ec2f8c0ba9b506bb989d02bbb55fb4eb339a3f6ac67d3c6dcb8c5759cc56dac8091d82ea68f38f56c53
+  languageName: node
+  linkType: hard
+
 "@tanstack/query-devtools@npm:5.32.1":
   version: 5.32.1
   resolution: "@tanstack/query-devtools@npm:5.32.1"
@@ -3694,6 +3701,7 @@ __metadata:
     "@mswjs/http-middleware": "npm:^0.10.1"
     "@stomp/stompjs": "npm:^7.0.0"
     "@svgr/webpack": "npm:^8.1.0"
+    "@tanstack/query-core": "npm:^5.51.14"
     "@tanstack/react-query": "npm:^5.35.1"
     "@tanstack/react-query-devtools": "npm:^5.35.1"
     "@types/canvas-confetti": "npm:^1.6.4"
