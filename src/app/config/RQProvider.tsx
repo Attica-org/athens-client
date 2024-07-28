@@ -5,7 +5,7 @@ import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React, { useState } from 'react';
-import NetworkErrorNotification from './NetworkErrorNotification';
+import NetworkErrorNotification from '../_components/utils/NetworkErrorNotification';
 
 type Props = {
   children: React.ReactNode;

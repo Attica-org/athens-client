@@ -16,7 +16,7 @@ export default function MobileNavLink({
 }: Props) {
   return (
     <li className="flex justify-center items-center p-10 dark:text-dark-line-semilight">
-      <Link aria-label={label} href={href} className={className}>
+      <Link prefetch aria-label={label} href={href} className={className}>
         {children}
       </Link>
     </li>

@@ -62,7 +62,7 @@ export default function CategoryAgora({ agora }: Props) {
           />
         )}
       </div>
-      <h2 className="text-xs under-mobile:text-xs under-mobile:font-semibold pt-10 dark:text-white">
+      <h2 className="text-xs under-mobile:text-xs under-mobile:font-semibold pt-10 dark:text-white break-all w-full text-center">
         {agora.agoraTitle}
       </h2>
       <p aria-label="아고라 참여 인원" className="text-xs pt-7">

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { AGORACATEGORY, isValidCategoryKey } from '@/constants/agoraCategory';
 import Swiper from 'swiper';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -19,26 +19,25 @@ export default function CategoryButtonList() {
   const pathname = usePathname();
   const router = useRouter();
   const categorySearchParams: string = searchParams.get('category') || '';
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>(
-    isValidCategoryKey(categorySearchParams)
-      ? AGORACATEGORY[categorySearchParams].value
-      : '1',
-  );
-
-  const { setCategory } = useCreateAgora(
-    useShallow((state) => ({ setCategory: state.setCategory })),
+  const { setCategory, category: selectedCategory } = useCreateAgora(
+    useShallow((state) => ({
+      setCategory: state.setCategory,
+      category: state.category,
+    })),
   );
 
   const changeCategoryParams = useCallback(
     (id: string) => {
       if (pathname !== '/home') return;
+
       const newSearchParams = new URLSearchParams(searchParams);
 
       newSearchParams.set('category', isValidCategoryKey(id) ? id : '1');
       newSearchParams.delete('q');
       search.reset();
 
-      router.replace(`/home?${newSearchParams.toString()}`);
+      // window.history.pushState(null, '', `/home?${newSearchParams.toString()}`)
+      router.push(`/home?${newSearchParams.toString()}`);
     },
     [router, searchParams, pathname],
   );
@@ -65,17 +64,8 @@ export default function CategoryButtonList() {
   }, []);
 
   useEffect(() => {
-    if (pathname === '/home') {
-      changeCategoryParams(selectedCategoryId);
-    }
-    if (pathname === '/create-agora') {
-      setCategory(selectedCategoryId);
-    }
-  }, [selectedCategoryId, pathname, changeCategoryParams, setCategory]);
-
-  const setSelectCategory = (id: string) => {
-    setSelectedCategoryId(isValidCategoryKey(id) ? id : '1');
-  };
+    changeCategoryParams(selectedCategory);
+  }, [selectedCategory, changeCategoryParams]);
 
   return (
     <div className="w-full mt-10 mb-0 pb-0 pl-0.5rem pr-0.5rem flex text-nowrap overflow-hidden ml-5">
@@ -85,13 +75,15 @@ export default function CategoryButtonList() {
             <button
               type="button"
               aria-label="카테고리"
-              onClick={() => setSelectCategory(category.value)}
+              onClick={() => setCategory(category.value)}
               className="swiper-slide"
               key={category.innerText}
             >
               <CategoryButton
                 innerText={category.innerText}
-                isActive={category.value === selectedCategoryId}
+                isActive={
+                  category.value === (categorySearchParams || selectedCategory)
+                }
               />
             </button>
           ))}
