@@ -74,15 +74,6 @@ export default function Header() {
     }
   };
 
-  useEffect(() => {
-    getUrl();
-
-    return () => {
-      reset();
-      deleteTabIdData();
-    };
-  }, [reset]);
-
   const refetchAgoraUserList = async () => {
     // 유저 리스트 캐시 무효화 및 재요청
     await queryClient.invalidateQueries({
@@ -90,6 +81,77 @@ export default function Header() {
     });
   };
 
+  const isPossibleConnect = () => {
+    return (
+      navigator.onLine &&
+      URL.SOCKET_URL !== '' &&
+      enterAgora.status !== 'CLOSED'
+    );
+  };
+
+  const handleWebSocketResponse = (response: any) => {
+    if (response.type === 'META') {
+      setTitle(response.data.agora.title);
+      setAgoraId(response.data.agora.id);
+      setMetaData(response.data);
+      refetchAgoraUserList();
+
+      if (response.data.agora.startAt) {
+        setDiscussionStart(response.data.agora.startAt);
+      }
+
+      const partcipantsCnt = {
+        pros: 0,
+        cons: 0,
+      };
+      response.data.participants.forEach(
+        (participant: { type: string; count: number }) => {
+          if (participant.type === 'PROS') {
+            partcipantsCnt.pros = participant.count;
+          } else if (participant.type === 'CONS') {
+            partcipantsCnt.cons = participant.count;
+          }
+        },
+      );
+
+      setParticipants(partcipantsCnt);
+    } else if (response.type === 'DISCUSSION_START') {
+      // console.log(data.data);
+      showToast('토론이 시작되었습니다.', 'success');
+      setDiscussionStart(response.data.startTime);
+    } else if (response.type === 'DISCUSSION_END') {
+      setDiscurreionEnd(response.data.endTime);
+      showToast(
+        '유저의 2/3 이상이 토론 종료를 선택하여 종료되었습니다.',
+        'success',
+      );
+      router.push(`/agoras/${response.data.agoraId}/flow/end-agora`);
+    }
+  };
+
+  const subscribeErrorControl = async (err: any) => {
+    if (err.code === 1201) {
+      await getToken();
+    } else if (err.code === 1003) {
+      await getReissuanceToken();
+    } else if (err.code === 2000) {
+      showToast(
+        '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        'error',
+      );
+    } else if (err.code === 2001) {
+      showToast('연결이 불안정합니다. 잠시 후 다시 시도해주세요.', 'error');
+    } else if (err.code === 1102) {
+      showToast('관찰자는 메시지를 보낼 수 없습니다.', 'error');
+    } else if (err.code === 1301) {
+      if (err.message === 'Session not found') {
+        showToast('현재 아고라에 존재하지 않는 유저입니다.', 'error');
+      } else {
+        showToast('존재하지 않는 아고라입니다.', 'error');
+      }
+    }
+    setIsError(true);
+  };
   // 최초 렌더링 시 실행
   useEffect(() => {
     const disconnect = () => {
@@ -105,43 +167,7 @@ export default function Header() {
         async (received_message: StompJs.IFrame) => {
           const data = await JSON.parse(received_message.body);
           // console.log('received_message', received_message);
-          if (data.type === 'META') {
-            setTitle(data.data.agora.title);
-            setAgoraId(data.data.agora.id);
-            setMetaData(data.data);
-            refetchAgoraUserList();
-
-            if (data.data.agora.startAt) {
-              setDiscussionStart(data.data.agora.startAt);
-            }
-
-            const partcipantsCnt = {
-              pros: 0,
-              cons: 0,
-            };
-            data.data.participants.forEach(
-              (participant: { type: string; count: number }) => {
-                if (participant.type === 'PROS') {
-                  partcipantsCnt.pros = participant.count;
-                } else if (participant.type === 'CONS') {
-                  partcipantsCnt.cons = participant.count;
-                }
-              },
-            );
-
-            setParticipants(partcipantsCnt);
-          } else if (data.type === 'DISCUSSION_START') {
-            // console.log(data.data);
-            showToast('토론이 시작되었습니다.', 'success');
-            setDiscussionStart(data.data.startTime);
-          } else if (data.type === 'DISCUSSION_END') {
-            setDiscurreionEnd(data.data.endTime);
-            showToast(
-              '유저의 2/3 이상이 토론 종료를 선택하여 종료되었습니다.',
-              'success',
-            );
-            router.push(`/agoras/${data.data.agoraId}/flow/end-agora`);
-          }
+          handleWebSocketResponse(data);
           // console.log(`> Received message: ${received_message.body}`);
         },
       );
@@ -153,30 +179,7 @@ export default function Header() {
         '/user/queue/errors',
         async (received_message: StompJs.IFrame) => {
           const data = JSON.parse(received_message.body);
-          if (data.code === 1201) {
-            await getToken();
-          } else if (data.code === 1003) {
-            await getReissuanceToken();
-          } else if (data.code === 2000) {
-            showToast(
-              '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-              'error',
-            );
-          } else if (data.code === 2001) {
-            showToast(
-              '연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
-              'error',
-            );
-          } else if (data.code === 1102) {
-            showToast('관찰자는 메시지를 보낼 수 없습니다.', 'error');
-          } else if (data.code === 1301) {
-            if (data.message === 'Session not found') {
-              showToast('현재 아고라에 존재하지 않는 유저입니다.', 'error');
-            } else {
-              showToast('존재하지 않는 아고라입니다.', 'error');
-            }
-          }
-          setIsError(true);
+          subscribeErrorControl(data);
         },
       );
     }
@@ -208,11 +211,7 @@ export default function Header() {
       client.current.activate();
     }
 
-    if (
-      navigator.onLine &&
-      URL.SOCKET_URL !== '' &&
-      enterAgora.status !== 'CLOSED'
-    ) {
+    if (isPossibleConnect()) {
       connect();
     }
 
@@ -236,6 +235,15 @@ export default function Header() {
     enterAgora.status,
     URL.SOCKET_URL,
   ]);
+
+  useEffect(() => {
+    getUrl();
+
+    return () => {
+      reset();
+      deleteTabIdData();
+    };
+  }, [reset]);
 
   useEffect(() => {
     if (!URL.BASE_URL) return;
