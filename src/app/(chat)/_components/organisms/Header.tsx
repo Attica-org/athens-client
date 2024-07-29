@@ -88,10 +88,6 @@ export default function Header() {
     await queryClient.invalidateQueries({
       queryKey: ['chat', 'users', `${agoraId}`],
     });
-    await queryClient.refetchQueries({
-      queryKey: ['chat', 'users', `${agoraId}`],
-      exact: true,
-    });
   };
 
   // 최초 렌더링 시 실행
