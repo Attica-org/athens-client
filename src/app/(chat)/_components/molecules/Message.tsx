@@ -21,8 +21,7 @@ export default function Message() {
   const [adjustScroll, setAdjustScroll] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
   const { shouldGoDown, setGoDown } = useMessageStore();
-  const myRole = useAgora((state) => state.enterAgora.role);
-  const agoraId = useAgora((state) => state.enterAgora.id);
+  const { role: myRole, id: agoraId } = useAgora().enterAgora;
 
   const { data, hasPreviousPage, isFetching, fetchPreviousPage } =
     useSuspenseInfiniteQuery<

@@ -1,16 +1,17 @@
 import React from 'react';
 import PROFLELIST from '@/constants/userProfileImage';
+import { ParticipationPosition } from '@/app/model/Agora';
 import UserImage from '../../../_components/atoms/UserImage';
 
 type UserList = {
   id: number;
   nickname: string;
   photoNumber: number;
-  type: 'PROS' | 'CONS' | 'OBSERVER';
+  type: ParticipationPosition;
 };
 
 type Props = {
-  position: string;
+  position: ParticipationPosition;
   userList: UserList[];
 };
 

@@ -31,7 +31,6 @@ export default function MessageInput() {
   const { setGoDown } = useMessageStore();
   const client = useRef<StompJs.Client>();
   const queryClient = useQueryClient();
-  const agoraId = useAgora((state) => state.enterAgora.id);
 
   const handleMessage: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setMessage(e.target.value);
@@ -42,7 +41,7 @@ export default function MessageInput() {
       // 쿼리 데이터에 추가
       const exMessages = queryClient.getQueryData([
         'chat',
-        `${agoraId}`,
+        `${enterAgora.id}`,
         'messages',
       ]) as InfiniteData<{
         chats: Message[];
@@ -73,13 +72,13 @@ export default function MessageInput() {
           },
         };
         queryClient.setQueryData(
-          ['chat', `${agoraId}`, 'messages'],
+          ['chat', `${enterAgora.id}`, 'messages'],
           newMessages,
         );
         setGoDown(true);
       }
     },
-    [agoraId, queryClient, setGoDown],
+    [enterAgora.id, queryClient, setGoDown],
   );
 
   const sendMessage = () => {
@@ -91,7 +90,7 @@ export default function MessageInput() {
       enterAgora.role !== 'OBSERVER'
     ) {
       client.current?.publish({
-        destination: `/app/agoras/${agoraId}/chats`,
+        destination: `/app/agoras/${enterAgora.id}/chats`,
         body: JSON.stringify({
           type: 'CHAT',
           message,
@@ -151,9 +150,9 @@ export default function MessageInput() {
     };
 
     const subscribe = () => {
-      // console.log('Subscribing...');
+      console.log('Subscribing...');
       client.current?.subscribe(
-        `/topic/agoras/${agoraId}/chats`,
+        `/topic/agoras/${enterAgora.id}/chats`,
         (received_message: StompJs.IFrame) => {
           // console.log(`> Received message: ${received_message.body}`);
 
@@ -175,7 +174,7 @@ export default function MessageInput() {
         brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
           Authorization: `Bearer ${tokenManager.getToken()}`,
-          AgoraId: `${agoraId}`,
+          AgoraId: `${enterAgora.id}`,
         },
         reconnectDelay: 500,
         onConnect: () => {
@@ -214,7 +213,7 @@ export default function MessageInput() {
       }
     };
   }, [
-    agoraId,
+    enterAgora.id,
     isError,
     enterAgora.status,
     pushMessage,

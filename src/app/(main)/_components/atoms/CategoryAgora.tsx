@@ -3,7 +3,7 @@
 import { AgoraData } from '@/app/model/Agora';
 import { useAgora } from '@/store/agora';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import COLOR from '@/constants/agoraColor';
 import isActiveAgora from '@/utils/isActiveAgora';
 
@@ -15,6 +15,7 @@ export default function CategoryAgora({ agora }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { setSelectedAgora, setEnterAgora } = useAgora();
+  const [selectedColor, setSelectedColor] = useState(COLOR[0].value);
 
   const routeAgoraPage = () => {
     router.push(`/agoras/${agora.id}`);
@@ -48,13 +49,20 @@ export default function CategoryAgora({ agora }: Props) {
     }
   };
 
+  useEffect(() => {
+    setSelectedColor(
+      COLOR.find((color) => color.value === agora.agoraColor)?.value ||
+        COLOR[0].value,
+    );
+  }, []);
+
   return (
     <article
       id={`${agora.id}`}
       className="w-165 under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center dark:bg-dark-light-300 dark:border-gray-500"
     >
       <div
-        className={`under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-3xl under-mobile:rounded-2xl ${COLOR.some((color) => color.value === agora.agoraColor) ? agora.agoraColor : COLOR[0].value} relative`}
+        className={`${selectedColor} under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-3xl under-mobile:rounded-2xl relative`}
       >
         {agora.status !== 'CLOSED' && (
           <div

@@ -27,7 +27,7 @@ export default function DiscussionStatus({ meta }: Props) {
     })),
   );
 
-  const agoraStart = useMutation({
+  const agoraStartMutation = useMutation({
     mutationFn: async () => patchAgoraStart(enterAgora.id),
     onMutate: () => {},
     onSuccess: async (response) => {
@@ -42,7 +42,7 @@ export default function DiscussionStatus({ meta }: Props) {
     },
   });
 
-  const agoraEnd = useMutation({
+  const agoraEndMutation = useMutation({
     mutationFn: async () => patchAgoraEnd(enterAgora.id),
     onSuccess: async (response) => {
       if (response) {
@@ -61,10 +61,10 @@ export default function DiscussionStatus({ meta }: Props) {
   const toggleProgress = () => {
     if (!start) {
       // 시작 api 호출
-      agoraStart.mutate();
+      agoraStartMutation.mutate();
     } else {
       // 종료 api 호출
-      agoraEnd.mutate();
+      agoraEndMutation.mutate();
     }
   };
 
