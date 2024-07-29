@@ -26,9 +26,11 @@ export default function VoteResult({ agoraId }: Props) {
     }
   }, [enterAgora.status, refetch]);
 
-  if (!data && error) {
-    showToast('투표 결과를 가져오는데 실패했습니다.', 'error');
-  }
+  useEffect(() => {
+    if (!data && error) {
+      showToast('투표 결과를 가져오는데 실패했습니다.', 'error');
+    }
+  }, [data, error]);
 
   return (
     <div className="text-xs lg:text-sm">

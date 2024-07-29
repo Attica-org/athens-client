@@ -15,8 +15,7 @@ type Props = {
 };
 
 export default function DiscussionTimer({ duration }: Props) {
-  const startTime = useChatInfo.getState().start;
-  const { start, end } = useChatInfo(
+  const { start: startTime, end: endTime } = useChatInfo(
     useShallow((state) => ({
       start: state.start,
       end: state.end,
@@ -29,10 +28,9 @@ export default function DiscussionTimer({ duration }: Props) {
   const { enterAgora, setEnterAgora } = useAgora();
   const router = useRouter();
 
-  const agoraEnd = useMutation({
+  const agoraEndMutation = useMutation({
     mutationFn: async () => patchAgoraTimeOut(enterAgora.id),
     retry: 2,
-    onMutate: () => {},
     onSuccess: async (response) => {
       if (response) {
         router.push(`/agoras/${enterAgora.id}/flow/end-agora`);
@@ -47,13 +45,13 @@ export default function DiscussionTimer({ duration }: Props) {
   });
 
   useEffect(() => {
-    if ((isFinished && start) || end) {
+    if ((isFinished && startTime) || endTime) {
       resetTimer();
-      agoraEnd.mutate();
+      agoraEndMutation.mutate();
       setEnterAgora({ ...enterAgora, status: 'CLOSED' });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFinished, enterAgora.id, router, start, resetTimer, end]);
+  }, [isFinished, enterAgora.id, router, startTime, resetTimer, endTime]);
 
   return (
     <div
