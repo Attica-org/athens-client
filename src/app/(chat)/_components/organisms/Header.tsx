@@ -91,10 +91,6 @@ export default function Header() {
     });
   };
 
-  const toggleMenu = () => {
-    toggle();
-  };
-
   // 최초 렌더링 시 실행
   useEffect(() => {
     const disconnect = () => {
@@ -270,7 +266,7 @@ export default function Header() {
         </div>
         <div className="flex justify-end items-center mr-0.5rem">
           <ShareButton title={metaData?.agora.title || ''} />
-          <HamburgerButton toggleMenu={toggleMenu} />
+          <HamburgerButton toggleMenu={toggle} />
         </div>
       </div>
       <div className="flex justify-center items-center">
