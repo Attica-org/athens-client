@@ -19,7 +19,7 @@ import swManager from '@/utils/swManager';
 import { saveTabId, deleteTabId } from '@/utils/indexedDB';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
-import AgoraTitle from '../molecules/AgoraTitle';
+import AgoraInfo from '../molecules/AgoraInfo';
 import HamburgerButton from '../atoms/HamburgerButton';
 import DiscussionStatus from '../molecules/DiscussionStatus';
 
@@ -104,7 +104,6 @@ export default function Header() {
 
     const subscribe = () => {
       // getMetadata();
-      // console.log('Subscribing...');
       client.current?.subscribe(
         `/topic/agoras/${agoraId}`,
         async (received_message: StompJs.IFrame) => {
@@ -158,7 +157,7 @@ export default function Header() {
         '/user/queue/errors',
         async (received_message: StompJs.IFrame) => {
           const data = JSON.parse(received_message.body);
-          if (data.code === 1201) {
+          if (data.code === 1201 || data.code === 1202) {
             await getToken();
           } else if (data.code === 1003) {
             await getReissuanceToken();
@@ -195,7 +194,6 @@ export default function Header() {
         },
         reconnectDelay: 500,
         onConnect: () => {
-          // console.log('connected');
           subscribeError();
           subscribe();
         },
@@ -274,7 +272,7 @@ export default function Header() {
         </div>
       </div>
       <div className="flex justify-center items-center">
-        <AgoraTitle
+        <AgoraInfo
           title={metaData?.agora.title || enterAgora.title || ''}
           isClosed={enterAgora.status === 'CLOSED'}
           pros={participants.pros}
