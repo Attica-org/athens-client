@@ -43,20 +43,25 @@ export default function EndAgora() {
   });
   const tabId = swManager.getTabId();
 
+  const getUrl = async () => {
+    const key = await getKey();
+    setURL({
+      BASE_URL: key.BASE_URL || '',
+    });
+  };
+
+  const isServiceWorkerActive = () => {
+    return 'serviceWorker' in navigator && navigator.serviceWorker.controller;
+  };
+
   useEffect(() => {
-    const getUrl = async () => {
-      const key = await getKey();
-      setURL({
-        BASE_URL: key.BASE_URL || '',
-      });
-    };
     getUrl();
   }, []);
 
-  // 투표 상태 업데이트
-  useEffect(() => {
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
+  const updateVoteState = () => {
+    if (isServiceWorkerActive()) {
+      const controller = navigator.serviceWorker.controller!;
+      controller.postMessage({
         action: 'updateVote',
         data: {
           voteType: vote,
@@ -64,6 +69,44 @@ export default function EndAgora() {
         tabId,
       });
     }
+  };
+
+  const startTimer = (voteEndTime: number) => {
+    if (isServiceWorkerActive()) {
+      const controller = navigator.serviceWorker.controller!;
+      controller.postMessage({
+        action: 'startTimer',
+        data: {
+          voteEndTime,
+          agoraId,
+          voteType: vote,
+          token: tokenManager.getToken(),
+          baseUrl: URL.BASE_URL,
+        },
+        tabId,
+      });
+    }
+  };
+
+  const handleVoteError = (event: MessageEvent) => {
+    switch (event.data.message.code) {
+      case 1301:
+        showToast('존재하지 않는 유저 혹은 아고라 입니다.', 'error');
+        break;
+      case 1002:
+        if (event.data.message.message === DUPLICATE_VOTE) {
+          showToast('이미 투표하였습니다.', 'error');
+        } else {
+          showToast('아직 토론이 진행중인 아고라 입니다.', 'error');
+        }
+        break;
+      default:
+        showToast(event.data.message, 'error');
+    }
+  };
+  // 투표 상태 업데이트
+  useEffect(() => {
+    updateVoteState();
   }, [vote, tabId]);
 
   // 타이머 시작 및 Service Worker와의 통신 설정
@@ -80,19 +123,7 @@ export default function EndAgora() {
       }
     }, 1000);
 
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
-        action: 'startTimer',
-        data: {
-          voteEndTime,
-          agoraId,
-          voteType: vote,
-          token: tokenManager.getToken(),
-          baseUrl: URL.BASE_URL,
-        },
-        tabId,
-      });
-    }
+    startTimer(voteEndTime);
 
     const handleServiceWorkerMessage = (event: MessageEvent) => {
       if (event.data.tabId !== tabId) return; // 다른 탭에서 온 메시지는 무시
@@ -111,20 +142,7 @@ export default function EndAgora() {
         router.replace(`/agoras/${agoraId}/flow/result-agora`);
       } else if (event.data.action === 'fetchError') {
         // console.log('fetchError', event.data);
-        switch (event.data.message.code) {
-          case 1301:
-            showToast('존재하지 않는 유저 혹은 아고라 입니다.', 'error');
-            break;
-          case 1002:
-            if (event.data.message.message === DUPLICATE_VOTE) {
-              showToast('이미 투표하였습니다.', 'error');
-            } else {
-              showToast('아직 토론이 진행중인 아고라 입니다.', 'error');
-            }
-            break;
-          default:
-            showToast(event.data.message, 'error');
-        }
+        handleVoteError(event);
       }
     };
 
