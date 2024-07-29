@@ -4,7 +4,7 @@ import { AgoraData } from '@/app/model/Agora';
 import { useAgora } from '@/store/agora';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { COLOR } from '@/constants/agoraColor';
+import COLOR from '@/constants/agoraColor';
 import isActiveAgora from '@/utils/isActiveAgora';
 
 type Props = {
