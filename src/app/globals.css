@@ -75,3 +75,28 @@ html {
   /* 커스텀할 내용 추가 */
   background-color: #2a2929;
 }
+
+.bg-agora-point-color1 {
+  background-color: #00ADAC !important;
+}
+
+.bg-agora-point-color2 {
+  background-color: #79E0D9 !important;
+}
+
+.bg-agora-point-color3 {
+  background-color: #E1C5B9 !important;
+}
+
+.bg-agora-point-color4 {
+  background-color: #FAC171 !important;
+}
+
+.bg-agora-point-color5 {
+  background-color: #FFBEC1 !important;
+}
+
+.bg-agora-point-color6 {
+  background-color: #35627B !important;
+}
+
