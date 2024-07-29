@@ -66,17 +66,20 @@ export default function Header() {
     });
   };
 
+  const deleteTabIdData = () => {
+    const tabId = swManager.getTabId();
+    if (tabId) {
+      swManager.clearTabId();
+      deleteTabId(tabId);
+    }
+  };
+
   useEffect(() => {
     getUrl();
 
     return () => {
       reset();
-
-      const tabId = swManager.getTabId();
-      if (tabId) {
-        swManager.clearTabId();
-        deleteTabId(tabId);
-      }
+      deleteTabIdData();
     };
   }, [reset]);
 
