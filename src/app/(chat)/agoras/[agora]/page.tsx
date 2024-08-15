@@ -43,10 +43,16 @@ export async function generateMetadata() {
   };
 }
 
-export default function Page() {
+type Props = {
+  params: {
+    agora: string;
+  };
+};
+
+export default function Page({ params }: Props) {
   return (
     <main aria-label="채팅" className="flex flex-col justify-between h-full">
-      <ErrorBoundaryMessage />
+      <ErrorBoundaryMessage agoraId={params.agora} />
     </main>
   );
 }
