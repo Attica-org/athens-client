@@ -38,7 +38,7 @@ export default function CategoryAgora({ agora }: Props) {
       status: agora.status,
     });
 
-    const AgoraStatus = searchParams.get('status');
+    const AgoraStatus = searchParams.get('status') || 'active';
 
     if (AgoraStatus === 'active') {
       router.push(`/flow/enter-agora/${agora.id}`);

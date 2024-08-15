@@ -6,9 +6,14 @@ import UserImage from '../../../_components/atoms/UserImage';
 type Props = {
   message: Message;
   isSameUser: boolean;
+  shouldShowTime: boolean;
 };
 
-export default function MyMessage({ message, isSameUser }: Props) {
+export default function MyMessage({
+  message,
+  isSameUser,
+  shouldShowTime,
+}: Props) {
   return (
     <article
       className={`flex justify-end items-start p-0.5rem ${isSameUser && 'pt-0'} pr-12 pb-0 h-full`}
@@ -26,11 +31,16 @@ export default function MyMessage({ message, isSameUser }: Props) {
           </div>
         )}
         <div className="flex justify-end items-end">
-          <div className="flex flex-col justify-end items-end h-full">
-            <time className="text-xxs pr-8 h-full dark:text-dark-line">
-              {new Date(message.createdAt).toLocaleTimeString().slice(0, -3)}
-            </time>
-          </div>
+          {shouldShowTime && (
+            <div className="flex flex-col justify-end items-end h-full">
+              <time className="text-xxs pr-8 h-full dark:text-dark-line">
+                {message.createdAt &&
+                  new Date(message.createdAt)
+                    ?.toLocaleTimeString()
+                    .slice(0, -3)}
+              </time>
+            </div>
+          )}
           <div
             className={`max-w-[60vw] whitespace-pre-line ${message.user.type === 'CONS' ? 'bg-red-200' : 'bg-blue-200'} rounded-tl-lg ${isSameUser && 'rounded-tr-lg'} rounded-bl-lg rounded-br-lg p-7 pl-10 pr-10 text-xs lg:text-sm`}
           >

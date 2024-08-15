@@ -1,11 +1,13 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import ErrorFallback from '@/app/_components/templates/ErrorFallback';
 import { SearchParams } from '@/app/model/Agora';
 import Loading from '@/app/_components/atoms/loading';
+import { useSearchStore } from '@/store/search';
+import { useShallow } from 'zustand/react/shallow';
 
 const KeywordAgoraList = dynamic(() => import('./KeywordAgoraList'), {
   loading: () => (
@@ -33,38 +35,30 @@ function FallbackComponent(props: FallbackProps) {
 }
 export default function AgoraListDecider({ searchParams }: Props) {
   const { q } = searchParams;
+  const { search, setSearch } = useSearchStore(
+    useShallow((state) => ({
+      search: state.search,
+      setSearch: state.setSearch,
+    })),
+  );
 
-  if (q) {
+  useEffect(() => {
+    if (q) {
+      setSearch(q);
+    }
+  }, []);
+
+  if (search) {
     return (
       <ErrorBoundary FallbackComponent={FallbackComponent}>
-        <Suspense
-          fallback={
-            <Loading
-              w="25"
-              h="25"
-              className="m-5 flex justify-center items-center"
-            />
-          }
-        >
-          <KeywordAgoraList searchParams={searchParams} />
-        </Suspense>
+        <KeywordAgoraList searchParams={searchParams} />
       </ErrorBoundary>
     );
   }
 
   return (
     <ErrorBoundary FallbackComponent={FallbackComponent}>
-      <Suspense
-        fallback={
-          <Loading
-            w="25"
-            h="25"
-            className="m-5 flex justify-center items-center"
-          />
-        }
-      >
-        <CategoryAgoraList searchParams={searchParams} />
-      </Suspense>
+      <CategoryAgoraList searchParams={searchParams} />
     </ErrorBoundary>
   );
 }
