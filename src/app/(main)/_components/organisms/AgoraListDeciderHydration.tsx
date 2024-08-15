@@ -7,18 +7,25 @@ import React from 'react';
 import { SearchParams } from '@/app/model/Agora';
 import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
 import AgoraListDecider from '../molecules/AgoraListDecider';
+import { getAgoraKeywordSearch } from '../../_lib/getAgoraKeywordSearch';
 
 type Props = {
   searchParams: SearchParams;
 };
 
-export default async function AgoraListDeciderSuspense({
+export default async function AgoraListDeciderHydration({
   searchParams,
 }: Props) {
   const queryClient = new QueryClient();
+  const isSearch = searchParams.q;
   await queryClient.prefetchInfiniteQuery({
-    queryKey: ['agoras', 'search', 'category', searchParams],
-    queryFn: getAgoraCategorySearch,
+    queryKey: [
+      'agoras',
+      'search',
+      isSearch ? 'keyword' : 'category',
+      searchParams,
+    ],
+    queryFn: isSearch ? getAgoraKeywordSearch : getAgoraCategorySearch,
     initialPageParam: { nextCursor: null },
   });
   const dehydratedState = dehydrate(queryClient);

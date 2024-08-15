@@ -7,8 +7,8 @@ type Props = {
   searchParams: SearchParams;
 };
 
-const AgoraListDeciderSuspense = dynamic(
-  () => import('../organisms/AgoraListDeciderSuspense'),
+const AgoraListDeciderHydration = dynamic(
+  () => import('../organisms/AgoraListDeciderHydration'),
 );
 
 export default function Main({ searchParams }: Props) {
@@ -23,7 +23,7 @@ export default function Main({ searchParams }: Props) {
             <Loading className="m-5 flex justify-center items-center" />
           }
         >
-          <AgoraListDeciderSuspense searchParams={searchParams} />
+          <AgoraListDeciderHydration searchParams={searchParams} />
         </Suspense>
       </section>
     </main>
