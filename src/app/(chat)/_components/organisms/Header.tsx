@@ -94,7 +94,7 @@ export default function Header() {
       setTitle(response.data.agora.title);
       setAgoraId(response.data.agora.id);
       setMetaData(response.data);
-      refetchAgoraUserList();
+      // refetchAgoraUserList();
 
       if (response.data.agora.startAt) {
         setDiscussionStart(response.data.agora.startAt);
@@ -271,7 +271,10 @@ export default function Header() {
         </div>
         <div className="flex justify-end items-center mr-0.5rem">
           <ShareButton title={metaData?.agora.title || ''} />
-          <HamburgerButton toggleMenu={toggle} />
+          <HamburgerButton
+            toggleMenu={toggle}
+            refetchUserList={refetchAgoraUserList}
+          />
         </div>
       </div>
       <div className="flex justify-center items-center">
