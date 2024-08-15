@@ -3741,6 +3741,7 @@ __metadata:
     react-intersection-observer: "npm:^9.10.2"
     react-share: "npm:^5.1.0"
     react-spring-bottom-sheet: "npm:^3.4.1"
+    react-virtuoso: "npm:^4.10.1"
     sharp: "npm:^0.33.3"
     sockjs-client: "npm:^1.6.1"
     swiper: "npm:^11.1.1"
@@ -8276,6 +8277,16 @@ __metadata:
   peerDependencies:
     react: ">= 16.8.0"
   checksum: 10c0/6ca0f6cbe752257393833884df02dc1266d9feb6d10e9c4800b8d591dae7740538404767f2013c7bcef8154bdc1fcd8c166a8408a0c06ed6498e73b23feaeeec
+  languageName: node
+  linkType: hard
+
+"react-virtuoso@npm:^4.10.1":
+  version: 4.10.1
+  resolution: "react-virtuoso@npm:4.10.1"
+  peerDependencies:
+    react: ">=16 || >=17 || >= 18"
+    react-dom: ">=16 || >=17 || >= 18"
+  checksum: 10c0/a7fed75fd73d2d3425ee252548e878aa0dec4230f7c34e08967e618d273a06647c546cbbd19bc1253541cd9d2804e1b764039a51588ce2a5949c50812b20684f
   languageName: node
   linkType: hard
 
