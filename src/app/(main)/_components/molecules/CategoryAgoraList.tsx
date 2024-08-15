@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   InfiniteData,
   useQueryClient,
@@ -12,12 +12,18 @@ import DeferredComponent from '@/app/_components/utils/DefferedComponent';
 import Loading from '@/app/_components/atoms/loading';
 import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
+import { VirtuosoGrid } from 'react-virtuoso';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
 import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
 import CategoryAgora from '../atoms/CategoryAgora';
+import CustomList from '../atoms/VirtuosoGridCustomList';
 
 type Props = {
   searchParams: SearchParams;
+};
+
+const virtuosoGridComponents = {
+  List: CustomList,
 };
 
 export default function CategoryAgoraList({ searchParams }: Props) {
@@ -74,11 +80,20 @@ export default function CategoryAgoraList({ searchParams }: Props) {
     rootMargin: '-30px',
   });
 
-  useEffect(() => {
+  const loadNextPage = useCallback(() => {
     if (inView && hasNextPage && !isFetching) {
       fetchNextPage();
     }
-  }, [inView, hasNextPage, fetchNextPage, isFetching]);
+  }, [inView, hasNextPage, isFetching, fetchNextPage]);
+
+  useEffect(() => {
+    loadNextPage();
+  }, [loadNextPage]);
+
+  const renderItemContent = useCallback(
+    (index: any, agora: any) => <CategoryAgora agora={agora} key={agora.id} />,
+    [],
+  );
 
   useEffect(() => {
     // 초기 데이터 호출 후 카테고리 변경 시 데이터 재호출
@@ -94,17 +109,22 @@ export default function CategoryAgoraList({ searchParams }: Props) {
 
   return (
     <>
+      <div className="text-md font-semibold dark:text-dark-line-light text-left pl-10 pb-5 w-full">
+        활성화 아고라
+      </div>
       {data?.pages[0].agoras.length < 1 ? (
         <NoAgoraMessage />
       ) : (
-        <div className="grid under-large:grid-cols-5 gap-x-1rem gap-y-1rem under-mobile:grid-cols-2 mobile:grid-cols-2 foldable:grid-cols-3 tablet:grid-cols-4 under-tablet:grid-cols-4 xl:grid-cols-6 sm:grid-cols-3 lg:grid-cols-5 under-xl:grid-cols-4">
-          {data?.pages
-            ?.map((page) => page.agoras)
-            ?.flat()
-            ?.map((agora) => <CategoryAgora key={agora.id} agora={agora} />)}
-          <div ref={ref} />
-        </div>
+        <VirtuosoGrid
+          className="scrollbar-hide w-full h-full"
+          data={data.pages.flatMap((page) => page.agoras)}
+          totalCount={data.pages[0].agoras.length}
+          overscan={10}
+          components={virtuosoGridComponents}
+          itemContent={renderItemContent}
+        />
       )}
+      <div ref={ref} />
       {(isFetching || isPending || isFetchingNextPage) && (
         <DeferredComponent>
           <Loading
