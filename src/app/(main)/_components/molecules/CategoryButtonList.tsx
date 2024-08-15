@@ -26,6 +26,16 @@ export default function CategoryButtonList() {
     })),
   );
 
+  useEffect(() => {
+    if (categorySearchParams) {
+      setCategory(categorySearchParams);
+    }
+
+    return () => {
+      setCategory('1');
+    };
+  }, []);
+
   const changeCategoryParams = useCallback(
     (id: string) => {
       if (pathname !== '/home') return;
@@ -36,10 +46,15 @@ export default function CategoryButtonList() {
       newSearchParams.delete('q');
       search.reset();
 
-      // window.history.pushState(null, '', `/home?${newSearchParams.toString()}`)
-      router.push(`/home?${newSearchParams.toString()}`);
+      const newUrl = `/home?${newSearchParams.toString()}`;
+      window.history.pushState(
+        { ...window.history.state, as: newUrl, url: newUrl },
+        '',
+        newUrl,
+      );
+      // router.push(`/home?${newSearchParams.toString()}`);
     },
-    [router, searchParams, pathname],
+    [router, searchParams, pathname, selectedCategory],
   );
 
   useEffect(() => {
@@ -81,9 +96,7 @@ export default function CategoryButtonList() {
             >
               <CategoryButton
                 innerText={category.innerText}
-                isActive={
-                  category.value === (categorySearchParams || selectedCategory)
-                }
+                isActive={category.value === selectedCategory}
               />
             </button>
           ))}

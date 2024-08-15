@@ -30,7 +30,14 @@ function SearchBar() {
     setSearchText('');
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.delete('q');
-    router.push(`/home?${newSearchParams.toString()}`);
+
+    const newUrl = `/home?${newSearchParams.toString()}`;
+    window.history.pushState(
+      { ...window.history.state, as: newUrl, url: newUrl },
+      '',
+      newUrl,
+    );
+    // router.push(newUrl);
   };
 
   const changeInputText: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -42,15 +49,33 @@ function SearchBar() {
     setSearch(searchText);
 
     if (!searchText) {
-      router.push('/home');
+      const newUrl = '/home';
+      window.history.pushState(
+        { ...window.history.state, as: newUrl, url: newUrl },
+        '',
+        newUrl,
+      );
+      // router.push('/home');
     } else {
-      router.push(`/home?q=${searchText}&status=active`);
+      const newUrl = `/home?q=${searchText}&status=active`;
+      window.history.pushState(
+        { ...window.history.state, as: newUrl, url: newUrl },
+        '',
+        newUrl,
+      );
+      // router.push(`/home?q=${searchText}&status=active`);
     }
   };
 
   useEffect(() => {
     if (search) {
-      router.push(`/home?q=${search}&status=active`);
+      const newUrl = `/home?q=${search}&status=active`;
+      window.history.pushState(
+        { ...window.history.state, as: newUrl, url: newUrl },
+        '',
+        newUrl,
+      );
+      // router.push(`/home?q=${search}&status=active`);
     }
   }, [router, search]);
 
