@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from './_components/organisms/Header';
 import MessageInput from './_components/molecules/MessageInput';
-import AgoraUserSide from './_components/organisms/AgoraUserSide';
+import AgoraSideBar from './_components/templates/AgoraSideBar';
 
 type Props = {
   children: React.ReactNode;
@@ -18,7 +18,7 @@ export default function Layout({ children }: Props) {
           {children}
           <MessageInput />
         </section>
-        <AgoraUserSide />
+        <AgoraSideBar />
       </section>
     </div>
   );
