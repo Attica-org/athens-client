@@ -3049,6 +3049,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-image-crop@npm:^8.1.6":
+  version: 8.1.6
+  resolution: "@types/react-image-crop@npm:8.1.6"
+  dependencies:
+    "@types/react": "npm:*"
+  checksum: 10c0/05d10f6ec6003eeb9a1284b45133c6b4baeded0b5e2fccfa34cab6c6c92e5fc144b2b4d040d1085f939d38465035f9fa855f80307d46a1fa749560085d40a34c
+  languageName: node
+  linkType: hard
+
 "@types/react@npm:*, @types/react@npm:^18":
   version: 18.2.74
   resolution: "@types/react@npm:18.2.74"
@@ -3711,6 +3720,7 @@ __metadata:
     "@types/node": "npm:^20"
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
+    "@types/react-image-crop": "npm:^8.1.6"
     "@types/sockjs-client": "npm:^1"
     "@typescript-eslint/eslint-plugin": "npm:^7.8.0"
     "@typescript-eslint/parser": "npm:^7.8.0"
@@ -3738,6 +3748,7 @@ __metadata:
     react-dom: "npm:^18"
     react-error-boundary: "npm:^4.0.13"
     react-hot-toast: "npm:^2.4.1"
+    react-image-crop: "npm:^11.0.6"
     react-intersection-observer: "npm:^9.10.2"
     react-share: "npm:^5.1.0"
     react-spring-bottom-sheet: "npm:^3.4.1"
@@ -8205,6 +8216,15 @@ __metadata:
     react: ">=16"
     react-dom: ">=16"
   checksum: 10c0/591ecec3c6adc1cdb70f00165a57baa3d7f75d0d30fa767213c36496bdcc6be2b2e6a3edbf7c04f7d726a1b17dcfb5e7feb2136b04b17c9ccb769894b970f365
+  languageName: node
+  linkType: hard
+
+"react-image-crop@npm:^11.0.6":
+  version: 11.0.6
+  resolution: "react-image-crop@npm:11.0.6"
+  peerDependencies:
+    react: ">=16.13.1"
+  checksum: 10c0/8b3bfbfdb34938e16f224090194ad42a72a6265d01980c2525cfdaf1afee0b711e6f457caa854938ef8c68940f15a8f32cad1c2e6440dd75625611f867b385d7
   languageName: node
   linkType: hard
 
