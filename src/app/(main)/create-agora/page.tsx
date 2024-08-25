@@ -6,6 +6,7 @@ import DiscussionDurationSetter from '../_components/molecules/DiscussionDuratio
 import AgoraTitleInput from './_component/AgoraTitleInput';
 import CreateAgoraBtn from './_component/CreateAgoraBtn';
 import CategoryButtonContainer from '../_components/organisms/CategoryButtonContainer';
+import AgoraImageUpload from '../../_components/molecules/AgoraImageUpload';
 
 export async function generateMetadata() {
   return {
@@ -36,7 +37,16 @@ export default function Page() {
             <section>
               <AgoraTitleInput />
             </section>
-            <section className="mt-1.5rem w-full">
+            <section className="mt-2rem w-full">
+              <div
+                role="region"
+                className="text-sm lg:text-md mb-10 under-mobile:text-sm"
+              >
+                아고라 프로필 이미지
+              </div>
+              <AgoraImageUpload />
+            </section>
+            <section className="mt-2rem w-full">
               <div
                 role="region"
                 className="text-sm lg:text-md mb-10 under-mobile:text-sm"
@@ -45,7 +55,7 @@ export default function Page() {
               </div>
               <CategoryButtonContainer />
             </section>
-            <section className="mt-1.5rem w-full">
+            <section className="mt-2rem w-full">
               <div
                 role="region"
                 className="text-sm lg:text-md mb-10 under-mobile:text-sm"
@@ -53,11 +63,17 @@ export default function Page() {
                 포인트 색상
               </div>
               <AgoraPointColorList />
+              <div className="flex justify-start items-center mt-12">
+                <NotificationIcon className="w-1rem mr-0.5rem" />
+                <div className="text-xs text-athens-gray-thick break-keep dark:text-white dark:text-opacity-65">
+                  이미지와 색상 모두 설정할 시 이미지가 우선적으로 보여집니다.
+                </div>
+              </div>
             </section>
             <section className="mt-2rem w-full">
               <div
                 role="region"
-                className="mb-8 text-sm lg:text-md under-mobile:text-sm"
+                className="mb-10 text-sm lg:text-md under-mobile:text-sm"
               >
                 최대 참여 인원
               </div>
