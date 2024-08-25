@@ -4,10 +4,12 @@ import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { AgoraConfig } from '@/app/model/Agora';
 
-const TITLE_NULL = '{"title":"공백일 수 없습니다"}';
-const CATEGORY_ERROR = '{"capacity":"1 이상이어야 합니다"}';
-const COLOR_NULL = '{"color":"공백일 수 없습니다"}';
-const CAPACITY_NULL = '{"categoryId":"널이어서는 안됩니다"}';
+const TITLE_NULL = { title: '공백일 수 없습니다' };
+const CATEGORY_ERROR = { capacity: '1 이상이어야 합니다' };
+const COLOR_NULL = { color: '공백일 수 없습니다' };
+const CAPACITY_NULL = { categoryId: '널이어서는 안됩니다' };
+const DURATION_UNDER_ERROR = { duration: '1 이상이어야 합니다' };
+const DURATION_OVER_ERROR = { duration: '180 이하이어야 합니다' };
 
 // eslint-disable-next-line import/prefer-default-export
 export const postCreateAgora = async (info: AgoraConfig) => {
@@ -48,6 +50,18 @@ export const postCreateAgora = async (info: AgoraConfig) => {
         res.error.message === TITLE_NULL
       ) {
         showToast('아고라 제목을 입력해주세요.', 'error');
+      } else if (
+        info.duration === null ||
+        info.duration < 1 ||
+        res.error.message === DURATION_UNDER_ERROR
+      ) {
+        showToast('토론 시간을 입력해주세요.', 'error');
+      } else if (
+        info.duration === null ||
+        info.duration > 180 ||
+        res.error.message === DURATION_OVER_ERROR
+      ) {
+        showToast('토론 시간을 180분 이하로 입력해주세요.', 'error');
       } else {
         showToast('생성 실패했습니다.\n 다시 시도해주세요.', 'error');
       }
