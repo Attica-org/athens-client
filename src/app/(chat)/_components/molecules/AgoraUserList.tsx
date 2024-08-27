@@ -16,6 +16,9 @@ type Props = {
 };
 
 export default function AgoraUserList({ position, userList }: Props) {
+  const handleKick = () => {
+    alert('추방하기 확인');
+  };
   return (
     <div className="pb-0.5rem">
       <h3
@@ -36,24 +39,33 @@ export default function AgoraUserList({ position, userList }: Props) {
             user.type !== 'OBSERVER' &&
             user.type === position && (
               <li
-                className="flex justify-start items-center pb-1rem"
+                className="w-full flex justify-between items-center pb-1rem"
                 key={user.id}
               >
-                <UserImage
-                  aria-hidden
-                  className="w-40 h-40 bg-white"
-                  file={
-                    user.photoNumber
-                      ? PROFLELIST[user.photoNumber - 1].file
-                      : PROFLELIST[0].file
-                  }
-                  name={user.nickname}
-                  w={40}
-                  h={40}
-                />
-                <div className="ml-0.5rem text-sm dark:text-white dark:text-opacity-85">
-                  {user.nickname}
+                <div className="flex items-center">
+                  <UserImage
+                    aria-hidden
+                    className="w-40 h-40 bg-white"
+                    file={
+                      user.photoNumber
+                        ? PROFLELIST[user.photoNumber - 1].file
+                        : PROFLELIST[0].file
+                    }
+                    name={user.nickname}
+                    w={40}
+                    h={40}
+                  />
+                  <div className="ml-0.5rem text-sm dark:text-white dark:text-opacity-85">
+                    {user.nickname}
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  onClick={handleKick}
+                  className="w-70 h-24 text-xs bg-red-500 text-white rounded-md"
+                >
+                  추방하기
+                </button>
               </li>
             ),
         )}

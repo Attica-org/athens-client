@@ -76,6 +76,9 @@ const config: Config = {
         'dark-light-100': '#383838',
         'dark-pro-color': '#73BBFF',
         'dark-con-color': '#FF9685',
+
+        'backbutton-confirm': '#10AE5D',
+        'backbutton-cancel': '#F2F4F3',
       },
     },
     screens: {
@@ -109,6 +112,9 @@ const config: Config = {
         },
         '.text-xxs': {
           fontSize: '0.625rem',
+        },
+        '.text-xxxs':{
+          fontSize: '0.5rem',
         },
         '.max-width-screen': {
           maxWidth: '1580px',
