@@ -108,10 +108,23 @@ export default function CategoryAgoraList({ searchParams }: Props) {
   }, [selectedCategory, queryClient]);
 
   return (
-    <>
-      <div className="text-md font-semibold dark:text-dark-line-light text-left pl-10 pb-5 w-full">
-        활성화 아고라
-      </div>
+    <section
+      aria-label={
+        searchParams.status === 'active'
+          ? '활성화 아고라 리스트'
+          : '종료된 아고라 리스트'
+      }
+      className="w-full h-full"
+    >
+      {searchParams.status === 'active' && (
+        <h2
+          aria-hidden={searchParams.status === 'active'}
+          aria-label="활성화 상태 아고라"
+          className="text-md font-semibold dark:text-dark-line-light text-left pl-10 mb-16 w-full"
+        >
+          활성화 아고라
+        </h2>
+      )}
       {data?.pages[0].agoras.length < 1 ? (
         <NoAgoraMessage />
       ) : (
@@ -134,6 +147,6 @@ export default function CategoryAgoraList({ searchParams }: Props) {
           />
         </DeferredComponent>
       )}
-    </>
+    </section>
   );
 }
