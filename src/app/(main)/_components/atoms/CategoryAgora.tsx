@@ -40,7 +40,9 @@ export default function CategoryAgora({ agora, className }: Props) {
     });
 
     const AgoraStatus =
-      agora.status === ('RUNNING' || 'QUEUED') ? 'active' : 'closed';
+      agora.status === 'RUNNING' || agora.status === 'QUEUED'
+        ? 'active'
+        : 'closed';
 
     if (AgoraStatus === 'active') {
       router.push(`/flow/enter-agora/${agora.id}`);
@@ -72,7 +74,7 @@ export default function CategoryAgora({ agora, className }: Props) {
           />
         )}
       </div>
-      <h3 className="text-xs under-mobile:text-xs under-mobile:font-semibold pt-10 dark:text-white break-all w-full text-center">
+      <h3 className="text-xs under-mobile:font-semibold pt-10 dark:text-white break-all w-full text-center">
         {agora.agoraTitle}
       </h3>
       <div
@@ -96,7 +98,7 @@ export default function CategoryAgora({ agora, className }: Props) {
               </span>
               {agora.participants.cons}명
             </span>
-            <span className="under-mobile:bloc break-keep">
+            <span className="under-mobile:block break-keep">
               <span className="pr-3 dark:text-white dark:text-opacity-85">
                 관찰자
               </span>
@@ -107,8 +109,9 @@ export default function CategoryAgora({ agora, className }: Props) {
           </>
         ) : (
           <ClosedAgoraVoteResultBar
-            prosPercentage={agora.prosCount}
-            consPercentage={agora.consCount}
+            prosCount={agora.prosCount}
+            consCount={agora.consCount}
+            totalMember={agora.totalMember}
           />
         )}
       </div>
