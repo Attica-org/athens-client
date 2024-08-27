@@ -8,7 +8,7 @@ export default function BackButton() {
     customClass: {
       icon: 'text-xxxs',
       popup:
-        'w-[250px] h-[170px] bg-white dark:bg-dark-light-300 place-self-center', // 전체 모달 관리
+        'w-[250px] h-[170px] bg-white dark:bg-dark-light-300 place-self-center rounded-xl', // 전체 모달 관리
       title: 'p-0 text-sm mt-8 text-black dark:text-[#E2E2E2]',
       container: 'text-black dark:text-[#E2E2E2]',
       confirmButton:
