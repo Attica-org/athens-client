@@ -8,6 +8,7 @@ import { SearchParams } from '@/app/model/Agora';
 import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
 import AgoraListDecider from '../molecules/AgoraListDecider';
 import { getAgoraKeywordSearch } from '../../_lib/getAgoraKeywordSearch';
+import { getLivelyAgora } from '../../_lib/getLivelyAgora';
 
 type Props = {
   searchParams: SearchParams;
@@ -18,6 +19,7 @@ export default async function AgoraListDeciderHydration({
 }: Props) {
   const queryClient = new QueryClient();
   const isSearch = searchParams.q;
+
   await queryClient.prefetchInfiniteQuery({
     queryKey: [
       'agoras',
@@ -28,6 +30,12 @@ export default async function AgoraListDeciderHydration({
     queryFn: isSearch ? getAgoraKeywordSearch : getAgoraCategorySearch,
     initialPageParam: { nextCursor: null },
   });
+
+  await queryClient.prefetchQuery({
+    queryKey: ['agoras', 'lively'],
+    queryFn: getLivelyAgora,
+  });
+
   const dehydratedState = dehydrate(queryClient);
 
   return (
