@@ -1,7 +1,7 @@
 import {
   HydrationBoundary,
+  QueryClient,
   dehydrate,
-  useQueryClient,
 } from '@tanstack/react-query';
 import React from 'react';
 import { getChatMessages } from '../../_lib/getChatMessages';
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export default async function MessageContainer({ agoraId }: Props) {
-  const queryClient = useQueryClient();
+  const queryClient = new QueryClient();
   await queryClient.prefetchInfiniteQuery({
     queryKey: ['chat', `${agoraId}`, 'messages'],
     queryFn: getChatMessages,

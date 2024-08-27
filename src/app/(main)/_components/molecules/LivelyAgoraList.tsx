@@ -39,7 +39,7 @@ export default function LivelyAgoraList() {
   });
 
   useEffect(() => {
-    setKey((prevKey) => prevKey + 1);
+    // setKey((prevKey) => prevKey + 1);
     setIsMounted(true);
 
     return () => {
@@ -54,10 +54,10 @@ export default function LivelyAgoraList() {
     if (swiperInstance && !swiperInstance.destroyed) {
       swiperInstance.destroy();
     }
-    setSwiperInstance(null);
     // 페이지 변경 시 key를 업데이트하여 강제 리렌더링
     setKey((prevKey) => prevKey + 1);
-  }, [pathname, swiperInstance]);
+    setSwiperInstance(null);
+  }, [pathname]);
 
   useLayoutEffect(() => {
     if (
@@ -110,7 +110,7 @@ export default function LivelyAgoraList() {
   const content = () => {
     if (isFetching || isPending) {
       return (
-        <div className="h-36 w-full">
+        <div className="h-235 w-full">
           <DeferredComponent>
             <Loading
               w="32"

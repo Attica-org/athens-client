@@ -146,7 +146,7 @@ export default function AgoraImageUpload({ image }: Props) {
               aria-hidden
               className="flex justify-center items-center h-full w-full bg-dark-light-500 rounded-3xl under-mobile:rounded-2xl"
             >
-              <ImageIcon className="w-12 h-12" />
+              <ImageIcon className="w-22 h-22" />
             </div>
           )}
           <input

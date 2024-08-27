@@ -95,8 +95,9 @@ export default function KeywordAgora({ agora }: Props) {
               </div>
             ) : (
               <ClosedAgoraVoteResultBar
-                prosPercentage={agora.prosCount}
-                consPercentage={agora.consCount}
+                prosCount={agora.prosCount}
+                consCount={agora.consCount}
+                totalMember={agora.totalMember}
               />
             )}
           </div>

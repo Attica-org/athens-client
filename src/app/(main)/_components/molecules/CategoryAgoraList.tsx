@@ -129,6 +129,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
         <NoAgoraMessage />
       ) : (
         <VirtuosoGrid
+          useWindowScroll={searchParams.status === 'active'}
           className="scrollbar-hide w-full h-full"
           data={data.pages.flatMap((page) => page.agoras)}
           totalCount={data.pages[0].agoras.length}
