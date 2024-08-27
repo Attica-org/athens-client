@@ -33,7 +33,7 @@ export const patchAgoraEnd = async (agoraId: number) => {
       if (res.error.message === AGORA_STATUS_ERROR) {
         showToast('이미 종료된 아고라입니다.', 'error');
       } else if (res.error.message === ALREADY_VOTED) {
-        showToast('이미 투표한 사용자입니다.', 'error');
+        showToast('이미 투표하였습니다.', 'error');
       } else {
         showToast('토론 종료에 실패했습니다.\n 다시 시도해주세요.', 'error');
       }

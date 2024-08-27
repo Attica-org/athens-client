@@ -13,7 +13,7 @@ export default function ChatNotification() {
   );
 
   useEffect(() => {
-    if (enterAgora.status !== 'CLOSED') return () => {};
+    if (enterAgora.status === 'CLOSED') return () => {};
     const timer = setTimeout(() => {
       setShowMessage(true);
     }, 10000);
@@ -23,7 +23,7 @@ export default function ChatNotification() {
 
   return (
     !showMessage &&
-    !enterAgora.status && (
+    enterAgora.status !== 'CLOSED' && (
       <div className="flex p-0.5rem pl-1rem pr-1rem">
         <div
           role="alert"
