@@ -19,6 +19,7 @@ export interface ClosedAgora {
   agoraColor: string;
   prosCount: number;
   consCount: number;
+  totalMember: number;
   createdAt: string;
   status: string;
 }
