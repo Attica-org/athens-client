@@ -125,3 +125,10 @@ html {
   margin: 0.6rem auto 0 !important;
 }
 
+.custom-before:before{
+  border-bottom-color: #f1f3f5 !important;
+}
+
+.dark .custom-before:before{
+  border-bottom-color: white !important;
+}
