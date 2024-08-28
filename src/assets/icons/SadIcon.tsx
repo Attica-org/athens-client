@@ -8,7 +8,12 @@ type Props = {
 
 export default function SadIcon({ className }: Props) {
   return (
-    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none">
+    <svg
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 50 50"
+    >
       <path fill="#7F2C0F" d="M8 20h32v21H8z" />
       <ellipse cx="25.5" cy="37.5" fill="#F85820" rx="11.5" ry="4.5" />
       <path fill="#1F1F1F" d="M8 8h35v13H8z" />

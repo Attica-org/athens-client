@@ -8,7 +8,12 @@ type Props = {
 
 export default function DislikeIcon({ className }: Props) {
   return (
-    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none">
+    <svg
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 50 50"
+    >
       <circle
         cx="25"
         cy="25"

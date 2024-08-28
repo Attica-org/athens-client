@@ -8,7 +8,12 @@ type Props = {
 
 export default function HappyIcon({ className }: Props) {
   return (
-    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none">
+    <svg
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 50 50"
+    >
       <path fill="#1F1F1F" d="M7 10h34v13H7z" />
       <path fill="#7F2C0F" d="M7 23h36v16H7z" />
       <ellipse cx="25" cy="37.5" fill="#F85820" rx="12" ry="4.5" />

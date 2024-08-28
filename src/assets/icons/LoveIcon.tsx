@@ -8,13 +8,18 @@ type Props = {
 
 export default function LoveIcon({ className }: Props) {
   return (
-    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none">
+    <svg
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 50 50"
+    >
       <circle
         cx="25"
         cy="25"
         r="24.75"
         fill="#FF7373"
-        stroke="#FE4628"
+        stroke="#FF0000"
         strokeWidth=".5"
       />
       <path
