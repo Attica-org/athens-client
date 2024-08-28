@@ -22,6 +22,9 @@ export default function AgoraUserList({ position, userList }: Props) {
   return (
     <div className="pb-0.5rem">
       <h3
+        aria-label={
+          position === 'PROS' ? '찬성측 참여자 목록' : '반대측 참여자 목록'
+        }
         id={position}
         className="text-sm pb-10 lg:pb-1rem dark:text-white dark:text-opacity-85"
       >

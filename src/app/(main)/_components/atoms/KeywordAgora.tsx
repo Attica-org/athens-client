@@ -9,6 +9,7 @@ import { useAgora } from '@/store/agora';
 import COLOR from '@/constants/agoraColor';
 import isActiveAgora from '@/utils/isActiveAgora';
 import UserImage from '../../../_components/atoms/UserImage';
+import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 
 type Props = {
   agora: AgoraData;
@@ -60,42 +61,44 @@ export default function KeywordAgora({ agora }: Props) {
       >
         <div className="flex-1 p-0.5rem pl-0">
           <div className="flex justify-between items-start mb-12">
-            <h3 className="text-base under-mobile:text-xs break-words break-keep line-clamp-2 max-w-prose dark:text-white dark:text-opacity-85">
+            <h3 className="text-sm under-mobile:text-xs break-words break-keep line-clamp-2 max-w-prose dark:text-white dark:text-opacity-85">
               {agora.agoraTitle}
             </h3>
+            <time
+              aria-label="아고라 생성 날짜"
+              className="text-xs pl-10 pr-3 text-nowrap dark:text-dark-line"
+            >
+              {getRelativeTime()}
+            </time>
           </div>
           <div className="flex justify-between items-center">
-            <div className="text-xs text-nowrap">
-              <span className="text-blue-500 dark:text-dark-pro-color">
-                찬성
-                <span className="text-athens-gray-thick pl-3 dark:text-dark-line">
-                  {isActiveAgora(agora)
-                    ? agora.participants.pros
-                    : agora.prosCount}
-                  명<span aria-hidden> | </span>
+            {isActiveAgora(agora) ? (
+              <div className="text-xs text-nowrap">
+                <span className="text-blue-500 dark:text-dark-pro-color">
+                  찬성
+                  <span className="text-athens-gray-thick ml-3 dark:text-dark-line">
+                    {agora.participants.pros}명<span aria-hidden> | </span>
+                  </span>
                 </span>
-              </span>
-              <span className="text-red-500 dark:text-dark-con-color">
-                반대
-                <span className="text-athens-gray-thick pl-3 dark:text-dark-line">
-                  {isActiveAgora(agora)
-                    ? agora.participants.cons
-                    : agora.consCount}
-                  명<span aria-hidden> | </span>
+                <span className="text-red-500 dark:text-dark-con-color">
+                  반대
+                  <span className="text-athens-gray-thick pl-3 dark:text-dark-line">
+                    {agora.participants.cons}명<span aria-hidden> | </span>
+                  </span>
                 </span>
-              </span>
-              {isActiveAgora(agora) && (
                 <span className="dark:text-white dark:text-opacity-80">
                   관찰자
                   <span className="pl-3 text-athens-gray-thick dark:text-dark-line">
                     {agora.participants.observer}명
                   </span>
                 </span>
-              )}
-            </div>
-            <div className="text-xs dark:text-dark-line">
-              {getRelativeTime()}
-            </div>
+              </div>
+            ) : (
+              <ClosedAgoraVoteResultBar
+                prosPercentage={agora.prosCount}
+                consPercentage={agora.consCount}
+              />
+            )}
           </div>
         </div>
         <div className="relative">
@@ -106,7 +109,7 @@ export default function KeywordAgora({ agora }: Props) {
           />
           {agora.status !== 'CLOSED' && (
             <span
-              className={`absolute top-0 left-53 inline-block w-13 h-13 ${agora.status === 'queued' ? 'bg-athens-button' : 'bg-red-400'} rounded-full ml-3`}
+              className={`absolute top-2 left-50 inline-block w-13 h-13 ${agora.status === 'queued' ? 'bg-athens-button' : 'bg-red-400'} rounded-full ml-3`}
             />
           )}
         </div>

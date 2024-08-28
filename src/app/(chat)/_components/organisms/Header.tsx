@@ -23,6 +23,11 @@ import AgoraInfo from '../molecules/AgoraInfo';
 import HamburgerButton from '../atoms/HamburgerButton';
 import DiscussionStatus from '../molecules/DiscussionStatus';
 
+const OBSERVER_MESSAGE_SEND_ERROR = 'Observer cannot send this request';
+const SESSION_NOT_FOUND = 'Session not found';
+// const AGORA_NOT_FOUND = 'Agora not found';
+const USER_NOT_FOUND = 'User is not participating in the agora';
+
 export default function Header() {
   const { toggle } = useSidebarStore(
     useShallow((state) => ({ toggle: state.toggle })),
@@ -142,9 +147,13 @@ export default function Header() {
     } else if (err.code === 2001) {
       showToast('연결이 불안정합니다. 잠시 후 다시 시도해주세요.', 'error');
     } else if (err.code === 1102) {
-      showToast('관찰자는 메시지를 보낼 수 없습니다.', 'error');
+      if (err.message === OBSERVER_MESSAGE_SEND_ERROR) {
+        showToast('관찰자는 메시지를 보낼 수 없습니다.', 'error');
+      } else if (err.message === USER_NOT_FOUND) {
+        showToast('유저를 찾을 수 없습니다.', 'error');
+      }
     } else if (err.code === 1301) {
-      if (err.message === 'Session not found') {
+      if (err.message === SESSION_NOT_FOUND) {
         showToast('현재 아고라에 존재하지 않는 유저입니다.', 'error');
       } else {
         showToast('존재하지 않는 아고라입니다.', 'error');
@@ -265,7 +274,7 @@ export default function Header() {
   return (
     <div className="flex flex-col w-full h-full justify-center dark:text-white dark:text-opacity-85">
       <div className="flex justify-between items-center pb-10 border-b-1 border-gray-200 dark:border-dark-bg-light">
-        <BackButton />
+        <BackButton goHome />
         <div className="flex justify-center items-center text-sm under-mobile:text-xs">
           <DiscussionStatus meta={metaData} />
         </div>
