@@ -17,6 +17,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import getKey from '@/utils/getKey';
 import swManager from '@/utils/swManager';
 import { saveTabId, deleteTabId } from '@/utils/indexedDB';
+import Swal from 'sweetalert2';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
@@ -271,10 +272,41 @@ export default function Header() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enterAgora.status, URL.BASE_URL]);
 
+  const swalButton = Swal.mixin({
+    customClass: {
+      icon: 'text-xxxs',
+      popup:
+        'w-[250px] h-[170px] bg-white dark:bg-dark-light-300 place-self-center rounded-xl', // 전체 모달 관리
+      title: 'p-0 text-sm mt-8 text-black dark:text-[#E2E2E2]',
+      container: 'text-black dark:text-[#E2E2E2]',
+      confirmButton:
+        'bg-backbutton-confirm w-80 h-27 text-xs text-white rounded-md',
+      cancelButton: 'bg-backbutton-cancel ml-7 w-80 h-27 text-xs rounded-md',
+    },
+    buttonsStyling: false,
+  });
+
+  const handleBack = () => {
+    swalButton
+      .fire({
+        icon: 'warning',
+        title: '아고라를 나가시겠습니까?',
+        text: '설정한 프로필은 초기화됩니다.',
+        showCancelButton: true,
+        confirmButtonText: '확인',
+        cancelButtonText: '취소',
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          router.replace('/home');
+        }
+      });
+  };
+
   return (
     <div className="flex flex-col w-full h-full justify-center dark:text-white dark:text-opacity-85">
       <div className="flex justify-between items-center pb-10 border-b-1 border-gray-200 dark:border-dark-bg-light">
-        <BackButton goHome />
+        <BackButton onClick={handleBack} />
         <div className="flex justify-center items-center text-sm under-mobile:text-xs">
           <DiscussionStatus meta={metaData} />
         </div>
