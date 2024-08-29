@@ -18,6 +18,7 @@ import getKey from '@/utils/getKey';
 import swManager from '@/utils/swManager';
 import { saveTabId, deleteTabId } from '@/utils/indexedDB';
 import Swal from 'sweetalert2';
+import fetchWrapper from '@/lib/fetchWrapper';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
@@ -286,6 +287,23 @@ export default function Header() {
     buttonsStyling: false,
   });
 
+  const callChatExitApi = async () => {
+    const res: {
+      success: boolean;
+    } = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/exit`, {
+      method: 'PATCH',
+      next: {
+        tags: [],
+      },
+      credentials: 'include',
+      cache: 'no-cache',
+      headers: {
+        Authorization: `Bearer ${tokenManager.getToken()}`,
+        AgoraId: { agoraId },
+      },
+    });
+    return res;
+  };
   const handleBack = () => {
     swalButton
       .fire({
@@ -298,7 +316,7 @@ export default function Header() {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          router.replace('/home');
+          callChatExitApi();
         }
       });
   };
