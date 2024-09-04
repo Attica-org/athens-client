@@ -8,6 +8,7 @@ import { SearchParams } from '@/app/model/Agora';
 import Loading from '@/app/_components/atoms/loading';
 import { useSearchStore } from '@/store/search';
 import { useShallow } from 'zustand/react/shallow';
+import LivelyAgoraList from './LivelyAgoraList';
 
 const KeywordAgoraList = dynamic(() => import('./KeywordAgoraList'), {
   loading: () => (
@@ -46,7 +47,7 @@ export default function AgoraListDecider({ searchParams }: Props) {
     if (q) {
       setSearch(q);
     }
-  }, []);
+  }, [q, setSearch]);
 
   if (search) {
     return (
@@ -58,7 +59,10 @@ export default function AgoraListDecider({ searchParams }: Props) {
 
   return (
     <ErrorBoundary FallbackComponent={FallbackComponent}>
-      <CategoryAgoraList searchParams={searchParams} />
+      <>
+        {searchParams.status === 'active' && <LivelyAgoraList />}
+        <CategoryAgoraList searchParams={searchParams} />
+      </>
     </ErrorBoundary>
   );
 }
