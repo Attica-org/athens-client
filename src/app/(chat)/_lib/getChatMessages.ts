@@ -4,6 +4,7 @@ import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
+import { getChatMessagesQueryKey as getChatMessagesTags } from '@/constants/queryKey';
 
 type Meta = {
   key: number | null;
@@ -40,7 +41,7 @@ export const getChatMessages: QueryFunction<
     `/api/v1/open/agoras/${agoraId}/chats?${urlSearchParams.toString()}`,
     {
       next: {
-        tags: ['chat', agoraId, 'messages'],
+        tags: getChatMessagesTags(Number(agoraId)),
       },
       credentials: 'include',
       cache: 'no-cache',

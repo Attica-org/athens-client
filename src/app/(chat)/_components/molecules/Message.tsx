@@ -6,6 +6,7 @@ import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useMessageStore } from '@/store/message';
 import { useAgora } from '@/store/agora';
+import { getChatMessagesQueryKey } from '@/constants/queryKey';
 import MyMessage from '../atoms/MyMessage';
 import YourMessage from '../atoms/YourMessage';
 import { getChatMessages } from '../../_lib/getChatMessages';
@@ -33,7 +34,7 @@ export default function Message() {
       [_1: string, _2: string, _3: string],
       { meta: Meta }
     >({
-      queryKey: ['chat', `${agoraId}`, 'messages'],
+      queryKey: getChatMessagesQueryKey(agoraId),
       queryFn: getChatMessages,
       staleTime: 60 * 1000,
       gcTime: 500 * 1000,

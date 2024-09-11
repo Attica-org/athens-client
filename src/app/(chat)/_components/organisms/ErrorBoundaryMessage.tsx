@@ -15,7 +15,7 @@ function FallbackComponent(props: FallbackProps) {
 }
 
 type Props = {
-  agoraId: string;
+  agoraId: number;
 };
 
 export default function ErrorBoundaryMessage({ agoraId }: Props) {

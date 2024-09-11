@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { useAgora } from '@/store/agora';
 import { useVoteStore } from '@/store/vote';
 import showToast from '@/utils/showToast';
+import { getVoteResultQueryKey } from '@/constants/queryKey';
 import { getVoteResult } from '../../_lib/getVoteResult';
 
 type Props = {
@@ -15,7 +16,7 @@ export default function VoteResult({ agoraId }: Props) {
   const result = useVoteStore((state) => state.voteResult);
   const { enterAgora } = useAgora();
   const { data, refetch, error } = useQuery({
-    queryKey: ['agora', `${agoraId}`, 'closed'],
+    queryKey: getVoteResultQueryKey(agoraId),
     queryFn: getVoteResult,
     retry: 2,
   });

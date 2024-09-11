@@ -5,6 +5,10 @@ import {
 } from '@tanstack/react-query';
 import React from 'react';
 import { SearchParams } from '@/app/model/Agora';
+import {
+  getCategoryAgoraListQueryKey,
+  getKeywordAgoraListQueryKey,
+} from '@/constants/queryKey';
 import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
 import AgoraListDecider from '../molecules/AgoraListDecider';
 import { getAgoraKeywordSearch } from '../../_lib/getAgoraKeywordSearch';
@@ -19,12 +23,9 @@ export default async function AgoraListDeciderHydration({
   const queryClient = new QueryClient();
   const isSearch = searchParams.q;
   await queryClient.prefetchInfiniteQuery({
-    queryKey: [
-      'agoras',
-      'search',
-      isSearch ? 'keyword' : 'category',
-      searchParams,
-    ],
+    queryKey: isSearch
+      ? getKeywordAgoraListQueryKey(searchParams)
+      : getCategoryAgoraListQueryKey(searchParams),
     queryFn: isSearch ? getAgoraKeywordSearch : getAgoraCategorySearch,
     initialPageParam: { nextCursor: null },
   });

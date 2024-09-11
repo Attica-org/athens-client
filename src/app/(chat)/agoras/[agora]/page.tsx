@@ -50,9 +50,10 @@ type Props = {
 };
 
 export default function Page({ params }: Props) {
+  const agoraId = Number(params.agora);
   return (
     <main aria-label="채팅" className="flex flex-col justify-between h-full">
-      <ErrorBoundaryMessage agoraId={params.agora} />
+      <ErrorBoundaryMessage agoraId={agoraId} />
     </main>
   );
 }

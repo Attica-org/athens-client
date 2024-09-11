@@ -19,6 +19,7 @@ import swManager from '@/utils/swManager';
 import { saveTabId, deleteTabId } from '@/utils/indexedDB';
 import Swal from 'sweetalert2';
 import fetchWrapper from '@/lib/fetchWrapper';
+import { getAgoraUserListQueryKey } from '@/constants/queryKey';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
@@ -84,7 +85,7 @@ export default function Header() {
   const refetchAgoraUserList = async () => {
     // 유저 리스트 캐시 무효화 및 재요청
     await queryClient.invalidateQueries({
-      queryKey: ['chat', 'users', `${agoraId}`],
+      queryKey: getAgoraUserListQueryKey(agoraId),
     });
   };
 

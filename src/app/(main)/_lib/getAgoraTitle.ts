@@ -6,7 +6,7 @@ import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
 import { redirect } from 'next/navigation';
-
+import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
 // eslint-disable-next-line import/prefer-default-export
 export const getAgoraTitle: QueryFunction<
   { title: string; status: string },
@@ -21,7 +21,7 @@ export const getAgoraTitle: QueryFunction<
 
   const res = await fetchWrapper.call(`/api/v1/open/agoras/${agoraId}/title`, {
     next: {
-      tags: [`${agoraId}`, 'agoraTitle'],
+      tags: getSelectedAgoraTags(agoraId),
     },
     credentials: 'include',
     cache: 'no-cache',
