@@ -23,7 +23,7 @@ function CreateAgoraBtn() {
   const [createAgora, setCreateAgora] = useState<AgoraConfig>({
     title: '',
     category: '1',
-    color: COLOR[0].value,
+    color: { idx: 0, value: COLOR[0].value },
     capacity: 5,
     duration: 60,
   });

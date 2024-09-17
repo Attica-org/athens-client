@@ -41,10 +41,15 @@ export interface SearchParams {
   q?: string;
 }
 
+interface ColorType {
+  idx: number;
+  value: string;
+}
+
 export type AgoraConfig = {
   title: string;
   category: string;
-  color: string;
+  color: ColorType;
   capacity: number;
   duration: number | null;
 };
