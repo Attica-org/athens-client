@@ -2,22 +2,39 @@
 
 import { useDarkMode } from '@/store/darkMode';
 import { usePathname } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 type Props = {
   className: string;
 };
 
 function HomeIcon({ className }: Props) {
-  const segment = usePathname().split('/');
+  const currentPath = usePathname().split('/');
   const { darkMode } = useDarkMode();
   const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
+  const previousPathRef = useRef<string | null>(
+    currentPath[currentPath.length - 1],
+  );
+  const [shouldRenderIcon, setShouldRenderIcon] = useState(false);
 
   useEffect(() => {
     setIsDarkMode(darkMode);
   }, [darkMode]);
 
-  if (segment[segment.length - 1] === 'home' || segment[2] === 'enter-agora') {
+  useEffect(() => {
+    const path = currentPath[currentPath.length - 1];
+    if (path === previousPathRef.current) {
+      const wasCreateAgora = previousPathRef.current === 'home';
+      const isCreateAgora = path === 'home';
+      const isEnterAgora = path === '/enter-agora';
+
+      setShouldRenderIcon(isCreateAgora || (wasCreateAgora && isEnterAgora));
+
+      previousPathRef.current = path;
+    }
+  }, [currentPath]);
+
+  if (currentPath[currentPath.length - 1] === 'home' || shouldRenderIcon) {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
         <g>
