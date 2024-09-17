@@ -17,14 +17,21 @@ type Props = {
 
 export default function KeywordAgora({ agora }: Props) {
   const router = useRouter();
-  const { setSelectedAgora } = useAgora();
+  const { setSelectedAgora, setEnterAgora } = useAgora();
 
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
-  const enterAgora = () => {
+  const enterAgoraHandle = () => {
     setSelectedAgora({
       id: agora.id,
       title: agora.agoraTitle,
       status: agora.status,
+    });
+
+    setEnterAgora({
+      id: agora.id,
+      title: agora.agoraTitle,
+      status: agora.status,
+      role: 'OBSERVER',
     });
 
     if (agora.status === 'QUEUED' || agora.status === 'RUNNING') {
@@ -37,7 +44,7 @@ export default function KeywordAgora({ agora }: Props) {
 
   const handleKeyDownEnterAgora: KeyboardEventHandler<HTMLElement> = (e) => {
     if (e.key === 'Enter') {
-      enterAgora();
+      enterAgoraHandle();
     }
   };
 
@@ -56,7 +63,7 @@ export default function KeywordAgora({ agora }: Props) {
         tabIndex={0}
         aria-label="아고라"
         onKeyDown={handleKeyDownEnterAgora}
-        onClick={enterAgora}
+        onClick={enterAgoraHandle}
         className="w-full flex mb-15 pb-15 pl-1rem pr-1rem justify-center items-center cursor-pointer border-b-1 border-gray-100 dark:border-0"
       >
         <div className="flex-1 p-0.5rem pl-0">
