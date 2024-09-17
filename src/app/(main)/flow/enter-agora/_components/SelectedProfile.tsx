@@ -56,7 +56,7 @@ export default function SelectedProfile() {
         value={nickname}
         placeholder={profileImage.name}
         onChange={nicknameChange}
-        className="ml-12 text-sm dark:bg-dark-light-500 outline-none w-120 placeholder:text-sm p-3 rounded-md"
+        className="ml-10 text-sm dark:bg-dark-light-500 outline-none w-120 placeholder:text-sm p-5 rounded-md"
       />
     </div>
   );
