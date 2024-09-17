@@ -9,13 +9,10 @@ type Props = {
   shouldShowTime: boolean;
 };
 
-export default function MyMessage({
-  message,
-  isSameUser,
-  shouldShowTime,
-}: Props) {
+function MyMessage({ message, isSameUser, shouldShowTime }: Props) {
   return (
     <article
+      key={message.chatId}
       className={`flex justify-end items-start p-0.5rem ${isSameUser && 'pt-0'} pr-12 pb-0 h-full`}
     >
       <div
@@ -71,3 +68,5 @@ export default function MyMessage({
     </article>
   );
 }
+
+export default React.memo(MyMessage);

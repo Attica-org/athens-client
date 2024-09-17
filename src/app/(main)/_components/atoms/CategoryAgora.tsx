@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import COLOR from '@/constants/agoraColor';
 import isActiveAgora from '@/utils/isActiveAgora';
+import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 
 type Props = {
@@ -45,7 +46,7 @@ export default function CategoryAgora({ agora, className }: Props) {
         : 'closed';
 
     if (AgoraStatus === 'active') {
-      router.push(`/flow/enter-agora/${agora.id}`);
+      router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
     } else if (AgoraStatus === 'closed') {
       // 바로 채팅방으로 이동
       setAgoraData();

@@ -133,7 +133,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
           aria-label="활성화 상태 아고라"
           className="flex justify-between items-center text-md font-semibold dark:text-dark-line-light text-left pl-10 mb-16 w-full"
         >
-          활성화 아고라
+          NOW
           <button
             type="button"
             aria-label="활성화 아고라 다시 불러오기"

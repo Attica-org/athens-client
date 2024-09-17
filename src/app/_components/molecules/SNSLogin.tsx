@@ -1,5 +1,6 @@
 'use client';
 
+import { homeSegmentKey } from '@/constants/segmentKey';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -15,7 +16,7 @@ export default function SNSLogin() {
     //     console.log(err)
     //   }
     // });
-    router.replace('/home');
+    router.replace(homeSegmentKey);
   };
 
   return (

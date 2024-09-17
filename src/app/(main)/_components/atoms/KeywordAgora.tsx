@@ -8,6 +8,7 @@ import { ko } from 'date-fns/locale';
 import { useAgora } from '@/store/agora';
 import COLOR from '@/constants/agoraColor';
 import isActiveAgora from '@/utils/isActiveAgora';
+import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import UserImage from '../../../_components/atoms/UserImage';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 
@@ -35,7 +36,7 @@ export default function KeywordAgora({ agora }: Props) {
     });
 
     if (agora.status === 'QUEUED' || agora.status === 'RUNNING') {
-      router.push(`/flow/enter-agora/${agora.id}`);
+      router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
     } else if (agora.status === 'CLOSED') {
       // 만약 status가 closed라면, /agoras/${id}로 이동
       router.push(`/agoras/${agora.id}`);

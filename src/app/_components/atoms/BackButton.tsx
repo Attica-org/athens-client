@@ -1,6 +1,7 @@
 'use client';
 
 import BackIcon from '@/assets/icons/BackIcon';
+import { homeSegmentKey } from '@/constants/segmentKey';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -13,7 +14,7 @@ export default function BackButton({ goHome }: Props) {
 
   const handleBack = () => {
     if (goHome) {
-      router.replace('/home');
+      router.replace(homeSegmentKey);
     } else {
       router.back();
     }
