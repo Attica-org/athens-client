@@ -13,6 +13,7 @@ import Loading from '@/app/_components/atoms/loading';
 import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 import { VirtuosoGrid } from 'react-virtuoso';
+import RefreshIcon from '@/assets/icons/RefreshIcon';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
 import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
 import CategoryAgora from '../atoms/CategoryAgora';
@@ -38,6 +39,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
 
   const {
     data,
+    refetch,
     hasNextPage,
     fetchNextPage,
     isFetching,
@@ -107,6 +109,16 @@ export default function CategoryAgoraList({ searchParams }: Props) {
     });
   }, [selectedCategory, queryClient]);
 
+  const handleKeyDownRefresh = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      refetch();
+    }
+  };
+
+  const handleClickRefresh = () => {
+    refetch();
+  };
+
   return (
     <section
       aria-label={
@@ -118,18 +130,29 @@ export default function CategoryAgoraList({ searchParams }: Props) {
     >
       {searchParams.status === 'active' && (
         <h2
-          aria-hidden={searchParams.status === 'active'}
           aria-label="활성화 상태 아고라"
-          className="text-md font-semibold dark:text-dark-line-light text-left pl-10 mb-16 w-full"
+          className="flex justify-between items-center text-md font-semibold dark:text-dark-line-light text-left pl-10 mb-16 w-full"
         >
           활성화 아고라
+          <button
+            type="button"
+            aria-label="활성화 아고라 다시 불러오기"
+            onClick={handleClickRefresh}
+            onKeyDown={handleKeyDownRefresh}
+            className="cursor-pointer flex font-normal mr-5"
+          >
+            <span className="text-xs mr-5 text-athens-sub font-bold">
+              새로고침
+            </span>
+            <RefreshIcon className="w-16 h-16" fill="#FEAC3E" />
+          </button>
         </h2>
       )}
       {data?.pages[0].agoras.length < 1 ? (
         <NoAgoraMessage />
       ) : (
         <VirtuosoGrid
-          useWindowScroll={searchParams.status === 'active'}
+          useWindowScroll={false}
           className="scrollbar-hide w-full h-full"
           data={data.pages.flatMap((page) => page.agoras)}
           totalCount={data.pages[0].agoras.length}
