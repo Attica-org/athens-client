@@ -1,4 +1,3 @@
-// query key를 3개정도 만들고, 각각 export 하는 예시 코드
 import { SearchParams } from '@/app/model/Agora';
 
 const getVoteResultQueryKey = (agoraId: number): [string, string, string] => [
