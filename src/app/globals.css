@@ -100,3 +100,28 @@ html {
   background-color: #35627B !important;
 }
 
+.swal2-icon:is(.dark *){
+  margin: 1.5em auto .6em !important;
+  border-color: white !important;
+  color: white !important;
+}
+
+.swal2-html-container:is(.dark *){
+  padding-top: .2rem !important;
+  font-size: 0.7rem !important; 
+  overflow-y: hidden !important;
+  height: 1.5rem !important;
+  color: lightgray !important;
+}
+.swal2-html-container{
+  padding-top: .2rem !important;
+  font-size: 0.7rem !important; 
+  overflow-y: hidden !important;
+  height: 1.5rem !important;
+  color: black !important;
+}
+
+.swal2-actions{
+  margin: 0.6rem auto 0 !important;
+}
+
