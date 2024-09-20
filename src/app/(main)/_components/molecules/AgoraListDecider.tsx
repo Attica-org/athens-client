@@ -64,7 +64,7 @@ export default function AgoraListDecider({ searchParams }: Props) {
           <>
             <LivelyAgoraList />
             <div className="h-12 w-full mb-16">
-              <div className="h-full mx-10 bg-athens-gray" />
+              <div className="h-full mx-10 bg-athens-gray dark:bg-dark-light-200" />
             </div>
           </>
         )}
