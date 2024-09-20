@@ -3331,6 +3331,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^7.8.0"
     autoprefixer: "npm:^10.0.1"
     canvas-confetti: "npm:^1.9.2"
+    client-only: "npm:^0.0.1"
     cors: "npm:^2.8.5"
     date-fns: "npm:^3.6.0"
     eslint: "npm:^8"
@@ -3761,7 +3762,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"client-only@npm:0.0.1":
+"client-only@npm:0.0.1, client-only@npm:^0.0.1":
   version: 0.0.1
   resolution: "client-only@npm:0.0.1"
   checksum: 10c0/9d6cfd0c19e1c96a434605added99dff48482152af791ec4172fb912a71cff9027ff174efd8cdb2160cc7f377543e0537ffc462d4f279bc4701de3f2a3c4b358
