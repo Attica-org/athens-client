@@ -26,4 +26,3 @@ export default function BackButton({ goHome }: Props) {
     </button>
   );
 }
-
