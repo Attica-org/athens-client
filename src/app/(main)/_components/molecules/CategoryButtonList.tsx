@@ -7,6 +7,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useSearchStore } from '@/store/search';
 import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
+import { homeSegmentKey } from '@/constants/segmentKey';
 import CategoryButton from '../atoms/CategoryButton';
 
 // import 'swiper/css';
@@ -38,7 +39,7 @@ export default function CategoryButtonList() {
 
   const changeCategoryParams = useCallback(
     (id: string) => {
-      if (pathname !== '/home') return;
+      if (pathname !== homeSegmentKey) return;
 
       const newSearchParams = new URLSearchParams(searchParams);
 
@@ -46,7 +47,7 @@ export default function CategoryButtonList() {
       newSearchParams.delete('q');
       search.reset();
 
-      const newUrl = `/home?${newSearchParams.toString()}`;
+      const newUrl = `${homeSegmentKey}?${newSearchParams.toString()}`;
       window.history.pushState(
         { ...window.history.state, as: newUrl, url: newUrl },
         '',

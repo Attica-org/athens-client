@@ -60,7 +60,14 @@ export default function AgoraListDecider({ searchParams }: Props) {
   return (
     <ErrorBoundary FallbackComponent={FallbackComponent}>
       <>
-        {searchParams.status === 'active' && <LivelyAgoraList />}
+        {searchParams.status === 'active' && (
+          <>
+            <LivelyAgoraList />
+            <div className="h-12 w-full mb-16">
+              <div className="h-full mx-10 bg-athens-gray" />
+            </div>
+          </>
+        )}
         <CategoryAgoraList searchParams={searchParams} />
       </>
     </ErrorBoundary>

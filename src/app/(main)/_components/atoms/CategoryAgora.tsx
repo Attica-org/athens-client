@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import COLOR from '@/constants/agoraColor';
 import isActiveAgora from '@/utils/isActiveAgora';
+import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 
 type Props = {
@@ -45,7 +46,7 @@ export default function CategoryAgora({ agora, className }: Props) {
         : 'closed';
 
     if (AgoraStatus === 'active') {
-      router.push(`/flow/enter-agora/${agora.id}`);
+      router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
     } else if (AgoraStatus === 'closed') {
       // 바로 채팅방으로 이동
       setAgoraData();
@@ -63,7 +64,7 @@ export default function CategoryAgora({ agora, className }: Props) {
   return (
     <article
       id={`${agora.id}`}
-      className={`${className} w-165 under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center dark:bg-dark-light-300 dark:border-gray-500`}
+      className={`${className} w-165 under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center dark:bg-dark-light-300 dark:border-gray-500 border-slate-200 bg-slate-50`}
     >
       <div
         className={`${selectedColor} under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-3xl under-mobile:rounded-2xl relative`}

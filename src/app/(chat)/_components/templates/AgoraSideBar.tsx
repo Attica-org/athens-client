@@ -61,7 +61,7 @@ export default function AgoraSideBar() {
     <div
       role="dialog"
       id="agora-side-bar"
-      className={`absolute inset-0 bg-opacity-50 bg-dark-bg-dark duration-500 transition-opacity ${
+      className={`min-w-300 absolute inset-0 bg-opacity-50 bg-dark-bg-dark duration-500 transition-opacity ${
         !isOpen && 'pointer-events-none opacity-0'
       }`}
       aria-modal={isOpen}
@@ -78,13 +78,13 @@ export default function AgoraSideBar() {
         aria-label="아고라 설정 및 참여자 목록"
       >
         <div
-          className={`absolute inset-y-0 right-0 flex flex-col max-w-full pl-10 ${
+          className={`min-w-250 absolute inset-y-0 right-0 flex flex-col max-w-full pl-10 ${
             isOpen ? 'z-15' : 'pointer-events-none'
           }`}
         >
           <section
             role="group"
-            className={`relative overflow-y-scroll scrollbar-hide p-1rem right-0 transition duration-500 ease-in-out w-screen inset-y-0 bg-white dark:bg-dark-light-300 flex-1 flex-col h-full border-l-1 border-athens-gray dark:border-dark-light-300 max-w-15rem xl:w-15rem under-mobile:w-[70vw] ${
+            className={`relative overflow-y-scroll scrollbar-hide p-1rem right-0 transition duration-500 ease-in-out w-screen inset-y-0 bg-white dark:bg-dark-light-300 flex-1 flex-col h-full border-l-1 border-athens-gray dark:border-dark-light-300 max-w-15rem xl:w-15rem ${
               isOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
           >
@@ -107,7 +107,7 @@ export default function AgoraSideBar() {
                   type="button"
                   aria-label="변경한 이미지 저장"
                   onClick={changeAgoraImg}
-                  className="z-[-1] absolute left-1/3 bottom-0 text-xs rounded-lg text-athens-sub"
+                  className="z-[-1] absolute left-80 bottom-0 text-xs rounded-lg text-athens-sub"
                 >
                   저장
                 </button>

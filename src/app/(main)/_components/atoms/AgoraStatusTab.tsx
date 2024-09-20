@@ -1,5 +1,6 @@
 'use client';
 
+import { homeSegmentKey } from '@/constants/segmentKey';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -14,11 +15,11 @@ function AgoraStatusTab() {
   const pathname = usePathname();
 
   const changeParams = useCallback(() => {
-    if (pathname !== '/home') return;
+    if (pathname !== homeSegmentKey) return;
     const newSearchParams = new URLSearchParams(searchParams);
 
     newSearchParams.set('status', status);
-    router.push(`/home?${newSearchParams.toString()}`);
+    router.push(`${homeSegmentKey}?${newSearchParams.toString()}`);
   }, [router, searchParams, status, pathname]);
 
   useEffect(() => {

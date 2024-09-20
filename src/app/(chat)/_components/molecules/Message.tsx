@@ -1,11 +1,17 @@
 'use client';
 
 import { Message as IMessage } from '@/app/model/Message';
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
-import { useInView } from 'react-intersection-observer';
 import { useMessageStore } from '@/store/message';
 import { useAgora } from '@/store/agora';
+import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import MyMessage from '../atoms/MyMessage';
 import YourMessage from '../atoms/YourMessage';
 import { getChatMessages } from '../../_lib/getChatMessages';
@@ -16,14 +22,58 @@ interface Meta {
   effectiveSize: number;
 }
 
+type MessageItemProps = {
+  message: IMessage;
+  isMyType: (type: string) => boolean;
+  getTimeString: (time: string) => string;
+  prevMessage: IMessage | null;
+};
+
 const observer = 'OBSERVER';
 
+const MessageItem = React.memo(
+  ({ message, isMyType, getTimeString, prevMessage }: MessageItemProps) => {
+    const isMyMessage = isMyType(message.user.type);
+    const isSameMessage = prevMessage && prevMessage.chatId === message.chatId;
+
+    if (isSameMessage) return null;
+
+    const isSameUser = prevMessage && prevMessage.user.id === message.user.id;
+    const isSameTime =
+      isSameUser &&
+      getTimeString(prevMessage.createdAt) === getTimeString(message.createdAt);
+    const shouldShowTime = !isSameTime;
+
+    return isMyMessage ? (
+      <MyMessage
+        isSameUser={isSameUser || false}
+        shouldShowTime={shouldShowTime}
+        message={message}
+      />
+    ) : (
+      <YourMessage
+        isSameUser={isSameUser || false}
+        shouldShowTime={shouldShowTime}
+        message={message}
+      />
+    );
+  },
+  (prevProps, nextProps) => {
+    return (
+      prevProps.message.chatId === nextProps.message.chatId &&
+      prevProps.prevMessage?.chatId === nextProps.prevMessage?.chatId
+    );
+  },
+);
+
 export default function Message() {
-  const [pageRendered, setPageRendered] = useState(false);
-  const [adjustScroll, setAdjustScroll] = useState(false);
-  const listRef = useRef<HTMLDivElement>(null);
   const { shouldGoDown, setGoDown } = useMessageStore();
   const { role: myRole, id: agoraId } = useAgora().enterAgora;
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  const lastMessageRef = useRef<IMessage | null>(null);
+  const [startIndex, setStartIndex] = useState(-1);
+  const [firstItemIndex, setFirstItemIndex] = useState(0);
+  const [isRendered, setIsRendered] = useState(false);
 
   const { data, hasPreviousPage, isFetching, fetchPreviousPage } =
     useSuspenseInfiniteQuery<
@@ -44,98 +94,107 @@ export default function Message() {
         lastPage.meta.key !== -1 ? { meta: lastPage.meta } : undefined,
     });
 
-  const { ref, inView } = useInView({
-    threshold: 0,
-    delay: 0,
-    rootMargin: '100px',
-  });
+  const virtuosoRef = useRef<VirtuosoHandle>(null);
+
+  const allMessages = useMemo(
+    () => data.pages.flatMap((page) => page.chats),
+    [data],
+  );
 
   useEffect(() => {
-    if (inView && hasPreviousPage && !isFetching && !adjustScroll) {
-      const prevHeight = listRef.current?.scrollHeight || 0;
-      setAdjustScroll(() => true);
+    if (allMessages.length > 0) {
+      if (virtuosoRef.current) {
+        if (firstItemIndex === 0 && allMessages.length > 0) {
+          const itemIndex = data.pages[0].chats.length - 1 || 0;
+          const isValidate = itemIndex >= 0;
 
-      fetchPreviousPage().then(() => {
-        setTimeout(() => {
-          if (listRef.current) {
-            const moveScroll = listRef.current.scrollHeight - prevHeight;
-            listRef.current.scrollTop = moveScroll;
-          }
-          setAdjustScroll(false);
-        }, 0);
+          setStartIndex(isValidate ? data.pages[0].chats[itemIndex].chatId : 0);
+          setFirstItemIndex(isValidate ? itemIndex : 0);
+          // console.log('첫 메시지 인덱스-firstItemIndex', itemIndex, isValidate ? itemIndex : 0, isValidate ? data.pages[0].chats[itemIndex].chatId : 0);
+
+          virtuosoRef.current.scrollToIndex({
+            index: isValidate ? itemIndex : 0,
+            behavior: 'auto',
+          });
+        } else if (allMessages.length > 0 && startIndex !== -1) {
+          // const allMessages = data.pages.flatMap(page => page.chats);
+          const nextFirstItemIndex = startIndex - allMessages.length;
+          setFirstItemIndex(nextFirstItemIndex);
+        }
+
+        lastMessageRef.current = allMessages[allMessages.length - 1] || null;
+        setMessages(allMessages);
+        setIsRendered(true);
+      }
+    }
+  }, [allMessages, startIndex]);
+
+  useEffect(() => {
+    if (shouldGoDown && virtuosoRef.current) {
+      virtuosoRef.current.scrollToIndex({
+        index: messages.length - 1,
+        behavior: 'smooth',
       });
-    }
-  }, [inView, fetchPreviousPage, isFetching, hasPreviousPage, adjustScroll]);
-
-  const hasMessage = data?.pages[0].chats.length > 0;
-  useEffect(() => {
-    if (hasMessage && !pageRendered) {
-      listRef.current?.scrollTo(0, listRef.current.scrollHeight);
-      setPageRendered(true);
-    }
-  }, [hasMessage, pageRendered]);
-
-  useEffect(() => {
-    if (shouldGoDown) {
-      // listRef.current?.scrollIntoView({ block: 'end' });
-      listRef.current?.scrollTo(0, listRef.current.scrollHeight);
       setGoDown(false);
     }
-  }, [shouldGoDown, setGoDown]);
+  }, [shouldGoDown]);
 
-  const isMyType = (type: string) => type === myRole || type === observer;
+  const startReached = useCallback(async () => {
+    if (hasPreviousPage && !isFetching && isRendered) {
+      setIsRendered(false);
+      await fetchPreviousPage();
+    }
+  }, [hasPreviousPage, isFetching, fetchPreviousPage, isRendered]);
 
-  const getTimeString = (time: string) => {
+  const isMyType = useCallback(
+    (type: string) => type === myRole || type === observer,
+    [myRole],
+  );
+
+  const getTimeString = useCallback((time: string) => {
     const date = new Date(time);
     return date.toLocaleTimeString().slice(0, -3);
-  };
+  }, []);
 
-  let prevChatSendTime = '';
+  const itemContent = useCallback(
+    (index: number, message: IMessage) => {
+      const idx = index - firstItemIndex;
+      const prevMessage = idx > 0 ? messages[idx - 1] : null;
+      // console.log(prevMessage, message, index, messages.length, firstItemIndex);
+      return (
+        <MessageItem
+          key={message.chatId}
+          message={message}
+          isMyType={isMyType}
+          getTimeString={getTimeString}
+          prevMessage={prevMessage}
+        />
+      );
+    },
+    [firstItemIndex, isMyType, getTimeString],
+  );
+
   return (
-    <div key={agoraId} ref={listRef} className="overflow-y-auto flex-1">
-      {!adjustScroll && pageRendered && <div ref={ref} className="h-1" />}
-      {data.pages.length &&
-        data?.pages
-          ?.map((page) => page.chats)
-          ?.flat()
-          ?.map((message, idx, allMessages) => {
-            const previousMessage = { ...allMessages[idx - 1] }; // 불변성 유지를 위해 복사
-            const prevMessageTimeString =
-              idx > 0 ? getTimeString(previousMessage.createdAt) : '';
-            const currentMessageTimeString = getTimeString(message.createdAt);
-            const isSameUser =
-              idx > 0 && previousMessage.user.id === message.user.id;
-            const isSameTime =
-              idx > 0 &&
-              isSameUser &&
-              (prevMessageTimeString === currentMessageTimeString ||
-                prevChatSendTime === prevMessageTimeString);
-            const shouldShowTime = !isSameTime;
-
-            if (isSameTime) {
-              prevChatSendTime = '';
-            } else {
-              prevChatSendTime = currentMessageTimeString;
-            }
-
-            return (
-              <div key={message.chatId}>
-                {isMyType(message.user.type) ? (
-                  <MyMessage
-                    shouldShowTime={shouldShowTime}
-                    message={message}
-                    isSameUser={isSameUser}
-                  />
-                ) : (
-                  <YourMessage
-                    shouldShowTime={shouldShowTime}
-                    message={message}
-                    isSameUser={isSameUser}
-                  />
-                )}
-              </div>
-            );
-          })}
+    <div className="flex flex-col h-full w-full">
+      <Virtuoso
+        ref={virtuosoRef}
+        data={messages}
+        computeItemKey={(index) => {
+          const idx = index - firstItemIndex;
+          return messages[idx].chatId;
+        }}
+        itemContent={itemContent}
+        startReached={startReached}
+        firstItemIndex={firstItemIndex}
+        initialTopMostItemIndex={messages.length - 1}
+        followOutput="auto"
+        style={{
+          display: 'flex',
+          height: '100%',
+          width: '100%',
+          overscrollBehavior: 'contain',
+        }}
+      />
       <ChatNotification />
     </div>
   );
