@@ -2,6 +2,7 @@
 
 import { postEnterAgoraInfo } from '@/app/(main)/_lib/postEnterAgoraInfo';
 import Loading from '@/app/_components/atoms/loading';
+import { homeSegmentKey } from '@/constants/segmentKey';
 import { useAgora } from '@/store/agora';
 import { useEnter } from '@/store/enter';
 import { useMutation } from '@tanstack/react-query';
@@ -23,7 +24,7 @@ export default function EnterAgoraButton() {
     } else if (selectedAgora.id) {
       router.push(`/agoras/${selectedAgora.id}`);
     } else {
-      router.push('/home');
+      router.push(homeSegmentKey);
     }
   };
 

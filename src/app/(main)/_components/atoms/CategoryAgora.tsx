@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import COLOR from '@/constants/agoraColor';
 import isActiveAgora from '@/utils/isActiveAgora';
+import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 
 type Props = {
@@ -40,10 +41,12 @@ export default function CategoryAgora({ agora, className }: Props) {
     });
 
     const AgoraStatus =
-      agora.status === ('RUNNING' || 'QUEUED') ? 'active' : 'closed';
+      agora.status === 'RUNNING' || agora.status === 'QUEUED'
+        ? 'active'
+        : 'closed';
 
     if (AgoraStatus === 'active') {
-      router.push(`/flow/enter-agora/${agora.id}`);
+      router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
     } else if (AgoraStatus === 'closed') {
       // 바로 채팅방으로 이동
       setAgoraData();
@@ -61,7 +64,7 @@ export default function CategoryAgora({ agora, className }: Props) {
   return (
     <article
       id={`${agora.id}`}
-      className={`${className} w-165 under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center dark:bg-dark-light-300 dark:border-gray-500`}
+      className={`${className} w-165 under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center dark:bg-dark-light-300 dark:border-gray-500 border-slate-200 bg-slate-50`}
     >
       <div
         className={`${selectedColor} under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-3xl under-mobile:rounded-2xl relative`}
@@ -72,7 +75,7 @@ export default function CategoryAgora({ agora, className }: Props) {
           />
         )}
       </div>
-      <h3 className="text-xs under-mobile:text-xs under-mobile:font-semibold pt-10 dark:text-white break-all w-full text-center">
+      <h3 className="text-xs under-mobile:font-semibold pt-10 dark:text-white break-all w-full text-center">
         {agora.agoraTitle}
       </h3>
       <div
@@ -96,7 +99,7 @@ export default function CategoryAgora({ agora, className }: Props) {
               </span>
               {agora.participants.cons}명
             </span>
-            <span className="under-mobile:bloc break-keep">
+            <span className="under-mobile:block break-keep">
               <span className="pr-3 dark:text-white dark:text-opacity-85">
                 관찰자
               </span>
@@ -107,8 +110,9 @@ export default function CategoryAgora({ agora, className }: Props) {
           </>
         ) : (
           <ClosedAgoraVoteResultBar
-            prosPercentage={agora.prosCount}
-            consPercentage={agora.consCount}
+            prosCount={agora.prosCount}
+            consCount={agora.consCount}
+            totalMember={agora.totalMember}
           />
         )}
       </div>

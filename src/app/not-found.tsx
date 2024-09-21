@@ -1,5 +1,6 @@
 'use client';
 
+import { homeSegmentKey } from '@/constants/segmentKey';
 import PROFLELIST from '@/constants/userProfileImage';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -32,7 +33,7 @@ export default function NotFound() {
         페이지를 찾을 수 없습니다.
       </p>
       <button
-        onClick={() => router.replace('/home')}
+        onClick={() => router.replace(homeSegmentKey)}
         type="button"
         aria-label="홈으로 돌아가기"
         className="bg-athens-main text-white rounded-full px-16 py-7 mt-50 text-sm"

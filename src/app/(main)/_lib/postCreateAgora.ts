@@ -28,7 +28,7 @@ export const postCreateAgora = async (info: AgoraConfig) => {
     body: JSON.stringify({
       title: info.title,
       categoryId: info.category,
-      color: info.color,
+      color: info.color.value,
       capacity: info.capacity,
       duration: info.duration,
     }),
