@@ -80,6 +80,9 @@
   "msw": {
     "workerDirectory": [
       "public"
+    ],
+    "dependencies":[
+      "graphql"
     ]
   }
 }

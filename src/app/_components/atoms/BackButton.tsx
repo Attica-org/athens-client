@@ -7,9 +7,10 @@ import React from 'react';
 
 type Props = {
   goHome?: boolean;
+  onClick?: () => void;
 };
 
-export default function BackButton({ goHome }: Props) {
+export default function BackButton({ goHome, onClick }: Props) {
   const router = useRouter();
 
   const handleBack = () => {
@@ -21,7 +22,7 @@ export default function BackButton({ goHome }: Props) {
   };
 
   return (
-    <button aria-label="뒤로가기" type="button" onClick={handleBack}>
+    <button aria-label="뒤로가기" type="button" onClick={onClick ? onClick : handleBack}>
       <BackIcon className="w-22 ml-1rem cursor-pointer" />
     </button>
   );
