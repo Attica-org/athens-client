@@ -39,13 +39,9 @@ export default function CategoryAgora({ agora, className }: Props) {
       status: agora.status,
     });
 
-    const AgoraStatus =
-      agora.status === ('RUNNING' || 'QUEUED') ? 'active' : 'closed';
-
-    if (AgoraStatus === 'active') {
+    if (agora.status === 'QUEUED' || agora.status === 'RUNNING') {
       router.push(`/flow/enter-agora/${agora.id}`);
-    } else if (AgoraStatus === 'closed') {
-      // 바로 채팅방으로 이동
+    } else if (agora.status === 'CLOSED') {
       setAgoraData();
       routeAgoraPage();
     }
