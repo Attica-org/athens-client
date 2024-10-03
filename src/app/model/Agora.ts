@@ -55,3 +55,11 @@ export type ProfileImage = {
   name: string;
   file: string;
 };
+
+export type AgoraEmojis = {
+  LIKE: number;
+  DISLIKE: number;
+  LOVE: number;
+  HAPPY: number;
+  SAD: number;
+};
