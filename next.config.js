@@ -19,17 +19,19 @@ const nextConfig = {
           },
         ],
       },
-      { headers: [
-        {
-          key: 'Cache-Control',
-          value: 'public, max-age=86400, immutable',
-        },
-      ],
+      {
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, immutable',
+          },
+        ],
 
-      source: '/:path(.+\\.(?:ico|png|svg|jpg|jpeg|gif|webp|json|mp3|mp4|ttf|ttc|otf|woff|woff2)$)',
-    }
+        source:
+          '/:path(.+\\.(?:ico|png|svg|jpg|jpeg|gif|webp|json|mp3|mp4|ttf|ttc|otf|woff|woff2)$)',
+      },
     ];
-  }
+  },
 };
 
 const withPWA = require('next-pwa')({
