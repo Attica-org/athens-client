@@ -1,15 +1,14 @@
 'use client';
 
 import { useDarkMode } from '@/store/darkMode';
-import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 type Props = {
   className: string;
+  shouldRender?: boolean;
 };
 
-export default function AddIcon({ className }: Props) {
-  const segment = usePathname();
+export default function AddIcon({ className, shouldRender }: Props) {
   const { darkMode } = useDarkMode();
   const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
 
@@ -17,7 +16,7 @@ export default function AddIcon({ className }: Props) {
     setIsDarkMode(darkMode);
   }, [darkMode]);
 
-  if (segment === '/create-agora') {
+  if (shouldRender) {
     return (
       <svg
         className={className}

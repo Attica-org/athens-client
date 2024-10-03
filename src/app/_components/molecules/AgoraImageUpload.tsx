@@ -144,9 +144,9 @@ export default function AgoraImageUpload({ image }: Props) {
           ) : (
             <div
               aria-hidden
-              className="flex justify-center items-center h-full w-full bg-dark-light-500 rounded-3xl under-mobile:rounded-2xl"
+              className="flex justify-center items-center h-full w-full dark:bg-dark-light-500 bg-gray-200 rounded-3xl under-mobile:rounded-2xl"
             >
-              <ImageIcon className="w-12 h-12" />
+              <ImageIcon className="w-22 h-22" />
             </div>
           )}
           <input
@@ -158,7 +158,7 @@ export default function AgoraImageUpload({ image }: Props) {
           />
           <div
             aria-hidden
-            className="flex justify-center items-center absolute top-40 left-40 w-22 h-22 rounded-full bg-dark-light-400"
+            className="flex justify-center items-center absolute top-40 left-40 w-22 h-22 rounded-full bg-dark-line-semilight"
           >
             <CameraIcon className="w-14 h-14" fill="#fffff" />
           </div>
@@ -167,7 +167,7 @@ export default function AgoraImageUpload({ image }: Props) {
           role="menu"
           aria-label="이미지 선택 및 제거 선택 팝업메뉴"
           ref={popupRef}
-          className={`z-25 transform transition-opacity duration-300 ease-out ${viewPopup ? 'opacity-100' : 'opacity-0 pointer-events-none'} cursor-pointer rounded-md gap-20 flex flex-col absolute ${popupPosition === 'top' ? 'bottom-10' : 'top-1/2'} left-50 p-10 bg-dark-light-200 text-white text-xs`}
+          className={`z-25 transform transition-opacity duration-300 ease-out ${viewPopup ? 'opacity-100' : 'opacity-0 pointer-events-none'} cursor-pointer rounded-md gap-20 flex flex-col absolute ${popupPosition === 'top' ? 'bottom-10' : 'top-1/2'} left-50 p-10 dark:bg-dark-light-200 bg-dark-light-500 text-white text-xs`}
         >
           <button
             role="menuitem"

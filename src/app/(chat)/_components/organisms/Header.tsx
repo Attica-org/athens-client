@@ -19,6 +19,7 @@ import swManager from '@/utils/swManager';
 import { saveTabId, deleteTabId } from '@/utils/indexedDB';
 import Swal from 'sweetalert2';
 import { getAgoraUserListQueryKey } from '@/constants/queryKey';
+import { homeSegmentKey } from '@/constants/segmentKey';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
@@ -308,13 +309,15 @@ export default function Header() {
     return patchChatExit({ agoraId });
   };
 
+  const onSuccessChatExit = (response: any) => {
+    if (response) {
+      // 나가기 성공 로직 구현
+      router.push(homeSegmentKey);
+    }
+  };
   const mutation = useMutation({
     mutationFn: callChatExitAPI,
-    onSuccess: (response) => {
-      if (response) {
-        // 나가기 성공 로직 구현
-      }
-    },
+    onSuccess: (response) => onSuccessChatExit(response),
   });
 
   const handleBack = () => {

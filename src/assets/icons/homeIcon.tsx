@@ -1,15 +1,14 @@
 'use client';
 
 import { useDarkMode } from '@/store/darkMode';
-import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 type Props = {
   className: string;
+  shouldRender?: boolean;
 };
 
-function HomeIcon({ className }: Props) {
-  const segment = usePathname().split('/');
+export default function HomeIcon({ className, shouldRender }: Props) {
   const { darkMode } = useDarkMode();
   const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
 
@@ -17,7 +16,7 @@ function HomeIcon({ className }: Props) {
     setIsDarkMode(darkMode);
   }, [darkMode]);
 
-  if (segment[segment.length - 1] === 'home' || segment[2] === 'enter-agora') {
+  if (shouldRender) {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
         <g>
@@ -40,5 +39,3 @@ function HomeIcon({ className }: Props) {
     </svg>
   );
 }
-
-export default HomeIcon;

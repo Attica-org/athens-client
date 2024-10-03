@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
+import { homeSegmentKey } from '@/constants/segmentKey';
 import fetchWrapper from '@/lib/fetchWrapper';
 import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
@@ -37,7 +38,7 @@ export const getAgoraTitle: QueryFunction<
       showToast('아고라 제목을 불러오는데 실패했습니다.', 'error');
     }
 
-    redirect('/home?status=active');
+    redirect(`${homeSegmentKey}?status=active`);
   }
 
   const result = res.response;

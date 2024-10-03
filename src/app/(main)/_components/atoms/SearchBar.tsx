@@ -2,6 +2,7 @@
 
 import RemoveIcon from '@/assets/icons/RemoveIcon';
 import SearchIcon from '@/assets/icons/SearchIcon';
+import { homeSegmentKey } from '@/constants/segmentKey';
 import { useSearchStore } from '@/store/search';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, {
@@ -31,7 +32,7 @@ function SearchBar() {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.delete('q');
 
-    const newUrl = `/home?${newSearchParams.toString()}`;
+    const newUrl = `${homeSegmentKey}?${newSearchParams.toString()}`;
     window.history.pushState(
       { ...window.history.state, as: newUrl, url: newUrl },
       '',
@@ -49,7 +50,7 @@ function SearchBar() {
     setSearch(searchText);
 
     if (!searchText) {
-      const newUrl = '/home';
+      const newUrl = homeSegmentKey;
       window.history.pushState(
         { ...window.history.state, as: newUrl, url: newUrl },
         '',
@@ -57,7 +58,7 @@ function SearchBar() {
       );
       // router.push('/home');
     } else {
-      const newUrl = `/home?q=${searchText}&status=active`;
+      const newUrl = `${homeSegmentKey}?q=${searchText}&status=active`;
       window.history.pushState(
         { ...window.history.state, as: newUrl, url: newUrl },
         '',
@@ -69,7 +70,7 @@ function SearchBar() {
 
   useEffect(() => {
     if (search) {
-      const newUrl = `/home?q=${search}&status=active`;
+      const newUrl = `${homeSegmentKey}?q=${search}&status=active`;
       window.history.pushState(
         { ...window.history.state, as: newUrl, url: newUrl },
         '',

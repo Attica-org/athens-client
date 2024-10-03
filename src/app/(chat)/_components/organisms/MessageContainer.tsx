@@ -1,7 +1,7 @@
 import {
   HydrationBoundary,
-  dehydrate,
   QueryClient,
+  dehydrate,
 } from '@tanstack/react-query';
 
 import React from 'react';

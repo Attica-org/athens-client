@@ -17,13 +17,14 @@ import {
 import showToast from '@/utils/showToast';
 import COLOR from '@/constants/agoraColor';
 import { AgoraConfig } from '@/app/model/Agora';
+import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import { postCreateAgora } from '../../_lib/postCreateAgora';
 
 function CreateAgoraBtn() {
   const [createAgora, setCreateAgora] = useState<AgoraConfig>({
     title: '',
     category: '1',
-    color: COLOR[0].value,
+    color: { idx: 0, value: COLOR[0].value },
     capacity: 5,
     duration: 60,
   });
@@ -62,7 +63,7 @@ function CreateAgoraBtn() {
         setIsLoading(false);
 
         invalidAgora(queryClient, ['agora']);
-        router.push(`/flow/enter-agora/${response.id}`);
+        router.push(`/flow${enterAgoraSegmentKey}/${response.id}`);
       } else {
         failedCreateAgora();
       }

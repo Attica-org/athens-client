@@ -59,8 +59,9 @@ export default function MessageInput() {
         const lastPage = newMessages.pages[newMessages.pages.length - 1];
         const newLastPage = lastPage
           ? { ...lastPage, chats: [...lastPage.chats] }
-          : { chats: [], meta: { key: 0, size: 20 } };
-        const lastMessageId = lastPage?.chats.at(-1)?.chatId;
+          : { chats: [], meta: { key: -1, size: 20 } };
+        const lastMessageId =
+          lastPage.meta.key !== -1 ? lastPage?.chats.at(-1)?.chatId : -1;
 
         if (type === 'received') {
           newLastPage.chats.push(JSON.parse(data).data);
@@ -69,7 +70,7 @@ export default function MessageInput() {
         newMessages.pages[newMessages.pages.length - 1] = {
           chats: newLastPage.chats,
           meta: {
-            key: lastMessageId || 0,
+            key: lastMessageId || -1,
             size: 20,
           },
         };

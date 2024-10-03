@@ -1,21 +1,28 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 import COLOR from '@/constants/agoraColor';
 import AgoraPointColor from '../atoms/AgoraPointColor';
 
 export default function SelectAgoraColor() {
-  const [isCheck, setIsCheck] = useState<number>(0);
-  const { setColor } = useCreateAgora(
-    useShallow((state) => ({ setColor: state.setColor })),
+  const { setColor, color } = useCreateAgora(
+    useShallow((state) => ({
+      setColor: state.setColor,
+      color: state.color,
+    })),
   );
+  const [isCheck, setIsCheck] = useState<number>(color.idx);
 
   const selectColor = (id: number) => {
     setIsCheck(id);
-    setColor(COLOR[id].value);
+    setColor(COLOR[id].value, id);
   };
+
+  useEffect(() => {
+    setIsCheck(color.idx);
+  }, [color.idx]);
 
   return (
     <div className="flex justify-start items-center">

@@ -19,6 +19,7 @@ export interface ClosedAgora {
   agoraColor: string;
   prosCount: number;
   consCount: number;
+  totalMember: number;
   createdAt: string;
   status: string;
 }
@@ -40,10 +41,15 @@ export interface SearchParams {
   q?: string;
 }
 
+interface ColorType {
+  idx: number;
+  value: string;
+}
+
 export type AgoraConfig = {
   title: string;
   category: string;
-  color: string;
+  color: ColorType;
   capacity: number;
   duration: number | null;
 };

@@ -6,6 +6,7 @@ import React, { useEffect } from 'react';
 import PROFLELIST from '@/constants/userProfileImage';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { homeSegmentKey } from '@/constants/segmentKey';
 
 export default function Error({
   error,
@@ -54,7 +55,7 @@ export default function Error({
       <button
         className="dark:text-white text-black rounded-md px-16 py-8 mt-12 text-sm"
         type="button"
-        onClick={() => router.replace('/home?status=active')}
+        onClick={() => router.replace(`${homeSegmentKey}?status=active`)}
       >
         홈으로 돌아가기
       </button>

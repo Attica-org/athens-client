@@ -18,7 +18,7 @@ export default function UserImage({
 }: Props) {
   return (
     <div
-      className={`rounded-2xl ${className} border-1 border-athens-gray flex justify-center items-center`}
+      className={`rounded-2xl ${className} border-1 dark:border-athens-gray flex p-2 justify-center items-center`}
     >
       {(file || name) && (
         <Image

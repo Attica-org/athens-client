@@ -7,7 +7,12 @@ type Props = {
 };
 export default function ActionButton({ label, onClick, className }: Props) {
   return (
-    <button type="button" className={className} onClick={onClick}>
+    <button
+      type="button"
+      className={className}
+      onClick={onClick}
+      aria-label={`${label} 버튼`}
+    >
       {label}
     </button>
   );

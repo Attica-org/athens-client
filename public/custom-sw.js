@@ -49,7 +49,7 @@ function transactionComplete(transaction) {
 }
 
 let baseUrl = '';
-const voteType = '';
+let voteType = '';
 let tabVotes = {};
 
 const tokenErrorHandler = async (response, baseUrl) => {

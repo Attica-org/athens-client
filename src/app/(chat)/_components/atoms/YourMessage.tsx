@@ -18,7 +18,7 @@ type Props = {
   client: StompJs.Client | undefined;
 };
 
-export default function YourMessage({
+function YourMessage({
   message,
   isSameUser,
   shouldShowTime,
@@ -130,3 +130,5 @@ export default function YourMessage({
     </article>
   );
 }
+
+export default React.memo(YourMessage);
