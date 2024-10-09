@@ -5,6 +5,7 @@ import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
+import { getVoteResultQueryKey as getVoteResultTags } from '@/constants/queryKey';
 
 type VoteResult = {
   id: number;
@@ -28,7 +29,7 @@ export const getVoteResult: QueryFunction<
     `/api/v1/auth/agoras/${agoraId}/results`,
     {
       next: {
-        tags: ['agora', agoraId, 'closed'],
+        tags: getVoteResultTags(Number(agoraId)),
       },
       credentials: 'include',
       cache: 'no-cache',

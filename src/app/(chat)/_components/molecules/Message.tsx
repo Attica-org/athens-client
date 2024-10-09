@@ -12,10 +12,15 @@ import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { useMessageStore } from '@/store/message';
 import { useAgora } from '@/store/agora';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
-import MyMessage from '../atoms/MyMessage';
-import YourMessage from '../atoms/YourMessage';
-import { getChatMessages } from '../../_lib/getChatMessages';
+import * as StompJs from '@stomp/stompjs';
+import { getChatMessagesQueryKey } from '@/constants/queryKey';
+import getKey from '@/utils/getKey';
+import tokenManager from '@/utils/tokenManager';
+import { useShallow } from 'zustand/react/shallow';
 import ChatNotification from '../atoms/ChatNotification';
+import { getChatMessages } from '../../_lib/getChatMessages';
+import YourMessage from '../atoms/YourMessage';
+import MyMessage from '../atoms/MyMessage';
 
 interface Meta {
   key: number | null;
@@ -27,12 +32,19 @@ type MessageItemProps = {
   isMyType: (type: string) => boolean;
   getTimeString: (time: string) => string;
   prevMessage: IMessage | null;
+  client: StompJs.Client | undefined;
 };
 
 const observer = 'OBSERVER';
 
 const MessageItem = React.memo(
-  ({ message, isMyType, getTimeString, prevMessage }: MessageItemProps) => {
+  ({
+    message,
+    isMyType,
+    getTimeString,
+    prevMessage,
+    client,
+  }: MessageItemProps) => {
     const isMyMessage = isMyType(message.user.type);
     const isSameMessage = prevMessage && prevMessage.chatId === message.chatId;
 
@@ -49,12 +61,16 @@ const MessageItem = React.memo(
         isSameUser={isSameUser || false}
         shouldShowTime={shouldShowTime}
         message={message}
+        chatId={message.chatId}
+        client={client}
       />
     ) : (
       <YourMessage
         isSameUser={isSameUser || false}
         shouldShowTime={shouldShowTime}
         message={message}
+        chatId={message.chatId}
+        client={client}
       />
     );
   },
@@ -74,6 +90,14 @@ export default function Message() {
   const [startIndex, setStartIndex] = useState(-1);
   const [firstItemIndex, setFirstItemIndex] = useState(0);
   const [isRendered, setIsRendered] = useState(false);
+  const client = useRef<StompJs.Client>();
+  const [URL, setURL] = useState({
+    SOCKET_URL: '',
+  });
+
+  const { enterAgora } = useAgora(
+    useShallow((state) => ({ enterAgora: state.enterAgora })),
+  );
 
   const { data, hasPreviousPage, isFetching, fetchPreviousPage } =
     useSuspenseInfiniteQuery<
@@ -83,7 +107,7 @@ export default function Message() {
       [_1: string, _2: string, _3: string],
       { meta: Meta }
     >({
-      queryKey: ['chat', `${agoraId}`, 'messages'],
+      queryKey: getChatMessagesQueryKey(agoraId),
       queryFn: getChatMessages,
       staleTime: 60 * 1000,
       gcTime: 500 * 1000,
@@ -168,11 +192,90 @@ export default function Message() {
           isMyType={isMyType}
           getTimeString={getTimeString}
           prevMessage={prevMessage}
+          client={client.current}
         />
       );
     },
     [firstItemIndex, isMyType, getTimeString],
   );
+
+  // 채팅 반응하기 구독
+  const getUrl = async () => {
+    const key = await getKey();
+    setURL({
+      SOCKET_URL: key.SOCKET_URL || '',
+    });
+  };
+
+  const handleWebSocketReaction = (response: any) => {
+    if (response.type === 'REACTION') {
+      // console.log('response는', response);
+      // 구독 처리하는 코드 작성 예정
+    }
+  };
+
+  const isPossibleConnect = () => {
+    return (
+      navigator.onLine &&
+      URL.SOCKET_URL !== '' &&
+      enterAgora.status !== 'CLOSED'
+    );
+  };
+
+  useEffect(() => {
+    getUrl();
+  }, []);
+
+  useEffect(() => {
+    const disconnect = () => {
+      client.current?.deactivate();
+    };
+
+    const subscribe = () => {
+      client.current?.subscribe(
+        `/topic/agoras/${agoraId}/reactions`,
+        async (received_reaction: StompJs.IFrame) => {
+          const userReactionData = JSON.parse(received_reaction.body);
+          handleWebSocketReaction(userReactionData);
+        },
+      );
+    };
+
+    const connect = () => {
+      client.current = new StompJs.Client({
+        brokerURL: `${URL.SOCKET_URL}/ws`,
+        connectHeaders: {
+          Authorization: `Bearer ${tokenManager.getToken()}`,
+          AgoraId: `${agoraId}`,
+        },
+        reconnectDelay: 500,
+        onConnect: () => {
+          subscribe();
+        },
+        onWebSocketError: async () => {
+          // showToast('네트워크가 불안정합니다.', 'error');
+          // await getReissuanceToken();
+          // connect();
+        },
+        onStompError: async () => {
+          // await getReissuanceToken();
+          // connect();
+        },
+      });
+
+      client.current.activate();
+    };
+
+    if (isPossibleConnect()) {
+      connect();
+    }
+
+    return () => {
+      if (client.current && client.current.connected) {
+        disconnect();
+      }
+    };
+  }, [agoraId, enterAgora.status, URL]);
 
   return (
     <div className="flex flex-col h-full w-full">

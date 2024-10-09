@@ -15,11 +15,10 @@ export default function useIsEmojiSendable() {
   const { status } = useAgora((state) => ({
     status: state.enterAgora.status,
   }));
-  if (end) {
+
+  if (end || status === 'CLOSED') {
     return false;
   }
-  if (status === 'CLOSED') {
-    return false;
-  }
+
   return true;
 }

@@ -14,6 +14,7 @@ import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 import { VirtuosoGrid } from 'react-virtuoso';
 import RefreshIcon from '@/assets/icons/RefreshIcon';
+import { getCategoryAgoraListQueryKey } from '@/constants/queryKey';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
 import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
 import CategoryAgora from '../atoms/CategoryAgora';
@@ -52,12 +53,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
     [_1: string, _2: string, _3: string, Props['searchParams']],
     { nextCursor: number | null }
   >({
-    queryKey: [
-      'agoras',
-      'search',
-      'category',
-      { ...searchParams, category: selectedCategory },
-    ],
+    queryKey: getCategoryAgoraListQueryKey(searchParams, selectedCategory),
     queryFn: getAgoraCategorySearch,
     staleTime: 60 * 1000,
     gcTime: 500 * 1000,
@@ -67,12 +63,9 @@ export default function CategoryAgoraList({ searchParams }: Props) {
         ? { nextCursor: lastPage.nextCursor }
         : undefined,
     initialData: () => {
-      return queryClient.getQueryData([
-        'agoras',
-        'search',
-        'category',
-        searchParams,
-      ]);
+      return queryClient.getQueryData(
+        getCategoryAgoraListQueryKey(searchParams),
+      );
     },
   });
 
@@ -100,12 +93,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
   useEffect(() => {
     // 초기 데이터 호출 후 카테고리 변경 시 데이터 재호출
     queryClient.invalidateQueries({
-      queryKey: [
-        'agoras',
-        'search',
-        'category',
-        { ...searchParams, category: selectedCategory },
-      ],
+      queryKey: getCategoryAgoraListQueryKey(searchParams, selectedCategory),
     });
   }, [selectedCategory, queryClient]);
 

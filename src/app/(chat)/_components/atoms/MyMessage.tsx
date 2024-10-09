@@ -1,22 +1,29 @@
 import { Message } from '@/app/model/Message';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PROFLELIST from '@/constants/userProfileImage';
+import * as StompJs from '@stomp/stompjs';
+import useClickOutside from '@/hooks/useClickOutside';
+import useTouchHandler from '@/hooks/useTouchHandler';
 import UserImage from '../../../_components/atoms/UserImage';
 import TextHoverMenu from './TextHoverMenu';
 import useIsEmojiSendable from '../../../../hooks/useIsEmojiSendable';
 import EmojiModal from './EmojiModal';
+import UserReaction from './UserReaction';
 
 type Props = {
   message: Message;
   isSameUser: boolean;
   shouldShowTime: boolean;
+  chatId: number;
+  client: StompJs.Client | undefined;
 };
 
-
-export default function MyMessage({
+function MyMessage({
   message,
   isSameUser,
   shouldShowTime,
+  chatId,
+  client,
 }: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const [showEmojiModal, setShowEmojiModal] = useState(false);
@@ -24,44 +31,13 @@ export default function MyMessage({
   const toggleEmojiModal = () => {
     setShowEmojiModal(!showEmojiModal);
   };
+
   const canSendEmoji = useIsEmojiSendable();
-  let pressTimer: NodeJS.Timeout | null = null;
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const handleTouchStart = () => {
-    pressTimer = setTimeout(() => {
-      setIsHovered(true);
-    }, 500);
-  };
-  const handleTouchEnd = () => {
-    if (pressTimer) {
-      clearTimeout(pressTimer);
-    }
-  };
-  const handleTouchCancel = () => {
-    if (pressTimer) {
-      clearTimeout(pressTimer);
-    }
-  };
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        setShowEmojiModal(false);
-        console.log('check');
-      }
-    };
-    if (showEmojiModal) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('touchstart', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
-    };
-  }, [showEmojiModal]);
+  const { handleTouchStart, handleTouchEnd, handleTouchCancel } =
+    useTouchHandler(() => setIsHovered(true));
+  useClickOutside(modalRef, () => setShowEmojiModal(false), showEmojiModal);
 
   return (
     <article
@@ -86,24 +62,26 @@ export default function MyMessage({
             {message.user.nickname}
           </div>
         )}
-        <div className="flex justify-end items-end">
-          <div className="flex flex-col justify-end items-end h-full">
-            {isHovered
-              ? canSendEmoji && (
+        <div className="flex justify-end">
+          {isHovered
+            ? canSendEmoji && (
+                <div className="flex justify-center items-center">
                   <TextHoverMenu
                     className="mr-10 p-4 bg-[#A8A8A8] opacity-75 rounded-md"
                     toggleEmojiModal={toggleEmojiModal}
                   />
-                )
-              : shouldShowTime && (
+                </div>
+              )
+            : shouldShowTime && (
+                <div className="flex justify-end items-end">
                   <time className="text-xxs pr-8 h-full dark:text-dark-line">
                     {message.createdAt &&
                       new Date(message.createdAt)
                         ?.toLocaleTimeString()
                         .slice(0, -3)}
                   </time>
-                )}
-          </div>
+                </div>
+              )}
           <div
             className={`max-w-[60vw] relative whitespace-pre-line ${message.user.type === 'CONS' ? 'bg-red-200' : 'bg-blue-200'} rounded-tl-lg ${isSameUser && 'rounded-tr-lg'} rounded-bl-lg rounded-br-lg p-7 pl-10 pr-10 text-xs lg:text-sm`}
           >
@@ -113,10 +91,17 @@ export default function MyMessage({
                 className="absolute mt-[26px] top-1/2 right-0 z-20 whitespace-nowrap bg-athens-gray dark:bg-white p-4 rounded-md border-1 border-gray-200
               before:content-[''] before:absolute before:top-[-14px] before:right-0 before:-translate-x-1/2 before:border-8 before:border-transparent custom-before before:z-10"
               >
-                <EmojiModal className="w-20 h-20" />
+                <EmojiModal
+                  className="w-20 h-20"
+                  chatId={chatId}
+                  client={client}
+                />
               </div>
             )}
           </div>
+        </div>
+        <div>
+          <UserReaction className="w-16 h-16" />
         </div>
       </div>
       {!isSameUser ? (

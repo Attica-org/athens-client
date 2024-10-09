@@ -22,7 +22,7 @@ export default function BackButton({ goHome, onClick }: Props) {
   };
 
   return (
-    <button aria-label="뒤로가기" type="button" onClick={onClick ? onClick : handleBack}>
+    <button aria-label="뒤로가기" type="button" onClick={onClick || handleBack}>
       <BackIcon className="w-22 ml-1rem cursor-pointer" />
     </button>
   );

@@ -12,12 +12,19 @@ import React, {
 } from 'react';
 import * as StompJs from '@stomp/stompjs';
 import tokenManager from '@/utils/tokenManager';
-import { InfiniteData, useQueryClient } from '@tanstack/react-query';
+import {
+  InfiniteData,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { Message } from '@/app/model/Message';
 import { useAgora } from '@/store/agora';
 // import showToast from '@/utils/showToast';
 // import { getReissuanceToken } from '@/lib/getReissuanceToken';
 import getKey from '@/utils/getKey';
+import { getChatMessagesQueryKey } from '@/constants/queryKey';
+import showToast from '@/utils/showToast';
+import postFilterBadWords from '../../_lib/postFilterBadWords';
 
 export default function MessageInput() {
   const [message, setMessage] = useState<string>('');
@@ -27,23 +34,18 @@ export default function MessageInput() {
     SOCKET_URL: '',
   });
   const { enterAgora } = useAgora();
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
   const { setGoDown } = useMessageStore();
   const client = useRef<StompJs.Client>();
   const queryClient = useQueryClient();
-
-  const handleMessage: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-    setMessage(e.target.value);
-  };
+  const [highlightedMessage, setHighlightedMessage] = useState<string>('');
 
   const pushMessage = useCallback(
     (data: any, type: string) => {
       // 쿼리 데이터에 추가
-      const exMessages = queryClient.getQueryData([
-        'chat',
-        `${enterAgora.id}`,
-        'messages',
-      ]) as InfiniteData<{
+      const exMessages = queryClient.getQueryData(
+        getChatMessagesQueryKey(enterAgora.id),
+      ) as InfiniteData<{
         chats: Message[];
         meta: { key: number; size: number };
       }>;
@@ -73,7 +75,7 @@ export default function MessageInput() {
           },
         };
         queryClient.setQueryData(
-          ['chat', `${enterAgora.id}`, 'messages'],
+          getChatMessagesQueryKey(enterAgora.id),
           newMessages,
         );
         setGoDown(true);
@@ -98,6 +100,9 @@ export default function MessageInput() {
         }),
       });
       setMessage('');
+      if (inputRef.current) {
+        inputRef.current.innerText = '';
+      }
       // console.log(`> Send message: ${message}`);
     }
   };
@@ -110,11 +115,25 @@ export default function MessageInput() {
     setIsComposing(false);
   };
 
-  const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
-      e.preventDefault();
-      sendMessage();
+  const moveCursorToEnd = (el: HTMLDivElement) => {
+    const range = document.createRange();
+    const selection = window.getSelection();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+  };
+
+  const handleMessage: ChangeEventHandler<HTMLDivElement> = (e) => {
+    const currentHTML = e.target.innerHTML;
+
+    if (highlightedMessage && highlightedMessage !== currentHTML) {
+      setHighlightedMessage('');
+      e.target.innerHTML = e.target.innerText;
+      moveCursorToEnd(e.target);
     }
+
+    setMessage(e.target.innerText);
   };
 
   useEffect(() => {
@@ -129,6 +148,7 @@ export default function MessageInput() {
     const handleOutSideClick = (e: MouseEvent) => {
       if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
         inputRef.current.focus();
+        moveCursorToEnd(inputRef.current);
       }
     };
 
@@ -151,7 +171,7 @@ export default function MessageInput() {
     };
 
     const subscribe = () => {
-      console.log('Subscribing...');
+      // console.log('Subscribing...');
       client.current?.subscribe(
         `/topic/agoras/${enterAgora.id}/chats`,
         (received_message: StompJs.IFrame) => {
@@ -222,20 +242,71 @@ export default function MessageInput() {
     URL.SOCKET_URL,
   ]);
 
+  const callFilterBadWordsAPI = async () => {
+    return postFilterBadWords({ message, agoraId: enterAgora.id });
+  };
+
+  type BadWord = {
+    start: number;
+    end: number;
+    keyword: string;
+  }[];
+
+  const highlightBadWords = (badWords: BadWord) => {
+    let newHighlightedMessage = '';
+    let lastIndex = 0;
+
+    badWords.forEach(({ start, end }) => {
+      newHighlightedMessage += message.slice(lastIndex, start);
+      newHighlightedMessage += `<span class="text-red-500">${message.slice(start, end + 1)}</span>`;
+      lastIndex = end + 1;
+    });
+
+    newHighlightedMessage += message.slice(lastIndex);
+
+    setHighlightedMessage(newHighlightedMessage);
+
+    if (inputRef.current) {
+      inputRef.current.innerHTML = newHighlightedMessage;
+      moveCursorToEnd(inputRef.current);
+    }
+  };
+
+  const filterBadWordsMutation = useMutation({
+    mutationFn: callFilterBadWordsAPI,
+    onSuccess: async (response) => {
+      if (response.hasBadWord) {
+        highlightBadWords(response.badword);
+        showToast('부적절한 단어가 포함되어 있습니다.', 'error');
+      } else {
+        sendMessage();
+      }
+    },
+  });
+
+  const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
+      e.preventDefault();
+      filterBadWordsMutation.mutate();
+    }
+  };
+
   return (
     enterAgora.status !== 'CLOSED' &&
     enterAgora.role !== 'OBSERVER' && (
       <section className="flex border-t-1 dark:border-dark-light-300 sticky bottom-0 right-0 left-0 w-full bg-white dark:bg-dark-light-300">
         <form className="pl-1rem p-10 pb-0 flex flex-1 justify-start items-center">
-          <textarea
+          <div
+            role="textbox"
+            tabIndex={0}
             aria-label="보낼 메세지 입력창"
+            contentEditable
             ref={inputRef}
-            value={message}
-            onChange={handleMessage}
+            onInput={handleMessage}
             onKeyDown={handleKeyDown}
             onCompositionStart={handleCompositionStart}
             onCompositionEnd={handleCompositionEnd}
-            placeholder="메시지 보내기"
+            data-placeholder="메시지 보내기"
             className="placeholder:text-athens-gray-thick dark:placeholder:text-dark-light-400
           dark:placeholder:text-opacity-85 dark:text-opacity-85 dark:text-white w-full text-sm lg:text-base
           focus-visible:outline-none dark:bg-dark-light-300 resize-none overflow-hidden h-35"
@@ -243,7 +314,7 @@ export default function MessageInput() {
         </form>
         <button
           type="button"
-          onClick={sendMessage}
+          onClick={() => filterBadWordsMutation.mutate()}
           aria-label="메세지 보내기"
           className="bg-athens-main pl-10 pr-10 cursor-pointer h-full"
         >

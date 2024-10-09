@@ -81,7 +81,7 @@
     "workerDirectory": [
       "public"
     ],
-    "dependencies":[
+    "dependencies": [
       "graphql"
     ]
   }

@@ -13,22 +13,28 @@ import showToast from '@/utils/showToast';
 import { getReissuanceToken } from '@/lib/getReissuanceToken';
 import { useVoteStore } from '@/store/vote';
 import getToken from '@/lib/getToken';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import getKey from '@/utils/getKey';
 import swManager from '@/utils/swManager';
 import { saveTabId, deleteTabId } from '@/utils/indexedDB';
 import Swal from 'sweetalert2';
-import fetchWrapper from '@/lib/fetchWrapper';
+import { getAgoraUserListQueryKey } from '@/constants/queryKey';
+import { homeSegmentKey } from '@/constants/segmentKey';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
 import HamburgerButton from '../atoms/HamburgerButton';
 import DiscussionStatus from '../molecules/DiscussionStatus';
+import patchChatExit from '../../_lib/patchChatExit';
 
 const OBSERVER_MESSAGE_SEND_ERROR = 'Observer cannot send this request';
 const SESSION_NOT_FOUND = 'Session not found';
 // const AGORA_NOT_FOUND = 'Agora not found';
 const USER_NOT_FOUND = 'User is not participating in the agora';
+const REACTION_TYPE_INVALID = `Invalid value for field ${'reactiontype'}`;
+const REACTION_TYPE_IS_NULL = 'Reaction type cannot be null';
+const CHAT_TYPE_INVALID = `Invalid value for field ${'type'}`;
+const CHAT_TYPE_IS_NULL = 'Chat type cannot be null';
 
 export default function Header() {
   const { toggle } = useSidebarStore(
@@ -84,7 +90,7 @@ export default function Header() {
   const refetchAgoraUserList = async () => {
     // 유저 리스트 캐시 무효화 및 재요청
     await queryClient.invalidateQueries({
-      queryKey: ['chat', 'users', `${agoraId}`],
+      queryKey: getAgoraUserListQueryKey(agoraId),
     });
   };
 
@@ -101,6 +107,7 @@ export default function Header() {
       setTitle(response.data.agora.title);
       setAgoraId(response.data.agora.id);
       setMetaData(response.data);
+      // console.log('META', response.data);
       // refetchAgoraUserList();
 
       if (response.data.agora.startAt) {
@@ -160,6 +167,18 @@ export default function Header() {
       } else {
         showToast('존재하지 않는 아고라입니다.', 'error');
       }
+    } else if (err.code === 1303) {
+      showToast('존재하지 않는 채팅에 반응을 보낼 수 없습니다.', 'error');
+    } else if (err.code === 1001) {
+      if (err.message === REACTION_TYPE_INVALID) {
+        showToast('리액션 타입이 잘못되었습니다.', 'error');
+      } else if (err.message === REACTION_TYPE_IS_NULL) {
+        showToast('리액션 타입이 비어있습니다.', 'error');
+      } else if (err.message === CHAT_TYPE_INVALID) {
+        showToast('채팅 타입이 잘못되었습니다.', 'error');
+      } else if (err.message === CHAT_TYPE_IS_NULL) {
+        showToast('채팅 타입이 비어있습니다.', 'error');
+      } else;
     }
     setIsError(true);
   };
@@ -178,7 +197,6 @@ export default function Header() {
           const data = await JSON.parse(received_message.body);
           // console.log('received_message', received_message);
           handleWebSocketResponse(data);
-          // console.log(`> Received message: ${received_message.body}`);
         },
       );
     };
@@ -287,23 +305,21 @@ export default function Header() {
     buttonsStyling: false,
   });
 
-  const callChatExitApi = async () => {
-    const res: {
-      success: boolean;
-    } = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/exit`, {
-      method: 'PATCH',
-      next: {
-        tags: [],
-      },
-      credentials: 'include',
-      cache: 'no-cache',
-      headers: {
-        Authorization: `Bearer ${tokenManager.getToken()}`,
-        AgoraId: { agoraId },
-      },
-    });
-    return res;
+  const callChatExitAPI = async () => {
+    return patchChatExit({ agoraId });
   };
+
+  const onSuccessChatExit = (response: any) => {
+    if (response) {
+      // 나가기 성공 로직 구현
+      router.push(homeSegmentKey);
+    }
+  };
+  const mutation = useMutation({
+    mutationFn: callChatExitAPI,
+    onSuccess: (response) => onSuccessChatExit(response),
+  });
+
   const handleBack = () => {
     swalButton
       .fire({
@@ -316,7 +332,7 @@ export default function Header() {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          callChatExitApi();
+          mutation.mutate();
         }
       });
   };
