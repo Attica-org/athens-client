@@ -12,12 +12,7 @@ type Props = {
   shouldShowTime: boolean;
 };
 
-
-export default function MyMessage({
-  message,
-  isSameUser,
-  shouldShowTime,
-}: Props) {
+function MyMessage({ message, isSameUser, shouldShowTime }: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const [showEmojiModal, setShowEmojiModal] = useState(false);
 
