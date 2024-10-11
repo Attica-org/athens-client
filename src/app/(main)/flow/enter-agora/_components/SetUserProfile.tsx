@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import UserImage from '@/app/_components/atoms/UserImage';
 import PROFLELIST from '@/constants/userProfileImage';
 import { useShallow } from 'zustand/react/shallow';
@@ -9,10 +9,9 @@ import { ProfileImage } from '@/app/model/Agora';
 import SelectedProfile from './SelectedProfile';
 
 export default function SetUserProfile() {
-  const { setProfileImage, reset } = useEnter(
+  const { setProfileImage } = useEnter(
     useShallow((state) => ({
       setProfileImage: state.setProfileImage,
-      reset: state.reset,
     })),
   );
 
@@ -28,13 +27,6 @@ export default function SetUserProfile() {
       selectProfile(profile);
     }
   };
-
-  useEffect(
-    () => () => {
-      reset();
-    },
-    [reset],
-  );
 
   return (
     <div className="flex flex-col justiy-start items-center">
