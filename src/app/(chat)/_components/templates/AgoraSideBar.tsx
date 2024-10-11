@@ -10,10 +10,10 @@ import React, {
 import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgora } from '@/store/agora';
-import AgoraImageUpload from '@/app/_components/molecules/AgoraImageUpload';
 import AgoraUserSuspense from '../organisms/AgoraUserSuspense';
 import AgoraUserSideSkeleton from '../organisms/AgoraUserSideSkeleton';
 import ChatSideModule from '../molecules/ChatSideModule';
+import ModifyAgoraImage from '../molecules/ModifyAgoraImage';
 
 export default function AgoraSideBar() {
   const { toggle, isOpen } = useSidebarStore(
@@ -22,7 +22,12 @@ export default function AgoraSideBar() {
       isOpen: state.isOpen,
     })),
   );
-  const agoraId = useAgora((state) => state.enterAgora.id);
+  const { id: agoraId, thumbnail } = useAgora(
+    useShallow((state) => ({
+      id: state.enterAgora.id,
+      thumbnail: state.enterAgora.thumbnail,
+    })),
+  );
 
   const onClickOutSide: MouseEventHandler<HTMLDivElement> = (e) => {
     if (e.target === e.currentTarget) {
@@ -52,10 +57,6 @@ export default function AgoraSideBar() {
       element.blur();
     }
   }, [isOpen]);
-
-  const changeAgoraImg = () => {
-    // 이미지 변경 서버 요청
-  };
 
   return (
     <div
@@ -99,18 +100,8 @@ export default function AgoraSideBar() {
             <ChatSideModule title="아고라 설정">
               <div className="flex w-full relative">
                 <div className="flex-1">
-                  {/* TODO: 전역 상태에 서버로부터 받아온 이미지 저장하여 prop으로 전달 */}
-                  <AgoraImageUpload />
+                  <ModifyAgoraImage thumbnail={thumbnail} agoraId={agoraId} />
                 </div>
-                {/* TODO: 이미지 수정 했을 때만 저장 버튼 출력하도록 수정 */}
-                <button
-                  type="button"
-                  aria-label="변경한 이미지 저장"
-                  onClick={changeAgoraImg}
-                  className="z-[-1] absolute left-80 bottom-0 text-xs rounded-lg text-athens-sub"
-                >
-                  저장
-                </button>
               </div>
             </ChatSideModule>
             <ChatSideModule title="참여자 목록">
