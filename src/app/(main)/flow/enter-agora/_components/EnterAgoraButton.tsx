@@ -45,6 +45,7 @@ export default function EnterAgoraButton() {
       if (response) {
         setEnterAgora({
           id: response.agoraId,
+          thumbnail: selectedAgora.thumbnail,
           title: selectedAgora.title,
           status: selectedAgora.status,
           role: response.type,

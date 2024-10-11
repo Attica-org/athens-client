@@ -10,6 +10,7 @@ import { AgoraConfig } from '@/app/model/Agora';
 
 interface AgoraState extends AgoraConfig {
   setTitle: (title: string) => void;
+  setThumbnail: (thumbnail: string) => void;
   setCategory: (category: string) => void;
   setColor: (color: string, idx: number) => void;
   setCapacity: (capacity: number) => void;
@@ -20,10 +21,12 @@ interface AgoraState extends AgoraConfig {
 const initialState: AgoraState = {
   title: '',
   category: '1',
+  thumbnail: '',
   color: { idx: 0, value: COLOR[0].value },
   capacity: DEFAULT_PARTICIPANTS_CNT,
   duration: DEFAULT_TIME,
   setTitle: () => {},
+  setThumbnail: () => {},
   setCategory: () => {},
   setColor: () => {},
   setCapacity: () => {},
@@ -36,6 +39,7 @@ export const useCreateAgora = create(
   immer<AgoraState>((set) => ({
     ...initialState,
     setTitle: (title: string) => set({ title }),
+    setThumbnail: (thumbnail: string) => set({ thumbnail }),
     setCategory: (category: string) => set({ category }),
     setColor: (color: string, idx: number) =>
       set({
@@ -49,6 +53,7 @@ export const useCreateAgora = create(
     reset: () =>
       set({
         title: '',
+        thumbnail: '',
         category: '1',
         color: { idx: 0, value: COLOR[0].value },
         capacity: DEFAULT_PARTICIPANTS_CNT,

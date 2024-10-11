@@ -28,6 +28,7 @@ export default function EnterAgoraContent() {
     if (isSuccess && data && !selectedAgora.id) {
       setSelectedAgora({
         id: Number(agoraId),
+        thumbnail: '',
         title: data.title,
         status: data.status,
       });
