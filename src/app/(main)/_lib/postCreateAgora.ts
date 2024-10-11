@@ -3,6 +3,7 @@ import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { AgoraConfig } from '@/app/model/Agora';
+import { base64ToFile } from '@/utils/base64ToFile';
 
 const TITLE_NULL = { title: '공백일 수 없습니다' };
 const CATEGORY_ERROR = { capacity: '1 이상이어야 합니다' };
@@ -18,20 +19,36 @@ export const postCreateAgora = async (info: AgoraConfig) => {
     await getToken();
   }
 
+  const requestInfo = {
+    title: info.title,
+    categoryId: info.category,
+    color: info.color.value,
+    capacity: info.capacity,
+    duration: info.duration,
+  };
+
+  const formData = new FormData();
+  const json = JSON.stringify(requestInfo);
+
+  const blob = new Blob([json], {
+    type: 'application/json',
+  });
+
+  // base64로 인코딩된 이미지를 디코딩하여 파일로 변환
+  const file = info.thumbnail
+    ? base64ToFile(info.thumbnail, `${info.title}.jpg`)
+    : '';
+
+  formData.append('request', blob);
+  formData.append('file', file);
+
   const res = await fetchWrapper.call('/api/v1/auth/agoras', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${tokenManager.getToken()}`,
     },
     credentials: 'include',
-    body: JSON.stringify({
-      title: info.title,
-      categoryId: info.category,
-      color: info.color.value,
-      capacity: info.capacity,
-      duration: info.duration,
-    }),
+    body: formData,
   });
 
   if (res.success === false) {
