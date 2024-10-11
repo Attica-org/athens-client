@@ -16,9 +16,7 @@ import { createPortal } from 'react-dom';
 
 type Props = {
   uploadImage: Array<{ dataUrl: string; file: File }>;
-  setCropedPreview: React.Dispatch<
-    React.SetStateAction<Array<{ dataUrl: string; file: File }>>
-  >;
+  setCropedPreview: React.Dispatch<Array<{ dataUrl: string; file: File }>>;
   onCancelCrop: () => void;
 };
 

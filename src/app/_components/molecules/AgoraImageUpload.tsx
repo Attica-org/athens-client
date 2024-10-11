@@ -1,4 +1,4 @@
-'use client';
+'only client';
 
 import CameraIcon from '@/assets/icons/CameraIcon';
 import ImageIcon from '@/assets/icons/ImageIcon';
@@ -14,15 +14,18 @@ import ImageCropper from '../atoms/ImageCropper';
 
 type Props = {
   image?: string;
+  setPreView: React.Dispatch<Array<{ dataUrl: string; file: File }>>;
+  preView: Array<{ dataUrl: string; file: File }>;
 };
 
-export default function AgoraImageUpload({ image }: Props) {
+export default function AgoraImageUpload({
+  image = '',
+  setPreView,
+  preView,
+}: Props) {
   const [uploadImage, setUploadImage] = useState<
     Array<{ dataUrl: string; file: File }>
   >(image ? [{ dataUrl: image, file: new File([], 'image') }] : []);
-  const [cropedPreview, setCropedPreview] = useState<
-    Array<{ dataUrl: string; file: File }>
-  >([]);
   const [viewPopup, setViewPopup] = useState(false);
   const [viewCropModal, setViewCropModal] = useState(false);
   const [popupPosition, setPopupPosition] = useState('top');
@@ -63,9 +66,15 @@ export default function AgoraImageUpload({ image }: Props) {
 
   const removeImage = () => {
     setUploadImage([]);
-    setCropedPreview([]);
+    setPreView([]);
     setViewPopup(false);
   };
+
+  useEffect(() => {
+    if (preView.length === 0 && uploadImage.length) {
+      removeImage();
+    }
+  }, [preView, uploadImage]);
 
   const calculatePopupPosition = () => {
     if (popupRef.current) {
@@ -133,9 +142,9 @@ export default function AgoraImageUpload({ image }: Props) {
           onClick={viewPopupHandler}
           onKeyDown={handleKeyDownPopupHandler}
         >
-          {cropedPreview[0]?.dataUrl || image ? (
+          {preView[0]?.dataUrl || image ? (
             <Image
-              src={cropedPreview[0]?.dataUrl ?? image}
+              src={preView[0]?.dataUrl ?? image}
               alt="아고라 프로필"
               layout="fill"
               objectFit="cover"
@@ -167,7 +176,7 @@ export default function AgoraImageUpload({ image }: Props) {
           role="menu"
           aria-label="이미지 선택 및 제거 선택 팝업메뉴"
           ref={popupRef}
-          className={`z-25 transform transition-opacity duration-300 ease-out ${viewPopup ? 'opacity-100' : 'opacity-0 pointer-events-none'} cursor-pointer rounded-md gap-20 flex flex-col absolute ${popupPosition === 'top' ? 'bottom-10' : 'top-1/2'} left-50 p-10 dark:bg-dark-light-200 bg-dark-light-500 text-white text-xs`}
+          className={`transform transition-opacity duration-300 ease-out ${viewPopup ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none'} cursor-pointer rounded-md gap-20 flex flex-col absolute ${popupPosition === 'top' ? 'bottom-10' : 'top-1/2'} left-50 p-10 dark:bg-dark-light-200 bg-dark-light-500 text-white text-xs`}
         >
           <button
             role="menuitem"
@@ -190,7 +199,7 @@ export default function AgoraImageUpload({ image }: Props) {
       {viewCropModal && (
         <ImageCropper
           uploadImage={uploadImage}
-          setCropedPreview={setCropedPreview}
+          setCropedPreview={setPreView}
           onCancelCrop={onCancelCrop}
         />
       )}

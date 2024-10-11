@@ -6,7 +6,7 @@ import DiscussionDurationSetter from '../_components/molecules/DiscussionDuratio
 import AgoraTitleInput from './_component/AgoraTitleInput';
 import CreateAgoraBtn from './_component/CreateAgoraBtn';
 import CategoryButtonContainer from '../_components/organisms/CategoryButtonContainer';
-import AgoraImageUpload from '../../_components/molecules/AgoraImageUpload';
+import UploadAgoraImage from './_component/UploadAgoraImage';
 
 export async function generateMetadata() {
   return {
@@ -44,7 +44,7 @@ export default function Page() {
               >
                 아고라 프로필 이미지
               </div>
-              <AgoraImageUpload />
+              <UploadAgoraImage />
             </section>
             <section className="mt-2rem w-full">
               <div
