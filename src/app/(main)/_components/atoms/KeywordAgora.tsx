@@ -22,25 +22,32 @@ export default function KeywordAgora({ agora }: Props) {
 
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
   const enterAgoraHandle = () => {
+    const setAgoraData = () => {
+      setEnterAgora({
+        id: agora.id,
+        thumbnail: agora.imageUrl,
+        title: agora.agoraTitle,
+        status: agora.status,
+        role: 'OBSERVER' as const,
+        isCreator: false,
+        agoraColor: agora.agoraColor,
+      });
+    };
+
+    // TODO: 아고라 id를 받아서 해당 아고라로 이동
     setSelectedAgora({
       id: agora.id,
       thumbnail: agora.imageUrl,
       title: agora.agoraTitle,
       status: agora.status,
-    });
-
-    setEnterAgora({
-      id: agora.id,
-      thumbnail: agora.imageUrl,
-      title: agora.agoraTitle,
-      status: agora.status,
-      role: 'OBSERVER',
+      agoraColor: agora.agoraColor,
     });
 
     if (agora.status === 'QUEUED' || agora.status === 'RUNNING') {
       router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
     } else if (agora.status === 'CLOSED') {
       // 만약 status가 closed라면, /agoras/${id}로 이동
+      setAgoraData();
       router.push(`/agoras/${agora.id}`);
     }
   };

@@ -31,6 +31,8 @@ export default function CategoryAgora({ agora, className }: Props) {
       title: agora.agoraTitle,
       status: agora.status,
       role: 'OBSERVER' as const,
+      isCreator: false,
+      agoraColor: agora.agoraColor,
     });
   };
 
@@ -41,17 +43,12 @@ export default function CategoryAgora({ agora, className }: Props) {
       thumbnail: agora.imageUrl,
       title: agora.agoraTitle,
       status: agora.status,
+      agoraColor: agora.agoraColor,
     });
 
-    const AgoraStatus =
-      agora.status === 'RUNNING' || agora.status === 'QUEUED'
-        ? 'active'
-        : 'closed';
-
-    if (AgoraStatus === 'active') {
+    if (agora.status === 'QUEUED' || agora.status === 'RUNNING') {
       router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
-    } else if (AgoraStatus === 'closed') {
-      // 바로 채팅방으로 이동
+    } else if (agora.status === 'CLOSED') {
       setAgoraData();
       routeAgoraPage();
     }

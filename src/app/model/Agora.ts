@@ -1,4 +1,4 @@
-type Status = 'RUNNING' | 'CLOSED' | 'QUEUED';
+export type Status = 'RUNNING' | 'CLOSED' | 'QUEUED';
 
 export interface Agora {
   id: number;
@@ -63,4 +63,12 @@ export type ProfileImage = {
   id: number;
   name: string;
   file: string;
+};
+
+export type AgoraEmojis = {
+  LIKE: number;
+  DISLIKE: number;
+  LOVE: number;
+  HAPPY: number;
+  SAD: number;
 };

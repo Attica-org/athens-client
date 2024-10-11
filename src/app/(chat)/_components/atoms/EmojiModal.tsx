@@ -1,35 +1,47 @@
+'use client';
+
 import React from 'react';
-import LoveIcon from '@/assets/icons/LoveIcon';
-import DislikeIcon from '@/assets/icons/DislikeIcon';
-import LikeIcon from '@/assets/icons/LikeIcon';
-import SadIcon from '@/assets/icons/SadIcon';
-import HappyIcon from '@/assets/icons/HappyIcon';
+import { AgoraEmojis } from '@/app/model/Agora';
+import * as StompJs from '@stomp/stompjs';
+import { useShallow } from 'zustand/react/shallow';
+import { useAgora } from '@/store/agora';
+import Emojis from './Emojis';
 
 type Props = {
-  className?: string;
+  className: string;
+  chatId: number;
+  client: StompJs.Client | undefined;
 };
 
-export default function EmojiModal({ className }: Props) {
-  const handleEmojiClick = () => {};
-  const emojis = [
-    { reactionType: 'LIKE', svg: <LikeIcon className={className} /> },
-    { reactionType: 'DISLIKE', svg: <DislikeIcon className={className} /> },
-    { reactionType: 'LOVE', svg: <LoveIcon className={className} /> },
-    { reactionType: 'HAPPY', svg: <HappyIcon className={className} /> },
-    { reactionType: 'SAD', svg: <SadIcon className={className} /> },
-  ];
+export default function EmojiModal({ className, chatId, client }: Props) {
+  const { enterAgora } = useAgora(
+    useShallow((state) => ({ enterAgora: state.enterAgora })),
+  );
 
+  const handleEmojiClick = (reaction: string) => {
+    if (client && client?.connected) {
+      client?.publish({
+        destination: `/app/agoras/${enterAgora.id}/chats/${chatId}/reactions`,
+        body: JSON.stringify({
+          type: 'REACTION',
+          reactionType: reaction,
+        }),
+      });
+    }
+  };
+
+  const emojis = Emojis({ className });
   return (
     <div className="flex justify-center items-center">
-      {emojis.map((emoji) => (
+      {Object.keys(emojis).map((reactionType) => (
         <button
           type="button"
           className="py-4 px-6 hover:bg-gray-200 hover:rounded-full"
-          key={emoji.reactionType}
-          onClick={handleEmojiClick}
-          aria-label={emoji.reactionType}
+          key={reactionType}
+          onClick={() => handleEmojiClick(reactionType)}
+          aria-label={reactionType}
         >
-          {emoji.svg}
+          {emojis[reactionType as keyof AgoraEmojis].icon}
         </button>
       ))}
     </div>

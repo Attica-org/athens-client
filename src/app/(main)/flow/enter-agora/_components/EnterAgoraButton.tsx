@@ -2,6 +2,7 @@
 
 import { postEnterAgoraInfo } from '@/app/(main)/_lib/postEnterAgoraInfo';
 import Loading from '@/app/_components/atoms/loading';
+import { ParticipationPosition, Status } from '@/app/model/Agora';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import { useAgora } from '@/store/agora';
 import { useEnter } from '@/store/enter';
@@ -9,12 +10,15 @@ import { useMutation } from '@tanstack/react-query';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
+const OBSERVER: ParticipationPosition = 'OBSERVER';
+const CLOSE_STATUS: Status = 'CLOSED';
+
 export default function EnterAgoraButton() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const pathname = usePathname();
 
   const router = useRouter();
-  const { selectedAgora, setEnterAgora } = useAgora();
+  const { selectedAgora, setSelectedAgora, setEnterAgora } = useAgora();
 
   const routePage = () => {
     if (!selectedAgora.id) {
@@ -43,13 +47,31 @@ export default function EnterAgoraButton() {
     mutationFn: callEnterAgoraAPI,
     onSuccess: (response) => {
       if (response) {
-        setEnterAgora({
-          id: response.agoraId,
-          thumbnail: selectedAgora.thumbnail,
-          title: selectedAgora.title,
-          status: selectedAgora.status,
-          role: response.type,
-        });
+        if (response === CLOSE_STATUS) {
+          setEnterAgora({
+            id: Number(pathname.split('/')[3]),
+            thumbnail: selectedAgora.thumbnail,
+            title: selectedAgora.title,
+            status: CLOSE_STATUS,
+            role: OBSERVER,
+            isCreator: false,
+            agoraColor: selectedAgora.agoraColor,
+          });
+          setSelectedAgora({
+            ...selectedAgora,
+            status: CLOSE_STATUS,
+          });
+        } else {
+          setEnterAgora({
+            id: response.agoraId,
+            thumbnail: selectedAgora.thumbnail,
+            title: selectedAgora.title,
+            status: selectedAgora.status,
+            role: response.type,
+            isCreator: response.isCreator,
+            agoraColor: selectedAgora.agoraColor,
+          });
+        }
         routePage();
       } else {
         setIsLoading(false);
@@ -65,7 +87,7 @@ export default function EnterAgoraButton() {
   const enterAgora = () => {
     const { nickname, setMessage, selectedPosition } = useEnter.getState();
 
-    if (selectedPosition !== 'OBSERVER') {
+    if (selectedPosition !== OBSERVER) {
       if (nickname.length > 10) {
         setMessage('닉네임은 10자 이내로 입력해주세요.');
         return;

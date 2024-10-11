@@ -1,5 +1,3 @@
-'only client';
-
 import React, { KeyboardEventHandler, useEffect } from 'react';
 import UserImage from '@/app/_components/atoms/UserImage';
 import { Message } from '@/app/model/Message';

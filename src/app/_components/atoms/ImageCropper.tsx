@@ -1,5 +1,3 @@
-import 'client-only';
-
 import BackIcon from '@/assets/icons/BackIcon';
 import CheckIcon from '@/assets/icons/CheckIcon';
 import Image from 'next/image';
@@ -16,7 +14,7 @@ import { createPortal } from 'react-dom';
 
 type Props = {
   uploadImage: Array<{ dataUrl: string; file: File }>;
-  setCropedPreview: React.Dispatch<Array<{ dataUrl: string; file: File }>>;
+  setCropedPreview: React.Dispatch<string>;
   onCancelCrop: () => void;
 };
 
@@ -63,8 +61,7 @@ export default function ImageCropper({
       convertToPixelCrop(crop, imgRef.current?.width, imgRef.current?.height),
     );
     const dataUrl = canvasRef.current.toDataURL();
-    const file = new File([dataUrl], 'image');
-    setCropedPreview([{ dataUrl, file }]);
+    setCropedPreview(dataUrl);
     onCancelCrop();
   };
 

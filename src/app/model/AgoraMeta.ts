@@ -12,4 +12,10 @@ export interface AgoraMeta {
     startAt: string;
   };
   participants: Participants[];
+  agoraMemberInfo: {
+    agoraId: number;
+    memberId: number;
+    username: string;
+    socketDisconnectTime: string;
+  };
 }

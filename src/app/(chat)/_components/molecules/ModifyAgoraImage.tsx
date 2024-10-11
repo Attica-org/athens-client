@@ -4,29 +4,20 @@ import AgoraImageUpload from '@/app/_components/molecules/AgoraImageUpload';
 import { useMutation } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import showToast from '@/utils/showToast';
+import { useAgora } from '@/store/agora';
 import { patchAgoraImg } from '../../_lib/patchAgoraImg';
-// import { useAgora } from "@/store/agora";
 
-type Props = {
-  thumbnail: string;
-  agoraId: number;
-};
-
-export default function ModifyAgoraImage({ thumbnail, agoraId }: Props) {
-  const [cropedPreview, setCropedPreview] = useState<
-    Array<{ dataUrl: string; file: File }>
-  >([
-    {
-      dataUrl: thumbnail,
-      file: new File([], 'thumbnail'),
-    },
-  ]);
+export default function ModifyAgoraImage() {
+  const { enterAgora } = useAgora();
+  const [cropedPreview, setCropedPreview] = useState<string>(
+    enterAgora.thumbnail,
+  );
 
   const modifyAgoraImgMutation = useMutation({
     mutationFn: async () =>
       patchAgoraImg({
-        agoraId,
-        fileUrl: cropedPreview[0].dataUrl,
+        agoraId: enterAgora.id,
+        fileUrl: cropedPreview,
       }),
     retry: 2,
     onSuccess: async (response) => {
@@ -52,7 +43,8 @@ export default function ModifyAgoraImage({ thumbnail, agoraId }: Props) {
       <AgoraImageUpload
         setPreView={setCropedPreview}
         preView={cropedPreview}
-        image={thumbnail}
+        image={enterAgora.thumbnail}
+        color={enterAgora.agoraColor}
       />
       {/* TODO: 이미지 수정 했을 때만 저장 버튼 출력하도록 수정 */}
       <button

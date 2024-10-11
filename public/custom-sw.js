@@ -30,7 +30,7 @@ async function getTabIds() {
     };
     request.onerror = () => {
       reject(request.error);
-    }
+    };
   });
 }
 
@@ -44,7 +44,7 @@ function transactionComplete(transaction) {
     };
     transaction.onabort = (event) => {
       reject(event.target.error);
-    }
+    };
   });
 }
 
@@ -125,11 +125,11 @@ self.addEventListener('message', async (event) => {
   const { action, data } = event.data;
 
   if (action === 'initialize') {
-    if(event.data.baseUrl) {
+    if (event.data.baseUrl) {
       baseUrl = event.data.baseUrl;
     }
 
-    if(!Object.keys(tabVotes).length) {
+    if (!Object.keys(tabVotes).length) {
       await loadTabVotesFromDB();
     }
 
@@ -210,7 +210,7 @@ self.addEventListener('message', async (event) => {
             clients.forEach((client) => {
               client.postMessage({
                 action: 'voteResult',
-                result: result,
+                result,
                 tabId: event.data.tabId,
               });
             });

@@ -9,6 +9,10 @@ import { useAgora } from '@/store/agora';
 import { ParticipationPosition } from '@/app/model/Agora';
 import { useEnter } from '@/store/enter';
 import { useShallow } from 'zustand/react/shallow';
+import * as StompJs from '@stomp/stompjs';
+import { getChatMessagesQueryKey } from '@/constants/queryKey';
+import getKey from '@/utils/getKey';
+import tokenManager from '@/utils/tokenManager';
 import MyMessage from '../atoms/MyMessage';
 import YourMessage from '../atoms/YourMessage';
 import { getChatMessages } from '../../_lib/getChatMessages';
@@ -27,6 +31,7 @@ type MessageItemProps = {
   getTimeString: (time: string) => string;
   nextMessage: IMessage | null;
   prevMessage: IMessage | null;
+  client: StompJs.Client | undefined;
 };
 
 function MessageItem({
@@ -35,6 +40,7 @@ function MessageItem({
   getTimeString,
   nextMessage,
   prevMessage,
+  client,
 }: MessageItemProps) {
   const isMyMessage = isMyType(message.user.type);
   const isSameMessage = nextMessage && nextMessage.chatId === message.chatId;
@@ -55,12 +61,16 @@ function MessageItem({
       isSameUser={isPrevSameUser || false}
       shouldShowTime={shouldShowTime}
       message={message}
+      client={client}
+      chatId={message.chatId}
     />
   ) : (
     <YourMessage
       isSameUser={isPrevSameUser || false}
       shouldShowTime={shouldShowTime}
       message={message}
+      client={client}
+      chatId={message.chatId}
     />
   );
 }
@@ -74,6 +84,10 @@ export default function Message() {
   const [newMessageView, setNewMessageView] = useState(false);
   const [messages, setMessages] = useState<IMessage[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
+  const client = useRef<StompJs.Client>();
+  const [URL, setURL] = useState({
+    SOCKET_URL: '',
+  });
   const { shouldGoDown, setGoDown } = useMessageStore();
   const myRole = useAgora((state) => state.enterAgora.role);
   const agoraId = useAgora((state) => state.enterAgora.id);
@@ -82,6 +96,9 @@ export default function Message() {
       nickname: state.nickname,
       reset: state.reset,
     })),
+  );
+  const { enterAgora } = useAgora(
+    useShallow((state) => ({ enterAgora: state.enterAgora })),
   );
 
   const { data, hasPreviousPage, isFetching, fetchPreviousPage } =
@@ -92,7 +109,7 @@ export default function Message() {
       [_1: string, _2: string, _3: string],
       { meta: Meta }
     >({
-      queryKey: ['chat', `${agoraId}`, 'messages'],
+      queryKey: getChatMessagesQueryKey(agoraId),
       queryFn: getChatMessages,
       staleTime: 60 * 1000,
       gcTime: 500 * 1000,
@@ -103,6 +120,84 @@ export default function Message() {
       getNextPageParam: (lastPage) =>
         lastPage.meta.key !== -1 ? { meta: lastPage.meta } : undefined,
     });
+
+  // 채팅 반응하기 구독
+  const getUrl = async () => {
+    const key = await getKey();
+    setURL({
+      SOCKET_URL: key.SOCKET_URL || '',
+    });
+  };
+
+  const handleWebSocketReaction = (response: any) => {
+    if (response.type === 'REACTION') {
+      // console.log('response는', response);
+      // 구독 처리하는 코드 작성 예정
+    }
+  };
+
+  const isPossibleConnect = () => {
+    return (
+      navigator.onLine &&
+      URL.SOCKET_URL !== '' &&
+      enterAgora.status !== 'CLOSED'
+    );
+  };
+
+  useEffect(() => {
+    getUrl();
+  }, []);
+
+  useEffect(() => {
+    const disconnect = () => {
+      client.current?.deactivate();
+    };
+
+    const subscribe = () => {
+      client.current?.subscribe(
+        `/topic/agoras/${agoraId}/reactions`,
+        async (received_reaction: StompJs.IFrame) => {
+          const userReactionData = JSON.parse(received_reaction.body);
+          handleWebSocketReaction(userReactionData);
+        },
+      );
+    };
+
+    const connect = () => {
+      client.current = new StompJs.Client({
+        brokerURL: `${URL.SOCKET_URL}/ws`,
+        connectHeaders: {
+          Authorization: `Bearer ${tokenManager.getToken()}`,
+          AgoraId: `${agoraId}`,
+        },
+        reconnectDelay: 500,
+        onConnect: () => {
+          subscribe();
+        },
+        onWebSocketError: async () => {
+          // showToast('네트워크가 불안정합니다.', 'error');
+          // await getReissuanceToken();
+          // connect();
+        },
+        onStompError: async () => {
+          // await getReissuanceToken();
+          // connect();
+        },
+      });
+
+      client.current.activate();
+    };
+
+    if (isPossibleConnect()) {
+      connect();
+    }
+
+    return () => {
+      if (client.current && client.current.connected) {
+        disconnect();
+      }
+    };
+  }, [agoraId, enterAgora.status, URL]);
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -194,6 +289,7 @@ export default function Message() {
               getTimeString={getTimeString}
               nextMessage={messages[idx + 1] || null}
               prevMessage={messages[idx - 1] || null}
+              client={client.current}
             />
           </div>
         ))}

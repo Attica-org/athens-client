@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import Loading from '@/app/_components/atoms/loading';
 import { usePathname } from 'next/navigation';
+import { getSelectedAgoraQueryKey } from '@/constants/queryKey';
 import { getAgoraTitle } from '../../_lib/getAgoraTitle';
 import ModalPosSelectContainer from '../../flow/enter-agora/_components/ModalPosSelectContainer';
 import InputErrorMessage from '../../flow/enter-agora/_components/InputErrorMessage';
@@ -19,7 +20,7 @@ export default function EnterAgoraContent() {
   const shouldFetch = !!agoraId && !selectedAgora.id;
 
   const { data, isSuccess } = useQuery({
-    queryKey: ['agoraTitle', agoraId],
+    queryKey: getSelectedAgoraQueryKey(agoraId),
     queryFn: getAgoraTitle,
     enabled: shouldFetch,
   });
@@ -31,6 +32,7 @@ export default function EnterAgoraContent() {
         thumbnail: '',
         title: data.title,
         status: data.status,
+        agoraColor: 'bg-agora-point-color1',
       });
     }
   }, [agoraId, data, setSelectedAgora, isSuccess, selectedAgora.id]);

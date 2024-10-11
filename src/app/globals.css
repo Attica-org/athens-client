@@ -132,3 +132,12 @@ html {
 .dark .custom-before:before{
   border-bottom-color: white !important;
 }
+
+[contenteditable="true"]:empty:before{
+  content: attr(data-placeholder);
+  color: rgba(0, 0, 0, 0.4);
+}
+
+:is(.dark) [contenteditable="true"]:empty:before{
+  color: rgba(255, 255, 255, 0.6);
+}

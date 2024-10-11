@@ -1,3 +1,4 @@
+import COLOR from '@/constants/agoraColor';
 import { create } from 'zustand';
 
 type Agora = {
@@ -5,6 +6,7 @@ type Agora = {
   thumbnail: string;
   title: string;
   status: string;
+  agoraColor: string;
 };
 
 type EnterAgora = {
@@ -13,6 +15,8 @@ type EnterAgora = {
   title: string;
   status: string;
   role: string;
+  isCreator: boolean;
+  agoraColor: string;
 };
 
 interface AgoraState {
@@ -21,6 +25,7 @@ interface AgoraState {
     thumbnail: string;
     title: string;
     status: string;
+    agoraColor: string;
   };
   enterAgora: {
     id: number;
@@ -28,6 +33,8 @@ interface AgoraState {
     title: string;
     status: string;
     role: string;
+    isCreator: boolean;
+    agoraColor: string;
   };
   setEnterAgora: (agora: EnterAgora) => void;
   setSelectedAgora: (agora: Agora) => void;
@@ -41,6 +48,7 @@ export const useAgora = create<AgoraState>((set) => ({
     thumbnail: '',
     title: '',
     status: '',
+    agoraColor: COLOR[0].value,
   },
   enterAgora: {
     id: 0,
@@ -48,6 +56,8 @@ export const useAgora = create<AgoraState>((set) => ({
     title: '',
     status: '',
     role: '',
+    isCreator: false,
+    agoraColor: COLOR[0].value,
   },
   setEnterAgora(agora: EnterAgora) {
     set({ enterAgora: agora });
@@ -62,6 +72,7 @@ export const useAgora = create<AgoraState>((set) => ({
         thumbnail: '',
         title: '',
         status: '',
+        agoraColor: COLOR[0].value,
       },
     });
   },

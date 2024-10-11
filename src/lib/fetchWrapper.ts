@@ -1,28 +1,36 @@
-import showToast from '@/utils/showToast';
 import getKey from '@/utils/getKey';
 import tokenManager from '@/utils/tokenManager';
 import getToken from './getToken';
 import { getReissuanceToken } from './getReissuanceToken';
 import retryConfig from './retryConfig';
 
+const REFRESH_TOKEN_NOT_EXIST = 'Refresh Token Not Exist.'; // 1003, 1202
+const TOKEN_EXPIRED = 'The token has expired.'; // 1201
+const INVALID_JWT_SIGNATURE = 'Invalid JWT signature.'; // 1201
+const AUTHORIZATION_HEADER_ISSUE =
+  'Authorization header is missing or does not start with Bearer'; // 1003
+const UNSUPPORTED_JWT = 'Unsupported JWT token.'; // 1201
+const INVALID_JWT_TOKEN = 'Invalid JWT token.'; // 1002
+
 const tokenErrorHandler = async (result: any) => {
-  switch (result.error.code) {
-    case 1003:
-      await getToken();
-      break;
-    case 1002:
-      await getReissuanceToken();
-      break;
-    case 1202:
-      await getToken();
-      break;
-    case 1201:
-      await getReissuanceToken();
-      break;
-    default:
-      showToast('토큰 오류가 발생했습니다.', 'error');
-      break;
+  if (
+    result.error.message === REFRESH_TOKEN_NOT_EXIST ||
+    result.error.message === TOKEN_EXPIRED
+  ) {
+    await getToken();
+    return true;
   }
+  if (
+    result.error.message === INVALID_JWT_TOKEN ||
+    result.error.message === TOKEN_EXPIRED ||
+    result.error.message === INVALID_JWT_SIGNATURE ||
+    result.error.message === AUTHORIZATION_HEADER_ISSUE ||
+    result.error.message === UNSUPPORTED_JWT
+  ) {
+    await getReissuanceToken();
+    return true;
+  }
+  return false;
 };
 
 const getURL = async () => {
@@ -60,23 +68,27 @@ class FetchWrapper {
       retryConfig.retry -= 1;
 
       if (response.status === 401 || response.status === 400) {
-        await tokenErrorHandler(result);
+        const isAuthError = await tokenErrorHandler(result);
         // 재발급 후 재요청
 
-        if (!fetchNext.headers.Authorization) {
-          // Authorization이 없을 경우, fetchNext를 동일하게 재요청
-          return this.call(url, fetchNext);
+        if (isAuthError) {
+          if (!fetchNext.headers.Authorization) {
+            // Authorization이 없을 경우, fetchNext를 동일하게 재요청
+            return this.call(url, fetchNext);
+          }
+
+          const newFetchNext = {
+            ...fetchNext,
+            headers: {
+              ...fetchNext.headers,
+              Authorization: `Bearer ${tokenManager.getToken()}`,
+            },
+          };
+
+          return this.call(url, newFetchNext);
         }
 
-        const newFetchNext = {
-          ...fetchNext,
-          headers: {
-            ...fetchNext.headers,
-            Authorization: `Bearer ${tokenManager.getToken()}`,
-          },
-        };
-
-        return this.call(url, newFetchNext);
+        return result;
       }
       // 인증 외 오류는 호출한 곳에서 처리
       return result;

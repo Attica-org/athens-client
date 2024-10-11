@@ -12,6 +12,7 @@ import { useSearchStore } from '@/store/search';
 import { useShallow } from 'zustand/react/shallow';
 import DeferredComponent from '@/app/_components/utils/DefferedComponent';
 import Loading from '@/app/_components/atoms/loading';
+import { getKeywordAgoraListQueryKey } from '@/constants/queryKey';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
 import { getAgoraKeywordSearch } from '../../_lib/getAgoraKeywordSearch';
 import KeywordAgora from '../atoms/KeywordAgora';
@@ -58,13 +59,11 @@ export default function KeywordAgoraList({ searchParams }: Props) {
         ? { nextCursor: lastPage.nextCursor }
         : undefined,
     initialData: () => {
-      if (searchParams.q && !search)
-        return queryClient.getQueryData([
-          'agoras',
-          'search',
-          'keyword',
-          searchParams,
-        ]);
+      if (searchParams.q && !search) {
+        return queryClient.getQueryData(
+          getKeywordAgoraListQueryKey(searchParams),
+        );
+      }
       return undefined;
     },
   });

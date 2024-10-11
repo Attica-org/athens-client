@@ -5,7 +5,7 @@ export const base64ToFile = (base64: string, filename: string) => {
   let n = bstr.length;
   const u8arr = new Uint8Array(n);
 
-  while (n) {
+  while (n >= 0) {
     u8arr[n] = bstr.charCodeAt(n);
     n -= 1;
   }

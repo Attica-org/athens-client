@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { useAgora } from '@/store/agora';
 import { useVoteStore } from '@/store/vote';
 import showToast from '@/utils/showToast';
+import { getVoteResultQueryKey } from '@/constants/queryKey';
 import { getVoteResult } from '../../_lib/getVoteResult';
 
 type Props = {
@@ -13,18 +14,23 @@ type Props = {
 
 export default function VoteResult({ agoraId }: Props) {
   const result = useVoteStore((state) => state.voteResult);
-  const { enterAgora } = useAgora();
-  const { data, refetch, error } = useQuery({
-    queryKey: ['agora', `${agoraId}`, 'closed'],
-    queryFn: getVoteResult,
+  const { enterAgora, selectedAgora } = useAgora();
+  const { data, error } = useQuery({
+    queryKey: getVoteResultQueryKey(agoraId),
+    queryFn: (query) => {
+      return getVoteResult(query);
+    },
     retry: 2,
+    enabled:
+      enterAgora.status === 'CLOSED' && selectedAgora.status === 'CLOSED',
   });
 
-  useEffect(() => {
-    if (enterAgora.status === 'CLOSED') {
-      refetch();
-    }
-  }, [enterAgora.status, refetch]);
+  // useEffect(() => {
+  //   if (enterAgora.status === 'CLOSED') {
+  //     console.log('refetch');
+  //     refetch();
+  //   }
+  // }, [enterAgora.status, refetch]);
 
   useEffect(() => {
     if (!data && error) {

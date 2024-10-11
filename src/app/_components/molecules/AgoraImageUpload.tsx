@@ -1,5 +1,3 @@
-'only client';
-
 import CameraIcon from '@/assets/icons/CameraIcon';
 import ImageIcon from '@/assets/icons/ImageIcon';
 import Image from 'next/image';
@@ -14,14 +12,16 @@ import ImageCropper from '../atoms/ImageCropper';
 
 type Props = {
   image?: string;
-  setPreView: React.Dispatch<Array<{ dataUrl: string; file: File }>>;
-  preView: Array<{ dataUrl: string; file: File }>;
+  setPreView: React.Dispatch<string>;
+  preView: string;
+  color?: string;
 };
 
 export default function AgoraImageUpload({
   image = '',
   setPreView,
   preView,
+  color,
 }: Props) {
   const [uploadImage, setUploadImage] = useState<
     Array<{ dataUrl: string; file: File }>
@@ -66,15 +66,15 @@ export default function AgoraImageUpload({
 
   const removeImage = () => {
     setUploadImage([]);
-    setPreView([]);
+    setPreView('');
     setViewPopup(false);
   };
 
   useEffect(() => {
-    if (preView.length === 0 && uploadImage.length) {
+    if (!preView && uploadImage.length) {
       removeImage();
     }
-  }, [preView, uploadImage]);
+  }, [preView]);
 
   const calculatePopupPosition = () => {
     if (popupRef.current) {
@@ -142,9 +142,9 @@ export default function AgoraImageUpload({
           onClick={viewPopupHandler}
           onKeyDown={handleKeyDownPopupHandler}
         >
-          {preView[0]?.dataUrl || image ? (
+          {preView || image ? (
             <Image
-              src={preView[0]?.dataUrl ?? image}
+              src={preView ?? image}
               alt="아고라 프로필"
               layout="fill"
               objectFit="cover"
@@ -153,7 +153,7 @@ export default function AgoraImageUpload({
           ) : (
             <div
               aria-hidden
-              className="flex justify-center items-center h-full w-full dark:bg-dark-light-500 bg-gray-200 rounded-3xl under-mobile:rounded-2xl"
+              className={`flex justify-center items-center h-full w-full ${color || 'dark:bg-dark-light-500 bg-gray-200'} rounded-3xl under-mobile:rounded-2xl`}
             >
               <ImageIcon className="w-22 h-22" />
             </div>

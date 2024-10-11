@@ -15,6 +15,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { VirtuosoGrid } from 'react-virtuoso';
 import RefreshIcon from '@/assets/icons/RefreshIcon';
 import { useSearchStore } from '@/store/search';
+import { getCategoryAgoraListQueryKey } from '@/constants/queryKey';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
 import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
 import CategoryAgora from '../atoms/CategoryAgora';
@@ -74,12 +75,9 @@ export default function CategoryAgoraList({ searchParams }: Props) {
         ? { nextCursor: lastPage.nextCursor }
         : undefined,
     initialData: () => {
-      return queryClient.getQueryData([
-        'agoras',
-        'search',
-        'category',
-        searchParams,
-      ]);
+      return queryClient.getQueryData(
+        getCategoryAgoraListQueryKey(searchParams),
+      );
     },
   });
 

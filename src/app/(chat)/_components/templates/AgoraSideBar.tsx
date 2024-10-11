@@ -10,6 +10,7 @@ import React, {
 import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgora } from '@/store/agora';
+import Image from 'next/image';
 import AgoraUserSuspense from '../organisms/AgoraUserSuspense';
 import AgoraUserSideSkeleton from '../organisms/AgoraUserSideSkeleton';
 import ChatSideModule from '../molecules/ChatSideModule';
@@ -22,10 +23,9 @@ export default function AgoraSideBar() {
       isOpen: state.isOpen,
     })),
   );
-  const { id: agoraId, thumbnail } = useAgora(
+  const { enterAgora } = useAgora(
     useShallow((state) => ({
-      id: state.enterAgora.id,
-      thumbnail: state.enterAgora.thumbnail,
+      enterAgora: state.enterAgora,
     })),
   );
 
@@ -98,17 +98,41 @@ export default function AgoraSideBar() {
               <RemoveIcon className="w-22 cursor-pointer" />
             </button>
             <ChatSideModule title="아고라 설정">
-              <div className="flex w-full relative">
-                <div className="flex-1">
-                  <ModifyAgoraImage thumbnail={thumbnail} agoraId={agoraId} />
+              {enterAgora.isCreator ? (
+                <div className="flex w-full relative">
+                  <div className="flex-1">
+                    <ModifyAgoraImage />
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="flex w-full relative">
+                  <div className="flex-1">
+                    {enterAgora.thumbnail ? (
+                      <div className="relative w-60 h-60">
+                        <Image
+                          src={enterAgora.thumbnail}
+                          alt="아고라 프로필"
+                          layout="fill"
+                          objectFit="cover"
+                          className="rounded-3xl under-mobile:rounded-2xl"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className={`w-60 h-60 rounded-3xl under-mobile:rounded-2xl ${enterAgora.agoraColor}`}
+                      />
+                    )}
+                  </div>
+                </div>
+              )}
             </ChatSideModule>
-            <ChatSideModule title="참여자 목록">
-              <Suspense fallback={<AgoraUserSideSkeleton />}>
-                <AgoraUserSuspense agoraId={agoraId} />
-              </Suspense>
-            </ChatSideModule>
+            {enterAgora.status !== 'CLOSED' && (
+              <ChatSideModule title="참여자 목록">
+                <Suspense fallback={<AgoraUserSideSkeleton />}>
+                  <AgoraUserSuspense agoraId={enterAgora.id} />
+                </Suspense>
+              </ChatSideModule>
+            )}
           </section>
         </div>
       </div>
