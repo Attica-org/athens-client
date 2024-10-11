@@ -18,12 +18,13 @@ import getKey from '@/utils/getKey';
 import swManager from '@/utils/swManager';
 import { saveTabId, deleteTabId } from '@/utils/indexedDB';
 import Swal from 'sweetalert2';
-import fetchWrapper from '@/lib/fetchWrapper';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
 import HamburgerButton from '../atoms/HamburgerButton';
 import DiscussionStatus from '../molecules/DiscussionStatus';
+// import { unloadDisconnectSocket } from '@/utils/unloadDisconnectSocket';
+// import { homeSegmentKey } from '@/constants/segmentKey';
 
 const OBSERVER_MESSAGE_SEND_ERROR = 'Observer cannot send this request';
 const SESSION_NOT_FOUND = 'Session not found';
@@ -55,7 +56,10 @@ export default function Header() {
     pros: 0,
     cons: 0,
   });
-  const [isError, setIsError] = useState(false);
+  // const [isError, setIsError] = useState({
+  //   isError: false,
+  //   count: 0,
+  // });
   const router = useRouter();
   const [agoraId, setAgoraId] = useState(enterAgora.id);
   const client = useRef<StompJs.Client>();
@@ -161,7 +165,10 @@ export default function Header() {
         showToast('존재하지 않는 아고라입니다.', 'error');
       }
     }
-    setIsError(true);
+    // setIsError({
+    //   isError: true,
+    //   count: isError.count + 1,
+    // });
   };
   // 최초 렌더링 시 실행
   useEffect(() => {
@@ -178,6 +185,11 @@ export default function Header() {
           const data = await JSON.parse(received_message.body);
           // console.log('received_message', received_message);
           handleWebSocketResponse(data);
+
+          // subscribe까지 완료되면 창 닫을 때 disconnect 등록
+          if (client && client.current) {
+            // unloadDisconnectSocket(client.current);
+          }
           // console.log(`> Received message: ${received_message.body}`);
         },
       );
@@ -203,15 +215,27 @@ export default function Header() {
         },
         reconnectDelay: 500,
         onConnect: () => {
+          // setIsError({
+          //   isError: false,
+          //   count: 0,
+          // });
           subscribeError();
           subscribe();
         },
         onWebSocketError: async () => {
+          // setIsError({
+          //   isError: false,
+          //   count: isError.count + 1,
+          // });
           // showToast('네트워크가 불안정합니다.', 'error');
           // await getReissuanceToken();
           // router.replace('/home');
         },
         onStompError: async () => {
+          // setIsError({
+          //   isError: false,
+          //   count: isError.count + 1,
+          // });
           // showToast('서버 연결이 불안정합니다.', 'error');
           // await getReissuanceToken();
         },
@@ -224,10 +248,21 @@ export default function Header() {
       connect();
     }
 
-    if (isError) {
-      connect();
-      setIsError(false);
-    }
+    // if (isError.isError && isError.count < 5) {
+    //   connect();
+    //   setIsError({
+    //     isError: false,
+    //     count: isError.count + 1,
+    //   });
+    // }
+    // else if (isError.count >= 5) {
+    //   // 서버로부터 온 에러 + 라이브러리 자체 에러, 강제 퇴장 시키기
+    //   showToast('서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.', 'error');
+
+    //   // TODO: 퇴장 api 호출
+    //   disconnect();
+    //   router.replace(homeSegmentKey);
+    // }
 
     return () => {
       if (client.current && client.current.connected) {
@@ -238,7 +273,7 @@ export default function Header() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     agoraId,
-    isError,
+    // isError,
     router,
     setDiscussionStart,
     enterAgora.status,
@@ -288,21 +323,22 @@ export default function Header() {
   });
 
   const callChatExitApi = async () => {
-    const res: {
-      success: boolean;
-    } = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/exit`, {
-      method: 'PATCH',
-      next: {
-        tags: [],
-      },
-      credentials: 'include',
-      cache: 'no-cache',
-      headers: {
-        Authorization: `Bearer ${tokenManager.getToken()}`,
-        AgoraId: { agoraId },
-      },
-    });
-    return res;
+    // const res: {
+    //   success: boolean;
+    // } = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/exit`, {
+    //   method: 'PATCH',
+    //   next: {
+    //     tags: [],
+    //   },
+    //   credentials: 'include',
+    //   cache: 'no-cache',
+    //   headers: {
+    //     Authorization: `Bearer ${tokenManager.getToken()}`,
+    //     AgoraId: { agoraId },
+    //   },
+    // });
+    // return res;
+    router.push('/home');
   };
   const handleBack = () => {
     swalButton

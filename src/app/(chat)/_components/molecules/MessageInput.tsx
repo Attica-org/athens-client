@@ -18,10 +18,14 @@ import { useAgora } from '@/store/agora';
 // import showToast from '@/utils/showToast';
 // import { getReissuanceToken } from '@/lib/getReissuanceToken';
 import getKey from '@/utils/getKey';
+// import { unloadDisconnectSocket } from '@/utils/unloadDisconnectSocket';
 
 export default function MessageInput() {
   const [message, setMessage] = useState<string>('');
-  const [isError, setIsError] = useState(false);
+  // const [isError, setIsError] = useState({
+  //   isError: false,
+  //   count: 0,
+  // });
   const [isComposing, setIsComposing] = useState(false);
   const [URL, setURL] = useState({
     SOCKET_URL: '',
@@ -45,21 +49,20 @@ export default function MessageInput() {
         'messages',
       ]) as InfiniteData<{
         chats: Message[];
-        meta: { key: number; size: number };
+        meta: { key: number; effectiveSize: number };
       }>;
 
       if (exMessages && typeof exMessages === 'object') {
         const newMessages = {
-          ...exMessages,
+          pageParams: [...exMessages.pageParams],
           pages: [...exMessages.pages],
         };
 
-        const lastPage = newMessages.pages[newMessages.pages.length - 1];
+        const lastPage = newMessages.pages.at(-1);
         const newLastPage = lastPage
           ? { ...lastPage, chats: [...lastPage.chats] }
-          : { chats: [], meta: { key: -1, size: 20 } };
-        const lastMessageId =
-          lastPage.meta.key !== -1 ? lastPage?.chats.at(-1)?.chatId : -1;
+          : { chats: [], meta: { key: 0, effectiveSize: 20 } };
+        // const lastMessageId = lastPage?.chats.at(-1)?.chatId;
 
         if (type === 'received') {
           newLastPage.chats.push(JSON.parse(data).data);
@@ -68,10 +71,11 @@ export default function MessageInput() {
         newMessages.pages[newMessages.pages.length - 1] = {
           chats: newLastPage.chats,
           meta: {
-            key: lastMessageId || -1,
-            size: 20,
+            key: newLastPage.meta.key || 0,
+            effectiveSize: 20,
           },
         };
+
         queryClient.setQueryData(
           ['chat', `${enterAgora.id}`, 'messages'],
           newMessages,
@@ -160,14 +164,25 @@ export default function MessageInput() {
           pushMessage(received_message.body, 'received');
         },
       );
+
+      if (client && client.current) {
+        // unloadDisconnectSocket(client.current);
+      }
     };
 
     const subscribeError = () => {
       // console.log('Subscribing Error...');
       client.current?.subscribe('/user/queue/errors', () => {
         // header에서 오류 처리
-        setIsError(true);
+        // setIsError({
+        //   isError: true,
+        //   count: isError.count + 1,
+        // });
       });
+
+      if (client && client.current) {
+        // unloadDisconnectSocket(client.current);
+      }
     };
 
     const connect = () => {
@@ -179,15 +194,27 @@ export default function MessageInput() {
         },
         reconnectDelay: 500,
         onConnect: () => {
+          // setIsError({
+          //   isError: false,
+          //   count: 0,
+          // });
           subscribeError();
           subscribe();
         },
         onWebSocketError: async () => {
+          // setIsError({
+          //   isError: false,
+          //   count: isError.count + 1,
+          // });
           // showToast('네트워크가 불안정합니다.', 'error');
           // await getReissuanceToken();
           // connect();
         },
         onStompError: async () => {
+          // setIsError({
+          //   isError: false,
+          //   count: isError.count + 1,
+          // });
           // await getReissuanceToken();
           // connect();
         },
@@ -203,10 +230,17 @@ export default function MessageInput() {
       connect();
     }
 
-    if (isError) {
-      connect();
-      setIsError(false);
-    }
+    // if (isError.isError && isError.count < 5) {
+    //   connect();
+    //   setIsError({
+    //     isError: false,
+    //     count: isError.count + 1,
+    //   });
+    // }
+    // else if(isError.count >= 5) {
+    //   // showToast('네트워크가 불안정합니다.', 'error');
+    //   disconnect();
+    // }
 
     return () => {
       if (client.current && client.current.connected) {
@@ -215,7 +249,7 @@ export default function MessageInput() {
     };
   }, [
     enterAgora.id,
-    isError,
+    // isError,
     enterAgora.status,
     pushMessage,
     enterAgora.role,
