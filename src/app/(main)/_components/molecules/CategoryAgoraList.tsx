@@ -14,6 +14,7 @@ import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 import { VirtuosoGrid } from 'react-virtuoso';
 import RefreshIcon from '@/assets/icons/RefreshIcon';
+import { useSearchStore } from '@/store/search';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
 import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
 import CategoryAgora from '../atoms/CategoryAgora';
@@ -37,6 +38,12 @@ export default function CategoryAgoraList({ searchParams }: Props) {
     })),
   );
 
+  const { tabStatus } = useSearchStore(
+    useShallow((state) => ({
+      tabStatus: state.tabStatus,
+    })),
+  );
+
   const {
     data,
     refetch,
@@ -56,7 +63,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
       'agoras',
       'search',
       'category',
-      { ...searchParams, category: selectedCategory },
+      { ...searchParams, status: tabStatus, category: selectedCategory },
     ],
     queryFn: getAgoraCategorySearch,
     staleTime: 60 * 1000,
@@ -104,10 +111,10 @@ export default function CategoryAgoraList({ searchParams }: Props) {
         'agoras',
         'search',
         'category',
-        { ...searchParams, category: selectedCategory },
+        { ...searchParams, status: tabStatus, category: selectedCategory },
       ],
     });
-  }, [selectedCategory, queryClient]);
+  }, [selectedCategory, queryClient, tabStatus]);
 
   const handleKeyDownRefresh = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -122,13 +129,11 @@ export default function CategoryAgoraList({ searchParams }: Props) {
   return (
     <section
       aria-label={
-        searchParams.status === 'active'
-          ? '활성화 아고라 리스트'
-          : '종료된 아고라 리스트'
+        tabStatus === 'active' ? '활성화 아고라 리스트' : '종료된 아고라 리스트'
       }
       className="w-full h-full"
     >
-      {searchParams.status === 'active' && (
+      {tabStatus === 'active' && (
         <h2
           aria-label="활성화 상태 아고라"
           className="flex justify-between items-center text-md font-semibold dark:text-dark-line-light text-left pl-10 mb-16 w-full"

@@ -22,9 +22,10 @@ type Props = {
 
 export default function KeywordAgoraList({ searchParams }: Props) {
   const queryClient = useQueryClient();
-  const { search } = useSearchStore(
+  const { search, tabStatus } = useSearchStore(
     useShallow((state) => ({
       search: state.search,
+      tabStatus: state.tabStatus,
     })),
   );
 
@@ -42,7 +43,12 @@ export default function KeywordAgoraList({ searchParams }: Props) {
     [_1: string, _2: string, _3: string, Props['searchParams']],
     { nextCursor: number | null }
   >({
-    queryKey: ['agoras', 'search', 'keyword', { ...searchParams, q: search }],
+    queryKey: [
+      'agoras',
+      'search',
+      'keyword',
+      { ...searchParams, q: search, status: tabStatus },
+    ],
     queryFn: getAgoraKeywordSearch,
     staleTime: 60 * 1000,
     gcTime: 500 * 1000,
@@ -80,10 +86,12 @@ export default function KeywordAgoraList({ searchParams }: Props) {
       {data?.pages[0].agoras.length < 1 ? (
         <NoAgoraMessage />
       ) : (
-        data?.pages
-          ?.map((page) => page.agoras)
-          ?.flat()
-          ?.map((agora) => <KeywordAgora key={agora.id} agora={agora} />)
+        <div className="pb-3rem w-full">
+          {data?.pages
+            ?.map((page) => page.agoras)
+            ?.flat()
+            ?.map((agora) => <KeywordAgora key={agora.id} agora={agora} />)}
+        </div>
       )}
       {(isFetching || isPending || isFetchingNextPage) && (
         <DeferredComponent>

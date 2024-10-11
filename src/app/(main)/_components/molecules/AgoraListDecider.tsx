@@ -36,10 +36,11 @@ function FallbackComponent(props: FallbackProps) {
 }
 export default function AgoraListDecider({ searchParams }: Props) {
   const { q } = searchParams;
-  const { search, setSearch } = useSearchStore(
+  const { search, setSearch, tabStatus } = useSearchStore(
     useShallow((state) => ({
       search: state.search,
       setSearch: state.setSearch,
+      tabStatus: state.tabStatus,
     })),
   );
 
@@ -60,7 +61,7 @@ export default function AgoraListDecider({ searchParams }: Props) {
   return (
     <ErrorBoundary FallbackComponent={FallbackComponent}>
       <>
-        {searchParams.status === 'active' && (
+        {tabStatus === 'active' && (
           <>
             <LivelyAgoraList />
             <div className="h-12 w-full mb-16">
