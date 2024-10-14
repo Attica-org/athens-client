@@ -6,7 +6,7 @@ type Props = {
   socialService: string;
 };
 
-export function OAuthRequest({ redirectUri, socialService }: Props) {
+export async function OAuthRequest({ redirectUri, socialService }: Props) {
   const baseUrl = (await getKey()).BASE_URL;
   const response = await fetch(
     `${baseUrl}/oauth2/authorization/${socialService}?redirect_uri=${redirectUri}`,
