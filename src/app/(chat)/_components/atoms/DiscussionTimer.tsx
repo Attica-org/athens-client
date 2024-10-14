@@ -8,6 +8,7 @@ import useTimer from '@/hooks/useTimer';
 import { useMutation } from '@tanstack/react-query';
 import { useAgora } from '@/store/agora';
 import showToast from '@/utils/showToast';
+import { AGORA_STATUS } from '@/constants/Agora';
 import { patchAgoraTimeOut } from '../../_lib/patchAgoraTimeOut';
 
 type Props = {
@@ -48,13 +49,13 @@ export default function DiscussionTimer({ duration }: Props) {
     if (endTime && !isFinished) {
       // 버튼으로 종료
       resetTimer();
-      setEnterAgora({ ...enterAgora, status: 'CLOSED' });
+      setEnterAgora({ ...enterAgora, status: AGORA_STATUS.CLOSED });
     } else if (isFinished) {
       // 타임 아웃
       agoraEndMutation.mutate();
 
       resetTimer();
-      setEnterAgora({ ...enterAgora, status: 'CLOSED' });
+      setEnterAgora({ ...enterAgora, status: AGORA_STATUS.CLOSED });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished, enterAgora.id, router, startTime, resetTimer, endTime]);

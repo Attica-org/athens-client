@@ -2,16 +2,16 @@
 
 import { postEnterAgoraInfo } from '@/app/(main)/_lib/postEnterAgoraInfo';
 import Loading from '@/app/_components/atoms/loading';
-import { ParticipationPosition, Status } from '@/app/model/Agora';
+import { ParticipationPosition } from '@/app/model/Agora';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import { useAgora } from '@/store/agora';
 import { useEnter } from '@/store/enter';
 import { useMutation } from '@tanstack/react-query';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import { AGORA_STATUS } from '@/constants/Agora';
 
 const OBSERVER: ParticipationPosition = 'OBSERVER';
-const CLOSE_STATUS: Status = 'CLOSED';
 
 export default function EnterAgoraButton() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -47,19 +47,19 @@ export default function EnterAgoraButton() {
     mutationFn: callEnterAgoraAPI,
     onSuccess: (response) => {
       if (response) {
-        if (response === CLOSE_STATUS) {
+        if (response === AGORA_STATUS.CLOSED) {
           setEnterAgora({
             id: Number(pathname.split('/')[3]),
             thumbnail: selectedAgora.thumbnail,
             title: selectedAgora.title,
-            status: CLOSE_STATUS,
+            status: AGORA_STATUS.CLOSED,
             role: OBSERVER,
             isCreator: false,
             agoraColor: selectedAgora.agoraColor,
           });
           setSelectedAgora({
             ...selectedAgora,
-            status: CLOSE_STATUS,
+            status: AGORA_STATUS.CLOSED,
           });
         } else {
           setEnterAgora({

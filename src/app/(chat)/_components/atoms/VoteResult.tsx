@@ -6,6 +6,7 @@ import { useAgora } from '@/store/agora';
 import { useVoteStore } from '@/store/vote';
 import showToast from '@/utils/showToast';
 import { getVoteResultQueryKey } from '@/constants/queryKey';
+import { AGORA_STATUS } from '@/constants/Agora';
 import { getVoteResult } from '../../_lib/getVoteResult';
 
 type Props = {
@@ -22,11 +23,12 @@ export default function VoteResult({ agoraId }: Props) {
     },
     retry: 2,
     enabled:
-      enterAgora.status === 'CLOSED' && selectedAgora.status === 'CLOSED',
+      enterAgora.status === AGORA_STATUS.CLOSED &&
+      selectedAgora.status === AGORA_STATUS.CLOSED,
   });
 
   // useEffect(() => {
-  //   if (enterAgora.status === 'CLOSED') {
+  //   if (enterAgora.status === AGORA_STATUS.CLOSED) {
   //     console.log('refetch');
   //     refetch();
   //   }

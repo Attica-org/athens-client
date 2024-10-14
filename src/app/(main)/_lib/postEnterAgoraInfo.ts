@@ -3,6 +3,7 @@ import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { ParticipationPosition } from '@/app/model/Agora';
+import { AGORA_STATUS } from '@/constants/Agora';
 
 type Props = {
   info: {
@@ -17,7 +18,6 @@ type Props = {
 
 const ALREADY_PARTICIPATED = 'User has already participated';
 const NICKNAME_DUPLICATED = 'The nickname is already in use';
-const CLOSED = 'CLOSED';
 
 const splitMessage = (message: string) => {
   const split = message.split('.');
@@ -67,7 +67,7 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
     } else if (res.error.code === 1002) {
       console.log(res.error.message);
       showToast('종료된 아고라입니다.', 'error');
-      return CLOSED;
+      return AGORA_STATUS.CLOSED;
     } else if (res.error.code === 1004) {
       if (splitMessage(res.error.message) === ALREADY_PARTICIPATED) {
         showToast('이미 참여한 아고라입니다.', 'error');

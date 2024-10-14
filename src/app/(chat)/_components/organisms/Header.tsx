@@ -21,6 +21,7 @@ import Swal from 'sweetalert2';
 // import fetchWrapper from '@/lib/fetchWrapper';
 import { getAgoraUserListQueryKey } from '@/constants/queryKey';
 import { homeSegmentKey } from '@/constants/segmentKey';
+import { AGORA_STATUS } from '@/constants/Agora';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
@@ -100,7 +101,7 @@ export default function Header() {
     return (
       navigator.onLine &&
       URL.SOCKET_URL !== '' &&
-      enterAgora.status !== 'CLOSED'
+      enterAgora.status !== AGORA_STATUS.CLOSED
     );
   };
 
@@ -305,7 +306,7 @@ export default function Header() {
   useEffect(() => {
     if (!URL.BASE_URL) return;
 
-    if (enterAgora.status !== 'CLOSED') {
+    if (enterAgora.status !== AGORA_STATUS.CLOSED) {
       const tabId = new Date().getTime().toString();
       swManager.setTabId(tabId);
       saveTabId(tabId);
@@ -351,11 +352,11 @@ export default function Header() {
   });
 
   const handleAgoraExit = () => {
-    if (enterAgora.status === 'CLOSED') {
+    if (enterAgora.status === AGORA_STATUS.CLOSED) {
       router.push(homeSegmentKey);
     } else if (
-      enterAgora.status === 'RUNNING' ||
-      enterAgora.status === 'QUEUED'
+      enterAgora.status === AGORA_STATUS.CLOSED ||
+      enterAgora.status === AGORA_STATUS.QUEUED
     ) {
       mutation.mutate();
     }
@@ -396,7 +397,7 @@ export default function Header() {
       <div className="flex justify-center items-center">
         <AgoraInfo
           title={metaData?.agora.title || enterAgora.title || ''}
-          isClosed={enterAgora.status === 'CLOSED'}
+          isClosed={enterAgora.status === AGORA_STATUS.CLOSED}
           pros={participants.pros}
           cons={participants.cons}
         />

@@ -24,6 +24,7 @@ import { useAgora } from '@/store/agora';
 import getKey from '@/utils/getKey';
 import { getChatMessagesQueryKey } from '@/constants/queryKey';
 import showToast from '@/utils/showToast';
+import { AGORA_STATUS } from '@/constants/Agora';
 import postFilterBadWords from '../../_lib/postFilterBadWords';
 // import { unloadDisconnectSocket } from '@/utils/unloadDisconnectSocket';
 
@@ -245,7 +246,7 @@ export default function MessageInput() {
     };
 
     if (
-      enterAgora.status !== 'CLOSED' &&
+      enterAgora.status !== AGORA_STATUS.CLOSED &&
       navigator.onLine &&
       URL.SOCKET_URL !== ''
     ) {
@@ -333,7 +334,7 @@ export default function MessageInput() {
   };
 
   return (
-    enterAgora.status !== 'CLOSED' &&
+    enterAgora.status !== AGORA_STATUS.CLOSED &&
     enterAgora.role !== 'OBSERVER' && (
       <section className="flex border-t-1 dark:border-dark-light-300 sticky bottom-0 right-0 left-0 w-full bg-white dark:bg-dark-light-300">
         <form className="pl-1rem p-10 pb-0 flex flex-1 justify-start items-center">

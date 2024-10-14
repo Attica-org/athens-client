@@ -1,4 +1,6 @@
-export type Status = 'RUNNING' | 'CLOSED' | 'QUEUED';
+import { AGORA_STATUS } from '@/constants/Agora';
+
+export type Status = (typeof AGORA_STATUS)[keyof typeof AGORA_STATUS];
 
 export interface Agora {
   id: number;

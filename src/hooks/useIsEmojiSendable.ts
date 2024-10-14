@@ -3,6 +3,7 @@
 import { useChatInfo } from '@/store/chatInfo';
 import { useAgora } from '@/store/agora';
 import { useShallow } from 'zustand/react/shallow';
+import { AGORA_STATUS } from '@/constants/Agora';
 
 export default function useIsEmojiSendable() {
   // end 상태가 있으면 이모지 전송 불가
@@ -16,7 +17,7 @@ export default function useIsEmojiSendable() {
     status: state.enterAgora.status,
   }));
 
-  if (end || status === 'CLOSED') {
+  if (end || status === AGORA_STATUS.CLOSED) {
     return false;
   }
 

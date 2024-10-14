@@ -8,6 +8,7 @@ import COLOR from '@/constants/agoraColor';
 import isActiveAgora from '@/utils/isActiveAgora';
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import Image from 'next/image';
+import { AGORA_STATUS } from '@/constants/Agora';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 
 type Props = {
@@ -46,9 +47,12 @@ export default function CategoryAgora({ agora, className }: Props) {
       agoraColor: agora.agoraColor,
     });
 
-    if (agora.status === 'QUEUED' || agora.status === 'RUNNING') {
+    if (
+      agora.status === AGORA_STATUS.QUEUED ||
+      agora.status === AGORA_STATUS.RUNNING
+    ) {
       router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
-    } else if (agora.status === 'CLOSED') {
+    } else if (agora.status === AGORA_STATUS.CLOSED) {
       setAgoraData();
       routeAgoraPage();
     }
@@ -79,9 +83,9 @@ export default function CategoryAgora({ agora, className }: Props) {
             className="rounded-3xl under-mobile:rounded-2xl"
           />
         )}
-        {agora.status !== 'CLOSED' && (
+        {agora.status !== AGORA_STATUS.CLOSED && (
           <div
-            className={`w-0.5rem h-0.5rem rounded-full ${agora.status === 'RUNNING' ? 'bg-athens-button' : 'bg-red-400'} absolute top-3 right-2 under-mobile:top-2 under-mobile:right-1 z-5`}
+            className={`w-0.5rem h-0.5rem rounded-full ${agora.status === AGORA_STATUS.RUNNING ? 'bg-athens-button' : 'bg-red-400'} absolute top-3 right-2 under-mobile:top-2 under-mobile:right-1 z-5`}
           />
         )}
       </div>
@@ -91,7 +95,9 @@ export default function CategoryAgora({ agora, className }: Props) {
       <div
         role="group"
         aria-label={
-          agora.status === 'CLOSED' ? '투표 결과' : '아고라 참여 인원'
+          agora.status === AGORA_STATUS.CLOSED
+            ? '투표 결과'
+            : '아고라 참여 인원'
         }
         className="text-xs pt-7 w-full"
       >
@@ -132,7 +138,7 @@ export default function CategoryAgora({ agora, className }: Props) {
         type="button"
         className="text-sm under-mobile:text-xs text-white bg-athens-main p-4 pt-5 pb-5 mt-10 w-9rem under-mobile:w-110 rounded-md"
       >
-        {agora.status === 'CLOSED' ? '결과보기' : '입장하기'}
+        {agora.status === AGORA_STATUS.CLOSED ? '결과보기' : '입장하기'}
       </button>
     </article>
   );
