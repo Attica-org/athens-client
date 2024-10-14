@@ -17,6 +17,7 @@ type Props = {
 
 const ALREADY_PARTICIPATED = 'User has already participated';
 const NICKNAME_DUPLICATED = 'The nickname is already in use';
+const CLOSED = 'CLOSED';
 
 const splitMessage = (message: string) => {
   const split = message.split('.');
@@ -63,6 +64,10 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
       } else {
         showToast('입장 실패했습니다.\n 다시 시도해주세요.', 'error');
       }
+    } else if (res.error.code === 1002) {
+      console.log(res.error.message);
+      showToast('종료된 아고라입니다.', 'error');
+      return CLOSED;
     } else if (res.error.code === 1004) {
       if (splitMessage(res.error.message) === ALREADY_PARTICIPATED) {
         showToast('이미 참여한 아고라입니다.', 'error');

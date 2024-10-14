@@ -43,7 +43,7 @@ export default async function Page() {
         </div>
       </div>
       <div className="w-full flex flex-col gap-y-12 justify-center items-center">
-        <div className="text-sm dark:text-dark-line-semilight text-dark-light-500 p-10 pb-20">
+        <div className="text-sm dark:text-dark-line text-dark-light-500 p-10 pb-20">
           SNS 계정으로 로그인
         </div>
         <SNSLogin />

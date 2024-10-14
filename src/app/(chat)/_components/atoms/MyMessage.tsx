@@ -74,7 +74,7 @@ function MyMessage({
               )
             : shouldShowTime && (
                 <div className="flex justify-end items-end">
-                  <time className="text-xxs pr-8 h-full dark:text-dark-line">
+                  <time className="text-xxs pr-8 dark:text-dark-line">
                     {message.createdAt &&
                       new Date(message.createdAt)
                         ?.toLocaleTimeString()

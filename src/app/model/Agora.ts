@@ -1,4 +1,4 @@
-type Status = 'RUNNING' | 'CLOSED' | 'QUEUED';
+export type Status = 'RUNNING' | 'CLOSED' | 'QUEUED';
 
 export interface Agora {
   id: number;
@@ -9,6 +9,7 @@ export interface Agora {
     cons: number;
     observer: number;
   };
+  imageUrl: string;
   createdAt?: string;
   status: Status;
 }
@@ -17,6 +18,7 @@ export interface ClosedAgora {
   id: number;
   agoraTitle: string;
   agoraColor: string;
+  imageUrl: string;
   prosCount: number;
   consCount: number;
   totalMember: number;
@@ -48,6 +50,7 @@ interface ColorType {
 
 export type AgoraConfig = {
   title: string;
+  thumbnail: string;
   category: string;
   color: ColorType;
   capacity: number;

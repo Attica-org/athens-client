@@ -45,9 +45,15 @@ export default function DiscussionTimer({ duration }: Props) {
   });
 
   useEffect(() => {
-    if ((isFinished && startTime) || endTime) {
+    if (endTime && !isFinished) {
+      // 버튼으로 종료
       resetTimer();
+      setEnterAgora({ ...enterAgora, status: 'CLOSED' });
+    } else if (isFinished) {
+      // 타임 아웃
       agoraEndMutation.mutate();
+
+      resetTimer();
       setEnterAgora({ ...enterAgora, status: 'CLOSED' });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -8,6 +8,7 @@ import ErrorFallback from '@/app/_components/templates/ErrorFallback';
 import { useChatInfo } from '@/store/chatInfo';
 import { useShallow } from 'zustand/react/shallow';
 import { getAgoraUserListQueryKey } from '@/constants/queryKey';
+import { useAgora } from '@/store/agora';
 import AgoraUserList from '../molecules/AgoraUserList';
 import { getAgoraUsers } from '../../_lib/getAgoraUsers';
 
@@ -25,6 +26,7 @@ function FallbackComponent(props: FallbackProps) {
 }
 
 export default function AgoraUserSuspense({ agoraId }: Props) {
+  const { enterAgora } = useAgora();
   const { end } = useChatInfo(
     useShallow((state) => ({
       end: state.end,
@@ -41,6 +43,7 @@ export default function AgoraUserSuspense({ agoraId }: Props) {
     queryFn: getAgoraUsers,
     staleTime: 1000 * 30,
     gcTime: 60 * 1000,
+    enabled: enterAgora.status !== 'CLOSED' && !end,
   });
 
   return (

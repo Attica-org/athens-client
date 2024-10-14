@@ -14,10 +14,10 @@ const dummyData = {
   data: {
     chatId: 23,
     reactionCount: {
-      LIKE: 3,
+      LIKE: 0,
       DISLIKE: 0,
-      LOVE: 1,
-      HAPPY: 1,
+      LOVE: 0,
+      HAPPY: 0,
       SAD: 0,
     },
   },
@@ -27,7 +27,7 @@ export default function UserReaction({ className }: { className: string }) {
   const emojis = Emojis({ className });
 
   return (
-    <div className="flex mt-10">
+    <div className="flex">
       {Object.keys(dummyData.data.reactionCount).map((reactionType) => {
         const count =
           dummyData.data.reactionCount[reactionType as keyof ReactionCount];

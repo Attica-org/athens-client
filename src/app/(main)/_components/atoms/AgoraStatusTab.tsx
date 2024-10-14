@@ -1,16 +1,22 @@
 'use client';
 
 import { homeSegmentKey } from '@/constants/segmentKey';
+import { useSearchStore } from '@/store/search';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 type Status = 'active' | 'closed';
 
 function AgoraStatusTab() {
-  const searchParams = useSearchParams();
-  const [status, setStatus] = useState<Status>(
-    (searchParams.get('status') as Status) || 'active',
+  const { tabStatus, setTabStatus } = useSearchStore(
+    useShallow((state) => ({
+      setTabStatus: state.setTabStatus,
+      tabStatus: state.tabStatus,
+    })),
   );
+  const searchParams = useSearchParams();
+  const [status, setStatus] = useState<Status>(tabStatus as Status);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -19,7 +25,17 @@ function AgoraStatusTab() {
     const newSearchParams = new URLSearchParams(searchParams);
 
     newSearchParams.set('status', status);
-    router.push(`${homeSegmentKey}?${newSearchParams.toString()}`);
+    setTabStatus(status);
+
+    const newUrl = `${homeSegmentKey}?${newSearchParams.toString()}`;
+    window.history.pushState(
+      { ...window.history.state, as: newUrl, url: newUrl },
+      '',
+      newUrl,
+    );
+
+    // newSearchParams.set('status', status);
+    // router.push(`${homeSegmentKey}?${newSearchParams.toString()}`);
   }, [router, searchParams, status, pathname]);
 
   useEffect(() => {

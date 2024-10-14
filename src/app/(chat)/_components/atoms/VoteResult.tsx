@@ -14,18 +14,23 @@ type Props = {
 
 export default function VoteResult({ agoraId }: Props) {
   const result = useVoteStore((state) => state.voteResult);
-  const { enterAgora } = useAgora();
-  const { data, refetch, error } = useQuery({
+  const { enterAgora, selectedAgora } = useAgora();
+  const { data, error } = useQuery({
     queryKey: getVoteResultQueryKey(agoraId),
-    queryFn: getVoteResult,
+    queryFn: (query) => {
+      return getVoteResult(query);
+    },
     retry: 2,
+    enabled:
+      enterAgora.status === 'CLOSED' && selectedAgora.status === 'CLOSED',
   });
 
-  useEffect(() => {
-    if (enterAgora.status === 'CLOSED') {
-      refetch();
-    }
-  }, [enterAgora.status, refetch]);
+  // useEffect(() => {
+  //   if (enterAgora.status === 'CLOSED') {
+  //     console.log('refetch');
+  //     refetch();
+  //   }
+  // }, [enterAgora.status, refetch]);
 
   useEffect(() => {
     if (!data && error) {

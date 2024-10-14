@@ -16,13 +16,16 @@ import {
 } from '@/constants/createAgora';
 import showToast from '@/utils/showToast';
 import COLOR from '@/constants/agoraColor';
-import { AgoraConfig } from '@/app/model/Agora';
+import { AgoraConfig, Status } from '@/app/model/Agora';
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import { postCreateAgora } from '../../_lib/postCreateAgora';
+
+const QUEUED: Status = 'QUEUED';
 
 function CreateAgoraBtn() {
   const [createAgora, setCreateAgora] = useState<AgoraConfig>({
     title: '',
+    thumbnail: '',
     category: '1',
     color: { idx: 0, value: COLOR[0].value },
     capacity: 5,
@@ -56,8 +59,10 @@ function CreateAgoraBtn() {
       if (response.id) {
         setSelectedAgora({
           id: response.id,
+          thumbnail: createAgora.thumbnail,
           title: createAgora.title,
-          status: 'QUEUED',
+          status: QUEUED,
+          agoraColor: createAgora.color.value,
         });
 
         setIsLoading(false);
@@ -74,7 +79,7 @@ function CreateAgoraBtn() {
   });
 
   const handleClick = () => {
-    const { title, category, color, capacity, duration } =
+    const { title, thumbnail, category, color, capacity, duration } =
       useCreateAgora.getState();
 
     if (
@@ -92,6 +97,7 @@ function CreateAgoraBtn() {
 
     setCreateAgora({
       title,
+      thumbnail,
       category,
       color,
       capacity,

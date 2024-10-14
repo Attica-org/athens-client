@@ -57,7 +57,7 @@ export default function ResultAgora() {
           <Link
             prefetch
             aria-label="홈으로 가기"
-            href="/"
+            href="/home"
             className="pt-1.5rem text-sm text-athens-gray-thick dark:text-dark-line"
           >
             홈으로 돌아가기

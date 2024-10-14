@@ -25,7 +25,6 @@
     "@types/canvas-confetti": "^1.6.4",
     "@types/react-image-crop": "^8.1.6",
     "canvas-confetti": "^1.9.2",
-    "client-only": "^0.0.1",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
     "eslint-config-airbnb-typescript": "^18.0.0",
