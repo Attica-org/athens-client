@@ -9,7 +9,7 @@ import { useAgora } from '@/store/agora';
 import COLOR from '@/constants/agoraColor';
 import isActiveAgora from '@/utils/isActiveAgora';
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
-import UserImage from '../../../_components/atoms/UserImage';
+import Image from 'next/image';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 
 type Props = {
@@ -22,23 +22,32 @@ export default function KeywordAgora({ agora }: Props) {
 
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
   const enterAgoraHandle = () => {
+    const setAgoraData = () => {
+      setEnterAgora({
+        id: agora.id,
+        thumbnail: agora.imageUrl,
+        title: agora.agoraTitle,
+        status: agora.status,
+        role: 'OBSERVER' as const,
+        isCreator: false,
+        agoraColor: agora.agoraColor,
+      });
+    };
+
+    // TODO: 아고라 id를 받아서 해당 아고라로 이동
     setSelectedAgora({
       id: agora.id,
+      thumbnail: agora.imageUrl,
       title: agora.agoraTitle,
       status: agora.status,
-    });
-
-    setEnterAgora({
-      id: agora.id,
-      title: agora.agoraTitle,
-      status: agora.status,
-      role: 'OBSERVER',
+      agoraColor: agora.agoraColor,
     });
 
     if (agora.status === 'QUEUED' || agora.status === 'RUNNING') {
       router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
     } else if (agora.status === 'CLOSED') {
       // 만약 status가 closed라면, /agoras/${id}로 이동
+      setAgoraData();
       router.push(`/agoras/${agora.id}`);
     }
   };
@@ -111,11 +120,19 @@ export default function KeywordAgora({ agora }: Props) {
           </div>
         </div>
         <div className="relative">
-          <UserImage
-            className={`w-67 h-67 ${COLOR.some((color) => color.value === agora.agoraColor) ? agora.agoraColor : COLOR[0].value} rounded-3xl`}
-            w={67}
-            h={67}
-          />
+          {agora.imageUrl ? (
+            <Image
+              src={agora.imageUrl}
+              alt="아고라 이미지"
+              layout="fill"
+              width={67}
+              height={67}
+            />
+          ) : (
+            <div
+              className={`w-67 h-67 ${COLOR.some((color) => color.value === agora.agoraColor) ? agora.agoraColor : COLOR[0].value} rounded-3xl border-1 dark:border-athens-gray`}
+            />
+          )}
           {agora.status !== 'CLOSED' && (
             <span
               className={`absolute top-2 left-50 inline-block w-13 h-13 ${agora.status === 'queued' ? 'bg-athens-button' : 'bg-red-400'} rounded-full ml-3`}

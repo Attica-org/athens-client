@@ -10,10 +10,11 @@ import React, {
 import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgora } from '@/store/agora';
-import AgoraImageUpload from '@/app/_components/molecules/AgoraImageUpload';
+import Image from 'next/image';
 import AgoraUserSuspense from '../organisms/AgoraUserSuspense';
 import AgoraUserSideSkeleton from '../organisms/AgoraUserSideSkeleton';
 import ChatSideModule from '../molecules/ChatSideModule';
+import ModifyAgoraImage from '../molecules/ModifyAgoraImage';
 
 export default function AgoraSideBar() {
   const { toggle, isOpen } = useSidebarStore(
@@ -22,7 +23,11 @@ export default function AgoraSideBar() {
       isOpen: state.isOpen,
     })),
   );
-  const agoraId = useAgora((state) => state.enterAgora.id);
+  const { enterAgora } = useAgora(
+    useShallow((state) => ({
+      enterAgora: state.enterAgora,
+    })),
+  );
 
   const onClickOutSide: MouseEventHandler<HTMLDivElement> = (e) => {
     if (e.target === e.currentTarget) {
@@ -52,10 +57,6 @@ export default function AgoraSideBar() {
       element.blur();
     }
   }, [isOpen]);
-
-  const changeAgoraImg = () => {
-    // 이미지 변경 서버 요청
-  };
 
   return (
     <div
@@ -97,27 +98,41 @@ export default function AgoraSideBar() {
               <RemoveIcon className="w-22 cursor-pointer" />
             </button>
             <ChatSideModule title="아고라 설정">
-              <div className="flex w-full relative">
-                <div className="flex-1">
-                  {/* TODO: 전역 상태에 서버로부터 받아온 이미지 저장하여 prop으로 전달 */}
-                  <AgoraImageUpload />
+              {enterAgora.isCreator ? (
+                <div className="flex w-full relative">
+                  <div className="flex-1">
+                    <ModifyAgoraImage />
+                  </div>
                 </div>
-                {/* TODO: 이미지 수정 했을 때만 저장 버튼 출력하도록 수정 */}
-                <button
-                  type="button"
-                  aria-label="변경한 이미지 저장"
-                  onClick={changeAgoraImg}
-                  className="z-[-1] absolute left-80 bottom-0 text-xs rounded-lg text-athens-sub"
-                >
-                  저장
-                </button>
-              </div>
+              ) : (
+                <div className="flex w-full relative">
+                  <div className="flex-1">
+                    {enterAgora.thumbnail ? (
+                      <div className="relative w-60 h-60">
+                        <Image
+                          src={enterAgora.thumbnail}
+                          alt="아고라 프로필"
+                          layout="fill"
+                          objectFit="cover"
+                          className="rounded-3xl under-mobile:rounded-2xl"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className={`w-60 h-60 rounded-3xl under-mobile:rounded-2xl ${enterAgora.agoraColor}`}
+                      />
+                    )}
+                  </div>
+                </div>
+              )}
             </ChatSideModule>
-            <ChatSideModule title="참여자 목록">
-              <Suspense fallback={<AgoraUserSideSkeleton />}>
-                <AgoraUserSuspense agoraId={agoraId} />
-              </Suspense>
-            </ChatSideModule>
+            {enterAgora.status !== 'CLOSED' && (
+              <ChatSideModule title="참여자 목록">
+                <Suspense fallback={<AgoraUserSideSkeleton />}>
+                  <AgoraUserSuspense agoraId={enterAgora.id} />
+                </Suspense>
+              </ChatSideModule>
+            )}
           </section>
         </div>
       </div>

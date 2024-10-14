@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import COLOR from '@/constants/agoraColor';
 import isActiveAgora from '@/utils/isActiveAgora';
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
+import Image from 'next/image';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 
 type Props = {
@@ -26,9 +27,12 @@ export default function CategoryAgora({ agora, className }: Props) {
   const setAgoraData = () => {
     setEnterAgora({
       id: agora.id,
+      thumbnail: agora.imageUrl,
       title: agora.agoraTitle,
       status: agora.status,
       role: 'OBSERVER' as const,
+      isCreator: false,
+      agoraColor: agora.agoraColor,
     });
   };
 
@@ -36,8 +40,10 @@ export default function CategoryAgora({ agora, className }: Props) {
   const enterAgora = () => {
     setSelectedAgora({
       id: agora.id,
+      thumbnail: agora.imageUrl,
       title: agora.agoraTitle,
       status: agora.status,
+      agoraColor: agora.agoraColor,
     });
 
     if (agora.status === 'QUEUED' || agora.status === 'RUNNING') {
@@ -63,6 +69,16 @@ export default function CategoryAgora({ agora, className }: Props) {
       <div
         className={`${selectedColor} under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-3xl under-mobile:rounded-2xl relative`}
       >
+        {agora.imageUrl && (
+          <Image
+            src={agora.imageUrl}
+            alt="아고라 이미지"
+            layout="fill"
+            objectFit="cover"
+            unoptimized
+            className="rounded-3xl under-mobile:rounded-2xl"
+          />
+        )}
         {agora.status !== 'CLOSED' && (
           <div
             className={`w-0.5rem h-0.5rem rounded-full ${agora.status === 'RUNNING' ? 'bg-athens-button' : 'bg-red-400'} absolute top-3 right-2 under-mobile:top-2 under-mobile:right-1 z-5`}

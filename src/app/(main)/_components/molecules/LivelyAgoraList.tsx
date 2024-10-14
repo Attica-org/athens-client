@@ -121,7 +121,7 @@ export default function LivelyAgoraList() {
         </div>
       );
     }
-    if (!agoras || agoras.length < 1) {
+    if (!agoras || agoras.length < 1 || agoras[0] === null) {
       return <NoAgoraMessage />;
     }
     return (
@@ -135,11 +135,14 @@ export default function LivelyAgoraList() {
             className="lively-agora-swiper pr-1rem w-full h-full"
           >
             <div className="swiper-wrapper h-full">
-              {agoras.map((agora) => (
-                <div key={agora.id} className="swiper-slide h-full">
-                  <CategoryAgora agora={agora} />
-                </div>
-              ))}
+              {agoras.map(
+                (agora) =>
+                  agora && (
+                    <div key={agora.id} className="swiper-slide h-full">
+                      <CategoryAgora agora={agora} />
+                    </div>
+                  ),
+              )}
             </div>
           </div>
         </div>

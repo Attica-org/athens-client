@@ -1,5 +1,3 @@
-'use client';
-
 import CameraIcon from '@/assets/icons/CameraIcon';
 import ImageIcon from '@/assets/icons/ImageIcon';
 import Image from 'next/image';
@@ -14,15 +12,20 @@ import ImageCropper from '../atoms/ImageCropper';
 
 type Props = {
   image?: string;
+  setPreView: React.Dispatch<string>;
+  preView: string;
+  color?: string;
 };
 
-export default function AgoraImageUpload({ image }: Props) {
+export default function AgoraImageUpload({
+  image = '',
+  setPreView,
+  preView,
+  color,
+}: Props) {
   const [uploadImage, setUploadImage] = useState<
     Array<{ dataUrl: string; file: File }>
   >(image ? [{ dataUrl: image, file: new File([], 'image') }] : []);
-  const [cropedPreview, setCropedPreview] = useState<
-    Array<{ dataUrl: string; file: File }>
-  >([]);
   const [viewPopup, setViewPopup] = useState(false);
   const [viewCropModal, setViewCropModal] = useState(false);
   const [popupPosition, setPopupPosition] = useState('top');
@@ -63,9 +66,15 @@ export default function AgoraImageUpload({ image }: Props) {
 
   const removeImage = () => {
     setUploadImage([]);
-    setCropedPreview([]);
+    setPreView('');
     setViewPopup(false);
   };
+
+  useEffect(() => {
+    if (!preView && uploadImage.length) {
+      removeImage();
+    }
+  }, [preView]);
 
   const calculatePopupPosition = () => {
     if (popupRef.current) {
@@ -133,9 +142,9 @@ export default function AgoraImageUpload({ image }: Props) {
           onClick={viewPopupHandler}
           onKeyDown={handleKeyDownPopupHandler}
         >
-          {cropedPreview[0]?.dataUrl || image ? (
+          {preView || image ? (
             <Image
-              src={cropedPreview[0]?.dataUrl ?? image}
+              src={preView ?? image}
               alt="아고라 프로필"
               layout="fill"
               objectFit="cover"
@@ -144,7 +153,7 @@ export default function AgoraImageUpload({ image }: Props) {
           ) : (
             <div
               aria-hidden
-              className="flex justify-center items-center h-full w-full dark:bg-dark-light-500 bg-gray-200 rounded-3xl under-mobile:rounded-2xl"
+              className={`flex justify-center items-center h-full w-full ${color || 'dark:bg-dark-light-500 bg-gray-200'} rounded-3xl under-mobile:rounded-2xl`}
             >
               <ImageIcon className="w-22 h-22" />
             </div>
@@ -167,7 +176,7 @@ export default function AgoraImageUpload({ image }: Props) {
           role="menu"
           aria-label="이미지 선택 및 제거 선택 팝업메뉴"
           ref={popupRef}
-          className={`z-25 transform transition-opacity duration-300 ease-out ${viewPopup ? 'opacity-100' : 'opacity-0 pointer-events-none'} cursor-pointer rounded-md gap-20 flex flex-col absolute ${popupPosition === 'top' ? 'bottom-10' : 'top-1/2'} left-50 p-10 dark:bg-dark-light-200 bg-dark-light-500 text-white text-xs`}
+          className={`transform transition-opacity duration-300 ease-out ${viewPopup ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none'} cursor-pointer rounded-md gap-20 flex flex-col absolute ${popupPosition === 'top' ? 'bottom-10' : 'top-1/2'} left-50 p-10 dark:bg-dark-light-200 bg-dark-light-500 text-white text-xs`}
         >
           <button
             role="menuitem"
@@ -190,7 +199,7 @@ export default function AgoraImageUpload({ image }: Props) {
       {viewCropModal && (
         <ImageCropper
           uploadImage={uploadImage}
-          setCropedPreview={setCropedPreview}
+          setCropedPreview={setPreView}
           onCancelCrop={onCancelCrop}
         />
       )}
