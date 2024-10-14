@@ -320,6 +320,17 @@ export default function Header() {
     onSuccess: (response) => onSuccessChatExit(response),
   });
 
+  const handleAgoraExit = () => {
+    if (enterAgora.status === 'CLOSED') {
+      router.push(homeSegmentKey);
+    } else if (
+      enterAgora.status === 'RUNNING' ||
+      enterAgora.status === 'QUEUED'
+    ) {
+      mutation.mutate();
+    }
+  };
+
   const handleBack = () => {
     swalButton
       .fire({
@@ -332,7 +343,7 @@ export default function Header() {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          mutation.mutate();
+          handleAgoraExit();
         }
       });
   };
