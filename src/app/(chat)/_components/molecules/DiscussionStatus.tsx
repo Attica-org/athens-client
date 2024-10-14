@@ -9,6 +9,7 @@ import Loading from '@/app/_components/atoms/loading';
 import { AgoraMeta } from '@/app/model/AgoraMeta';
 import { useShallow } from 'zustand/react/shallow';
 import showToast from '@/utils/showToast';
+import { AGORA_STATUS } from '@/constants/Agora';
 import { patchAgoraStart } from '../../_lib/patchAgoraStart';
 import { patchAgoraEnd } from '../../_lib/patchAgoraEnd';
 import DiscussionTimer from '../atoms/DiscussionTimer';
@@ -68,7 +69,7 @@ export default function DiscussionStatus({ meta }: Props) {
     }
   };
 
-  return enterAgora.status !== 'CLOSED' ? (
+  return enterAgora.status !== AGORA_STATUS.CLOSED ? (
     <>
       {enterAgora.role !== 'OBSERVER' && (
         <button

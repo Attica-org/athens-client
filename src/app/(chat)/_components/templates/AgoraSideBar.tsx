@@ -11,6 +11,7 @@ import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgora } from '@/store/agora';
 import Image from 'next/image';
+import { AGORA_STATUS } from '@/constants/Agora';
 import AgoraUserSuspense from '../organisms/AgoraUserSuspense';
 import AgoraUserSideSkeleton from '../organisms/AgoraUserSideSkeleton';
 import ChatSideModule from '../molecules/ChatSideModule';
@@ -126,7 +127,7 @@ export default function AgoraSideBar() {
                 </div>
               )}
             </ChatSideModule>
-            {enterAgora.status !== 'CLOSED' && (
+            {enterAgora.status !== AGORA_STATUS.CLOSED && (
               <ChatSideModule title="참여자 목록">
                 <Suspense fallback={<AgoraUserSideSkeleton />}>
                   <AgoraUserSuspense agoraId={enterAgora.id} />

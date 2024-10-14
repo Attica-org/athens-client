@@ -16,11 +16,10 @@ import {
 } from '@/constants/createAgora';
 import showToast from '@/utils/showToast';
 import COLOR from '@/constants/agoraColor';
-import { AgoraConfig, Status } from '@/app/model/Agora';
+import { AgoraConfig } from '@/app/model/Agora';
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
+import { AGORA_STATUS } from '@/constants/Agora';
 import { postCreateAgora } from '../../_lib/postCreateAgora';
-
-const QUEUED: Status = 'QUEUED';
 
 function CreateAgoraBtn() {
   const [createAgora, setCreateAgora] = useState<AgoraConfig>({
@@ -61,7 +60,7 @@ function CreateAgoraBtn() {
           id: response.id,
           thumbnail: createAgora.thumbnail,
           title: createAgora.title,
-          status: QUEUED,
+          status: AGORA_STATUS.QUEUED,
           agoraColor: createAgora.color.value,
         });
 

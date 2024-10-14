@@ -13,6 +13,7 @@ import * as StompJs from '@stomp/stompjs';
 import { getChatMessagesQueryKey } from '@/constants/queryKey';
 import getKey from '@/utils/getKey';
 import tokenManager from '@/utils/tokenManager';
+import { AGORA_STATUS } from '@/constants/Agora';
 import MyMessage from '../atoms/MyMessage';
 import YourMessage from '../atoms/YourMessage';
 import { getChatMessages } from '../../_lib/getChatMessages';
@@ -140,7 +141,7 @@ export default function Message() {
     return (
       navigator.onLine &&
       URL.SOCKET_URL !== '' &&
-      enterAgora.status !== 'CLOSED'
+      enterAgora.status !== AGORA_STATUS.CLOSED
     );
   };
 

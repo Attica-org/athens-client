@@ -9,6 +9,7 @@ import { useChatInfo } from '@/store/chatInfo';
 import { useShallow } from 'zustand/react/shallow';
 import { getAgoraUserListQueryKey } from '@/constants/queryKey';
 import { useAgora } from '@/store/agora';
+import { AGORA_STATUS } from '@/constants/Agora';
 import AgoraUserList from '../molecules/AgoraUserList';
 import { getAgoraUsers } from '../../_lib/getAgoraUsers';
 
@@ -43,7 +44,7 @@ export default function AgoraUserSuspense({ agoraId }: Props) {
     queryFn: getAgoraUsers,
     staleTime: 1000 * 30,
     gcTime: 60 * 1000,
-    enabled: enterAgora.status !== 'CLOSED' && !end,
+    enabled: enterAgora.status !== AGORA_STATUS.CLOSED && !end,
   });
 
   return (
