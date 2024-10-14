@@ -281,7 +281,7 @@ export default function Message() {
   return (
     <div key={agoraId} ref={listRef} className="overflow-y-auto flex-1">
       {!adjustScroll && pageRendered && <div ref={ref} className="h-1" />}
-      {messages.length &&
+      {messages.length > 0 &&
         messages.map((message, idx) => (
           <div key={message.chatId || Math.random()}>
             <MessageItem
