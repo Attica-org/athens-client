@@ -63,7 +63,6 @@ function MessageItem({
       shouldShowTime={shouldShowTime}
       message={message}
       client={client}
-      chatId={message.chatId}
     />
   ) : (
     <YourMessage
@@ -71,7 +70,6 @@ function MessageItem({
       shouldShowTime={shouldShowTime}
       message={message}
       client={client}
-      chatId={message.chatId}
     />
   );
 }

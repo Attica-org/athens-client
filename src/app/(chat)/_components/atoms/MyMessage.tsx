@@ -14,17 +14,10 @@ type Props = {
   message: Message;
   isSameUser: boolean;
   shouldShowTime: boolean;
-  chatId: number;
   client: StompJs.Client | undefined;
 };
 
-function MyMessage({
-  message,
-  isSameUser,
-  shouldShowTime,
-  chatId,
-  client,
-}: Props) {
+function MyMessage({ message, isSameUser, shouldShowTime, client }: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const [showEmojiModal, setShowEmojiModal] = useState(false);
 
@@ -93,7 +86,7 @@ function MyMessage({
               >
                 <EmojiModal
                   className="w-20 h-20"
-                  chatId={chatId}
+                  chatId={message.chatId}
                   client={client}
                 />
               </div>
