@@ -10,7 +10,7 @@ import Emojis from './Emojis';
 type Props = {
   className: string;
   chatId: number;
-  client: StompJs.Client | undefined;
+  client: React.RefObject<StompJs.Client> | null;
 };
 
 export default function EmojiModal({ className, chatId, client }: Props) {
@@ -19,8 +19,8 @@ export default function EmojiModal({ className, chatId, client }: Props) {
   );
 
   const handleEmojiClick = (reaction: string) => {
-    if (client && client?.connected) {
-      client?.publish({
+    if (client?.current?.connected) {
+      client?.current?.publish({
         destination: `/app/agoras/${enterAgora.id}/chats/${chatId}/reactions`,
         body: JSON.stringify({
           type: 'REACTION',

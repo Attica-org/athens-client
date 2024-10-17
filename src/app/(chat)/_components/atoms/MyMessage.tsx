@@ -14,7 +14,7 @@ type Props = {
   message: Message;
   isSameUser: boolean;
   shouldShowTime: boolean;
-  client: StompJs.Client | undefined;
+  client: React.RefObject<StompJs.Client> | null;
 };
 
 function MyMessage({ message, isSameUser, shouldShowTime, client }: Props) {

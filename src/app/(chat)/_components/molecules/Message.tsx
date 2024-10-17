@@ -32,7 +32,7 @@ type MessageItemProps = {
   getTimeString: (time: string) => string;
   nextMessage: IMessage | null;
   prevMessage: IMessage | null;
-  client: StompJs.Client | undefined;
+  client: React.RefObject<StompJs.Client> | null;
 };
 
 function MessageItem({
@@ -83,7 +83,7 @@ export default function Message() {
   const [newMessageView, setNewMessageView] = useState(false);
   const [messages, setMessages] = useState<IMessage[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
-  const client = useRef<StompJs.Client>();
+  const client = useRef<StompJs.Client | null>(null);
   const [URL, setURL] = useState({
     SOCKET_URL: '',
   });
@@ -196,7 +196,7 @@ export default function Message() {
         disconnect();
       }
     };
-  }, [agoraId, enterAgora.status, URL]);
+  }, [agoraId, enterAgora.status, URL, isPossibleConnect]);
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -288,7 +288,7 @@ export default function Message() {
               getTimeString={getTimeString}
               nextMessage={messages[idx + 1] || null}
               prevMessage={messages[idx - 1] || null}
-              client={client.current}
+              client={client}
             />
           </div>
         ))}
