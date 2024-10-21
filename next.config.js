@@ -8,9 +8,6 @@ const nextConfig = {
     });
     return config;
   },
-  experimental: {
-    middleware: true,
-  },
   images: {
     remotePatterns: [
       {
