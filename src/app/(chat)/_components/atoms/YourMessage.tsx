@@ -89,6 +89,7 @@ function YourMessage({ message, isSameUser, shouldShowTime, client }: Props) {
                   className="w-20 h-20"
                   chatId={message.chatId}
                   client={client}
+                  setShowEmojiModal={setShowEmojiModal}
                 />
               </div>
             )}
@@ -98,7 +99,7 @@ function YourMessage({ message, isSameUser, shouldShowTime, client }: Props) {
               ? canSendEmoji && (
                   <div className="flex justify-center items-center">
                     <TextHoverMenu
-                      className="ml-10 p-4 bg-[#A8A8A8] opacity-75 rounded-md"
+                      className="ml-10 p-4 bg-[#3f3f3f] rounded-md"
                       toggleEmojiModal={toggleEmojiModal}
                     />
                   </div>
@@ -116,8 +117,8 @@ function YourMessage({ message, isSameUser, shouldShowTime, client }: Props) {
           </div>
         </div>
 
-        <div>
-          <UserReaction className="w-16 h-16" />
+        <div className="mt-10">
+          <UserReaction className="w-16 h-16" chatId={message.chatId} />
         </div>
       </div>
     </article>

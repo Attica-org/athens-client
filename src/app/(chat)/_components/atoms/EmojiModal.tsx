@@ -11,12 +11,21 @@ type Props = {
   className: string;
   chatId: number;
   client: React.RefObject<StompJs.Client> | null;
+  setShowEmojiModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function EmojiModal({ className, chatId, client }: Props) {
+export default function EmojiModal({
+  className,
+  chatId,
+  client,
+  setShowEmojiModal,
+}: Props) {
   const { enterAgora } = useAgora(
     useShallow((state) => ({ enterAgora: state.enterAgora })),
   );
+  const toggleEmojiModal = () => {
+    setShowEmojiModal((prev) => !prev);
+  };
 
   const handleEmojiClick = (reaction: string) => {
     if (client?.current?.connected) {
@@ -27,6 +36,7 @@ export default function EmojiModal({ className, chatId, client }: Props) {
           reactionType: reaction,
         }),
       });
+      toggleEmojiModal();
     }
   };
 
