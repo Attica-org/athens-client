@@ -69,6 +69,7 @@ const config: Config = {
         'dark-line': '#D0CDCD',
         'dark-line-light': '#E9E9E9',
         'dark-line-semilight': '#ADADAD',
+        'dark-light-600': '#3f3f3f',
         'dark-light-500': '#636366',
         'dark-light-400': '#A6A6A6',
         'dark-light-300': '#3A3A3B',
@@ -79,6 +80,7 @@ const config: Config = {
 
         'backbutton-confirm': '#10AE5D',
         'backbutton-cancel': '#F2F4F3',
+
       },
     },
     screens: {

@@ -5,7 +5,7 @@ import * as StompJs from '@stomp/stompjs';
 import useClickOutside from '@/hooks/useClickOutside';
 import useTouchHandler from '@/hooks/useTouchHandler';
 import UserImage from '../../../_components/atoms/UserImage';
-import TextHoverMenu from './TextHoverMenu';
+import ReactionMenuButton from './ReactionMenuButton';
 import useIsEmojiSendable from '../../../../hooks/useIsEmojiSendable';
 import EmojiModal from './EmojiModal';
 import UserReaction from './UserReaction';
@@ -98,8 +98,8 @@ function YourMessage({ message, isSameUser, shouldShowTime, client }: Props) {
             {isHovered
               ? canSendEmoji && (
                   <div className="flex justify-center items-center">
-                    <TextHoverMenu
-                      className="ml-10 p-4 bg-[#3f3f3f] rounded-md"
+                    <ReactionMenuButton
+                      className="ml-10 p-4 bg-dark-light-600 rounded-md"
                       toggleEmojiModal={toggleEmojiModal}
                     />
                   </div>

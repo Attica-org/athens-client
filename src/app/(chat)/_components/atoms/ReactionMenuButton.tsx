@@ -5,12 +5,16 @@ type Props = {
   className?: string;
   toggleEmojiModal: () => void;
 };
-export default function TextHoverMenu({ className, toggleEmojiModal }: Props) {
+
+export default function ReactionMenuButton({
+  className,
+  toggleEmojiModal,
+}: Props) {
   return (
     <div className={className}>
       <HeartIcon
-        className="w-20 h-20 cursor-pointer"
-        fill="#424542"
+        className="w-16 h-16 cursor-pointer"
+        fill="#FFFFFF"
         onClick={toggleEmojiModal}
       />
     </div>
