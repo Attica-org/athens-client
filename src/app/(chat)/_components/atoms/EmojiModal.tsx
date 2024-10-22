@@ -10,23 +10,33 @@ import Emojis from './Emojis';
 type Props = {
   className: string;
   chatId: number;
-  client: StompJs.Client | undefined;
+  client: React.RefObject<StompJs.Client> | null;
+  setShowEmojiModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function EmojiModal({ className, chatId, client }: Props) {
+export default function EmojiModal({
+  className,
+  chatId,
+  client,
+  setShowEmojiModal,
+}: Props) {
   const { enterAgora } = useAgora(
     useShallow((state) => ({ enterAgora: state.enterAgora })),
   );
+  const toggleEmojiModal = () => {
+    setShowEmojiModal((prev) => !prev);
+  };
 
   const handleEmojiClick = (reaction: string) => {
-    if (client && client?.connected) {
-      client?.publish({
+    if (client?.current?.connected) {
+      client?.current?.publish({
         destination: `/app/agoras/${enterAgora.id}/chats/${chatId}/reactions`,
         body: JSON.stringify({
           type: 'REACTION',
           reactionType: reaction,
         }),
       });
+      toggleEmojiModal();
     }
   };
 

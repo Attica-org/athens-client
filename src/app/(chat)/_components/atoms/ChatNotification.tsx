@@ -3,6 +3,7 @@
 import { useAgora } from '@/store/agora';
 import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import { AGORA_STATUS } from '@/constants/Agora';
 
 export default function ChatNotification() {
   const [showMessage, setShowMessage] = useState(false);
@@ -13,7 +14,7 @@ export default function ChatNotification() {
   );
 
   useEffect(() => {
-    if (enterAgora.status === 'CLOSED') return () => {};
+    if (enterAgora.status === AGORA_STATUS.CLOSED) return () => {};
     const timer = setTimeout(() => {
       setShowMessage(true);
     }, 10000);
@@ -23,7 +24,7 @@ export default function ChatNotification() {
 
   return (
     !showMessage &&
-    enterAgora.status !== 'CLOSED' && (
+    enterAgora.status !== AGORA_STATUS.CLOSED && (
       <div className="flex p-0.5rem pl-1rem pr-1rem">
         <div
           role="alert"

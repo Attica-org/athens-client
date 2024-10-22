@@ -10,6 +10,7 @@ import COLOR from '@/constants/agoraColor';
 import isActiveAgora from '@/utils/isActiveAgora';
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import Image from 'next/image';
+import { AGORA_STATUS } from '@/constants/Agora';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 
 type Props = {
@@ -43,9 +44,12 @@ export default function KeywordAgora({ agora }: Props) {
       agoraColor: agora.agoraColor,
     });
 
-    if (agora.status === 'QUEUED' || agora.status === 'RUNNING') {
+    if (
+      agora.status === AGORA_STATUS.QUEUED ||
+      agora.status === AGORA_STATUS.RUNNING
+    ) {
       router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
-    } else if (agora.status === 'CLOSED') {
+    } else if (agora.status === AGORA_STATUS.CLOSED) {
       // 만약 status가 closed라면, /agoras/${id}로 이동
       setAgoraData();
       router.push(`/agoras/${agora.id}`);
@@ -133,7 +137,7 @@ export default function KeywordAgora({ agora }: Props) {
               className={`w-67 h-67 ${COLOR.some((color) => color.value === agora.agoraColor) ? agora.agoraColor : COLOR[0].value} rounded-3xl border-1 dark:border-athens-gray`}
             />
           )}
-          {agora.status !== 'CLOSED' && (
+          {agora.status !== AGORA_STATUS.CLOSED && (
             <span
               className={`absolute top-2 left-50 inline-block w-13 h-13 ${agora.status === 'queued' ? 'bg-athens-button' : 'bg-red-400'} rounded-full ml-3`}
             />
