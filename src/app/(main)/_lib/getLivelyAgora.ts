@@ -1,9 +1,9 @@
-import fetchWrapper from '@/lib/fetchWrapper';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
 import showToast from '@/utils/showToast';
 
 // eslint-disable-next-line import/prefer-default-export
 export const getLivelyAgora = async () => {
-  const res = await fetchWrapper.call('/api/v1/open/agoras/active', {
+  const res = await callFetchWrapper('/api/v1/open/agoras/active', {
     next: {
       tags: ['agoras', 'lively'],
     },

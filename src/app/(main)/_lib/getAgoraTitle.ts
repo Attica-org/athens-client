@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { homeSegmentKey } from '@/constants/segmentKey';
-import fetchWrapper from '@/lib/fetchWrapper';
-import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
-import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
 import { redirect } from 'next/navigation';
 import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
 // eslint-disable-next-line import/prefer-default-export
 export const getAgoraTitle: QueryFunction<
   { title: string; status: string },
@@ -15,12 +13,7 @@ export const getAgoraTitle: QueryFunction<
 > = async ({ queryKey }) => {
   const [_, agoraId] = queryKey;
 
-  // 토큰을 가지고 있는지 확인
-  if (tokenManager.getToken() === undefined) {
-    await getToken();
-  }
-
-  const res = await fetchWrapper.call(`/api/v1/open/agoras/${agoraId}/title`, {
+  const res = await callFetchWrapper(`/api/v1/open/agoras/${agoraId}/title`, {
     next: {
       tags: getSelectedAgoraTags(agoraId),
     },

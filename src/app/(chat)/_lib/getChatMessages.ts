@@ -1,10 +1,10 @@
 import { Message } from '@/app/model/Message';
-import fetchWrapper from '@/lib/fetchWrapper';
 import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
 import { getChatMessagesQueryKey as getChatMessagesTags } from '@/constants/queryKey';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
 
 type Meta = {
   key: number | null;
@@ -37,7 +37,7 @@ export const getChatMessages: QueryFunction<
     await getToken();
   }
 
-  const res = await fetchWrapper.call(
+  const res = await callFetchWrapper(
     `/api/v1/open/agoras/${agoraId}/chats?${urlSearchParams.toString()}`,
     {
       next: {

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AgoraUserProfileType } from '@/app/model/Agora';
-import fetchWrapper from '@/lib/fetchWrapper';
 import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
 import { getAgoraUserListQueryKey as getAgoraUserListTags } from '@/constants/queryKey';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
 
 // eslint-disable-next-line import/prefer-default-export
 export const getAgoraUsers: QueryFunction<
@@ -20,7 +20,7 @@ export const getAgoraUsers: QueryFunction<
     await getToken();
   }
 
-  const res = await fetchWrapper.call(`/api/v1/open/agoras/${agoraId}/users`, {
+  const res = await callFetchWrapper(`/api/v1/open/agoras/${agoraId}/users`, {
     next: {
       tags: getAgoraUserListTags(Number(agoraId)),
     },

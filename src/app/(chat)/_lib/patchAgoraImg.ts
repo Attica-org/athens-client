@@ -1,8 +1,8 @@
-import fetchWrapper from '@/lib/fetchWrapper';
 import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { base64ToFile } from '@/utils/base64ToFile';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
 
 type Props = {
   agoraId: number;
@@ -20,7 +20,7 @@ export const patchAgoraImg = async ({ agoraId, fileUrl }: Props) => {
   const file = fileUrl ? base64ToFile(fileUrl, `아고라${agoraId}.jpg`) : '';
   formData.append('file', file);
 
-  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}`, {
+  const res = await callFetchWrapper(`/api/v1/auth/agoras/${agoraId}`, {
     method: 'PATCH',
     next: {
       tags: [],
