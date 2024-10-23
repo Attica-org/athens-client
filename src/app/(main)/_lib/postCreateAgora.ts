@@ -1,9 +1,9 @@
-import fetchWrapper from '@/lib/fetchWrapper';
 import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { AgoraConfig } from '@/app/model/Agora';
 import { base64ToFile } from '@/utils/base64ToFile';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
 
 const TITLE_NULL = { title: '공백일 수 없습니다' };
 const CATEGORY_ERROR = { capacity: '1 이상이어야 합니다' };
@@ -42,7 +42,7 @@ export const postCreateAgora = async (info: AgoraConfig) => {
   formData.append('request', blob);
   formData.append('file', file);
 
-  const res = await fetchWrapper.call('/api/v1/auth/agoras', {
+  const res = await callFetchWrapper('/api/v1/auth/agoras', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${tokenManager.getToken()}`,

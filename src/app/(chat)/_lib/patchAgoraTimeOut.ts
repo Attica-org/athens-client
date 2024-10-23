@@ -1,4 +1,4 @@
-import fetchWrapper from '@/lib/fetchWrapper';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
 import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
@@ -10,7 +10,7 @@ export const patchAgoraTimeOut = async (agoraId: number) => {
     await getToken();
   }
 
-  const res = await fetchWrapper.call(
+  const res = await callFetchWrapper(
     `/api/v1/open/agoras/${agoraId}/time-out`,
     {
       method: 'PATCH',

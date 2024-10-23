@@ -1,5 +1,5 @@
 import { AgoraData } from '@/app/model/Agora';
-import fetchWrapper from '@/lib/fetchWrapper';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
 import showToast from '@/utils/showToast';
 import { QueryFunction } from '@tanstack/react-query';
 
@@ -20,7 +20,7 @@ export const getAgoraCategorySearch: QueryFunction<
 
   const urlSearchParams = new URLSearchParams(searchParams);
 
-  const res = await fetchWrapper.call(
+  const res = await callFetchWrapper(
     `/api/v1/open/agoras?${urlSearchParams.toString()}&next=${pageParam.nextCursor ?? ''}`,
     {
       next: {
