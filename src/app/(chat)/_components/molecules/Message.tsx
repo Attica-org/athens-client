@@ -2,7 +2,12 @@
 
 import { Message as IMessage } from '@/app/model/Message';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { InfiniteData, useSuspenseInfiniteQuery } from '@tanstack/react-query';
+import {
+  InfiniteData,
+  QueryClient,
+  useQueryClient,
+  useSuspenseInfiniteQuery,
+} from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useMessageStore } from '@/store/message';
 import { useAgora } from '@/store/agora';
@@ -10,7 +15,10 @@ import { ParticipationPosition } from '@/app/model/Agora';
 import { useEnter } from '@/store/enter';
 import { useShallow } from 'zustand/react/shallow';
 import * as StompJs from '@stomp/stompjs';
-import { getChatMessagesQueryKey } from '@/constants/queryKey';
+import {
+  getChatMessagesQueryKey,
+  getUserReactionQueryKey,
+} from '@/constants/queryKey';
 import getKey from '@/utils/getKey';
 import tokenManager from '@/utils/tokenManager';
 import { AGORA_STATUS } from '@/constants/Agora';
@@ -32,7 +40,9 @@ type MessageItemProps = {
   getTimeString: (time: string) => string;
   nextMessage: IMessage | null;
   prevMessage: IMessage | null;
-  client: StompJs.Client | undefined;
+  client: React.RefObject<StompJs.Client> | null;
+  queryClient: QueryClient;
+  agoraId: number;
 };
 
 function MessageItem({
@@ -42,6 +52,8 @@ function MessageItem({
   nextMessage,
   prevMessage,
   client,
+  queryClient,
+  agoraId,
 }: MessageItemProps) {
   const isMyMessage = isMyType(message.user.type);
   const isSameMessage = nextMessage && nextMessage.chatId === message.chatId;
@@ -57,13 +69,17 @@ function MessageItem({
   const isSameTime = nextMessage && currentMessageTime === nextMessageTime;
   const shouldShowTime = !isNextSameUser || !isSameTime;
 
+  queryClient.setQueryData(
+    getUserReactionQueryKey(agoraId, message.chatId),
+    message.reactionCount,
+  );
+
   return isMyMessage ? (
     <MyMessage
       isSameUser={isPrevSameUser || false}
       shouldShowTime={shouldShowTime}
       message={message}
       client={client}
-      chatId={message.chatId}
     />
   ) : (
     <YourMessage
@@ -71,7 +87,6 @@ function MessageItem({
       shouldShowTime={shouldShowTime}
       message={message}
       client={client}
-      chatId={message.chatId}
     />
   );
 }
@@ -85,13 +100,14 @@ export default function Message() {
   const [newMessageView, setNewMessageView] = useState(false);
   const [messages, setMessages] = useState<IMessage[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
-  const client = useRef<StompJs.Client>();
+  const client = useRef<StompJs.Client | null>(null);
   const [URL, setURL] = useState({
     SOCKET_URL: '',
   });
   const { shouldGoDown, setGoDown } = useMessageStore();
   const myRole = useAgora((state) => state.enterAgora.role);
   const agoraId = useAgora((state) => state.enterAgora.id);
+  const queryClient = useQueryClient();
   const { nickname: userNickname, reset } = useEnter(
     useShallow((state) => ({
       nickname: state.nickname,
@@ -132,8 +148,10 @@ export default function Message() {
 
   const handleWebSocketReaction = (response: any) => {
     if (response.type === 'REACTION') {
-      // console.log('response는', response);
-      // 구독 처리하는 코드 작성 예정
+      queryClient.setQueryData(
+        getUserReactionQueryKey(agoraId, response.data.chatId),
+        response.data.reactionCount,
+      );
     }
   };
 
@@ -155,13 +173,15 @@ export default function Message() {
     };
 
     const subscribe = () => {
-      client.current?.subscribe(
-        `/topic/agoras/${agoraId}/reactions`,
-        async (received_reaction: StompJs.IFrame) => {
-          const userReactionData = JSON.parse(received_reaction.body);
-          handleWebSocketReaction(userReactionData);
-        },
-      );
+      if (client.current?.connected) {
+        client.current?.subscribe(
+          `/topic/agoras/${agoraId}/reactions`,
+          async (received_reaction: StompJs.IFrame) => {
+            const userReactionData = JSON.parse(received_reaction.body);
+            handleWebSocketReaction(userReactionData);
+          },
+        );
+      }
     };
 
     const connect = () => {
@@ -198,7 +218,7 @@ export default function Message() {
         disconnect();
       }
     };
-  }, [agoraId, enterAgora.status, URL]);
+  }, [agoraId, enterAgora.status, URL, isPossibleConnect]);
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -290,7 +310,9 @@ export default function Message() {
               getTimeString={getTimeString}
               nextMessage={messages[idx + 1] || null}
               prevMessage={messages[idx - 1] || null}
-              client={client.current}
+              client={client}
+              queryClient={queryClient}
+              agoraId={agoraId}
             />
           </div>
         ))}

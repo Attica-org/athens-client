@@ -5,6 +5,7 @@
 //   content: string;
 //   createdAt: string;
 // }
+import { Reaction } from './Reaction';
 
 export interface Message {
   chatId: number;
@@ -16,4 +17,5 @@ export interface Message {
   };
   content: string;
   createdAt: string;
+  reactionCount: Reaction;
 }

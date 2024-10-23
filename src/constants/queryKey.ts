@@ -41,6 +41,11 @@ const getSelectedAgoraQueryKey = (agoraId: string): [string, string] => [
   agoraId,
 ];
 
+const getUserReactionQueryKey = (
+  agoraId: number,
+  chatId: number,
+): [string, number, number] => ['reaction', agoraId, chatId];
+
 export {
   getVoteResultQueryKey,
   getChatMessagesQueryKey,
@@ -48,4 +53,5 @@ export {
   getCategoryAgoraListQueryKey,
   getKeywordAgoraListQueryKey,
   getSelectedAgoraQueryKey,
+  getUserReactionQueryKey,
 };
