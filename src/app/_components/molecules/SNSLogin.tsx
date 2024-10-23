@@ -2,10 +2,14 @@ import React from 'react';
 import Link from 'next/link';
 
 export default function SNSLogin() {
+  const getRedirectUri = (provider: string) => {
+    return `${process.env.NEXT_BASE_URL}/oauth2/authorization/${provider}?redirect_uri=${process.env.NEXT_PUBLIC_CLIENT_URL}/login`;
+  };
+
   return (
     <>
       <Link
-        href={`${process.env.NEXT_BASE_URL}/oauth2/authorization/kakao?redirect_uri=${process.env.NEXT_PUBLIC_CLIENT_URL}/login`}
+        href={getRedirectUri('kakao')}
         aria-label="카카오로 로그인하기"
         className="text-sm relative flex justify-center items-center w-full bg-[#FEE500] border-1 border-[#FEE500] rounded-md h-42 p-12"
       >
@@ -27,7 +31,7 @@ export default function SNSLogin() {
         </div>
       </Link>
       <Link
-        href={`${process.env.NEXT_BASE_URL}/oauth2/authorization/google?redirect_uri=${process.env.NEXT_PUBLIC_CLIENT_URL}/login`}
+        href={getRedirectUri('google')}
         aria-label="구글로 로그인하기"
         className="text-sm relative flex justify-center items-center w-full bg-white border-1 border-dark-line-semilight rounded-md h-42 p-12"
       >

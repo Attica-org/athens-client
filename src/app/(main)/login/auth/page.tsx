@@ -25,7 +25,7 @@ export default function LoginConfirm({ searchParams }: Props) {
     if (tempToken.success) {
       try {
         await signIn('credentials', {
-          accessToken: tempToken,
+          accessToken: tempToken.accessToken,
         });
       } catch (error) {
         showToast('로그인에 실패했습니다. 다시 시도해주세요.', 'error');

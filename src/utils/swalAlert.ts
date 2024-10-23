@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2';
 
-const swalConfirmCancelAlert = Swal.mixin({
+export const swalConfirmCancelAlert = Swal.mixin({
   customClass: {
     icon: 'text-xxxs',
     popup:
@@ -14,7 +14,7 @@ const swalConfirmCancelAlert = Swal.mixin({
   buttonsStyling: false,
 });
 
-const swalConfirmAlert = Swal.mixin({
+export const swalConfirmAlert = Swal.mixin({
   customClass: {
     icon: 'text-xxxs',
     popup:
@@ -26,5 +26,3 @@ const swalConfirmAlert = Swal.mixin({
   },
   buttonsStyling: false,
 });
-
-export { swalConfirmCancelAlert, swalConfirmAlert };

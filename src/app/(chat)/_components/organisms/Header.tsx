@@ -120,7 +120,7 @@ export default function Header() {
     if (enterAgora.status === AGORA_STATUS.CLOSED) {
       router.push(homeSegmentKey);
     } else if (
-      enterAgora.status === AGORA_STATUS.CLOSED ||
+      enterAgora.status === AGORA_STATUS.RUNNING ||
       enterAgora.status === AGORA_STATUS.QUEUED
     ) {
       mutation.mutate();

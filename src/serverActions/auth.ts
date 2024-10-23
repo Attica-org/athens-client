@@ -18,7 +18,7 @@ export const signInWithCredentials = async (tempToken: string) => {
 
     const tokenResult = await tokenResponse.json();
 
-    if (!tokenResult.success) {
+    if (!tokenResult.accessToken) {
       return tokenResult;
     }
 

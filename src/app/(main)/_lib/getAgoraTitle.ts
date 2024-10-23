@@ -8,7 +8,7 @@ import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/qu
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 // eslint-disable-next-line import/prefer-default-export
 export const getAgoraTitle: QueryFunction<
-  { title: string; status: string },
+  { title: string; status: string; imageUrl: string; agoraColor: string },
   [_1: string, _2: string]
 > = async ({ queryKey }) => {
   const [_, agoraId] = queryKey;
