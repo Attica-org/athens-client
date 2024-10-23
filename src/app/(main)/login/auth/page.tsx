@@ -22,7 +22,7 @@ export default function LoginConfirm({ searchParams }: Props) {
   const getUserAccessToken = async (authuser: string) => {
     const tempToken = await signInWithCredentials(authuser);
 
-    if (tempToken) {
+    if (tempToken.success) {
       try {
         await signIn('credentials', {
           accessToken: tempToken,
@@ -31,8 +31,8 @@ export default function LoginConfirm({ searchParams }: Props) {
         showToast('로그인에 실패했습니다. 다시 시도해주세요.', 'error');
         router.replace('/');
       }
-    } else {
-      showToast('잘못된 접근입니다.', 'error');
+    } else if (!tempToken.success) {
+      showToast('로그인에 실패했습니다. 다시 시도해주세요.', 'error');
       router.replace('/');
     }
   };
