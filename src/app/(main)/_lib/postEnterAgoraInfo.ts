@@ -1,9 +1,9 @@
-import fetchWrapper from '@/lib/fetchWrapper';
 import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { ParticipationPosition } from '@/app/model/Agora';
 import { AGORA_STATUS } from '@/constants/Agora';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
 
 type Props = {
   info: {
@@ -31,7 +31,7 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
     await getToken();
   }
 
-  const res = await fetchWrapper.call(
+  const res = await callFetchWrapper(
     `/api/v1/auth/agoras/${agoraId}/participants`,
     {
       method: 'post',

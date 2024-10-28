@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-import fetchWrapper from '@/lib/fetchWrapper';
 import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
 import { getVoteResultQueryKey as getVoteResultTags } from '@/constants/queryKey';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
 
 type VoteResult = {
   id: number;
@@ -25,20 +25,17 @@ export const getVoteResult: QueryFunction<
     await getToken();
   }
 
-  const res = await fetchWrapper.call(
-    `/api/v1/auth/agoras/${agoraId}/results`,
-    {
-      next: {
-        tags: getVoteResultTags(Number(agoraId)),
-      },
-      credentials: 'include',
-      cache: 'no-cache',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${tokenManager.getToken()}`,
-      },
+  const res = await callFetchWrapper(`/api/v1/auth/agoras/${agoraId}/results`, {
+    next: {
+      tags: getVoteResultTags(Number(agoraId)),
     },
-  );
+    credentials: 'include',
+    cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${tokenManager.getToken()}`,
+    },
+  });
 
   if (res.success === false) {
     if (res.error.code === 1301) {

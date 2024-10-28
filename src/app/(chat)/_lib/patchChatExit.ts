@@ -1,4 +1,4 @@
-import fetchWrapper from '@/lib/fetchWrapper';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
 import getToken from '@/lib/getToken';
 import showToast from '@/utils/showToast';
 import tokenManager from '@/utils/tokenManager';
@@ -15,7 +15,7 @@ const patchChatExit = async ({ agoraId }: Props) => {
     await getToken();
   }
 
-  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/exit`, {
+  const res = await callFetchWrapper(`/api/v1/auth/agoras/${agoraId}/exit`, {
     method: 'PATCH',
     next: {
       tags: [],

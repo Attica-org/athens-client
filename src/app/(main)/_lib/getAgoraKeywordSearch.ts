@@ -1,5 +1,5 @@
 import { Agora } from '@/app/model/Agora';
-import fetchWrapper from '@/lib/fetchWrapper';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
 import showToast from '@/utils/showToast';
 import { QueryFunction } from '@tanstack/react-query';
 
@@ -18,7 +18,7 @@ export const getAgoraKeywordSearch: QueryFunction<
   const [, , , { status = 'active', q = '' }] = queryKey;
   const searchParams = { status, agora_name: q };
 
-  const res = await fetchWrapper.call(
+  const res = await callFetchWrapper(
     `/api/v1/open/agoras?agora-name=${q}&status=${status}&next=${pageParam.nextCursor ?? ''}`,
     {
       next: {
