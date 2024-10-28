@@ -29,10 +29,10 @@ export default function EnterAgoraContent() {
     if (isSuccess && data && !selectedAgora.id) {
       setSelectedAgora({
         id: Number(agoraId),
-        thumbnail: '',
+        thumbnail: data.imageUrl,
         title: data.title,
         status: data.status,
-        agoraColor: 'bg-agora-point-color1',
+        agoraColor: data.agoraColor,
       });
     }
   }, [agoraId, data, setSelectedAgora, isSuccess, selectedAgora.id]);

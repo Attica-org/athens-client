@@ -17,11 +17,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import getKey from '@/utils/getKey';
 import swManager from '@/utils/swManager';
 import { saveTabId, deleteTabId } from '@/utils/indexedDB';
-import Swal from 'sweetalert2';
 // import fetchWrapper from '@/lib/fetchWrapper';
 import { getAgoraUserListQueryKey } from '@/constants/queryKey';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import { AGORA_STATUS } from '@/constants/Agora';
+import { swalConfirmCancelAlert } from '@/utils/swalAlert';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
@@ -64,7 +64,10 @@ export default function Header() {
     pros: 0,
     cons: 0,
   });
-  const [isError, setIsError] = useState(false);
+  const [socketError, setSocketError] = useState({
+    isError: false,
+    count: 0,
+  });
   const router = useRouter();
   const [agoraId, setAgoraId] = useState(enterAgora.id);
   const client = useRef<StompJs.Client>();
@@ -95,6 +98,52 @@ export default function Header() {
     await queryClient.invalidateQueries({
       queryKey: getAgoraUserListQueryKey(agoraId),
     });
+  };
+
+  const callChatExitAPI = async () => {
+    return patchChatExit({ agoraId });
+  };
+
+  const onSuccessChatExit = (response: any) => {
+    if (response) {
+      // 나가기 성공 로직 구현
+      router.push(homeSegmentKey);
+    }
+  };
+
+  const mutation = useMutation({
+    mutationFn: callChatExitAPI,
+    onSuccess: (response) => onSuccessChatExit(response),
+  });
+
+  const handleAgoraExit = () => {
+    if (enterAgora.status === AGORA_STATUS.CLOSED) {
+      router.push(homeSegmentKey);
+    } else if (
+      enterAgora.status === AGORA_STATUS.RUNNING ||
+      enterAgora.status === AGORA_STATUS.QUEUED
+    ) {
+      mutation.mutate();
+    }
+  };
+
+  //   unloadDisconnectSocket({client: client.current, mutation: mutation.mutate});
+
+  const handleBack = () => {
+    swalConfirmCancelAlert
+      .fire({
+        icon: 'warning',
+        title: '아고라를 나가시겠습니까?',
+        text: '설정한 프로필은 초기화됩니다.',
+        showCancelButton: true,
+        confirmButtonText: '확인',
+        cancelButtonText: '취소',
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          handleAgoraExit();
+        }
+      });
   };
 
   const isPossibleConnect = () => {
@@ -183,7 +232,10 @@ export default function Header() {
         showToast('채팅 타입이 비어있습니다.', 'error');
       } else;
     }
-    setIsError(true);
+    setSocketError({
+      ...socketError,
+      isError: true,
+    });
   };
   // 최초 렌더링 시 실행
   useEffect(() => {
@@ -202,6 +254,13 @@ export default function Header() {
           handleWebSocketResponse(data);
         },
       );
+
+      if (socketError.isError) {
+        setSocketError({
+          ...socketError,
+          isError: false,
+        });
+      }
     };
 
     function subscribeError() {
@@ -224,59 +283,44 @@ export default function Header() {
         },
         reconnectDelay: 500,
         onConnect: () => {
-          // setIsError({
-          //   isError: false,
-          //   count: 0,
-          // });
           subscribeError();
           subscribe();
         },
         onWebSocketError: async () => {
-          // setIsError({
-          //   isError: false,
-          //   count: isError.count + 1,
-          // });
-          // showToast('네트워크가 불안정합니다.', 'error');
-          // await getReissuanceToken();
-          // router.replace('/home');
+          setSocketError((prev) => ({
+            isError: false,
+            count: prev.count + 1,
+          }));
         },
         onStompError: async () => {
-          // setIsError({
-          //   isError: false,
-          //   count: isError.count + 1,
-          // });
-          // showToast('서버 연결이 불안정합니다.', 'error');
-          // await getReissuanceToken();
+          setSocketError((prev) => ({
+            isError: false,
+            count: prev.count + 1,
+          }));
         },
       });
-      // console.log('Activating... metadata');
       client.current.activate();
+    }
+
+    if (socketError.isError && socketError.count < 5) {
+      connect();
+      setSocketError((prev) => ({
+        isError: false,
+        count: prev.count + 1,
+      }));
+    }
+    if (socketError.count >= 5) {
+      showToast(
+        '서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
+        'error',
+      );
+      disconnect();
+      mutation.mutate();
     }
 
     if (isPossibleConnect()) {
       connect();
     }
-
-    if (isError) {
-      connect();
-      setIsError(false);
-    }
-
-    // if (isError.isError && isError.count < 5) {
-    //   connect();
-    //   setIsError({
-    //     isError: false,
-    //     count: isError.count + 1,
-    //   });
-    // }
-    // else if (isError.count >= 5) {
-    //   // 서버로부터 온 에러 + 라이브러리 자체 에러, 강제 퇴장 시키기
-    //   showToast('서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.', 'error');
-
-    //   // TODO: 퇴장 api 호출
-    //   disconnect();
-    //   router.replace(homeSegmentKey);
-    // }
 
     return () => {
       if (client.current && client.current.connected) {
@@ -287,7 +331,7 @@ export default function Header() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     agoraId,
-    isError,
+    socketError.isError,
     router,
     setDiscussionStart,
     enterAgora.status,
@@ -321,63 +365,6 @@ export default function Header() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enterAgora.status, URL.BASE_URL]);
-
-  const swalButton = Swal.mixin({
-    customClass: {
-      icon: 'text-xxxs',
-      popup:
-        'w-[250px] h-[170px] bg-white dark:bg-dark-light-300 place-self-center rounded-xl', // 전체 모달 관리
-      title: 'p-0 text-sm mt-8 text-black dark:text-[#E2E2E2]',
-      container: 'text-black dark:text-[#E2E2E2]',
-      confirmButton:
-        'bg-backbutton-confirm w-80 h-27 text-xs text-white rounded-md',
-      cancelButton: 'bg-backbutton-cancel ml-7 w-80 h-27 text-xs rounded-md',
-    },
-    buttonsStyling: false,
-  });
-
-  const callChatExitAPI = async () => {
-    return patchChatExit({ agoraId });
-  };
-
-  const onSuccessChatExit = (response: any) => {
-    if (response) {
-      // 나가기 성공 로직 구현
-      router.push(homeSegmentKey);
-    }
-  };
-  const mutation = useMutation({
-    mutationFn: callChatExitAPI,
-    onSuccess: (response) => onSuccessChatExit(response),
-  });
-
-  const handleAgoraExit = () => {
-    if (enterAgora.status === AGORA_STATUS.CLOSED) {
-      router.push(homeSegmentKey);
-    } else if (
-      enterAgora.status === AGORA_STATUS.RUNNING ||
-      enterAgora.status === AGORA_STATUS.QUEUED
-    ) {
-      mutation.mutate();
-    }
-  };
-
-  const handleBack = () => {
-    swalButton
-      .fire({
-        icon: 'warning',
-        title: '아고라를 나가시겠습니까?',
-        text: '설정한 프로필은 초기화됩니다.',
-        showCancelButton: true,
-        confirmButtonText: '확인',
-        cancelButtonText: '취소',
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
-          handleAgoraExit();
-        }
-      });
-  };
 
   return (
     <div className="flex flex-col w-full h-full justify-center dark:text-white dark:text-opacity-85">

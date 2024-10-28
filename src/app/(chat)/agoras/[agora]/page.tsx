@@ -1,14 +1,15 @@
-import fetchWrapper from '@/lib/fetchWrapper';
 import { headers } from 'next/headers';
 import React from 'react';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
+import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
 import ErrorBoundaryMessage from '../../_components/organisms/ErrorBoundaryMessage';
 
 export async function generateMetadata() {
   const agoraId = headers().get('x-pathname')?.split('/').pop();
   let agoraTitle = '';
-  const res = await fetchWrapper.call(`/api/v1/open/agoras/${agoraId}/title`, {
+  const res = await callFetchWrapper(`/api/v1/open/agoras/${agoraId}/title`, {
     next: {
-      tags: [`${agoraId}`, 'agoraTitle'],
+      tags: getSelectedAgoraTags(agoraId as string),
     },
     credentials: 'include',
     cache: 'no-cache',
