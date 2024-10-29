@@ -146,5 +146,5 @@ export const authConfig: NextAuthConfig = {
     },
   },
   // JWT 암호화 키
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET,
 };
