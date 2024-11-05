@@ -326,6 +326,23 @@ export default function MessageInput() {
     },
   });
 
+  const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    const text = e.clipboardData.getData('text/plain'); // 일반 텍스트만 가져옴
+    const selection = window.getSelection();
+
+    if (selection === null || selection === undefined) return;
+    if (selection.rangeCount <= 0) return;
+
+    const range = selection.getRangeAt(0);
+    range.insertNode(document.createTextNode(text));
+
+    selection.removeAllRanges();
+
+    setMessage(inputRef.current?.innerText || '');
+  };
+
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
     if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
       e.preventDefault();
@@ -349,6 +366,7 @@ export default function MessageInput() {
             onCompositionStart={handleCompositionStart}
             onCompositionEnd={handleCompositionEnd}
             data-placeholder="메시지 보내기"
+            onPaste={handlePaste}
             className="placeholder:text-athens-gray-thick dark:placeholder:text-dark-light-400
           dark:placeholder:text-opacity-85 dark:text-opacity-85 dark:text-white w-full text-sm lg:text-base
           focus-visible:outline-none dark:bg-dark-light-300 resize-none overflow-hidden h-35"
