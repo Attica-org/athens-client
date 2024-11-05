@@ -1,18 +1,19 @@
 'use client';
 
 import React, { useCallback, useEffect } from 'react';
-import { AGORACATEGORY, isValidCategoryKey } from '@/constants/agoraCategory';
 import Swiper from 'swiper';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useSearchStore } from '@/store/search';
 import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 import { homeSegmentKey } from '@/constants/segmentKey';
-import CategoryButton from '../atoms/CategoryButton';
 
 // import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/mousewheel';
+import { isValidCategoryKey } from '@/utils/validation/validateCategoryKey';
+import { AGORACATEGORY } from '@/constants/consts';
+import CategoryButton from '../atoms/CategoryButton';
 
 export default function CategoryButtonList() {
   const search = useSearchStore();

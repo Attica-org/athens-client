@@ -4,6 +4,7 @@ import React, { ChangeEventHandler, useRef } from 'react';
 import UserImage from '@/app/_components/atoms/UserImage';
 import { useEnter } from '@/store/enter';
 import { useShallow } from 'zustand/react/shallow';
+import { AGORA_POSITION } from '@/constants/agora';
 
 export default function SelectedProfile() {
   const { nickname, setNickname, profileImage, selectedPosition } = useEnter(
@@ -49,7 +50,7 @@ export default function SelectedProfile() {
         h={65}
       />
       <input
-        disabled={selectedPosition === 'OBSERVER'}
+        disabled={selectedPosition === AGORA_POSITION.OBSERVER}
         ref={inputRef}
         aria-label="닉네임 입력창"
         type="text"

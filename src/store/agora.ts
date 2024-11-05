@@ -1,4 +1,4 @@
-import COLOR from '@/constants/agoraColor';
+import { COLOR } from '@/constants/consts';
 import { create } from 'zustand';
 
 type Agora = {

@@ -1,6 +1,6 @@
 import { Agora } from '@/app/model/Agora';
+import { AGORA_KEYWORD_SEARCH } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
-import showToast from '@/utils/showToast';
 import { QueryFunction } from '@tanstack/react-query';
 
 type SearchParams = {
@@ -9,7 +9,6 @@ type SearchParams = {
   q?: string;
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const getAgoraKeywordSearch: QueryFunction<
   { agoras: Agora[]; nextCursor: number | null },
   [_1: string, _2: string, _3: string, searchParams: SearchParams],
@@ -38,20 +37,25 @@ export const getAgoraKeywordSearch: QueryFunction<
     },
   );
 
-  if (res.success === false) {
+  if (!res.ok && !res.success) {
+    if (!res.error) {
+      throw new Error(AGORA_KEYWORD_SEARCH.UNKNOWN_ERROR);
+    }
+
     if (res.error.code === 1001) {
-      showToast('허용되지 않는 status 입니다.', 'error');
+      throw new Error(AGORA_KEYWORD_SEARCH.NOT_ALLOWED_STATUS);
     }
     if (res.error.code === -1) {
       throw new Error(res.error.message);
     }
-    // redirect('/home?status=active');
-    return {
-      agoras: [],
-      nextCursor: null,
-    };
-  }
 
+    throw new Error(AGORA_KEYWORD_SEARCH.FAILED_TO_GET_AGORA_LIST);
+    // return {
+    //   agoras: [],
+    //   nextCursor: null,
+    // };
+  }
+  //
   const result = res.response;
 
   return {

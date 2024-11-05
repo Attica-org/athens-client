@@ -13,13 +13,14 @@ import tokenManager from '@/utils/tokenManager';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import { AGORA_POSITION } from '@/constants/agora';
+import { VotePosition } from '@/app/model/Agora';
 
-type ResultPosition = 'PROS' | 'CONS' | 'DEFAULT';
 const DUPLICATE_VOTE = 'User has already voted for Opinion in this agora';
 
 export default function EndAgora() {
   const [selectedResultPosition, setSelectedResultPosition] =
-    useState<ResultPosition>('DEFAULT');
+    useState<VotePosition>(AGORA_POSITION.DEFAULT);
   const [remainingTime, setRemainingTime] = useState(15);
   const [isFinished, setIsFinished] = useState(false);
   const [vote, setVote] = useState<string | null>(null);
@@ -161,7 +162,7 @@ export default function EndAgora() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agoraId, router, setVoteEnd, setVoteResult, URL.BASE_URL]);
 
-  const selectResultPosition = (position: ResultPosition) => {
+  const selectResultPosition = (position: VotePosition) => {
     setSelectedResultPosition(position);
     setVote(position);
   };
@@ -194,9 +195,9 @@ export default function EndAgora() {
             type="button"
             aria-label="찬성하기"
             disabled={isFinished}
-            onClick={() => selectResultPosition('PROS')}
+            onClick={() => selectResultPosition(AGORA_POSITION.PROS)}
             className={`${
-              selectedResultPosition === 'PROS'
+              selectedResultPosition === AGORA_POSITION.PROS
                 ? 'bg-blue-400 text-white'
                 : 'text-blue-600 bg-white dark:text-white dark:bg-dark-light-500'
             } mr-1rem text-sm p-6 pl-1.5rem pr-1.5rem rounded-xl`}
@@ -207,9 +208,9 @@ export default function EndAgora() {
             type="button"
             aria-label="반대하기"
             disabled={isFinished}
-            onClick={() => selectResultPosition('CONS')}
+            onClick={() => selectResultPosition(AGORA_POSITION.CONS)}
             className={`${
-              selectedResultPosition === 'CONS'
+              selectedResultPosition === AGORA_POSITION.CONS
                 ? 'bg-red-400 text-white '
                 : 'bg-white text-red-500 dark:text-white dark:bg-dark-light-500'
             } text-sm p-6 pl-1.5rem pr-1.5rem rounded-xl`}

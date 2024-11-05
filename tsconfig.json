@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "target": "ES6",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -23,10 +24,12 @@
   },
   "include": [
     "next-env.d.ts",
+    "src/**/*",
+    "src/models/**/*",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
     "next.config.js"
-, "public/custom-sw.js", "src/utils/indexedDB.ts"  ],
+, "public/custom-sw.js", "src/utils/indexedDB.ts", "src/utils/validation", "src/constants/*.ts"  ],
   "exclude": ["node_modules"]
 }

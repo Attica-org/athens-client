@@ -9,7 +9,8 @@ import Loading from '@/app/_components/atoms/loading';
 import { AgoraMeta } from '@/app/model/AgoraMeta';
 import { useShallow } from 'zustand/react/shallow';
 import showToast from '@/utils/showToast';
-import { AGORA_STATUS } from '@/constants/Agora';
+import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
+import useApiError from '@/hooks/useApiError';
 import { patchAgoraStart } from '../../_lib/patchAgoraStart';
 import { patchAgoraEnd } from '../../_lib/patchAgoraEnd';
 import DiscussionTimer from '../atoms/DiscussionTimer';
@@ -22,6 +23,7 @@ type Props = {
 export default function DiscussionStatus({ meta }: Props) {
   const [isEndClicked, setIsEndClicked] = useState(false);
   const { enterAgora } = useAgora();
+  const { handleError } = useApiError();
   const { start } = useChatInfo(
     useShallow((state) => ({
       start: state.start,
@@ -32,14 +34,12 @@ export default function DiscussionStatus({ meta }: Props) {
     mutationFn: async () => patchAgoraStart(enterAgora.id),
     onMutate: () => {},
     onSuccess: async (response) => {
-      // 타이머 시작
       if (!response) {
         showToast('토론 시작에 실패했습니다.', 'error');
       }
     },
-    onError: () => {
-      // console.dir(error);
-      // alert('문제가 발생했습니다. 다시 시도해주세요.');
+    onError: (error) => {
+      handleError(error);
     },
   });
 
@@ -49,13 +49,13 @@ export default function DiscussionStatus({ meta }: Props) {
       if (response) {
         setIsEndClicked(true);
         showToast('토론 종료에 투표하였습니다.', 'success');
-      } else {
-        showToast('토론 종료 투표에 실패했습니다.', 'error');
+        return;
       }
+
+      showToast('토론 종료 투표에 실패했습니다.', 'error');
     },
-    onError: () => {
-      // console.dir(error);
-      // alert('문제가 발생했습니다. 다시 시도해주세요.');
+    onError: (error) => {
+      handleError(error);
     },
   });
 
@@ -71,7 +71,7 @@ export default function DiscussionStatus({ meta }: Props) {
 
   return enterAgora.status !== AGORA_STATUS.CLOSED ? (
     <>
-      {enterAgora.role !== 'OBSERVER' && (
+      {enterAgora.role !== AGORA_POSITION.OBSERVER && (
         <button
           type="button"
           onClick={toggleProgress}
@@ -100,7 +100,7 @@ export default function DiscussionStatus({ meta }: Props) {
           {meta &&
             meta.participants.map(
               (participant) =>
-                participant.type === 'OBSERVER' && (
+                participant.type === AGORA_POSITION.OBSERVER && (
                   <span
                     key={meta.agora.id}
                     className="pl-5 text-xs text-athens-gray-thick dark:text-white dark:text-opacity-85"

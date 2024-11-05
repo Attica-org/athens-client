@@ -1,12 +1,8 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-
-import {
-  DEFAULT_PARTICIPANTS_CNT,
-  DEFAULT_TIME,
-} from '@/constants/createAgora';
-import COLOR from '@/constants/agoraColor';
 import { AgoraConfig } from '@/app/model/Agora';
+import { AGORA_CREATE } from '@/constants/Agora';
+import { COLOR } from '@/constants/consts';
 
 interface AgoraState extends AgoraConfig {
   setTitle: (title: string) => void;
@@ -23,8 +19,8 @@ const initialState: AgoraState = {
   category: '1',
   thumbnail: '',
   color: { idx: 0, value: COLOR[0].value },
-  capacity: DEFAULT_PARTICIPANTS_CNT,
-  duration: DEFAULT_TIME,
+  capacity: AGORA_CREATE.DEFAULT_PARTICIPANTS_CNT,
+  duration: AGORA_CREATE.DEFAULT_TIME,
   setTitle: () => {},
   setThumbnail: () => {},
   setCategory: () => {},
@@ -56,8 +52,8 @@ export const useCreateAgora = create(
         thumbnail: '',
         category: '1',
         color: { idx: 0, value: COLOR[0].value },
-        capacity: DEFAULT_PARTICIPANTS_CNT,
-        duration: DEFAULT_TIME,
+        capacity: AGORA_CREATE.DEFAULT_PARTICIPANTS_CNT,
+        duration: AGORA_CREATE.DEFAULT_TIME,
       }),
   })),
 );

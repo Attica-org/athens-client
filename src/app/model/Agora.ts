@@ -60,6 +60,10 @@ export type AgoraConfig = {
 };
 
 export type ParticipationPosition = 'PROS' | 'CONS' | 'OBSERVER';
+export type VotePosition = 'PROS' | 'CONS' | 'DEFAULT';
+export type ProsPos = 'PROS';
+export type ConsPos = 'CONS';
+export type ObserverPos = 'OBSERVER';
 
 export type ProfileImage = {
   id: number;

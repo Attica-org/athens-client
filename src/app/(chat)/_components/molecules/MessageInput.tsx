@@ -11,7 +11,6 @@ import React, {
   useState,
 } from 'react';
 import * as StompJs from '@stomp/stompjs';
-import tokenManager from '@/utils/tokenManager';
 import {
   InfiniteData,
   useMutation,
@@ -24,7 +23,9 @@ import { useAgora } from '@/store/agora';
 import getKey from '@/utils/getKey';
 import { getChatMessagesQueryKey } from '@/constants/queryKey';
 import showToast from '@/utils/showToast';
-import { AGORA_STATUS } from '@/constants/Agora';
+import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
+import useApiError from '@/hooks/useApiError';
+import { useSession } from 'next-auth/react';
 import postFilterBadWords from '../../_lib/postFilterBadWords';
 // import { unloadDisconnectSocket } from '@/utils/unloadDisconnectSocket';
 
@@ -40,11 +41,13 @@ export default function MessageInput() {
     SOCKET_URL: '',
   });
   const { enterAgora } = useAgora();
+  const { handleError } = useApiError();
   const inputRef = useRef<HTMLDivElement>(null);
   const { setGoDown } = useMessageStore();
   const client = useRef<StompJs.Client>();
   const queryClient = useQueryClient();
   const [highlightedMessage, setHighlightedMessage] = useState<string>('');
+  const session = useSession();
 
   const pushMessage = useCallback(
     (data: any, type: string) => {
@@ -96,7 +99,7 @@ export default function MessageInput() {
     if (
       client.current &&
       client.current.connected &&
-      enterAgora.role !== 'OBSERVER'
+      enterAgora.role !== AGORA_POSITION.OBSERVER
     ) {
       client.current?.publish({
         destination: `/app/agoras/${enterAgora.id}/chats`,
@@ -212,7 +215,7 @@ export default function MessageInput() {
       client.current = new StompJs.Client({
         brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
-          Authorization: `Bearer ${tokenManager.getToken()}`,
+          Authorization: `Bearer ${session.data?.user.accessToken}`,
           AgoraId: `${enterAgora.id}`,
         },
         reconnectDelay: 500,
@@ -320,9 +323,13 @@ export default function MessageInput() {
       if (response.hasBadWord) {
         highlightBadWords(response.badword);
         showToast('부적절한 단어가 포함되어 있습니다.', 'error');
-      } else {
-        sendMessage();
+        return;
       }
+
+      sendMessage();
+    },
+    onError: (error) => {
+      handleError(error);
     },
   });
 
@@ -335,7 +342,7 @@ export default function MessageInput() {
 
   return (
     enterAgora.status !== AGORA_STATUS.CLOSED &&
-    enterAgora.role !== 'OBSERVER' && (
+    enterAgora.role !== AGORA_POSITION.OBSERVER && (
       <section className="flex border-t-1 dark:border-dark-light-300 sticky bottom-0 right-0 left-0 w-full bg-white dark:bg-dark-light-300">
         <form className="pl-1rem p-10 pb-0 flex flex-1 justify-start items-center">
           <div

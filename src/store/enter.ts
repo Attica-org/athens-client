@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { ParticipationPosition, ProfileImage } from '@/app/model/Agora';
+import { AGORA_POSITION } from '@/constants/Agora';
 
 interface EnterState {
   nickname: string;
@@ -22,7 +23,7 @@ const initialState: EnterState = {
     name: '도끼 든 회색 곰',
     file: 'bear.png',
   },
-  selectedPosition: 'OBSERVER',
+  selectedPosition: AGORA_POSITION.OBSERVER,
   setMessage: () => {},
   setSelectedPosition: () => {},
   setNickname: () => {},
@@ -49,7 +50,7 @@ export const useEnter = create(
           name: '도끼 든 회색 곰',
           file: 'bear.png',
         },
-        selectedPosition: 'OBSERVER',
+        selectedPosition: AGORA_POSITION.OBSERVER,
       }),
   })),
 );

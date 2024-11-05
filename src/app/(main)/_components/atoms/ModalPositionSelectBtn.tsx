@@ -1,5 +1,6 @@
 import React from 'react';
 import { ParticipationPosition } from '@/app/model/Agora';
+import { AGORA_POSITION } from '@/constants/agora';
 
 type Props = {
   selectedPosition: string;
@@ -17,7 +18,7 @@ export default function ModalPositionSelectBtn({
   children,
 }: Props) {
   const bgColor =
-    position !== 'OBSERVER' ? `bg-${color}-400` : 'bg-athens-main';
+    position !== AGORA_POSITION.OBSERVER ? `bg-${color}-400` : 'bg-athens-main';
   return (
     <button
       type="button"

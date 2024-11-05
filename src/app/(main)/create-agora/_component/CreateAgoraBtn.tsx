@@ -10,15 +10,12 @@ import { useCreateAgora } from '@/store/create';
 import { useRouter } from 'next/navigation';
 import { useAgora } from '@/store/agora';
 import Loading from '@/app/_components/atoms/loading';
-import {
-  MAX_DISCUSSION_TIME,
-  MIN_DISCUSSION_TIME,
-} from '@/constants/createAgora';
 import showToast from '@/utils/showToast';
-import COLOR from '@/constants/agoraColor';
 import { AgoraConfig } from '@/app/model/Agora';
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
-import { AGORA_STATUS } from '@/constants/Agora';
+import { AGORA_CREATE, AGORA_STATUS } from '@/constants/agora';
+import useApiError from '@/hooks/useApiError';
+import { COLOR } from '@/constants/consts';
 import { postCreateAgora } from '../../_lib/postCreateAgora';
 
 function CreateAgoraBtn() {
@@ -33,14 +30,16 @@ function CreateAgoraBtn() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const queryClient = useQueryClient();
+  const { handleError } = useApiError();
 
   const invalidAgora = (client: QueryClient, queryKey: string[]) => {
     client.invalidateQueries({ queryKey });
   };
 
-  const failedCreateAgora = () => {
+  const failedCreateAgora = (error: Error) => {
     showToast('아고라 생성에 실패했습니다.', 'error');
     setIsLoading(false);
+    handleError(error);
   };
 
   const mutation = useMutation({
@@ -68,12 +67,12 @@ function CreateAgoraBtn() {
 
         invalidAgora(queryClient, ['agora']);
         router.push(`/flow${enterAgoraSegmentKey}/${response.id}`);
-      } else {
-        failedCreateAgora();
+        return;
       }
+      failedCreateAgora(new Error('아고라 생성에 실패했습니다.'));
     },
-    onError: () => {
-      failedCreateAgora();
+    onError: (error) => {
+      failedCreateAgora(error);
     },
   });
 
@@ -87,8 +86,8 @@ function CreateAgoraBtn() {
       !color ||
       !category ||
       !duration ||
-      duration > MAX_DISCUSSION_TIME ||
-      duration < MIN_DISCUSSION_TIME
+      duration > AGORA_CREATE.MAX_DISCUSSION_TIME ||
+      duration < AGORA_CREATE.MIN_DISCUSSION_TIME
     ) {
       showToast('입력값을 확인해주세요.', 'error');
       return;

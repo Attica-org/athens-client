@@ -3,3 +3,10 @@ export interface Category {
   innerText: string;
   isActive: boolean;
 }
+
+export type CategoryItems = {
+  readonly [key: string | number]: {
+    readonly innerText: string;
+    readonly value: string;
+  };
+};

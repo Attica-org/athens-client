@@ -1,14 +1,14 @@
 'use client';
 
 import React, { ChangeEventHandler, useState } from 'react';
-import {
-  MAX_PARTICIPANTS_CNT,
-  MIN_PARTICIPANTS_CNT,
-} from '@/constants/createAgora';
 import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 import { ParticipantCountAction } from '@/app/model/Agora';
+import { AGORA_CREATE } from '@/constants/agora';
 import ControlNumberInput from '../atoms/ControlNumberInput';
+
+const INCREASE = 'INCREASE';
+const DECREASE = 'DECREASE';
 
 function ParticipantCapacitySetter() {
   const [message, setMessage] = useState<string | null>('');
@@ -20,12 +20,12 @@ function ParticipantCapacitySetter() {
   );
 
   const validateCapacity = (value: number, state?: ParticipantCountAction) => {
-    if (state === 'INCREASE' || value < MIN_PARTICIPANTS_CNT) {
-      setMessage('최소 참여 인원은 각 1명입니다.');
+    if (state === INCREASE || value < AGORA_CREATE.MIN_PARTICIPANTS_CNT) {
+      setMessage(AGORA_CREATE.MIN_PARTICIPANTS_CNT_MESSAGE);
       return;
     }
-    if (state === 'DECREASE' || value > MAX_PARTICIPANTS_CNT) {
-      setMessage('최대 참여 인원은 각 5명입니다.');
+    if (state === DECREASE || value > AGORA_CREATE.MAX_PARTICIPANTS_CNT) {
+      setMessage(AGORA_CREATE.MAX_PARTICIPANTS_CNT_MESSAGE);
       return;
     }
 
@@ -41,10 +41,10 @@ function ParticipantCapacitySetter() {
 
   const handleParticipantsBtn = (action: ParticipantCountAction) => {
     switch (action) {
-      case 'DECREASE':
+      case DECREASE:
         validateCapacity(capacity - 1);
         break;
-      case 'INCREASE':
+      case INCREASE:
         validateCapacity(capacity + 1);
         break;
       default:
