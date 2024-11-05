@@ -26,10 +26,11 @@
     "next-env.d.ts",
     "src/**/*",
     "src/models/**/*",
+    "src/constants/**/*",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
     "next.config.js"
-, "public/custom-sw.js", "src/utils/indexedDB.ts", "src/utils/validation", "src/constants/*.ts"  ],
+, "public/custom-sw.js", "src/utils/indexedDB.ts", "src/utils/validation"  ],
   "exclude": ["node_modules"]
 }
