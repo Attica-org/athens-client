@@ -14,8 +14,8 @@ const nextConfig = {
         protocol: 'https',
         hostname: process.env.NEXT_IMAGE_URL,
         pathname: '/**',
-      }
-    ]
+      },
+    ],
   },
   headers: async () => {
     return [
@@ -28,13 +28,14 @@ const nextConfig = {
           },
         ],
       },
-      { 
-        source: '/:path(.+\\.(?:ico|png|svg|jpg|jpeg|gif|webp|json|mp3|mp4|ttf|ttc|otf|woff|woff2)$)',
+      {
+        source:
+          '/:path(.+\\.(?:ico|png|svg|jpg|jpeg|gif|webp|json|mp3|mp4|ttf|ttc|otf|woff|woff2)$)',
         headers: [
-        {
-          key: 'Cache-Control',
-          value: 'public, max-age=86400, immutable',
-        },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, immutable',
+          },
         ],
       },
     ];

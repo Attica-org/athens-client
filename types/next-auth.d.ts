@@ -1,19 +1,19 @@
 import 'next-auth';
 import '@auth/core/jwt';
 
-export declare module "next-auth" {
+export declare module 'next-auth' {
   interface User {
     accessToken: string;
     authProvider: string;
     name: string;
-    email: string
+    email: string;
   }
 
   interface Session {
     user: {
       accessToken: string;
       authProvider: string;
-    }
+    };
   }
 }
 
