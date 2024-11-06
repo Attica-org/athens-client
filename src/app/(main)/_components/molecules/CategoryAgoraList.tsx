@@ -7,7 +7,6 @@ import {
   useSuspenseInfiniteQuery,
 } from '@tanstack/react-query';
 import { AgoraData, SearchParams } from '@/app/model/Agora';
-import { useInView } from 'react-intersection-observer';
 import DeferredComponent from '@/app/_components/utils/DefferedComponent';
 import Loading from '@/app/_components/atoms/loading';
 import { useCreateAgora } from '@/store/create';
@@ -79,24 +78,13 @@ export default function CategoryAgoraList({ searchParams }: Props) {
         getCategoryAgoraListQueryKey(searchParams),
       );
     },
-    retry: 2,
   });
 
-  const { ref, inView } = useInView({
-    threshold: 0,
-    delay: 0,
-    rootMargin: '-30px',
-  });
-
-  const loadNextPage = useCallback(() => {
-    if (inView && hasNextPage && !isFetching) {
+  const loadNextPage = () => {
+    if (hasNextPage) {
       fetchNextPage();
     }
-  }, [inView, hasNextPage, isFetching, fetchNextPage]);
-
-  useEffect(() => {
-    loadNextPage();
-  }, [loadNextPage]);
+  };
 
   const renderItemContent = useCallback(
     (index: any, agora: any) => <CategoryAgora agora={agora} key={agora.id} />,
@@ -113,7 +101,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
         { ...searchParams, status: tabStatus, category: selectedCategory },
       ],
     });
-  }, [selectedCategory, queryClient, tabStatus]);
+  }, [selectedCategory, queryClient, tabStatus, searchParams]);
 
   const handleKeyDownRefresh = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -163,9 +151,9 @@ export default function CategoryAgoraList({ searchParams }: Props) {
           overscan={10}
           components={virtuosoGridComponents}
           itemContent={renderItemContent}
+          endReached={() => loadNextPage()}
         />
       )}
-      <div ref={ref} />
       {(isFetching || isPending || isFetchingNextPage) && (
         <DeferredComponent>
           <Loading
