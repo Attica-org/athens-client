@@ -90,8 +90,6 @@ export const authConfig: NextAuthConfig = {
       // update 시에만 session이 존재
       // accessToken 만료로 인한 갱신, 기존 세션에 새로운 토큰을 반영
       if (trigger === 'update') {
-        console.log('update session', session);
-        console.log('current jwt', token);
         const newJwtToken = {
           ...token,
           accessToken: session.user.accessToken,
@@ -104,7 +102,6 @@ export const authConfig: NextAuthConfig = {
       return token;
     },
     session: async ({ session, token }) => {
-      console.log('session', session);
       if (token && session.user.accessToken !== token.accessToken) {
         // jwt callback에서 반환받은 token 값을 기존 세션에 추가한다.
         const newSession = {

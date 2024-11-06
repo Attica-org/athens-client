@@ -30,9 +30,8 @@ export default function RQProvider({ children }: Props) {
           refetchOnReconnect: true,
         },
         mutations: {
-          onError: (error) => {
-            console.log('mutation error', error);
-            handleError(error);
+          onError: async (error) => {
+            await handleError(error);
           },
           networkMode: 'always',
           retry: 1,
