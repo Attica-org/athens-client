@@ -155,19 +155,19 @@ export default function Message() {
     }
   };
 
-  const isPossibleConnect = () => {
-    return (
-      navigator.onLine &&
-      URL.SOCKET_URL !== '' &&
-      enterAgora.status !== AGORA_STATUS.CLOSED
-    );
-  };
-
   useEffect(() => {
     getUrl();
   }, []);
 
   useEffect(() => {
+    const isPossibleConnect = () => {
+      return (
+        navigator.onLine &&
+        URL.SOCKET_URL !== '' &&
+        enterAgora.status !== AGORA_STATUS.CLOSED
+      );
+    };
+
     const disconnect = () => {
       client.current?.deactivate();
     };
@@ -218,7 +218,7 @@ export default function Message() {
         disconnect();
       }
     };
-  }, [agoraId, enterAgora.status, URL, isPossibleConnect]);
+  }, [agoraId, enterAgora.status, URL]);
 
   const { ref, inView } = useInView({
     threshold: 0,
