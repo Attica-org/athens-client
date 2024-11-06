@@ -5,8 +5,9 @@ import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/qu
 import ErrorBoundaryMessage from '../../_components/organisms/ErrorBoundaryMessage';
 
 export async function generateMetadata() {
-  const agoraId = headers().get('x-pathname')?.split('/').pop();
+  const agoraId = headers().get('referer')?.split('/').pop();
   let agoraTitle = '';
+
   const res = await callFetchWrapper(`/api/v1/open/agoras/${agoraId}/title`, {
     next: {
       tags: getSelectedAgoraTags(agoraId as string),
@@ -18,9 +19,9 @@ export async function generateMetadata() {
     },
   });
 
-  if (res.success === false) {
+  if (!res.ok && !res.success) {
     agoraTitle = '아고라 - Athens';
-  } else {
+  } else if (res.success) {
     const result = res.response;
     agoraTitle = `${result.title} - Athens`;
   }
