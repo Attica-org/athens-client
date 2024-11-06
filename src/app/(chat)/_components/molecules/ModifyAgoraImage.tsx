@@ -5,10 +5,12 @@ import { useMutation } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import showToast from '@/utils/showToast';
 import { useAgora } from '@/store/agora';
+import useApiError from '@/hooks/useApiError';
 import { patchAgoraImg } from '../../_lib/patchAgoraImg';
 
 export default function ModifyAgoraImage() {
   const { enterAgora } = useAgora();
+  const { handleError } = useApiError();
   const [cropedPreview, setCropedPreview] = useState<string>(
     enterAgora.thumbnail,
   );
@@ -19,7 +21,6 @@ export default function ModifyAgoraImage() {
         agoraId: enterAgora.id,
         fileUrl: cropedPreview,
       }),
-    retry: 2,
     onSuccess: async (response) => {
       if (response) {
         showToast('이미지가 변경되었습니다.', 'success');
@@ -27,9 +28,9 @@ export default function ModifyAgoraImage() {
         // const { setEnterAgora, enterAgora, setSelectedAgora, selectedAgora } = useAgora.getState();
       }
     },
-    onError: () => {
+    onError: (error) => {
       // console.dir(error);
-      showToast('문제가 발생했습니다. 다시 시도해주세요.', 'error');
+      handleError(error);
     },
   });
 

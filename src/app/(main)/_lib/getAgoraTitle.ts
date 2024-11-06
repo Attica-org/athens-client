@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { homeSegmentKey } from '@/constants/segmentKey';
-import showToast from '@/utils/showToast';
 import { QueryFunction } from '@tanstack/react-query';
-import { redirect } from 'next/navigation';
 import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
-// eslint-disable-next-line import/prefer-default-export
+import { AGORA_INFO } from '@/constants/responseErrorMessage';
+
 export const getAgoraTitle: QueryFunction<
   { title: string; status: string; imageUrl: string; agoraColor: string },
   [_1: string, _2: string]
@@ -24,14 +22,17 @@ export const getAgoraTitle: QueryFunction<
     },
   });
 
-  if (res.success === false) {
-    if (res.error.code === 1301) {
-      showToast('존재하지 않는 아고라입니다.', 'error');
-    } else {
-      showToast('아고라 제목을 불러오는데 실패했습니다.', 'error');
+  if (!res.ok && !res.success) {
+    if (!res.error) {
+      throw new Error(AGORA_INFO.UNKNOWN_ERROR);
     }
 
-    redirect(`${homeSegmentKey}?status=active`);
+    if (res.error.code === 1301) {
+      throw new Error(AGORA_INFO.NOT_EXIST_AGORA);
+    }
+
+    throw new Error(AGORA_INFO.FAILED_TO_GET_AGORA_INFO);
+    // redirect(`${homeSegmentKey}?status=active`);
   }
 
   const result = res.response;

@@ -1,16 +1,12 @@
+import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { AGORA_END } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
-import getToken from '@/lib/getToken';
-import showToast from '@/utils/showToast';
-import tokenManager from '@/utils/tokenManager';
+import { getSession } from '@/serverActions/auth';
 
-const AGORA_STATUS_ERROR = 'Agora status must be RUNNING';
-const ALREADY_VOTED = 'User has already voted for ending the agora';
-
-// eslint-disable-next-line import/prefer-default-export
 export const patchAgoraEnd = async (agoraId: number) => {
-  // 토큰을 가지고 있는지 확인
-  if (tokenManager.getToken() === undefined) {
-    await getToken();
+  const session = await getSession();
+  if (!session) {
+    throw new Error(SIGNIN_REQUIRED);
   }
 
   const res = await callFetchWrapper(`/api/v1/auth/agoras/${agoraId}/close`, {
@@ -22,27 +18,32 @@ export const patchAgoraEnd = async (agoraId: number) => {
     cache: 'no-cache',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${tokenManager.getToken()}`,
+      Authorization: `Bearer ${session.user.accessToken}`,
     },
   });
 
-  if (res.success === false) {
+  if (!res.ok && !res.success) {
+    if (!res.error) {
+      throw new Error(AGORA_END.UNKNOWN_ERROR);
+    }
+
     if (res.error.code === 1301) {
-      showToast('존재하지 않는 아고라 혹은 사용자입니다.', 'error');
+      throw new Error(AGORA_END.NOT_FOUND_AGORA_OR_USER);
     } else if (res.error.code === 1002) {
-      if (res.error.message === AGORA_STATUS_ERROR) {
-        showToast('이미 종료된 아고라입니다.', 'error');
-      } else if (res.error.message === ALREADY_VOTED) {
-        showToast('이미 투표하였습니다.', 'error');
-      } else {
-        showToast('토론 종료에 실패했습니다.\n 다시 시도해주세요.', 'error');
+      if (res.error.message === AGORA_END.SERVER_RESPONSE_AGORA_STATUS_ERROR) {
+        throw new Error(AGORA_END.ALREADY_ENDED);
+      } else if (
+        res.error.message === AGORA_END.SERVER_RESPONSE_ALREADY_VOTED
+      ) {
+        throw new Error(AGORA_END.ALREADY_VOTED);
       }
     } else if (res.error.code === 1102) {
-      showToast('관찰자는 토론을 종료할 수 없습니다.', 'error');
-    } else {
-      showToast('토론 종료에 실패했습니다.\n 다시 시도해주세요.', 'error');
+      throw new Error(AGORA_END.OBSERVER_CANNOT_END);
     }
-    return null;
+
+    throw new Error(AGORA_END.NOT_FOUND_AGORA_OR_USER);
+
+    // return null;
   }
 
   const result = res.response;
