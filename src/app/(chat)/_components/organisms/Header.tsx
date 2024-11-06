@@ -30,13 +30,13 @@ import {
   DISCUSSION_START,
   DISCUSSION_TOAST_MESSAGE,
 } from '@/constants/chats';
+import { useUnloadDisconnectSocket } from '@/hooks/useUnloadDisconnectSocket';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
 import HamburgerButton from '../atoms/HamburgerButton';
 import DiscussionStatus from '../molecules/DiscussionStatus';
 import patchChatExit from '../../_lib/patchChatExit';
-// import { unloadDisconnectSocket } from '@/utils/unloadDisconnectSocket';
 
 export default function Header() {
   const { toggle } = useSidebarStore(
@@ -131,23 +131,19 @@ export default function Header() {
     }
   };
 
-  //   unloadDisconnectSocket({client: client.current, mutation: mutation.mutate});
+  const handleBack = async () => {
+    const result = await swalConfirmCancelAlert.fire({
+      icon: 'warning',
+      title: '아고라를 나가시겠습니까?',
+      text: '설정한 프로필은 초기화됩니다.',
+      showCancelButton: true,
+      confirmButtonText: '확인',
+      cancelButtonText: '취소',
+    });
 
-  const handleBack = () => {
-    swalConfirmCancelAlert
-      .fire({
-        icon: 'warning',
-        title: '아고라를 나가시겠습니까?',
-        text: '설정한 프로필은 초기화됩니다.',
-        showCancelButton: true,
-        confirmButtonText: '확인',
-        cancelButtonText: '취소',
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
-          handleAgoraExit();
-        }
-      });
+    if (result && result.isConfirmed) {
+      handleAgoraExit();
+    }
   };
 
   const isPossibleConnect = () => {
@@ -371,6 +367,10 @@ export default function Header() {
       saveTabId(tabId);
 
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        console.log(
+          'navigator.serviceWorker.controller',
+          navigator.serviceWorker.controller,
+        );
         navigator.serviceWorker.controller.postMessage({
           action: 'initialize',
           tabId,
@@ -380,6 +380,11 @@ export default function Header() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enterAgora.status, URL.BASE_URL]);
+
+  useUnloadDisconnectSocket({
+    client: client.current,
+    mutation: mutation.mutate,
+  });
 
   return (
     <div className="flex flex-col w-full h-full justify-center dark:text-white dark:text-opacity-85">
