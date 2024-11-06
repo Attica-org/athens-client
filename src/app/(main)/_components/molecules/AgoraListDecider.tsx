@@ -59,18 +59,20 @@ export default function AgoraListDecider({ searchParams }: Props) {
   }
 
   return (
-    <ErrorBoundary FallbackComponent={FallbackComponent}>
-      <>
-        {tabStatus === 'active' && (
-          <>
+    <>
+      {tabStatus === 'active' && (
+        <>
+          <ErrorBoundary FallbackComponent={FallbackComponent}>
             <LivelyAgoraList />
-            <div className="h-12 w-full mb-16">
-              <div className="h-full mx-10 bg-athens-gray dark:bg-dark-light-200" />
-            </div>
-          </>
-        )}
+          </ErrorBoundary>
+          <div className="h-12 w-full mb-16">
+            <div className="h-full mx-10 bg-athens-gray dark:bg-dark-light-200" />
+          </div>
+        </>
+      )}
+      <ErrorBoundary FallbackComponent={FallbackComponent}>
         <CategoryAgoraList searchParams={searchParams} />
-      </>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </>
   );
 }
