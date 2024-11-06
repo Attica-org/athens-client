@@ -1,10 +1,14 @@
 'use client';
 
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
-// import { useQueryError } from '@/hooks/useQueryError';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React, { useState } from 'react';
+import useApiError from '@/hooks/useApiError';
 import NetworkErrorNotification from '../_components/utils/NetworkErrorNotification';
 
 type Props = {
@@ -13,22 +17,30 @@ type Props = {
 
 export default function RQProvider({ children }: Props) {
   const { isNetworkOffline } = useNetworkStatus();
-  // const { handleError } = useQueryError();
+  const { handleError } = useApiError();
 
   const [client] = useState(
     new QueryClient({
       defaultOptions: {
         queries: {
-          networkMode: 'online',
+          networkMode: 'always',
           refetchOnWindowFocus: false,
           retry: 2,
           retryOnMount: true,
           refetchOnReconnect: true,
         },
+        mutations: {
+          onError: (error) => {
+            console.log('mutation error', error);
+            handleError(error);
+          },
+          networkMode: 'always',
+          retry: 1,
+        },
       },
-      // queryCache: new QueryCache({
-      //   onError: handleError,
-      // }),
+      queryCache: new QueryCache({
+        onError: (error) => handleError(error),
+      }),
     }),
   );
 
