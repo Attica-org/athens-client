@@ -1,19 +1,15 @@
 import getKey from '@/utils/getKey';
 
-class FetchWrapper {
+export class FetchWrapper {
   static #baseURL: string;
 
-  constructor() {
-    FetchWrapper.#setBaseUrl();
-  }
-
-  static async #setBaseUrl() {
+  static async setBaseUrl() {
     this.#baseURL = (await getKey()).BASE_URL || '';
   }
 
   static async call(url: string, fetchNext: any): Promise<any> {
     if (!this.#baseURL) {
-      await this.#setBaseUrl();
+      await this.setBaseUrl();
     }
 
     let response;
@@ -23,13 +19,15 @@ class FetchWrapper {
         ...fetchNext,
         headers: {
           ...fetchNext.headers,
-          Connection: 'keep-alive',
+          // Connection: 'keep-alive',
         },
       });
+
       return await response.json();
     } catch (error) {
       console.log('error', error);
-      return response;
+      console.log('response', response);
+      throw new Error('알 수 없는 에러가 발생했습니다.');
     }
   }
 }

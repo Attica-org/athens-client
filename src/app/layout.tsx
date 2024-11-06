@@ -3,6 +3,7 @@ import React from 'react';
 import './globals.css';
 import { Noto_Sans_KR } from 'next/font/google';
 import Script from 'next/script';
+import { FetchWrapper } from '@/lib/fetchWrapper';
 import MSWComponent from './config/MSWComponent';
 import RQProvider from './config/RQProvider';
 import ServiceWorkerRegistration from './config/ServiceWorkerRegistration';
@@ -42,11 +43,13 @@ declare global {
   }
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await FetchWrapper.setBaseUrl();
+
   return (
     <html lang="ko" className="dark">
       <link rel="manifest" href="/manifest.json" />
