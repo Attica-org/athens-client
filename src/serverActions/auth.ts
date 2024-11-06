@@ -44,6 +44,11 @@ export const getSession = async () => {
   return auth();
 };
 
-export const updateSession = async (session: any) => {
-  await update(session);
+export const updateSession = async (session: string) => {
+  console.log('session', session);
+  await update({
+    user: {
+      accessToken: session,
+    },
+  });
 };
