@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { ParticipationPosition, ProfileImage } from '@/app/model/Agora';
-import { AGORA_POSITION } from '@/constants/Agora';
+import { AGORA_POSITION } from '@/constants/agora';
 
 interface EnterState {
   nickname: string;

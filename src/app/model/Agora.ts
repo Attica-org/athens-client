@@ -1,4 +1,4 @@
-import { AGORA_STATUS } from '@/constants/Agora';
+import { AGORA_STATUS } from '@/constants/agora';
 
 export type Status = (typeof AGORA_STATUS)[keyof typeof AGORA_STATUS];
 

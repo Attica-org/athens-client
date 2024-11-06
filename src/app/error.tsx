@@ -3,10 +3,10 @@
 // -> error component는 client component여아함
 
 import React, { useEffect } from 'react';
-import PROFLELIST from '@/constants/userProfileImage';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { homeSegmentKey } from '@/constants/segmentKey';
+import { PROFLELIST } from '@/constants/consts';
 
 export default function Error({
   error,

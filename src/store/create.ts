@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { AgoraConfig } from '@/app/model/Agora';
-import { AGORA_CREATE } from '@/constants/Agora';
+import { AGORA_CREATE } from '@/constants/agora';
 import { COLOR } from '@/constants/consts';
 
 interface AgoraState extends AgoraConfig {

@@ -1,7 +1,7 @@
 'use client';
 
+import { PROFLELIST } from '@/constants/consts';
 import { homeSegmentKey } from '@/constants/segmentKey';
-import PROFLELIST from '@/constants/userProfileImage';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React from 'react';
