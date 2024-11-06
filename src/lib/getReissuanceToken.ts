@@ -1,9 +1,8 @@
-import { getSession } from '@/serverActions/auth';
+import { getSession, updateSession } from '@/serverActions/auth';
 import {
   AUTHORIZATION_FAIL,
   AUTHORIZATION_SUCCESS,
 } from '@/constants/authErrorMessage';
-import { update } from '@/auth';
 import { callFetchWrapper } from './fetchWrapper';
 
 export const getReissuanceToken = async () => {
@@ -30,11 +29,7 @@ export const getReissuanceToken = async () => {
   }
 
   try {
-    await update({
-      user: {
-        accessToken: res.response,
-      },
-    });
+    await updateSession(res.response);
     // await updateSession(res.response);
   } catch (error) {
     console.log('jwt update error', error);
