@@ -3,14 +3,16 @@
 import { PROFLELIST } from '@/constants/consts';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 
 export default function NotFound() {
   const randomIndex = Math.floor(Math.random() * PROFLELIST.length);
   const randomProfile = PROFLELIST[randomIndex];
   const router = useRouter();
+  const pathname = usePathname();
 
+  console.log('not found pathnmae', pathname);
   return (
     <div className="flex flex-col h-dvh w-dvw justify-center items-center scrollbar-hide">
       <h1 className="text-athens-sub text-9xl mt-12 flex justify-center items-center">

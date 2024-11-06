@@ -8,6 +8,7 @@ export async function generateMetadata() {
   const agoraId = headers().get('referer')?.split('/').pop();
   let agoraTitle = '';
 
+  console.log('agoraId', agoraId);
   const res = await callFetchWrapper(`/api/v1/open/agoras/${agoraId}/title`, {
     next: {
       tags: getSelectedAgoraTags(agoraId as string),

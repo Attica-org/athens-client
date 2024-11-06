@@ -88,6 +88,7 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
     // return null;
   }
 
+  console.log('post enter aogra into res', res);
   const result = res.response;
 
   return result;

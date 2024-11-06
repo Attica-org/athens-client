@@ -16,17 +16,24 @@ const useApiError = () => {
   }, []);
 
   const authErrorHandlers = useCallback(async () => {
-    const reissueResponse = await getReissuanceToken();
+    try {
+      const reissueResponse = await getReissuanceToken();
 
-    if (reissueResponse === AUTHORIZATION_FAIL) {
+      if (reissueResponse === AUTHORIZATION_FAIL) {
+        console.log('useApiError에서의 세션 만료 메시지', reissueResponse);
+        showToast(
+          '로그인 세션이 만료되었습니다. 다시 로그인 해주세요.',
+          'error',
+        );
+        await signOutUser();
+      }
       console.log('useApiError에서의 세션 만료 메시지', reissueResponse);
-      showToast('로그인 세션이 만료되었습니다. 다시 로그인 해주세요.', 'error');
-      await signOutUser();
+      showToast('세션 발급 완료', 'success');
+      // else if (reissueResponse === AUTHORIZATION_SUCCESS) {
+      // }
+    } catch (error) {
+      console.log('useApi Auth Error Catch', error);
     }
-    // } else if (reissueResponse === AUTHORIZATION_SUCCESS) {
-    //   // 기존 요청 재시도
-
-    // }
   }, [signOutUser]);
 
   const handleError = useCallback(

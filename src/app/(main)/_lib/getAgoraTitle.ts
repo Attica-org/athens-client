@@ -11,6 +11,7 @@ export const getAgoraTitle: QueryFunction<
 > = async ({ queryKey }) => {
   const [_, agoraId] = queryKey;
 
+  console.log('agoraId', agoraId);
   const res = await callFetchWrapper(`/api/v1/open/agoras/${agoraId}/title`, {
     next: {
       tags: getSelectedAgoraTags(agoraId),
