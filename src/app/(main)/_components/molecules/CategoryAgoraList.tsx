@@ -79,6 +79,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
         getCategoryAgoraListQueryKey(searchParams),
       );
     },
+    retry: 2,
   });
 
   const { ref, inView } = useInView({
