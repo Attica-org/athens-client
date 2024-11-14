@@ -1,26 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { homeSegmentKey } from '@/constants/segmentKey';
-import fetchWrapper from '@/lib/fetchWrapper';
-import getToken from '@/lib/getToken';
-import showToast from '@/utils/showToast';
-import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
-import { redirect } from 'next/navigation';
 import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
-// eslint-disable-next-line import/prefer-default-export
+import { callFetchWrapper } from '@/lib/fetchWrapper';
+import { AGORA_INFO } from '@/constants/responseErrorMessage';
+
 export const getAgoraTitle: QueryFunction<
-  { title: string; status: string },
+  { title: string; status: string; imageUrl: string; agoraColor: string },
   [_1: string, _2: string]
 > = async ({ queryKey }) => {
   const [_, agoraId] = queryKey;
 
-  // 토큰을 가지고 있는지 확인
-  if (tokenManager.getToken() === undefined) {
-    await getToken();
-  }
-
-  const res = await fetchWrapper.call(`/api/v1/open/agoras/${agoraId}/title`, {
+  console.log('agoraId', agoraId);
+  const res = await callFetchWrapper(`/api/v1/open/agoras/${agoraId}/title`, {
     next: {
       tags: getSelectedAgoraTags(agoraId),
     },
@@ -31,14 +23,17 @@ export const getAgoraTitle: QueryFunction<
     },
   });
 
-  if (res.success === false) {
-    if (res.error.code === 1301) {
-      showToast('존재하지 않는 아고라입니다.', 'error');
-    } else {
-      showToast('아고라 제목을 불러오는데 실패했습니다.', 'error');
+  if (!res.ok && !res.success) {
+    if (!res.error) {
+      throw new Error(AGORA_INFO.UNKNOWN_ERROR);
     }
 
-    redirect(`${homeSegmentKey}?status=active`);
+    if (res.error.code === 1301) {
+      throw new Error(AGORA_INFO.NOT_EXIST_AGORA);
+    }
+
+    throw new Error(AGORA_INFO.FAILED_TO_GET_AGORA_INFO);
+    // redirect(`${homeSegmentKey}?status=active`);
   }
 
   const result = res.response;

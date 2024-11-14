@@ -1,21 +1,19 @@
-import fetchWrapper from '@/lib/fetchWrapper';
-import getToken from '@/lib/getToken';
-import showToast from '@/utils/showToast';
-import tokenManager from '@/utils/tokenManager';
-
-const NOT_FOUND_AGORA = 'Not found agora. agoraId: 1';
-const NOT_FOUND_USER = 'Agora user not found with agora id: 1 user id: 1';
+import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { AGORA_EXIT } from '@/constants/responseErrorMessage';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
+import { getSession } from '@/serverActions/auth';
 
 type Props = {
   agoraId: number;
 };
 
 const patchChatExit = async ({ agoraId }: Props) => {
-  if (tokenManager.getToken() === undefined) {
-    await getToken();
+  const session = await getSession();
+  if (!session) {
+    throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/exit`, {
+  const res = await callFetchWrapper(`/api/v1/auth/agoras/${agoraId}/exit`, {
     method: 'PATCH',
     next: {
       tags: [],
@@ -23,19 +21,31 @@ const patchChatExit = async ({ agoraId }: Props) => {
     credentials: 'include',
     cache: 'no-cache',
     headers: {
-      Authorization: `Bearer ${tokenManager.getToken()}`,
+      Authorization: `Bearer ${session.user.accessToken}`,
     },
   });
 
-  if (res.success === false) {
+  console.log('res', res);
+  if (!res.ok && !res.success) {
+    console.log('res.error', res.error);
+    if (!res.error) {
+      throw new Error(AGORA_EXIT.UNKNOWN_ERROR);
+    }
+
     if (res.error.code === 1301) {
-      if (res.error.message === NOT_FOUND_AGORA) {
-        showToast('존재하지 않는 아고라입니다', 'error');
-      } else if (res.error.message === NOT_FOUND_USER) {
-        showToast('존재하지 않는 사용자입니다', 'error');
+      if (
+        res.error.message.startsWith(AGORA_EXIT.SERVER_RESPONSE_NOT_FOUND_AGORA)
+      ) {
+        throw new Error(AGORA_EXIT.NOT_FOUND_AGORA);
+      } else if (
+        res.error.message.startsWith(AGORA_EXIT.SERVER_RESPONSE_NOT_FOUND_USER)
+      ) {
+        throw new Error(AGORA_EXIT.NOT_FOUND_USER);
       }
     }
-    return null;
+
+    throw new Error(AGORA_EXIT.FAILED_TO_EXIT);
+    // return null;
   }
 
   const result = res.response;

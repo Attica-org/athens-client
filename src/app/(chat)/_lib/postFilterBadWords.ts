@@ -1,27 +1,26 @@
-import fetchWrapper from '@/lib/fetchWrapper';
-import getToken from '@/lib/getToken';
-import showToast from '@/utils/showToast';
-import tokenManager from '@/utils/tokenManager';
+import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { FILTER_BAD_WORDS } from '@/constants/responseErrorMessage';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
+import { getSession } from '@/serverActions/auth';
 
 type Props = {
   message: string;
   agoraId: number;
 };
 
-const USER_NOT_PARTICIPATING = 'User is not participating in the agora';
-
 const postFilterBadWords = async ({ message, agoraId }: Props) => {
-  if (tokenManager.getToken() === undefined) {
-    await getToken();
+  const session = await getSession();
+  if (!session) {
+    throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await fetchWrapper.call(
+  const res = await callFetchWrapper(
     `/api/v1/auth/agoras/${agoraId}/chats/filter`,
     {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${tokenManager.getToken()}`,
+        Authorization: `Bearer ${session.user.accessToken}`,
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -31,16 +30,22 @@ const postFilterBadWords = async ({ message, agoraId }: Props) => {
     },
   );
 
-  if (res.success === false) {
+  if (!res.ok && res.error?.message) {
+    if (!res.error) {
+      throw new Error(FILTER_BAD_WORDS.UNKNOWN_ERROR);
+    }
+
     if (res.error.code === 1102) {
-      if (res.error.message === USER_NOT_PARTICIPATING) {
-        showToast(
-          '채팅을 작성중인 유저가 현재 아고라에 존재하지 않습니다',
-          'error',
-        );
+      if (
+        res.error.message ===
+        FILTER_BAD_WORDS.SERVER_RESPONSE_USER_NOT_PARTICIPATING
+      ) {
+        throw new Error(FILTER_BAD_WORDS.USER_NOT_PARTICIPATING);
       }
     }
-    return null;
+
+    throw new Error(FILTER_BAD_WORDS.FAILED_TO_FILTER);
+    // return null;
   }
 
   return res;

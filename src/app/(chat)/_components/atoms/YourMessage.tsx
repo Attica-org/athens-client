@@ -1,9 +1,10 @@
 import { Message } from '@/app/model/Message';
 import React, { useRef, useState } from 'react';
-import PROFLELIST from '@/constants/userProfileImage';
 import * as StompJs from '@stomp/stompjs';
 import useClickOutside from '@/hooks/useClickOutside';
 import useTouchHandler from '@/hooks/useTouchHandler';
+import { AGORA_POSITION } from '@/constants/agora';
+import { PROFLELIST } from '@/constants/consts';
 import UserImage from '../../../_components/atoms/UserImage';
 import ReactionMenuButton from './ReactionMenuButton';
 import useIsEmojiSendable from '../../../../hooks/useIsEmojiSendable';
@@ -59,7 +60,7 @@ function YourMessage({ message, isSameUser, shouldShowTime, client }: Props) {
       )}
       <div
         ref={modalRef}
-        className={`p-0.5rem ${isSameUser && 'pt-0'} flex flex-col justify-center items-start`}
+        className={`p-0.5rem ${isSameUser && 'pt-0'} pb-0 flex flex-col justify-center items-start`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onTouchStart={handleTouchStart}
@@ -77,7 +78,7 @@ function YourMessage({ message, isSameUser, shouldShowTime, client }: Props) {
         )}
         <div className="flex justify-end">
           <div
-            className={`max-w-[60vw] relative whitespace-pre-line ${message.user.type === 'CONS' ? 'bg-red-200' : 'bg-blue-200'} rounded-tr-lg ${isSameUser && 'rounded-tl-lg'} rounded-bl-lg rounded-br-lg p-7 pl-10 pr-10 text-xs lg:text-sm`}
+            className={`max-w-[60vw] relative whitespace-pre-line ${message.user.type === AGORA_POSITION.CONS ? 'bg-red-200' : 'bg-blue-200'} rounded-tr-lg ${isSameUser && 'rounded-tl-lg'} rounded-bl-lg rounded-br-lg p-7 pl-10 pr-10 text-xs lg:text-sm`}
           >
             {message.content}
             {showEmojiModal && (
@@ -117,7 +118,7 @@ function YourMessage({ message, isSameUser, shouldShowTime, client }: Props) {
           </div>
         </div>
 
-        <div className="mt-10">
+        <div className="mt-5">
           <UserReaction className="w-16 h-16" chatId={message.chatId} />
         </div>
       </div>

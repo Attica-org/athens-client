@@ -1,26 +1,25 @@
-import fetchWrapper from '@/lib/fetchWrapper';
-import getToken from '@/lib/getToken';
-import showToast from '@/utils/showToast';
-import tokenManager from '@/utils/tokenManager';
 import { base64ToFile } from '@/utils/base64ToFile';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
+import { getSession } from '@/serverActions/auth';
+import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { AGORA_IMAGE_UPDATE } from '@/constants/responseErrorMessage';
 
 type Props = {
   agoraId: number;
   fileUrl: string;
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const patchAgoraImg = async ({ agoraId, fileUrl }: Props) => {
-  // 토큰을 가지고 있는지 확인
-  if (tokenManager.getToken() === undefined) {
-    await getToken();
+  const session = await getSession();
+  if (!session) {
+    throw new Error(SIGNIN_REQUIRED);
   }
 
   const formData = new FormData();
   const file = fileUrl ? base64ToFile(fileUrl, `아고라${agoraId}.jpg`) : '';
   formData.append('file', file);
 
-  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}`, {
+  const res = await callFetchWrapper(`/api/v1/auth/agoras/${agoraId}`, {
     method: 'PATCH',
     next: {
       tags: [],
@@ -28,19 +27,24 @@ export const patchAgoraImg = async ({ agoraId, fileUrl }: Props) => {
     credentials: 'include',
     cache: 'no-cache',
     headers: {
-      Authorization: `Bearer ${tokenManager.getToken()}`,
+      Authorization: `Bearer ${session.user.accessToken}`,
     },
     body: formData,
   });
 
-  if (res.success === false) {
-    if (res.error.code === 1202) {
-      showToast('방장만 이미지를 변경할 수 있습니다.', 'error');
-    } else if (res.error.code === 1301) {
-      showToast('존재하지 않는 아고라이거나 사용자입니다.', 'error');
+  if (!res.ok && !res.success) {
+    if (!res.error) {
+      throw new Error(AGORA_IMAGE_UPDATE.UNKNOWN_ERROR);
     }
 
-    return null;
+    if (res.error.code === 1202) {
+      throw new Error(AGORA_IMAGE_UPDATE.ONLY_HOST_CAN_UPDATE);
+    } else if (res.error.code === 1301) {
+      throw new Error(AGORA_IMAGE_UPDATE.NOT_FOUND_AGORA_OR_USER);
+    }
+
+    throw new Error(AGORA_IMAGE_UPDATE.FAILED_TO_UPDATE_IMAGE);
+    // return null;
   }
 
   const result = res.response;

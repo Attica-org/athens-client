@@ -22,5 +22,7 @@ export default function showToast(message: string, type: string) {
     Toast(message, '❌');
   } else if (type === 'success') {
     Toast(message, '✅');
+  } else if (type === 'info') {
+    Toast(message, 'ℹ️');
   }
 }

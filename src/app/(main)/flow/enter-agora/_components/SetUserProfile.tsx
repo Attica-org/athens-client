@@ -2,10 +2,10 @@
 
 import React from 'react';
 import UserImage from '@/app/_components/atoms/UserImage';
-import PROFLELIST from '@/constants/userProfileImage';
 import { useShallow } from 'zustand/react/shallow';
 import { useEnter } from '@/store/enter';
 import { ProfileImage } from '@/app/model/Agora';
+import { PROFLELIST } from '@/constants/consts';
 import SelectedProfile from './SelectedProfile';
 
 export default function SetUserProfile() {

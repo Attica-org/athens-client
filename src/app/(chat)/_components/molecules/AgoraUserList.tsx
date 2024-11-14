@@ -1,6 +1,7 @@
 import React from 'react';
-import PROFLELIST from '@/constants/userProfileImage';
 import { ParticipationPosition } from '@/app/model/Agora';
+import { AGORA_POSITION } from '@/constants/agora';
+import { PROFLELIST } from '@/constants/consts';
 import UserImage from '../../../_components/atoms/UserImage';
 
 type UserList = {
@@ -23,12 +24,14 @@ export default function AgoraUserList({ position, userList }: Props) {
     <div className="pb-0.5rem">
       <h3
         aria-label={
-          position === 'PROS' ? '찬성측 참여자 목록' : '반대측 참여자 목록'
+          position === AGORA_POSITION.PROS
+            ? '찬성측 참여자 목록'
+            : '반대측 참여자 목록'
         }
         id={position}
         className="text-sm pb-10 lg:pb-1rem dark:text-white dark:text-opacity-85"
       >
-        {position === 'PROS' ? '찬성측' : '반대측'}
+        {position === AGORA_POSITION.PROS ? '찬성측' : '반대측'}
       </h3>
       <ul
         aria-labelledby={position}
@@ -36,7 +39,7 @@ export default function AgoraUserList({ position, userList }: Props) {
       >
         {userList.map(
           (user) =>
-            user.type !== 'OBSERVER' &&
+            user.type !== AGORA_POSITION.OBSERVER &&
             user.type === position && (
               <li
                 className="w-full flex justify-between items-center pb-1rem"

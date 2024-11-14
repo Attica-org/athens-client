@@ -1,14 +1,17 @@
-import fetchWrapper from '@/lib/fetchWrapper';
 import { headers } from 'next/headers';
 import React from 'react';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
+import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
 import ErrorBoundaryMessage from '../../_components/organisms/ErrorBoundaryMessage';
 
 export async function generateMetadata() {
-  const agoraId = headers().get('x-pathname')?.split('/').pop();
+  const agoraId = headers().get('referer')?.split('/').pop();
   let agoraTitle = '';
-  const res = await fetchWrapper.call(`/api/v1/open/agoras/${agoraId}/title`, {
+
+  console.log('agoraId', agoraId);
+  const res = await callFetchWrapper(`/api/v1/open/agoras/${agoraId}/title`, {
     next: {
-      tags: [`${agoraId}`, 'agoraTitle'],
+      tags: getSelectedAgoraTags(agoraId as string),
     },
     credentials: 'include',
     cache: 'no-cache',
@@ -17,9 +20,9 @@ export async function generateMetadata() {
     },
   });
 
-  if (res.success === false) {
+  if (!res.ok && !res.success) {
     agoraTitle = '아고라 - Athens';
-  } else {
+  } else if (res.success) {
     const result = res.response;
     agoraTitle = `${result.title} - Athens`;
   }

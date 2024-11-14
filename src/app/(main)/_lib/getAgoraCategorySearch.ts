@@ -1,6 +1,6 @@
 import { AgoraData } from '@/app/model/Agora';
-import fetchWrapper from '@/lib/fetchWrapper';
-import showToast from '@/utils/showToast';
+import { AGORA_CATEGORY_SEARCH } from '@/constants/responseErrorMessage';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { QueryFunction } from '@tanstack/react-query';
 
 type SearchParams = {
@@ -9,7 +9,6 @@ type SearchParams = {
   q?: string;
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const getAgoraCategorySearch: QueryFunction<
   { agoras: AgoraData[]; nextCursor: number | null },
   [_1: string, _2: string, _3: string, searchParams: SearchParams],
@@ -20,7 +19,7 @@ export const getAgoraCategorySearch: QueryFunction<
 
   const urlSearchParams = new URLSearchParams(searchParams);
 
-  const res = await fetchWrapper.call(
+  const res = await callFetchWrapper(
     `/api/v1/open/agoras?${urlSearchParams.toString()}&next=${pageParam.nextCursor ?? ''}`,
     {
       next: {
@@ -40,27 +39,28 @@ export const getAgoraCategorySearch: QueryFunction<
     },
   );
 
-  if (res.success === false) {
+  if (!res.ok && !res.success) {
+    if (!res.error) {
+      throw new Error(AGORA_CATEGORY_SEARCH.UNKNOWN_ERROR);
+    }
+
     if (res.error.code === 1001) {
-      showToast('허용되지 않는 status 입니다.', 'error');
-    }
-    if (res.error.code === 1301) {
-      showToast('허용되지 않는 카테고리입니다.', 'error');
-    }
-    if (res.error.code === -1) {
+      throw new Error(AGORA_CATEGORY_SEARCH.NOT_ALLOWED_STATUS);
+    } else if (res.error.code === 1301) {
+      throw new Error(AGORA_CATEGORY_SEARCH.NOT_ALLOWED_CATEGORY);
+    } else if (res.error.code === -1) {
       throw new Error(res.error.message);
     }
-    // redirect('/home?status=active');
-    return {
-      agoras: [],
-      nextCursor: null,
-    };
+
+    throw new Error(AGORA_CATEGORY_SEARCH.FAILED_TO_GET_AGORA_LIST);
+    // return {
+    //   agoras: [],
+    //   nextCursor: null,
+    // };
   }
 
-  const result = res.response;
-
   return {
-    agoras: result.agoras,
-    nextCursor: result.hasNext ? result.next : null,
+    agoras: res.response.agoras,
+    nextCursor: res.response.hasNext ? res.response.next : null,
   };
 };

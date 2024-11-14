@@ -1,26 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AgoraUserProfileType } from '@/app/model/Agora';
-import fetchWrapper from '@/lib/fetchWrapper';
-import getToken from '@/lib/getToken';
-import showToast from '@/utils/showToast';
-import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
 import { getAgoraUserListQueryKey as getAgoraUserListTags } from '@/constants/queryKey';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
+import { getSession } from '@/serverActions/auth';
+import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { AGORA_USER } from '@/constants/responseErrorMessage';
 
-// eslint-disable-next-line import/prefer-default-export
 export const getAgoraUsers: QueryFunction<
   AgoraUserProfileType[],
   [string, string, string]
 > = async ({ queryKey }) => {
   const [_1, _2, agoraId] = queryKey;
 
-  // 토큰을 가지고 있는지 확인
-  if (tokenManager.getToken() === undefined) {
-    await getToken();
+  const session = await getSession();
+  if (!session) {
+    throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await fetchWrapper.call(`/api/v1/open/agoras/${agoraId}/users`, {
+  const res = await callFetchWrapper(`/api/v1/open/agoras/${agoraId}/users`, {
     next: {
       tags: getAgoraUserListTags(Number(agoraId)),
     },
@@ -31,16 +30,18 @@ export const getAgoraUsers: QueryFunction<
     },
   });
 
-  if (res.success === false) {
-    if (res.error.code === 1301) {
-      showToast('해당 아고라를 찾을 수 없습니다.', 'error');
-    } else if (res.error.code === -1) {
-      throw new Error(res.error.message);
-    } else {
-      showToast('참여 사용자를 불러올 수 없습니다.', 'error');
+  if (!res.ok && !res.success) {
+    if (!res.error) {
+      throw new Error(AGORA_USER.UNKNOWN_ERROR);
     }
 
-    return [];
+    if (res.error.code === 1301) {
+      throw new Error(AGORA_USER.NOT_FOUND_AGORA);
+    } else if (res.error.code === -1) {
+      throw new Error(res.error.message);
+    }
+
+    throw new Error(AGORA_USER.FAILED_TO_GET_AGORA_USER);
   }
 
   const result = res.response.participants;

@@ -1,57 +1,38 @@
-import showToast from '@/utils/showToast';
-import tokenManager from '@/utils/tokenManager';
-import getKey from '@/utils/getKey';
-import getToken from './getToken';
-import retryConfig from './retryConfig';
+import { getSession, updateSession } from '@/serverActions/auth';
+import {
+  AUTHORIZATION_FAIL,
+  AUTHORIZATION_SUCCESS,
+} from '@/constants/authErrorMessage';
+import { callFetchWrapper } from './fetchWrapper';
 
-// eslint-disable-next-line import/prefer-default-export
 export const getReissuanceToken = async () => {
-  const key = await getKey();
+  const session = await getSession();
+  if (!session) {
+    return AUTHORIZATION_FAIL;
+  }
 
-  const res = await fetch(`${key.BASE_URL}/api/v1/auth/reissue`, {
+  const res = await callFetchWrapper('/api/v1/auth/reissue', {
     method: 'POST',
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${tokenManager.getToken()}`,
+      Authorization: `Bearer ${session.user.accessToken}`,
     },
   });
 
-  if (!res.ok) {
-    const result = await res.json();
+  console.log('res', res);
 
-    if (result.error.code === 1003 || result.error.code === 1202) {
-      if (retryConfig.tokenReissuance > 0) {
-        retryConfig.tokenReissuance -= 1;
-        await getToken();
-        await getReissuanceToken();
-      }
-    } else if (result.error.code === 1201) {
-      if (
-        result.error.message === 'Invalid JWT signature.' ||
-        result.error.message === 'Unsupported JWT token.'
-      ) {
-        if (retryConfig.tokenReissuance > 0) {
-          retryConfig.tokenReissuance -= 1;
-          await getToken();
-          await getReissuanceToken();
-        }
-      }
-    } else {
-      showToast('인증 오류가 발생했습니다.', 'error');
-    }
-
-    if (retryConfig.tokenReissuance < 1) {
-      showToast('인증 오류가 발생했습니다.', 'error');
-      retryConfig.retry = 0;
-      retryConfig.tokenReissuance = 3;
-    }
-
-    return;
+  if (!res.ok && !res.success) {
+    // 토큰 재발급 실패
+    // 토큰 재발급이 실패하면 로그아웃 처리
+    return AUTHORIZATION_FAIL;
   }
 
-  retryConfig.tokenReissuance = 3;
-  const result = await res.json();
-
-  tokenManager.setToken(result.response);
+  try {
+    await updateSession(res.response);
+    // await updateSession(res.response);
+  } catch (error) {
+    console.log('jwt update error', error);
+  }
+  return AUTHORIZATION_SUCCESS;
 };

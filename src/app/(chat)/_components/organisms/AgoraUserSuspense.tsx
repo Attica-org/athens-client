@@ -9,7 +9,7 @@ import { useChatInfo } from '@/store/chatInfo';
 import { useShallow } from 'zustand/react/shallow';
 import { getAgoraUserListQueryKey } from '@/constants/queryKey';
 import { useAgora } from '@/store/agora';
-import { AGORA_STATUS } from '@/constants/Agora';
+import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import AgoraUserList from '../molecules/AgoraUserList';
 import { getAgoraUsers } from '../../_lib/getAgoraUsers';
 
@@ -51,9 +51,9 @@ export default function AgoraUserSuspense({ agoraId }: Props) {
     <div>
       {userList && !end && (
         <ErrorBoundary FallbackComponent={FallbackComponent}>
-          <AgoraUserList position="PROS" userList={userList} />
+          <AgoraUserList position={AGORA_POSITION.PROS} userList={userList} />
           <div className="border-b-1 border-gray-200 mb-1rem dark:border-gray-500" />
-          <AgoraUserList position="CONS" userList={userList} />
+          <AgoraUserList position={AGORA_POSITION.CONS} userList={userList} />
         </ErrorBoundary>
       )}
     </div>

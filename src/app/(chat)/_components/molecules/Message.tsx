@@ -11,7 +11,6 @@ import {
 import { useInView } from 'react-intersection-observer';
 import { useMessageStore } from '@/store/message';
 import { useAgora } from '@/store/agora';
-import { ParticipationPosition } from '@/app/model/Agora';
 import { useEnter } from '@/store/enter';
 import { useShallow } from 'zustand/react/shallow';
 import * as StompJs from '@stomp/stompjs';
@@ -20,8 +19,8 @@ import {
   getUserReactionQueryKey,
 } from '@/constants/queryKey';
 import getKey from '@/utils/getKey';
-import tokenManager from '@/utils/tokenManager';
-import { AGORA_STATUS } from '@/constants/Agora';
+import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
+import { useSession } from 'next-auth/react';
 import MyMessage from '../atoms/MyMessage';
 import YourMessage from '../atoms/YourMessage';
 import { getChatMessages } from '../../_lib/getChatMessages';
@@ -91,9 +90,6 @@ function MessageItem({
   );
 }
 
-const OBSERVER: ParticipationPosition = 'OBSERVER';
-const PROS: ParticipationPosition = 'PROS';
-
 export default function Message() {
   const [pageRendered, setPageRendered] = useState(false);
   const [adjustScroll, setAdjustScroll] = useState(false);
@@ -108,6 +104,7 @@ export default function Message() {
   const myRole = useAgora((state) => state.enterAgora.role);
   const agoraId = useAgora((state) => state.enterAgora.id);
   const queryClient = useQueryClient();
+  const session = useSession();
   const { nickname: userNickname, reset } = useEnter(
     useShallow((state) => ({
       nickname: state.nickname,
@@ -188,7 +185,7 @@ export default function Message() {
       client.current = new StompJs.Client({
         brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
-          Authorization: `Bearer ${tokenManager.getToken()}`,
+          Authorization: `Bearer ${session.data?.user.accessToken}`,
           AgoraId: `${agoraId}`,
         },
         reconnectDelay: 500,
@@ -289,7 +286,9 @@ export default function Message() {
   }, [reset]);
 
   const isMyType = useCallback(
-    (type: string) => type === myRole || (myRole === OBSERVER && type === PROS),
+    (type: string) =>
+      type === myRole ||
+      (myRole === AGORA_POSITION.OBSERVER && type === AGORA_POSITION.PROS),
     [myRole],
   );
 

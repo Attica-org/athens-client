@@ -6,7 +6,7 @@ import { useAgora } from '@/store/agora';
 import { useVoteStore } from '@/store/vote';
 import showToast from '@/utils/showToast';
 import { getVoteResultQueryKey } from '@/constants/queryKey';
-import { AGORA_STATUS } from '@/constants/Agora';
+import { AGORA_STATUS } from '@/constants/agora';
 import { getVoteResult } from '../../_lib/getVoteResult';
 
 type Props = {
@@ -21,7 +21,6 @@ export default function VoteResult({ agoraId }: Props) {
     queryFn: (query) => {
       return getVoteResult(query);
     },
-    retry: 2,
     enabled:
       enterAgora.status === AGORA_STATUS.CLOSED &&
       selectedAgora.status === AGORA_STATUS.CLOSED,
@@ -36,7 +35,10 @@ export default function VoteResult({ agoraId }: Props) {
 
   useEffect(() => {
     if (!data && error) {
-      showToast('투표 결과를 가져오는데 실패했습니다.', 'error');
+      showToast(
+        '투표 데이터를 얻어오는데 실패했습니다.\n다시 시도해주세요.',
+        'error',
+      );
     }
   }, [data, error]);
 

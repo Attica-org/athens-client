@@ -1,16 +1,15 @@
-import fetchWrapper from '@/lib/fetchWrapper';
-import getToken from '@/lib/getToken';
-import showToast from '@/utils/showToast';
-import tokenManager from '@/utils/tokenManager';
+import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { AGORA_TIME_OUT } from '@/constants/responseErrorMessage';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
+import { getSession } from '@/serverActions/auth';
 
-// eslint-disable-next-line import/prefer-default-export
 export const patchAgoraTimeOut = async (agoraId: number) => {
-  // 토큰을 가지고 있는지 확인
-  if (tokenManager.getToken() === undefined) {
-    await getToken();
+  const session = await getSession();
+  if (!session) {
+    throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await fetchWrapper.call(
+  const res = await callFetchWrapper(
     `/api/v1/open/agoras/${agoraId}/time-out`,
     {
       method: 'PATCH',
@@ -25,15 +24,19 @@ export const patchAgoraTimeOut = async (agoraId: number) => {
     },
   );
 
-  if (res.success === false) {
-    if (res.error.code === 1301) {
-      showToast('존재하지 않는 아고라입니다.', 'error');
-    } else if (res.error.code === 1002) {
-      showToast('이미 종료된 아고라입니다.', 'error');
-    } else {
-      showToast('토론 종료에 실패했습니다.\n 다시 시도해주세요.', 'error');
+  if (!res.ok && !res.success) {
+    if (!res.error) {
+      throw new Error(AGORA_TIME_OUT.UNKNOWN_ERROR);
     }
-    return null;
+
+    if (res.error.code === 1301) {
+      throw new Error(AGORA_TIME_OUT.NOT_FOUND_AGORA);
+    } else if (res.error.code === 1002) {
+      throw new Error(AGORA_TIME_OUT.ALREADY_TIME_OUT);
+    }
+    throw new Error(AGORA_TIME_OUT.FAILED_TO_TIME_OUT);
+
+    // return null;
   }
 
   const result = res.response;

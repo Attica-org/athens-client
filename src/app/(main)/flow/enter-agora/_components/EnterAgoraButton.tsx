@@ -2,19 +2,19 @@
 
 import { postEnterAgoraInfo } from '@/app/(main)/_lib/postEnterAgoraInfo';
 import Loading from '@/app/_components/atoms/loading';
-import { ParticipationPosition } from '@/app/model/Agora';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import { useAgora } from '@/store/agora';
 import { useEnter } from '@/store/enter';
 import { useMutation } from '@tanstack/react-query';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { AGORA_STATUS } from '@/constants/Agora';
-
-const OBSERVER: ParticipationPosition = 'OBSERVER';
+import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
+import useApiError from '@/hooks/useApiError';
+import showToast from '@/utils/showToast';
 
 export default function EnterAgoraButton() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { handleError } = useApiError();
   const pathname = usePathname();
 
   const router = useRouter();
@@ -48,12 +48,14 @@ export default function EnterAgoraButton() {
     onSuccess: (response) => {
       if (response) {
         if (response === AGORA_STATUS.CLOSED) {
+          showToast('종료된 아고라입니다.', 'info');
+
           setEnterAgora({
             id: Number(pathname.split('/')[3]),
             thumbnail: selectedAgora.thumbnail,
             title: selectedAgora.title,
             status: AGORA_STATUS.CLOSED,
-            role: OBSERVER,
+            role: AGORA_POSITION.OBSERVER,
             isCreator: false,
             agoraColor: selectedAgora.agoraColor,
           });
@@ -75,19 +77,19 @@ export default function EnterAgoraButton() {
         routePage();
       } else {
         setIsLoading(false);
+        handleError(new Error('입장 실패했습니다.\n 다시 시도해주세요.'));
       }
     },
-    onError: () => {
+    onError: (error) => {
       setIsLoading(false);
-      // console.dir(error);
-      // alert('문제가 발생했습니다. 다시 시도해주세요.');
+      handleError(error);
     },
   });
 
   const enterAgora = () => {
     const { nickname, setMessage, selectedPosition } = useEnter.getState();
 
-    if (selectedPosition !== OBSERVER) {
+    if (selectedPosition !== AGORA_POSITION.OBSERVER) {
       if (nickname.length > 10) {
         setMessage('닉네임은 10자 이내로 입력해주세요.');
         return;

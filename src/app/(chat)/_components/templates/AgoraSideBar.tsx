@@ -11,7 +11,8 @@ import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgora } from '@/store/agora';
 import Image from 'next/image';
-import { AGORA_STATUS } from '@/constants/Agora';
+import { AGORA_STATUS } from '@/constants/agora';
+import { isValidImgUrl } from '@/utils/validation/validateImage';
 import AgoraUserSuspense from '../organisms/AgoraUserSuspense';
 import AgoraUserSideSkeleton from '../organisms/AgoraUserSideSkeleton';
 import ChatSideModule from '../molecules/ChatSideModule';
@@ -108,7 +109,7 @@ export default function AgoraSideBar() {
               ) : (
                 <div className="flex w-full relative">
                   <div className="flex-1">
-                    {enterAgora.thumbnail ? (
+                    {isValidImgUrl(enterAgora.thumbnail) ? (
                       <div className="relative w-60 h-60">
                         <Image
                           src={enterAgora.thumbnail}

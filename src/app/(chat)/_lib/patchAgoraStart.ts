@@ -1,16 +1,15 @@
-import fetchWrapper from '@/lib/fetchWrapper';
-import getToken from '@/lib/getToken';
-import showToast from '@/utils/showToast';
-import tokenManager from '@/utils/tokenManager';
+import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { AGORA_START } from '@/constants/responseErrorMessage';
+import { callFetchWrapper } from '@/lib/fetchWrapper';
+import { getSession } from '@/serverActions/auth';
 
-// eslint-disable-next-line import/prefer-default-export
 export const patchAgoraStart = async (agoraId: number) => {
-  // 토큰을 가지고 있는지 확인
-  if (tokenManager.getToken() === undefined) {
-    await getToken();
+  const session = await getSession();
+  if (!session) {
+    throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await fetchWrapper.call(`/api/v1/auth/agoras/${agoraId}/start`, {
+  const res = await callFetchWrapper(`/api/v1/auth/agoras/${agoraId}/start`, {
     method: 'PATCH',
     next: {
       tags: [],
@@ -19,22 +18,25 @@ export const patchAgoraStart = async (agoraId: number) => {
     cache: 'no-cache',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${tokenManager.getToken()}`,
+      Authorization: `Bearer ${session.user.accessToken}`,
     },
   });
 
-  if (res.success === false) {
-    if (res.error.code === 1002) {
-      showToast('이미 진행중이거나 종료된 아고라입니다.', 'error');
-    } else if (res.error.code === 1301) {
-      showToast('존재하지 않는 아고라이거나 사용자입니다.', 'error');
-    } else if (res.error.code === 1102) {
-      showToast('관찰자는 토론을 시작할 수 없습니다.', 'error');
-    } else {
-      showToast('토론 시작에 실패했습니다.\n 다시 시도해주세요.', 'error');
+  if (!res.ok && !res.success) {
+    if (!res.error) {
+      throw new Error(AGORA_START.UNKNOWN_ERROR);
     }
 
-    return null;
+    if (res.error.code === 1002) {
+      throw new Error(AGORA_START.ALREADY_RUNNING_OR_ENDED);
+    } else if (res.error.code === 1301) {
+      throw new Error(AGORA_START.NOT_FOUND_AGORA_OR_USER);
+    } else if (res.error.code === 1102) {
+      throw new Error(AGORA_START.OBSERVER_CANNOT_START);
+    }
+
+    throw new Error(AGORA_START.FAILED_TO_START_AGORA);
+    // return null;
   }
 
   const result = res.response;
