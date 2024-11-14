@@ -30,6 +30,13 @@ export default function NavLinks() {
               className="w-1.5rem"
             />
           </DesktopNavLink>
+          <DesktopNavLink
+            href={userInfoSegmentKey}
+            innerText="사용자 정보"
+            label="사용자 정보 조회"
+          >
+            <NavIconDecider segment={userInfoSegmentKey} className="w-1.5rem" />
+          </DesktopNavLink>
         </ul>
       </div>
       <div className="sticky bottom-0 block lg:hidden w-full h-58 border-t-1 border-gray-100 dark:border-gray-500">

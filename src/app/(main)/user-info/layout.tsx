@@ -10,7 +10,7 @@ export default function Layout({ children }: Props) {
   return (
     <>
       <SideNav />
-      <div className="h-dvh w-full inset-y-full justify-center items-center">
+      <div className="flex flex-col flex-1 h-dvh flex-grow max-width-screen min-w-270 inset-y-full">
         <Header />
         <section>{children}</section>
       </div>
