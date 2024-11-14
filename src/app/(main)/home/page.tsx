@@ -1,6 +1,7 @@
 import React from 'react';
-import { AGORACATEGORY, isValidCategoryKey } from '@/constants/agoraCategory';
 import { SearchParams } from '@/app/model/Agora';
+import { AGORACATEGORY } from '@/constants/consts';
+import { isValidCategoryKey } from '@/utils/validation/validateCategoryKey';
 import Main from '../_components/templates/Main';
 
 type Props = {

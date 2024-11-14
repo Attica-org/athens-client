@@ -4,8 +4,10 @@ import { useAgora } from '@/store/agora';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import Loading from '@/app/_components/atoms/loading';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { getSelectedAgoraQueryKey } from '@/constants/queryKey';
+import { homeSegmentKey } from '@/constants/segmentKey';
+import showToast from '@/utils/showToast';
 import { getAgoraTitle } from '../../_lib/getAgoraTitle';
 import ModalPosSelectContainer from '../../flow/enter-agora/_components/ModalPosSelectContainer';
 import InputErrorMessage from '../../flow/enter-agora/_components/InputErrorMessage';
@@ -14,12 +16,13 @@ import EnterAgoraButton from '../../flow/enter-agora/_components/EnterAgoraButto
 
 export default function EnterAgoraContent() {
   const { selectedAgora, setSelectedAgora } = useAgora();
+  const router = useRouter();
   const pathname = usePathname();
   const agoraId = pathname.split('/')[3];
 
   const shouldFetch = !!agoraId && !selectedAgora.id;
 
-  const { data, isSuccess } = useQuery({
+  const { data, isSuccess, isError } = useQuery({
     queryKey: getSelectedAgoraQueryKey(agoraId),
     queryFn: getAgoraTitle,
     enabled: shouldFetch,
@@ -34,8 +37,19 @@ export default function EnterAgoraContent() {
         status: data.status,
         agoraColor: data.agoraColor,
       });
+    } else if (!isSuccess && isError) {
+      showToast('아고라 제목을 불러오는데 실패했습니다.', 'error');
+      router.push(`${homeSegmentKey}?status=active`);
     }
-  }, [agoraId, data, setSelectedAgora, isSuccess, selectedAgora.id]);
+  }, [
+    agoraId,
+    data,
+    isError,
+    isSuccess,
+    router,
+    selectedAgora.id,
+    setSelectedAgora,
+  ]);
 
   return (
     <>

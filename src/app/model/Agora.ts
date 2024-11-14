@@ -1,4 +1,4 @@
-import { AGORA_STATUS } from '@/constants/Agora';
+import { AGORA_STATUS } from '@/constants/agora';
 
 export type Status = (typeof AGORA_STATUS)[keyof typeof AGORA_STATUS];
 
@@ -60,6 +60,10 @@ export type AgoraConfig = {
 };
 
 export type ParticipationPosition = 'PROS' | 'CONS' | 'OBSERVER';
+export type VotePosition = 'PROS' | 'CONS' | 'DEFAULT';
+export type ProsPos = 'PROS';
+export type ConsPos = 'CONS';
+export type ObserverPos = 'OBSERVER';
 
 export type ProfileImage = {
   id: number;

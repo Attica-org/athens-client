@@ -1,7 +1,6 @@
+import { AGORA_ACTIVE } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
-import showToast from '@/utils/showToast';
 
-// eslint-disable-next-line import/prefer-default-export
 export const getLivelyAgora = async () => {
   const res = await callFetchWrapper('/api/v1/open/agoras/active', {
     next: {
@@ -14,9 +13,13 @@ export const getLivelyAgora = async () => {
     },
   });
 
-  if (res.success === false) {
+  if (!res.ok && !res.success) {
+    if (!res.error) {
+      throw new Error(AGORA_ACTIVE.UNKNOWN_ERROR);
+    }
+
     if (res.error.code === 1002) {
-      showToast('잘못된 요청입니다.', 'error');
+      throw new Error(AGORA_ACTIVE.BAD_REQUEST);
     }
   }
 
@@ -25,5 +28,5 @@ export const getLivelyAgora = async () => {
   }
 
   // 인기 아고라가 없을 땐 빈 배열 반환
-  return res.response;
+  return [];
 };

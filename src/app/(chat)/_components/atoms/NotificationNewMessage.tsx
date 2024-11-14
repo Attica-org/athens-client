@@ -1,7 +1,7 @@
 import React, { KeyboardEventHandler, useEffect } from 'react';
 import UserImage from '@/app/_components/atoms/UserImage';
 import { Message } from '@/app/model/Message';
-import PROFLELIST from '@/constants/userProfileImage';
+import { PROFLELIST } from '@/constants/consts';
 
 type Props = {
   message: Message;

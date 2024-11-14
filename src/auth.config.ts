@@ -39,7 +39,7 @@ export const authConfig: NextAuthConfig = {
           const result = await response.json();
 
           // 로그인 실패
-          if (!result.success || !response.ok) {
+          if (!result.success && !response.ok) {
             throw new Error('FAILED TO LOGIN');
           }
 
@@ -89,10 +89,7 @@ export const authConfig: NextAuthConfig = {
 
       // update 시에만 session이 존재
       // accessToken 만료로 인한 갱신, 기존 세션에 새로운 토큰을 반영
-      if (
-        trigger === 'update' &&
-        session?.user.accessToken !== token.accessToken
-      ) {
+      if (trigger === 'update') {
         const newJwtToken = {
           ...token,
           accessToken: session.user.accessToken,

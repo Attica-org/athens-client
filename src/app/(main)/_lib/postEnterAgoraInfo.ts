@@ -1,9 +1,9 @@
-import getToken from '@/lib/getToken';
-import showToast from '@/utils/showToast';
-import tokenManager from '@/utils/tokenManager';
 import { ParticipationPosition } from '@/app/model/Agora';
-import { AGORA_STATUS } from '@/constants/Agora';
+import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
+import { SIGNIN_REQUIRED, TOKEN_EXPIRED } from '@/constants/authErrorMessage';
+import { getSession } from '@/serverActions/auth';
+import { AGORA_ENTER } from '@/constants/responseErrorMessage';
 
 type Props = {
   info: {
@@ -16,19 +16,15 @@ type Props = {
   agoraId: number;
 };
 
-const ALREADY_PARTICIPATED = 'User has already participated';
-const NICKNAME_DUPLICATED = 'The nickname is already in use';
-
 const splitMessage = (message: string) => {
   const split = message.split('.');
   return split[0];
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
-  // 토큰을 가지고 있는지 확인
-  if (tokenManager.getToken() === undefined) {
-    await getToken();
+  const session = await getSession();
+  if (!session) {
+    throw new Error(SIGNIN_REQUIRED);
   }
 
   const res = await callFetchWrapper(
@@ -37,7 +33,7 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${tokenManager.getToken()}`,
+        Authorization: `Bearer ${session.user.accessToken}`,
       },
       credentials: 'include',
       body: JSON.stringify({
@@ -49,37 +45,50 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
     },
   );
 
-  if (res.success === false) {
+  if (!res.ok && !res.success) {
+    if (!res.error) {
+      throw new Error(AGORA_ENTER.UNKNOWN_ERROR);
+    }
+
     if (res.error.code === 1001) {
       if (info.id === null) {
-        showToast('프로필을 선택해주세요.', 'error');
+        throw new Error(AGORA_ENTER.PROFILE_NULL);
       } else if (info.nickname === null) {
-        showToast('닉네임을 입력해주세요.', 'error');
+        throw new Error(AGORA_ENTER.NICKNAME_NULL);
       } else if (
-        info.role !== 'OBSERVER' &&
-        info.role !== 'PROS' &&
-        info.role !== 'CONS'
+        info.role !== AGORA_POSITION.OBSERVER &&
+        info.role !== AGORA_POSITION.PROS &&
+        info.role !== AGORA_POSITION.CONS
       ) {
-        showToast('허용되지 않는 입장 타입 입니다.', 'error');
-      } else {
-        showToast('입장 실패했습니다.\n 다시 시도해주세요.', 'error');
+        throw new Error(AGORA_ENTER.NOT_ALLOWED_POSITION);
       }
     } else if (res.error.code === 1002) {
-      console.log(res.error.message);
-      showToast('종료된 아고라입니다.', 'error');
+      if (res.error.message === TOKEN_EXPIRED) {
+        throw new Error(res.error.message);
+      }
+
       return AGORA_STATUS.CLOSED;
     } else if (res.error.code === 1004) {
-      if (splitMessage(res.error.message) === ALREADY_PARTICIPATED) {
-        showToast('이미 참여한 아고라입니다.', 'error');
-      } else if (splitMessage(res.error.message) === NICKNAME_DUPLICATED) {
-        showToast('닉네임이 중복됩니다.', 'error');
+      if (
+        splitMessage(res.error.message) ===
+        AGORA_ENTER.SERVER_RESPONSE_ALREADY_PARTICIPATED
+      ) {
+        throw new Error(AGORA_ENTER.ALREADY_PARTICIPATED);
+      } else if (
+        splitMessage(res.error.message) ===
+        AGORA_ENTER.SERVER_RESPONSE_NICKNAME_DUPLICATED
+      ) {
+        throw new Error(AGORA_ENTER.NICKNAME_DUPLICATED);
       }
     } else if (res.error.code === 2000) {
-      showToast('선택한 타입의 인원이 꽉 찼습니다.', 'error');
+      throw new Error(AGORA_ENTER.FULL_CAPACITY);
     }
-    return null;
+
+    throw new Error(AGORA_ENTER.FAILED_TO_ENTER_AGORA);
+    // return null;
   }
 
+  console.log('post enter aogra into res', res);
   const result = res.response;
 
   return result;

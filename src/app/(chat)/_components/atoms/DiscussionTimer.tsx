@@ -8,7 +8,8 @@ import useTimer from '@/hooks/useTimer';
 import { useMutation } from '@tanstack/react-query';
 import { useAgora } from '@/store/agora';
 import showToast from '@/utils/showToast';
-import { AGORA_STATUS } from '@/constants/Agora';
+import { AGORA_STATUS } from '@/constants/agora';
+import useApiError from '@/hooks/useApiError';
 import { patchAgoraTimeOut } from '../../_lib/patchAgoraTimeOut';
 
 type Props = {
@@ -27,21 +28,20 @@ export default function DiscussionTimer({ duration }: Props) {
     duration,
   );
   const { enterAgora, setEnterAgora } = useAgora();
+  const { handleError } = useApiError();
   const router = useRouter();
 
   const agoraEndMutation = useMutation({
     mutationFn: async () => patchAgoraTimeOut(enterAgora.id),
-    retry: 2,
     onSuccess: async (response) => {
       if (response) {
         router.push(`/agoras/${enterAgora.id}/flow/end-agora`);
-      } else {
-        showToast('데이터 연결에 실패했습니다.', 'error');
       }
+
+      showToast('데이터 연결에 실패했습니다.', 'error');
     },
-    onError: () => {
-      // console.dir(error);
-      // alert('문제가 발생했습니다. 다시 시도해주세요.');
+    onError: (error) => {
+      handleError(error);
     },
   });
 

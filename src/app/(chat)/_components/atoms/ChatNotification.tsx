@@ -3,7 +3,7 @@
 import { useAgora } from '@/store/agora';
 import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { AGORA_STATUS } from '@/constants/Agora';
+import { AGORA_STATUS } from '@/constants/agora';
 
 export default function ChatNotification() {
   const [showMessage, setShowMessage] = useState(false);

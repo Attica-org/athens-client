@@ -32,7 +32,6 @@ export default function LivelyAgoraList() {
   } = useQuery<Agora[], Object, Agora[], [string, string]>({
     queryKey: ['agoras', 'lively'],
     queryFn: getLivelyAgora,
-    retry: 2,
     initialData: () => {
       return queryClient.getQueryData(['agoras', 'lively']);
     },
@@ -57,7 +56,7 @@ export default function LivelyAgoraList() {
     // 페이지 변경 시 key를 업데이트하여 강제 리렌더링
     setKey((prevKey) => prevKey + 1);
     setSwiperInstance(null);
-  }, [pathname]);
+  }, [pathname, swiperInstance]);
 
   useLayoutEffect(() => {
     if (

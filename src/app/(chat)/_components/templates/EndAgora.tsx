@@ -9,17 +9,18 @@ import { useVoteStore } from '@/store/vote';
 import swManager from '@/utils/swManager';
 import getKey from '@/utils/getKey';
 import showToast from '@/utils/showToast';
-import tokenManager from '@/utils/tokenManager';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import { AGORA_POSITION } from '@/constants/agora';
+import { VotePosition } from '@/app/model/Agora';
+import { useSession } from 'next-auth/react';
 
-type ResultPosition = 'PROS' | 'CONS' | 'DEFAULT';
 const DUPLICATE_VOTE = 'User has already voted for Opinion in this agora';
 
 export default function EndAgora() {
   const [selectedResultPosition, setSelectedResultPosition] =
-    useState<ResultPosition>('DEFAULT');
+    useState<VotePosition>(AGORA_POSITION.DEFAULT);
   const [remainingTime, setRemainingTime] = useState(15);
   const [isFinished, setIsFinished] = useState(false);
   const [vote, setVote] = useState<string | null>(null);
@@ -42,6 +43,7 @@ export default function EndAgora() {
     BASE_URL: '',
   });
   const tabId = swManager.getTabId();
+  const session = useSession();
 
   const getUrl = async () => {
     const key = await getKey();
@@ -72,7 +74,7 @@ export default function EndAgora() {
   };
 
   const startTimer = (voteEndTime: number) => {
-    if (isServiceWorkerActive()) {
+    if (isServiceWorkerActive() && session) {
       const controller = navigator.serviceWorker.controller!;
       controller.postMessage({
         action: 'startTimer',
@@ -80,7 +82,7 @@ export default function EndAgora() {
           voteEndTime,
           agoraId,
           voteType: vote,
-          token: tokenManager.getToken(),
+          token: session.data?.user.accessToken,
           baseUrl: URL.BASE_URL,
         },
         tabId,
@@ -128,6 +130,7 @@ export default function EndAgora() {
     const handleServiceWorkerMessage = (event: MessageEvent) => {
       if (event.data.tabId !== tabId) return; // 다른 탭에서 온 메시지는 무시
 
+      console.log('event.data', event.data);
       if (event.data.action === 'voteSent') {
         setIsFinished(true);
       } else if (event.data.action === 'voteResult') {
@@ -146,6 +149,7 @@ export default function EndAgora() {
       }
     };
 
+    console.log('navigator.serviceWorker', navigator.serviceWorker);
     navigator.serviceWorker.addEventListener(
       'message',
       handleServiceWorkerMessage,
@@ -161,11 +165,12 @@ export default function EndAgora() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agoraId, router, setVoteEnd, setVoteResult, URL.BASE_URL]);
 
-  const selectResultPosition = (position: ResultPosition) => {
+  const selectResultPosition = (position: VotePosition) => {
     setSelectedResultPosition(position);
     setVote(position);
   };
 
+  console.log('isFinished', isFinished, 'voteEnd', voteEnd);
   return (
     <ModalBase
       title="토론 종료"
@@ -194,9 +199,9 @@ export default function EndAgora() {
             type="button"
             aria-label="찬성하기"
             disabled={isFinished}
-            onClick={() => selectResultPosition('PROS')}
+            onClick={() => selectResultPosition(AGORA_POSITION.PROS)}
             className={`${
-              selectedResultPosition === 'PROS'
+              selectedResultPosition === AGORA_POSITION.PROS
                 ? 'bg-blue-400 text-white'
                 : 'text-blue-600 bg-white dark:text-white dark:bg-dark-light-500'
             } mr-1rem text-sm p-6 pl-1.5rem pr-1.5rem rounded-xl`}
@@ -207,9 +212,9 @@ export default function EndAgora() {
             type="button"
             aria-label="반대하기"
             disabled={isFinished}
-            onClick={() => selectResultPosition('CONS')}
+            onClick={() => selectResultPosition(AGORA_POSITION.CONS)}
             className={`${
-              selectedResultPosition === 'CONS'
+              selectedResultPosition === AGORA_POSITION.CONS
                 ? 'bg-red-400 text-white '
                 : 'bg-white text-red-500 dark:text-white dark:bg-dark-light-500'
             } text-sm p-6 pl-1.5rem pr-1.5rem rounded-xl`}

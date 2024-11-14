@@ -4,12 +4,12 @@ import { AgoraData } from '@/app/model/Agora';
 import { useAgora } from '@/store/agora';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import COLOR from '@/constants/agoraColor';
-import isActiveAgora from '@/utils/isActiveAgora';
+import isActiveAgora from '@/utils/validation/validateIsActiveAgora';
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import Image from 'next/image';
-import { AGORA_STATUS } from '@/constants/Agora';
-import { isValidImgUrl } from '@/utils/validate';
+import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
+import { isValidImgUrl } from '@/utils/validation/validateImage';
+import { COLOR } from '@/constants/consts';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 
 type Props = {
@@ -32,7 +32,7 @@ export default function CategoryAgora({ agora, className }: Props) {
       thumbnail: agora.imageUrl,
       title: agora.agoraTitle,
       status: agora.status,
-      role: 'OBSERVER' as const,
+      role: AGORA_POSITION.OBSERVER,
       isCreator: false,
       agoraColor: agora.agoraColor,
     });

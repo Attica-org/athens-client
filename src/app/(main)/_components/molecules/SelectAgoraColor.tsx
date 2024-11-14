@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
-import COLOR from '@/constants/agoraColor';
+import { COLOR } from '@/constants/consts';
 import AgoraPointColor from '../atoms/AgoraPointColor';
 
 export default function SelectAgoraColor() {

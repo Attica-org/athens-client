@@ -1,10 +1,10 @@
 import { Message } from '@/app/model/Message';
-import getToken from '@/lib/getToken';
-import showToast from '@/utils/showToast';
-import tokenManager from '@/utils/tokenManager';
 import { QueryFunction } from '@tanstack/react-query';
 import { getChatMessagesQueryKey as getChatMessagesTags } from '@/constants/queryKey';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
+import { getSession } from '@/serverActions/auth';
+import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { CHAT_MESSAGE } from '@/constants/responseErrorMessage';
 
 type Meta = {
   key: number | null;
@@ -16,7 +16,6 @@ type Search = {
   key?: string;
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const getChatMessages: QueryFunction<
   { chats: Message[]; meta: Meta },
   [_1: string, _2: string, _3: string],
@@ -32,9 +31,9 @@ export const getChatMessages: QueryFunction<
   }
   const urlSearchParams = new URLSearchParams(Object.entries(searchParams));
 
-  // 토큰을 가지고 있는지 확인
-  if (tokenManager.getToken() === undefined) {
-    await getToken();
+  const session = await getSession();
+  if (!session) {
+    throw new Error(SIGNIN_REQUIRED);
   }
 
   const res = await callFetchWrapper(
@@ -47,27 +46,30 @@ export const getChatMessages: QueryFunction<
       cache: 'no-cache',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${tokenManager.getToken()}`,
+        Authorization: `Bearer ${session.user.accessToken}`,
       },
     },
   );
 
-  if (res.success === false) {
-    if (res.error.code === 1301) {
-      showToast('해당 아고라를 찾을 수 없습니다.', 'error');
-    } else if (res.error.code === -1) {
-      throw new Error(res.error.message);
-    } else {
-      showToast('채팅 내역을 불러올 수 없습니다.', 'error');
+  if (!res.ok && !res.success) {
+    if (!res.error) {
+      throw new Error(CHAT_MESSAGE.UNKNOWN_ERROR);
     }
 
-    return {
-      chats: [],
-      meta: {
-        key: -1,
-        effectiveSize: 0,
-      },
-    };
+    if (res.error.code === 1301) {
+      throw new Error(CHAT_MESSAGE.NOT_FOUND_AGORA);
+    } else if (res.error.code === -1) {
+      throw new Error(res.error.message);
+    }
+
+    throw new Error(CHAT_MESSAGE.FAILED_TO_GET_CHAT);
+    // return {
+    //   chats: [],
+    //   meta: {
+    //     key: -1,
+    //     effectiveSize: 0,
+    //   },
+    // };
   }
 
   const result = res.response;
