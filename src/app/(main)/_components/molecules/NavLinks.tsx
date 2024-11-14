@@ -1,5 +1,9 @@
 import React from 'react';
-import { homeSegmentKey, createAgoraSegmentKey } from '@/constants/segmentKey';
+import {
+  homeSegmentKey,
+  createAgoraSegmentKey,
+  userInfoSegmentKey,
+} from '@/constants/segmentKey';
 import MobileNavLink from '../atoms/MobileNavLink';
 import DesktopNavLink from '../atoms/DesktopNavLink';
 import NavIconDecider from '../atoms/NavIconDecider';
@@ -35,7 +39,7 @@ export default function NavLinks() {
             href={homeSegmentKey}
             label="홈으로 가기"
           >
-            <NavIconDecider segment={homeSegmentKey} className="w-23 pb-2" />홈
+            <NavIconDecider segment={homeSegmentKey} className="w-23 pb-4" />홈
           </MobileNavLink>
           <MobileNavLink
             label="아고라 생성하기"
@@ -44,9 +48,17 @@ export default function NavLinks() {
           >
             <NavIconDecider
               segment={createAgoraSegmentKey}
-              className="w-23 pb-2"
+              className="w-23 pb-4"
             />
             아고라생성
+          </MobileNavLink>
+          <MobileNavLink
+            className="flex flex-col text-xs justify-center items-center p-10"
+            href={userInfoSegmentKey}
+            label="사용자 정보"
+          >
+            <NavIconDecider segment={userInfoSegmentKey} className="w-28" />
+            사용자정보
           </MobileNavLink>
         </ul>
       </div>
