@@ -38,5 +38,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/agoras', '/flow/:path*', '/create-agora', '/settings'],
+  matcher: ['/agoras', '/flow/:path*', '/create-agora', '/user-info'],
 };
