@@ -2,10 +2,11 @@ import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { AGORA_TIME_OUT } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
+import isNull from '@/utils/isNull';
 
 export const patchAgoraTimeOut = async (agoraId: number) => {
   const session = await getSession();
-  if (!session) {
+  if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 

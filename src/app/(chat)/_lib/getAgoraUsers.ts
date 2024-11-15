@@ -7,6 +7,7 @@ import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { AGORA_USER } from '@/constants/responseErrorMessage';
+import isNull from '@/utils/isNull';
 
 export const getAgoraUsers: QueryFunction<
   AgoraUserProfileType[],
@@ -15,7 +16,7 @@ export const getAgoraUsers: QueryFunction<
   const [_1, _2, agoraId] = queryKey;
 
   const session = await getSession();
-  if (!session) {
+  if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 

@@ -1,11 +1,12 @@
 // middleware.ts
 import { NextResponse } from 'next/server';
 import { getSession } from './serverActions/auth';
+import isNull from './utils/isNull';
 
 export async function middleware() {
   const session = await getSession();
 
-  if (!session) {
+  if (isNull(session)) {
     return NextResponse.redirect(`${process.env.NEXT_CLIENT_URL}/`);
   }
 

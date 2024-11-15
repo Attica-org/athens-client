@@ -3,13 +3,14 @@ import {
   AUTHORIZATION_SUCCESS,
 } from '@/constants/authErrorMessage';
 import { getReissuanceToken } from '@/lib/getReissuanceToken';
+import isNull from '@/utils/isNull';
 import { useSession } from 'next-auth/react';
 
 const useUpdateSession = () => {
   const { data: session, update } = useSession();
 
   const callReissueFn = async () => {
-    if (!session) {
+    if (isNull(session)) {
       return AUTHORIZATION_FAIL;
     }
 
