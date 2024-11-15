@@ -10,7 +10,6 @@ import { AgoraMeta } from '@/app/model/AgoraMeta';
 import { useChatInfo } from '@/store/chatInfo';
 import showToast from '@/utils/showToast';
 import { useVoteStore } from '@/store/vote';
-import getToken from '@/lib/getToken';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import getKey from '@/utils/getKey';
 import { getAgoraUserListQueryKey } from '@/constants/queryKey';
@@ -185,7 +184,7 @@ export default function Header() {
 
   const subscribeErrorControl = async (err: any) => {
     if (err.code === 1201) {
-      await getToken();
+      // await getToken();
     } else if (err.code === 1003) {
       const reissuResult = await callReissueFn();
       if (reissuResult === AUTHORIZATION_FAIL) {
