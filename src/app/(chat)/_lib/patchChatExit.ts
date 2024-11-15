@@ -25,9 +25,7 @@ const patchChatExit = async ({ agoraId }: Props) => {
     },
   });
 
-  console.log('res', res);
   if (!res.ok && !res.success) {
-    console.log('res.error', res.error);
     if (!res.error) {
       throw new Error(AGORA_EXIT.UNKNOWN_ERROR);
     }
