@@ -16,7 +16,7 @@ export const getReissuanceToken = async () => {
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.user.accessToken}`,
+      Authorization: `Bearer ${session.user?.accessToken}`,
     },
   });
 

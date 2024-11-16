@@ -281,7 +281,7 @@ export default function Header() {
     }
 
     function connect() {
-      if (!session.data?.user.accessToken) {
+      if (!session.data?.user?.accessToken) {
         showToast('로그인이 필요합니다.', 'error');
         signOut();
       }
@@ -289,7 +289,7 @@ export default function Header() {
       client.current = new StompJs.Client({
         brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${session.data?.user?.accessToken}`,
           AgoraId: `${agoraId}`,
         },
         reconnectDelay: 500,

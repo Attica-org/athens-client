@@ -82,7 +82,7 @@ export default function EndAgora() {
           voteEndTime,
           agoraId,
           voteType: vote,
-          token: session.data?.user.accessToken,
+          token: session.data?.user?.accessToken,
           baseUrl: URL.BASE_URL,
         },
         tabId,

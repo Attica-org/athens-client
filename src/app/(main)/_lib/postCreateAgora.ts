@@ -44,7 +44,7 @@ export const postCreateAgora = async (info: AgoraConfig) => {
   const res = await callFetchWrapper('/api/v1/auth/agoras', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${session.user.accessToken}`,
+      Authorization: `Bearer ${session.user?.accessToken}`,
     },
     credentials: 'include',
     body: formData,
