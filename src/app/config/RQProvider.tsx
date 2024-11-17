@@ -38,7 +38,9 @@ export default function RQProvider({ children }: Props) {
         },
       },
       queryCache: new QueryCache({
-        onError: (error) => handleError(error),
+        onError: async (error) => {
+          await handleError(error);
+        },
       }),
     }),
   );

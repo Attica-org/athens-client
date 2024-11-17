@@ -19,14 +19,11 @@ export class FetchWrapper {
         ...fetchNext,
         headers: {
           ...fetchNext.headers,
-          // Connection: 'keep-alive',
         },
       });
 
       return await response.json();
     } catch (error) {
-      console.log('error', error);
-      console.log('response', response);
       throw new Error('알 수 없는 에러가 발생했습니다.');
     }
   }
