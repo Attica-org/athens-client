@@ -45,7 +45,6 @@ export const getSession = async () => {
 };
 
 export const updateSession = async (session: string) => {
-  console.log('session', session);
   await update({
     user: {
       accessToken: session,

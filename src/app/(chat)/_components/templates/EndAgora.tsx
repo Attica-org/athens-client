@@ -2,19 +2,19 @@
 
 import Loading from '@/app/_components/atoms/loading';
 import ModalBase from '@/app/_components/molecules/ModalBase';
-import { deleteTabId } from '@/utils/indexedDB';
 import { useAgora } from '@/store/agora';
 import { useChatInfo } from '@/store/chatInfo';
 import { useVoteStore } from '@/store/vote';
-import swManager from '@/utils/swManager';
 import getKey from '@/utils/getKey';
 import showToast from '@/utils/showToast';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { AGORA_POSITION } from '@/constants/agora';
 import { VotePosition } from '@/app/model/Agora';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
+import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { updateSession } from '@/serverActions/auth';
 
 const DUPLICATE_VOTE = 'User has already voted for Opinion in this agora';
 
@@ -42,25 +42,24 @@ export default function EndAgora() {
   const [URL, setURL] = useState({
     BASE_URL: '',
   });
-  const tabId = swManager.getTabId();
   const session = useSession();
 
-  const getUrl = async () => {
-    const key = await getKey();
-    setURL({
-      BASE_URL: key.BASE_URL || '',
-    });
-  };
+  useEffect(() => {
+    const getUrl = async () => {
+      const key = await getKey();
+      setURL({
+        BASE_URL: key.BASE_URL || '',
+      });
+    };
+
+    getUrl();
+  }, []);
 
   const isServiceWorkerActive = () => {
     return 'serviceWorker' in navigator && navigator.serviceWorker.controller;
   };
 
-  useEffect(() => {
-    getUrl();
-  }, []);
-
-  const updateVoteState = () => {
+  const updateVoteState = useCallback(() => {
     if (isServiceWorkerActive()) {
       const controller = navigator.serviceWorker.controller!;
       controller.postMessage({
@@ -68,10 +67,9 @@ export default function EndAgora() {
         data: {
           voteType: vote,
         },
-        tabId,
       });
     }
-  };
+  }, [vote]);
 
   const startTimer = (voteEndTime: number) => {
     if (isServiceWorkerActive() && session) {
@@ -85,12 +83,17 @@ export default function EndAgora() {
           token: session.data?.user.accessToken,
           baseUrl: URL.BASE_URL,
         },
-        tabId,
       });
     }
   };
 
   const handleVoteError = (event: MessageEvent) => {
+    if (event.data.message === SIGNIN_REQUIRED) {
+      showToast('로그인이 필요합니다.', 'error');
+      signOut();
+      router.push('/');
+    }
+
     switch (event.data.message.code) {
       case 1301:
         showToast('존재하지 않는 유저 혹은 아고라 입니다.', 'error');
@@ -109,7 +112,7 @@ export default function EndAgora() {
   // 투표 상태 업데이트
   useEffect(() => {
     updateVoteState();
-  }, [vote, tabId]);
+  }, [vote, updateVoteState]);
 
   // 타이머 시작 및 Service Worker와의 통신 설정
   useEffect(() => {
@@ -128,18 +131,19 @@ export default function EndAgora() {
     startTimer(voteEndTime);
 
     const handleServiceWorkerMessage = (event: MessageEvent) => {
-      if (event.data.tabId !== tabId) return; // 다른 탭에서 온 메시지는 무시
-
-      console.log('event.data', event.data);
       if (event.data.action === 'voteSent') {
         setIsFinished(true);
+
+        if (event.data.newAccessToken.length > 0) {
+          updateSession(event.data.newAccessToken);
+        }
       } else if (event.data.action === 'voteResult') {
         // console.log('voteResult', event.data);
         setVoteResult(event.data.result);
         setVoteEnd(true);
 
-        if (tabId) {
-          deleteTabId(tabId);
+        if (event.data.newAccessToken.length > 0) {
+          updateSession(event.data.newAccessToken);
         }
 
         router.replace(`/agoras/${agoraId}/flow/result-agora`);
@@ -149,7 +153,6 @@ export default function EndAgora() {
       }
     };
 
-    console.log('navigator.serviceWorker', navigator.serviceWorker);
     navigator.serviceWorker.addEventListener(
       'message',
       handleServiceWorkerMessage,
@@ -170,7 +173,6 @@ export default function EndAgora() {
     setVote(position);
   };
 
-  console.log('isFinished', isFinished, 'voteEnd', voteEnd);
   return (
     <ModalBase
       title="토론 종료"

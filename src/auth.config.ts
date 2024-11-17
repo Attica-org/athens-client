@@ -1,5 +1,6 @@
 import type { NextAuthConfig, User } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import isNull from './utils/isNull';
 
 interface Authorize {
   accessToken?: string;
@@ -125,7 +126,7 @@ export const authConfig: NextAuthConfig = {
         const { search, origin, pathname } = new URL(url);
         const callbackUrl = new URLSearchParams(search).get('callbackUrl');
 
-        if (callbackUrl) {
+        if (!isNull(callbackUrl)) {
           return callbackUrl.startsWith('/')
             ? `${baseUrl}${callbackUrl}`
             : callbackUrl;
