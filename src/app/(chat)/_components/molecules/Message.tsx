@@ -27,6 +27,7 @@ import { getChatMessages } from '../../_lib/getChatMessages';
 import ChatNotification from '../atoms/ChatNotification';
 import NotificationNewMessage from '../atoms/NotificationNewMessage';
 import ScrollToBottomBtn from '../atoms/ScrollToBottomBtn';
+import UserAccessNotification from '../atoms/UserAccessNotification';
 
 interface Meta {
   key: number | null;
@@ -54,6 +55,19 @@ function MessageItem({
   queryClient,
   agoraId,
 }: MessageItemProps) {
+  const hasAccessProperty =
+    message.access !== undefined && message.access.length > 0;
+
+  if (hasAccessProperty && message.access !== undefined) {
+    return (
+      <UserAccessNotification
+        className="flex p-0.5rem pl-1rem pr-1rem"
+        nickname={message.user.nickname}
+        access={message.access}
+      />
+    );
+  }
+
   const isMyMessage = isMyType(message.user.type);
   const isSameMessage = nextMessage && nextMessage.chatId === message.chatId;
 
@@ -233,7 +247,6 @@ export default function Message() {
           const newMessages = data?.pages[0].chats || [];
           return [...newMessages, ...prev];
         });
-
         setTimeout(() => {
           if (listRef.current) {
             const moveScroll = listRef.current.scrollHeight - prevHeight;
@@ -265,6 +278,12 @@ export default function Message() {
           const isAtBottom =
             listRef.current.clientHeight + listRef.current.scrollTop + 100 >=
             listRef.current.scrollHeight;
+
+          // 입퇴장 속성이 있다면, 스크롤을 조정하지 않음
+          if (lastMessage.access !== undefined) {
+            setGoDown(false);
+            return;
+          }
 
           // 마지막 메시지가 내 메시지거나, 스크롤이 맨 아래에 있을 때만 스크롤 조정
           if (isAtBottom || lastMessage.user.nickname === userNickname) {
