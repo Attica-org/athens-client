@@ -4,6 +4,7 @@ import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { SIGNIN_REQUIRED, TOKEN_EXPIRED } from '@/constants/authErrorMessage';
 import { getSession } from '@/serverActions/auth';
 import { AGORA_ENTER } from '@/constants/responseErrorMessage';
+import isNull from '@/utils/isNull';
 
 type Props = {
   info: {
@@ -23,7 +24,7 @@ const splitMessage = (message: string) => {
 
 export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
   const session = await getSession();
-  if (!session) {
+  if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
@@ -88,7 +89,6 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
     // return null;
   }
 
-  console.log('post enter aogra into res', res);
   const result = res.response;
 
   return result;

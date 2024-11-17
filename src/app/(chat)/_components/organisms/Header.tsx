@@ -9,17 +9,13 @@ import * as StompJs from '@stomp/stompjs';
 import { AgoraMeta } from '@/app/model/AgoraMeta';
 import { useChatInfo } from '@/store/chatInfo';
 import showToast from '@/utils/showToast';
-import { getReissuanceToken } from '@/lib/getReissuanceToken';
 import { useVoteStore } from '@/store/vote';
-import getToken from '@/lib/getToken';
 import {
   InfiniteData,
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
 import getKey from '@/utils/getKey';
-import swManager from '@/utils/swManager';
-import { saveTabId, deleteTabId } from '@/utils/indexedDB';
 import {
   getAgoraUserListQueryKey,
   getChatMessagesQueryKey,
@@ -40,6 +36,7 @@ import {
 import { useUnloadDisconnectSocket } from '@/hooks/useUnloadDisconnectSocket';
 import { Message } from '@/app/model/Message';
 import { useMessageStore } from '@/store/message';
+import useUpdateSession from '@/hooks/useUpdateSession';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
@@ -79,6 +76,7 @@ export default function Header() {
   const { setGoDown } = useMessageStore();
   const router = useRouter();
   const { handleError } = useApiError();
+  const { callReissueFn } = useUpdateSession();
   const session = useSession();
   const [agoraId, setAgoraId] = useState(enterAgora.id);
   const client = useRef<StompJs.Client>();
@@ -94,14 +92,6 @@ export default function Header() {
       BASE_URL: key.BASE_URL || '',
       SOCKET_URL: key.SOCKET_URL || '',
     });
-  };
-
-  const deleteTabIdData = () => {
-    const tabId = swManager.getTabId();
-    if (tabId) {
-      swManager.clearTabId();
-      deleteTabId(tabId);
-    }
   };
 
   const refetchAgoraUserList = async () => {
@@ -254,7 +244,6 @@ export default function Header() {
       setTitle(response.data.agora.title);
       setAgoraId(response.data.agora.id);
       setMetaData(response.data);
-      console.log('META', response.data);
       // refetchAgoraUserList();
 
       if (response.data.agora.startAt) {
@@ -296,9 +285,9 @@ export default function Header() {
 
   const subscribeErrorControl = async (err: any) => {
     if (err.code === 1201) {
-      await getToken();
+      // await getToken();
     } else if (err.code === 1003) {
-      const reissuResult = await getReissuanceToken();
+      const reissuResult = await callReissueFn();
       if (reissuResult === AUTHORIZATION_FAIL) {
         showToast('세션이 만료되었습니다.', 'info');
         signOutWithCredentials();
@@ -387,7 +376,6 @@ export default function Header() {
         showToast('로그인이 필요합니다.', 'error');
         signOut();
       }
-      console.log('session', session);
       client.current = new StompJs.Client({
         brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
@@ -456,32 +444,8 @@ export default function Header() {
 
     return () => {
       reset();
-      deleteTabIdData();
     };
   }, [reset]);
-
-  useEffect(() => {
-    if (!URL.BASE_URL) return;
-
-    if (enterAgora.status !== AGORA_STATUS.CLOSED) {
-      const tabId = new Date().getTime().toString();
-      swManager.setTabId(tabId);
-      saveTabId(tabId);
-
-      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-        console.log(
-          'navigator.serviceWorker.controller',
-          navigator.serviceWorker.controller,
-        );
-        navigator.serviceWorker.controller.postMessage({
-          action: 'initialize',
-          tabId,
-          baseUrl: URL.BASE_URL,
-        });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enterAgora.status, URL.BASE_URL]);
 
   useUnloadDisconnectSocket({
     client: client.current,
