@@ -68,9 +68,7 @@ const useApiError = () => {
     ) => {
       const response = error as any;
       if (error instanceof Error) {
-        console.log('error', error);
         if (AUTH_MESSAGE.includes(error.message)) {
-          console.log('authErrorHandlers');
           await authErrorHandlers(retryMutation, queryKey);
         } else if (error.message === SIGNIN_REQUIRED) {
           showToast('로그인이 필요합니다.', 'error');

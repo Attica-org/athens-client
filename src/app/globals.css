@@ -101,9 +101,17 @@ html {
 }
 
 .swal2-icon:is(.dark *){
-  margin: 1.5em auto .6em !important;
+  margin: 2.5em auto .6em !important;
   border-color: white !important;
   color: white !important;
+  font-size: 0.5rem !important;
+}
+
+.swal2-icon{
+  margin: 2.5em auto .6em !important;
+  border-color: #DB4455 !important;
+  color: #DB4455 !important;
+  font-size: 0.5rem !important;
 }
 
 .swal2-html-container:is(.dark *){
@@ -113,6 +121,7 @@ html {
   height: 1.5rem !important;
   color: lightgray !important;
 }
+
 .swal2-html-container{
   padding-top: .2rem !important;
   font-size: 0.7rem !important; 

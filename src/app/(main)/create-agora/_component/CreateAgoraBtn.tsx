@@ -41,7 +41,6 @@ function CreateAgoraBtn() {
     error: Error,
     mutation: UseMutateFunction<any, Error, void, unknown>,
   ) => {
-    showToast('아고라 생성에 실패했습니다.', 'error');
     setIsLoading(false);
     await handleError(error, mutation);
   };

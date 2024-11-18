@@ -28,7 +28,7 @@ export const patchAgoraImg = async ({ agoraId, fileUrl }: Props) => {
     credentials: 'include',
     cache: 'no-cache',
     headers: {
-      Authorization: `Bearer ${session.user.accessToken}`,
+      Authorization: `Bearer ${session.user?.accessToken}`,
     },
     body: formData,
   });

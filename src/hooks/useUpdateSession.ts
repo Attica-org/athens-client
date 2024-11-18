@@ -14,7 +14,7 @@ const useUpdateSession = () => {
       return AUTHORIZATION_FAIL;
     }
 
-    const result = await getReissuanceToken(session.user.accessToken);
+    const result = await getReissuanceToken(session.data.user.accessToken);
     if (!result.success) {
       return AUTHORIZATION_FAIL;
     }

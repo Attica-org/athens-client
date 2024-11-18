@@ -1,6 +1,10 @@
 'use client';
 
-import { AUTHORIZATION_FAIL } from '@/constants/authErrorMessage';
+import {
+  AUTHORIZATION_FAIL,
+  AUTH_MESSAGE,
+  AUTHORIZATION_SUCCESS,
+} from '@/constants/authErrorMessage';
 import useUpdateSession from '@/hooks/useUpdateSession';
 import { signOutWithCredentials } from '@/serverActions/auth';
 import showToast from '@/utils/showToast';
@@ -24,6 +28,9 @@ const SocketErrorHandler = () => {
           'info',
         );
         signOutWithCredentials();
+      } else if (reissuResult === AUTHORIZATION_SUCCESS) {
+        showToast('잠시후 다시 시도해주세요.', 'info');
+        router.push(homeSegmentKey);
       }
     } else if (socketError.code === 2000) {
       if (socketError.message === CHAT_SOCKET_ERROR_MESSAGE.RUNTIME_EXCEPTION) {

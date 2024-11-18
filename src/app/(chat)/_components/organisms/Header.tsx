@@ -10,12 +10,19 @@ import { AgoraMeta } from '@/app/model/AgoraMeta';
 import { useChatInfo } from '@/store/chatInfo';
 import showToast from '@/utils/showToast';
 import { useVoteStore } from '@/store/vote';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  InfiniteData,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import getKey from '@/utils/getKey';
-import { getAgoraUserListQueryKey } from '@/constants/queryKey';
+import {
+  getAgoraUserListQueryKey,
+  getChatMessagesQueryKey,
+} from '@/constants/queryKey';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
-import { swalConfirmCancelAlert } from '@/utils/swalAlert';
+import { swalBackButtonAlert } from '@/utils/swalAlert';
 import useApiError from '@/hooks/useApiError';
 import { signOut, useSession } from 'next-auth/react';
 import {
@@ -24,6 +31,9 @@ import {
   DISCUSSION_TOAST_MESSAGE,
 } from '@/constants/chats';
 import { useUnloadDisconnectSocket } from '@/hooks/useUnloadDisconnectSocket';
+import { Message } from '@/app/model/Message';
+import { useMessageStore } from '@/store/message';
+import isNull from '@/utils/isNull';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
@@ -61,6 +71,7 @@ export default function Header() {
     isError: false,
     count: 0,
   });
+  const { setGoDown } = useMessageStore();
   const router = useRouter();
   const { handleError } = useApiError();
   const { chatSocketErrorHandler } = SocketErrorHandler();
@@ -119,14 +130,7 @@ export default function Header() {
   };
 
   const handleBack = async () => {
-    const result = await swalConfirmCancelAlert.fire({
-      icon: 'warning',
-      title: '아고라를 나가시겠습니까?',
-      text: '설정한 프로필은 초기화됩니다.',
-      showCancelButton: true,
-      confirmButtonText: '확인',
-      cancelButtonText: '취소',
-    });
+    const result = await swalBackButtonAlert();
 
     if (result && result.isConfirmed) {
       handleAgoraExit();
@@ -141,12 +145,90 @@ export default function Header() {
     );
   };
 
+  const updateUserAccessMessage = (
+    userDisconnectTime: string,
+    enterAgoraId: number,
+    username: string,
+  ) => {
+    const curMessages = queryClient.getQueryData(
+      getChatMessagesQueryKey(enterAgora.id),
+    ) as InfiniteData<{
+      chats: Message[];
+      meta: { key: number; effectiveSize: number };
+    }>;
+
+    if (isNull(username) || isNull(curMessages)) return;
+
+    const newMessages = {
+      pageParams: [...curMessages.pageParams],
+      pages: [...curMessages.pages],
+    };
+
+    const lastPage = newMessages.pages.at(-1);
+
+    const newLastPage =
+      lastPage?.meta.key === -1
+        ? { chats: [...lastPage.chats], meta: { ...lastPage.meta } }
+        : { chats: [], meta: { key: 0, effectiveSize: 20 } };
+
+    // const lastMessageId = lastPage?.chats.at(-1)?.chatId;
+
+    const newMessage = {
+      chatId: -1,
+      user: {
+        id: -1,
+        nickname: username,
+        photoNumber: 0,
+        type: '',
+      },
+      content: '',
+      createdAt: '',
+      reactionCount: {
+        LIKE: 0,
+        DISLIKE: 0,
+        LOVE: 0,
+        HAPPY: 0,
+        SAD: 0,
+      },
+      access: userDisconnectTime === null ? 'enter' : 'exit',
+    };
+
+    newLastPage.chats.push(newMessage);
+
+    newMessages.pages[newMessages.pages.length - 1] = {
+      chats: newLastPage.chats,
+      meta: {
+        key: newLastPage.meta.key || 0,
+        effectiveSize: 20,
+      },
+    };
+
+    queryClient.setQueryData(
+      getChatMessagesQueryKey(enterAgoraId),
+      newMessages,
+    );
+    setGoDown(true);
+    // console.log('newMessages', newMessages);
+
+    // let accessStatus = null;
+
+    // if (userDisconnectTime === null) {
+    //   accessStatus = 'enter';
+    // } else if (userDisconnectTime.length > 0) {
+    //   accessStatus = 'exit';
+    // }
+
+    // queryClient.setQueryData(getChatMessagesQueryKey(enterAgoraId), {
+    //   status: accessStatus,
+    //   username,
+    // });
+  };
+
   const handleWebSocketResponse = (response: any) => {
     if (response.type === 'META') {
       setTitle(response.data.agora.title);
       setAgoraId(response.data.agora.id);
       setMetaData(response.data);
-      // console.log('META', response.data);
       // refetchAgoraUserList();
 
       if (response.data.agora.startAt) {
@@ -168,6 +250,13 @@ export default function Header() {
       );
 
       setParticipants(partcipantsCnt);
+
+      const { socketDisconnectTime, username } = response.data.agoraMemberInfo;
+      updateUserAccessMessage(
+        socketDisconnectTime,
+        response.data.agora.id,
+        username,
+      );
     } else if (response.type === DISCUSSION_START) {
       // console.log(data.data);
       showToast('토론이 시작되었습니다.', 'success');
@@ -225,14 +314,14 @@ export default function Header() {
     }
 
     function connect() {
-      if (!session.data?.user.accessToken) {
+      if (!session.data?.user?.accessToken) {
         showToast('로그인이 필요합니다.', 'error');
         signOut();
       }
       client.current = new StompJs.Client({
         brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${session.data?.user?.accessToken}`,
           AgoraId: `${agoraId}`,
         },
         reconnectDelay: 500,
