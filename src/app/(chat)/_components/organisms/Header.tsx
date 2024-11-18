@@ -16,24 +16,21 @@ import { getAgoraUserListQueryKey } from '@/constants/queryKey';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { swalConfirmCancelAlert } from '@/utils/swalAlert';
-import { AUTHORIZATION_FAIL } from '@/constants/authErrorMessage';
-import { signOutWithCredentials } from '@/serverActions/auth';
 import useApiError from '@/hooks/useApiError';
 import { signOut, useSession } from 'next-auth/react';
-import { CHAT_SOCKET_ERROR_MESSAGE } from '@/constants/responseErrorMessage';
 import {
   DISCUSSION_END,
   DISCUSSION_START,
   DISCUSSION_TOAST_MESSAGE,
 } from '@/constants/chats';
 import { useUnloadDisconnectSocket } from '@/hooks/useUnloadDisconnectSocket';
-import useUpdateSession from '@/hooks/useUpdateSession';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
 import HamburgerButton from '../atoms/HamburgerButton';
 import DiscussionStatus from '../molecules/DiscussionStatus';
 import patchChatExit from '../../_lib/patchChatExit';
+import SocketErrorHandler from '../../utils/SocketErrorHandler';
 
 export default function Header() {
   const { toggle } = useSidebarStore(
@@ -66,7 +63,7 @@ export default function Header() {
   });
   const router = useRouter();
   const { handleError } = useApiError();
-  const { callReissueFn } = useUpdateSession();
+  const { chatSocketErrorHandler } = SocketErrorHandler();
   const session = useSession();
   const [agoraId, setAgoraId] = useState(enterAgora.id);
   const client = useRef<StompJs.Client>();
@@ -105,8 +102,8 @@ export default function Header() {
   const mutation = useMutation({
     mutationFn: callChatExitAPI,
     onSuccess: (response) => onSuccessChatExit(response),
-    onError: (error) => {
-      handleError(error);
+    onError: async (error) => {
+      await handleError(error, mutation.mutate);
     },
   });
 
@@ -183,51 +180,8 @@ export default function Header() {
   };
 
   const subscribeErrorControl = async (err: any) => {
-    if (err.code === 1201) {
-      // await getToken();
-    } else if (err.code === 1003) {
-      const reissuResult = await callReissueFn();
-      if (reissuResult === AUTHORIZATION_FAIL) {
-        showToast('세션이 만료되었습니다.', 'info');
-        signOutWithCredentials();
-        router.replace('/');
-      }
-    } else if (err.code === 2000) {
-      showToast(
-        '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-        'error',
-      );
-    } else if (err.code === 2001) {
-      showToast('연결이 불안정합니다. 잠시 후 다시 시도해주세요.', 'error');
-    } else if (err.code === 1102) {
-      if (
-        err.message === CHAT_SOCKET_ERROR_MESSAGE.OBSERVER_MESSAGE_SEND_ERROR
-      ) {
-        showToast('관찰자는 메시지를 보낼 수 없습니다.', 'error');
-      } else if (err.message === CHAT_SOCKET_ERROR_MESSAGE.USER_NOT_FOUND) {
-        showToast('유저를 찾을 수 없습니다.', 'error');
-      }
-    } else if (err.code === 1301) {
-      if (err.message === CHAT_SOCKET_ERROR_MESSAGE.SESSION_NOT_FOUND) {
-        showToast('현재 아고라에 존재하지 않는 유저입니다.', 'error');
-      } else {
-        showToast('존재하지 않는 아고라입니다.', 'error');
-      }
-    } else if (err.code === 1303) {
-      showToast('존재하지 않는 채팅에 반응을 보낼 수 없습니다.', 'error');
-    } else if (err.code === 1001) {
-      if (err.message === CHAT_SOCKET_ERROR_MESSAGE.REACTION_TYPE_INVALID) {
-        showToast('리액션 타입이 잘못되었습니다.', 'error');
-      } else if (
-        err.message === CHAT_SOCKET_ERROR_MESSAGE.REACTION_TYPE_IS_NULL
-      ) {
-        showToast('리액션 타입이 비어있습니다.', 'error');
-      } else if (err.message === CHAT_SOCKET_ERROR_MESSAGE.CHAT_TYPE_INVALID) {
-        showToast('채팅 타입이 잘못되었습니다.', 'error');
-      } else if (err.message === CHAT_SOCKET_ERROR_MESSAGE.CHAT_TYPE_IS_NULL) {
-        showToast('채팅 타입이 비어있습니다.', 'error');
-      } else;
-    }
+    chatSocketErrorHandler(err);
+
     setSocketError({
       ...socketError,
       isError: true,
