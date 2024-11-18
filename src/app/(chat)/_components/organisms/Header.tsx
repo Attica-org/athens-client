@@ -37,6 +37,7 @@ import { useUnloadDisconnectSocket } from '@/hooks/useUnloadDisconnectSocket';
 import { Message } from '@/app/model/Message';
 import { useMessageStore } from '@/store/message';
 import useUpdateSession from '@/hooks/useUpdateSession';
+import isNull from '@/utils/isNull';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
@@ -169,10 +170,7 @@ export default function Header() {
       meta: { key: number; effectiveSize: number };
     }>;
 
-    if (username.length === 0) return;
-    if (curMessages === undefined || curMessages === null) {
-      return;
-    }
+    if (isNull(username) || isNull(curMessages)) return;
 
     const newMessages = {
       pageParams: [...curMessages.pageParams],

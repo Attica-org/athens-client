@@ -4,6 +4,7 @@ import React from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { homeSegmentKey } from '@/constants/segmentKey';
+import { AUTHENTICATED } from '@/constants/Auth';
 import ActionButton from '../atoms/ActionButton';
 
 type Props = {
@@ -15,7 +16,7 @@ export function ActionButtons({ className }: Props) {
   const router = useRouter();
 
   const handleSignOut = () => {
-    if (session?.status === 'authenticated') {
+    if (session?.status === AUTHENTICATED) {
       signOut();
       router.push(homeSegmentKey);
     }

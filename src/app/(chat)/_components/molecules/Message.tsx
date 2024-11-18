@@ -21,6 +21,7 @@ import {
 import getKey from '@/utils/getKey';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { useSession } from 'next-auth/react';
+import isNull from '@/utils/isNull';
 import MyMessage from '../atoms/MyMessage';
 import YourMessage from '../atoms/YourMessage';
 import { getChatMessages } from '../../_lib/getChatMessages';
@@ -55,10 +56,7 @@ function MessageItem({
   queryClient,
   agoraId,
 }: MessageItemProps) {
-  const hasAccessProperty =
-    message.access !== undefined && message.access.length > 0;
-
-  if (hasAccessProperty && message.access !== undefined) {
+  if (!isNull(message.access)) {
     return (
       <UserAccessNotification
         className="flex p-0.5rem pl-1rem pr-1rem"
@@ -275,15 +273,15 @@ export default function Message() {
       // 새로 전달받은 메시지 업데이트 후에 스크롤 조정
       setTimeout(() => {
         if (listRef.current) {
-          const isAtBottom =
-            listRef.current.clientHeight + listRef.current.scrollTop + 100 >=
-            listRef.current.scrollHeight;
-
           // 입퇴장 속성이 있다면, 스크롤을 조정하지 않음
           if (lastMessage.access !== undefined) {
             setGoDown(false);
             return;
           }
+
+          const isAtBottom =
+            listRef.current.clientHeight + listRef.current.scrollTop + 100 >=
+            listRef.current.scrollHeight;
 
           // 마지막 메시지가 내 메시지거나, 스크롤이 맨 아래에 있을 때만 스크롤 조정
           if (isAtBottom || lastMessage.user.nickname === userNickname) {
