@@ -22,7 +22,7 @@ import {
 } from '@/constants/queryKey';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
-import { swalConfirmCancelAlert } from '@/utils/swalAlert';
+import { swalBackButtonAlert } from '@/utils/swalAlert';
 import { AUTHORIZATION_FAIL } from '@/constants/authErrorMessage';
 import { signOutWithCredentials } from '@/serverActions/auth';
 import useApiError from '@/hooks/useApiError';
@@ -133,17 +133,7 @@ export default function Header() {
   };
 
   const handleBack = async () => {
-    const result = await swalConfirmCancelAlert.fire({
-      icon: 'warning',
-      title: '아고라를 나가시겠습니까?',
-      text: '설정한 프로필은 초기화됩니다.',
-      showCancelButton: true,
-      confirmButtonText: '확인',
-      cancelButtonText: '취소',
-      width: '250px',
-      confirmButtonColor: 'bg-backbutton-confirm',
-      cancelButtonColor: 'bg-[#F2F4F3] dark:bg-white',
-    });
+    const result = await swalBackButtonAlert();
 
     if (result && result.isConfirmed) {
       handleAgoraExit();

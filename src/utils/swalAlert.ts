@@ -2,7 +2,7 @@
 
 import Swal from 'sweetalert2';
 
-export const swalConfirmCancelAlert = Swal.mixin({
+const swalConfirmCancelCustomClass = Swal.mixin({
   customClass: {
     popup:
       'w-[250px] h-[170px] bg-white dark:bg-dark-light-300 place-self-center rounded-xl', // 전체 모달 관리
@@ -14,7 +14,7 @@ export const swalConfirmCancelAlert = Swal.mixin({
   },
 });
 
-export const swalConfirmAlert = Swal.mixin({
+const swalConfirmAlertCustomClass = Swal.mixin({
   customClass: {
     popup:
       'w-[250px] h-[170px] bg-white dark:bg-dark-light-300 place-self-center rounded-xl', // 전체 모달 관리
@@ -24,3 +24,28 @@ export const swalConfirmAlert = Swal.mixin({
       'bg-backbutton-confirm text-white w-100 h-27 text-xs rounded-md mt-[0.6rem] mx-auto mb-0',
   },
 });
+
+export const swalBackButtonAlert = async () => {
+  return swalConfirmCancelCustomClass.fire({
+    icon: 'warning',
+    title: '아고라를 나가시겠습니까?',
+    text: '설정한 프로필은 초기화됩니다.',
+    showCancelButton: true,
+    confirmButtonText: '확인',
+    cancelButtonText: '취소',
+    width: '250px',
+    confirmButtonColor: 'bg-backbutton-confirm',
+    cancelButtonColor: 'bg-[#F2F4F3] dark:bg-white',
+  });
+};
+
+export const swalKickedUserAlert = async () => {
+  return swalConfirmAlertCustomClass.fire({
+    icon: 'warning',
+    title: '추방당하셨습니다.',
+    text: '과반수 이상의 참여자가 추방에 동의했습니다.',
+    confirmButtonText: '확인',
+    width: '250px',
+    confirmButtonColor: 'bg-backbutton-confirm',
+  });
+};

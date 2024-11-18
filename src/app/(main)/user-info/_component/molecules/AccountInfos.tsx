@@ -41,7 +41,7 @@ export default function AccountInfos({ className }: Props) {
 
   return (
     <section className={className}>
-      <div className="text-md font-bold mb-20 dark:text-white">내 정보</div>
+      <h1 className="font-bold mb-20 dark:text-white">내 정보</h1>
       <AccountInfo label="이름" content={name} className="mb-10" />
       <AccountInfo
         label="이메일"
