@@ -77,12 +77,15 @@ export default function EnterAgoraButton() {
         routePage();
       } else {
         setIsLoading(false);
-        await handleError(new Error('입장 실패했습니다.\n 다시 시도해주세요.'));
+        await handleError(
+          new Error('입장 실패했습니다.\n 다시 시도해주세요.'),
+          mutation.mutate,
+        );
       }
     },
     onError: async (error) => {
       setIsLoading(false);
-      await handleError(error);
+      await handleError(error, mutation.mutate);
     },
   });
 

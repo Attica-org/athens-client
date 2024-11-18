@@ -38,8 +38,8 @@ export default function DiscussionStatus({ meta }: Props) {
         showToast('토론 시작에 실패했습니다.', 'error');
       }
     },
-    onError: (error) => {
-      handleError(error);
+    onError: async (error) => {
+      await handleError(error, agoraStartMutation.mutate);
     },
   });
 
@@ -54,8 +54,8 @@ export default function DiscussionStatus({ meta }: Props) {
 
       showToast('토론 종료 투표에 실패했습니다.', 'error');
     },
-    onError: (error) => {
-      handleError(error);
+    onError: async (error) => {
+      await handleError(error, agoraEndMutation.mutate);
     },
   });
 
