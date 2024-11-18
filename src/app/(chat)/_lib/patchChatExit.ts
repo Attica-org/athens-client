@@ -22,7 +22,7 @@ const patchChatExit = async ({ agoraId }: Props) => {
     credentials: 'include',
     cache: 'no-cache',
     headers: {
-      Authorization: `Bearer ${session.user.accessToken}`,
+      Authorization: `Bearer ${session.user?.accessToken}`,
     },
   });
 

@@ -21,12 +21,14 @@ import {
 import getKey from '@/utils/getKey';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { useSession } from 'next-auth/react';
+import isNull from '@/utils/isNull';
 import MyMessage from '../atoms/MyMessage';
 import YourMessage from '../atoms/YourMessage';
 import { getChatMessages } from '../../_lib/getChatMessages';
 import ChatNotification from '../atoms/ChatNotification';
 import NotificationNewMessage from '../atoms/NotificationNewMessage';
 import ScrollToBottomBtn from '../atoms/ScrollToBottomBtn';
+import UserAccessNotification from '../atoms/UserAccessNotification';
 
 interface Meta {
   key: number | null;
@@ -54,6 +56,16 @@ function MessageItem({
   queryClient,
   agoraId,
 }: MessageItemProps) {
+  if (!isNull(message.access)) {
+    return (
+      <UserAccessNotification
+        className="flex p-0.5rem pl-1rem pr-1rem"
+        nickname={message.user.nickname}
+        access={message.access}
+      />
+    );
+  }
+
   const isMyMessage = isMyType(message.user.type);
   const isSameMessage = nextMessage && nextMessage.chatId === message.chatId;
 
@@ -185,7 +197,7 @@ export default function Message() {
       client.current = new StompJs.Client({
         brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${session.data?.user?.accessToken}`,
           AgoraId: `${agoraId}`,
         },
         reconnectDelay: 500,
@@ -233,7 +245,6 @@ export default function Message() {
           const newMessages = data?.pages[0].chats || [];
           return [...newMessages, ...prev];
         });
-
         setTimeout(() => {
           if (listRef.current) {
             const moveScroll = listRef.current.scrollHeight - prevHeight;
@@ -262,6 +273,12 @@ export default function Message() {
       // 새로 전달받은 메시지 업데이트 후에 스크롤 조정
       setTimeout(() => {
         if (listRef.current) {
+          // 입퇴장 속성이 있다면, 스크롤을 조정하지 않음
+          if (lastMessage.access !== undefined) {
+            setGoDown(false);
+            return;
+          }
+
           const isAtBottom =
             listRef.current.clientHeight + listRef.current.scrollTop + 100 >=
             listRef.current.scrollHeight;

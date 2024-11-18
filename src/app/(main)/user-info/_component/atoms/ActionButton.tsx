@@ -11,6 +11,7 @@ export default function ActionButton({ label, onClick, className }: Props) {
       type="button"
       className={className}
       onClick={onClick}
+      onKeyDown={onClick}
       aria-label={`${label} 버튼`}
     >
       {label}

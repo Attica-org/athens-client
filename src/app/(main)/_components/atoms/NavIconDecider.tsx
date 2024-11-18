@@ -9,7 +9,9 @@ import {
   enterAgoraSegmentKey,
   createAgoraSegmentKey,
   SegmentKeyType,
+  userInfoSegmentKey,
 } from '@/constants/segmentKey';
+import UserIcon from '@/assets/icons/UserIcon';
 
 type Props = {
   segment: SegmentKeyType;
@@ -45,6 +47,15 @@ export default function NavIconDecider({ segment, className }: Props) {
     return (
       <HomeIcon
         shouldRender={currentPath === homeSegmentKey || shouldRenderIcon}
+        className={className}
+      />
+    );
+  }
+
+  if (segment === userInfoSegmentKey) {
+    return (
+      <UserIcon
+        shouldRender={currentPath === userInfoSegmentKey || shouldRenderIcon}
         className={className}
       />
     );
