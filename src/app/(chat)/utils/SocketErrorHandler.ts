@@ -21,14 +21,14 @@ const SocketErrorHandler = () => {
 
   const chatSocketErrorHandler = async (socketError: any) => {
     if (AUTH_MESSAGE.includes(socketError.message)) {
-      const reissuResult = await callReissueFn();
-      if (reissuResult === AUTHORIZATION_FAIL) {
+      const reissueResult = await callReissueFn();
+      if (reissueResult === AUTHORIZATION_FAIL) {
         showToast(
           '로그인 세션이 만료되었습니다.\n다시 로그인해주세요.',
           'info',
         );
         signOutWithCredentials();
-      } else if (reissuResult === AUTHORIZATION_SUCCESS) {
+      } else if (reissueResult === AUTHORIZATION_SUCCESS) {
         showToast('잠시후 다시 시도해주세요.', 'info');
         router.push(homeSegmentKey);
       }

@@ -10,15 +10,15 @@ const useUpdateSession = () => {
   const { data: session, update } = useSession();
 
   const callReissueFn = async () => {
-    if (isNull(session)) {
+    if (isNull(session) || isNull(session?.user)) {
       return AUTHORIZATION_FAIL;
     }
 
-    const result = await getReissuanceToken(session.data.user.accessToken);
+    const result = await getReissuanceToken(session.user.accessToken);
     if (!result.success) {
       return AUTHORIZATION_FAIL;
     }
-    update({
+    await update({
       ...session,
       user: {
         ...session.user,
