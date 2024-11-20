@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
 import { useRouter } from 'next/navigation';
@@ -41,6 +47,28 @@ import HamburgerButton from '../atoms/HamburgerButton';
 import DiscussionStatus from '../molecules/DiscussionStatus';
 import patchChatExit from '../../_lib/patchChatExit';
 import SocketErrorHandler from '../../utils/SocketErrorHandler';
+
+type Props = {
+  memoizedTitle: string;
+  toggle: () => void;
+  refetchAgoraUserList: () => void;
+};
+
+const MenuItems = React.memo(function MenuItems({
+  memoizedTitle,
+  toggle,
+  refetchAgoraUserList,
+}: Props) {
+  return (
+    <div className="flex justify-end items-center mr-0.5rem">
+      <ShareButton title={memoizedTitle} />
+      <HamburgerButton
+        toggleMenu={toggle}
+        refetchUserList={refetchAgoraUserList}
+      />
+    </div>
+  );
+});
 
 export default function Header() {
   const { toggle } = useSidebarStore(
@@ -84,13 +112,13 @@ export default function Header() {
     SOCKET_URL: '',
   });
 
-  const getUrl = async () => {
+  const getUrl = useCallback(async () => {
     const key = await getKey();
     setURL({
       BASE_URL: key.BASE_URL || '',
       SOCKET_URL: key.SOCKET_URL || '',
     });
-  };
+  }, []);
 
   const refetchAgoraUserList = async () => {
     // 유저 리스트 캐시 무효화 및 재요청
@@ -387,12 +415,20 @@ export default function Header() {
     return () => {
       reset();
     };
-  }, [reset]);
+  }, [reset, getUrl]);
 
   useUnloadDisconnectSocket({
     client: client.current,
     mutation: mutation.mutate,
   });
+
+  const memoizedTitle = useMemo(() => {
+    return (
+      metaData?.agora.title ||
+      enterAgora.title ||
+      '다양한 사람들과 토론에 함께하세요!'
+    );
+  }, [metaData?.agora.title, enterAgora.title]);
 
   return (
     <div className="flex flex-col w-full h-full justify-center dark:text-white dark:text-opacity-85">
@@ -401,17 +437,15 @@ export default function Header() {
         <div className="flex justify-center items-center text-sm under-mobile:text-xs">
           <DiscussionStatus meta={metaData} />
         </div>
-        <div className="flex justify-end items-center mr-0.5rem">
-          <ShareButton title={metaData?.agora.title || ''} />
-          <HamburgerButton
-            toggleMenu={toggle}
-            refetchUserList={refetchAgoraUserList}
-          />
-        </div>
+        <MenuItems
+          memoizedTitle={memoizedTitle}
+          toggle={toggle}
+          refetchAgoraUserList={refetchAgoraUserList}
+        />
       </div>
       <div className="flex justify-center items-center">
         <AgoraInfo
-          title={metaData?.agora.title || enterAgora.title || ''}
+          title={memoizedTitle}
           isClosed={enterAgora.status === AGORA_STATUS.CLOSED}
           pros={participants.pros}
           cons={participants.cons}

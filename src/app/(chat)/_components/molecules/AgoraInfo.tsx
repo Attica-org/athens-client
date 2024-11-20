@@ -8,7 +8,12 @@ type Props = {
   isClosed?: boolean;
 };
 
-export default function AgoraInfo({ title, pros, cons, isClosed }: Props) {
+export default React.memo(function AgoraInfo({
+  title,
+  pros,
+  cons,
+  isClosed,
+}: Props) {
   return (
     <section className="flex flex-col justify-center items-center w-full dark:bg-dark-light-300 pb-5">
       <h1
@@ -37,4 +42,4 @@ export default function AgoraInfo({ title, pros, cons, isClosed }: Props) {
       )}
     </section>
   );
-}
+});

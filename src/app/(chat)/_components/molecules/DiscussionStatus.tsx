@@ -2,7 +2,6 @@
 
 import { useMutation } from '@tanstack/react-query';
 import React, { Suspense, useState } from 'react';
-import EyeIcon from '@/assets/icons/EyeIcon';
 import { useChatInfo } from '@/store/chatInfo';
 import { useAgora } from '@/store/agora';
 import Loading from '@/app/_components/atoms/loading';
@@ -15,6 +14,7 @@ import { patchAgoraStart } from '../../_lib/patchAgoraStart';
 import { patchAgoraEnd } from '../../_lib/patchAgoraEnd';
 import DiscussionTimer from '../atoms/DiscussionTimer';
 import VoteResult from '../atoms/VoteResult';
+import ObserverStatus from '../atoms/ObserverStatus';
 
 type Props = {
   meta: AgoraMeta | undefined;
@@ -22,7 +22,11 @@ type Props = {
 
 export default function DiscussionStatus({ meta }: Props) {
   const [isEndClicked, setIsEndClicked] = useState(false);
-  const { enterAgora } = useAgora();
+  const { enterAgora } = useAgora(
+    useShallow((state) => ({
+      enterAgora: state.enterAgora,
+    })),
+  );
   const { handleError } = useApiError();
   const { start } = useChatInfo(
     useShallow((state) => ({
@@ -91,25 +95,7 @@ export default function DiscussionStatus({ meta }: Props) {
         className="flex justify-center items-center"
       >
         <DiscussionTimer duration={meta?.agora.duration || 0} />
-        <div
-          role="status"
-          aria-label="관찰자 수"
-          className="flex justify-center items-center ml-10"
-        >
-          <EyeIcon className="w-1rem" />
-          {meta &&
-            meta.participants.map(
-              (participant) =>
-                participant.type === AGORA_POSITION.OBSERVER && (
-                  <span
-                    key={meta.agora.id}
-                    className="pl-5 text-xs text-athens-gray-thick dark:text-white dark:text-opacity-85"
-                  >
-                    {participant.count || 0}
-                  </span>
-                ),
-            )}
-        </div>
+        <ObserverStatus meta={meta} />
       </div>
     </>
   ) : (
