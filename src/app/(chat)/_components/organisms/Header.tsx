@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
 import { useRouter } from 'next/navigation';
@@ -23,11 +29,8 @@ import {
 import { homeSegmentKey } from '@/constants/segmentKey';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { swalBackButtonAlert } from '@/utils/swalAlert';
-import { AUTHORIZATION_FAIL } from '@/constants/authErrorMessage';
-import { signOutWithCredentials } from '@/serverActions/auth';
 import useApiError from '@/hooks/useApiError';
 import { signOut, useSession } from 'next-auth/react';
-import { CHAT_SOCKET_ERROR_MESSAGE } from '@/constants/responseErrorMessage';
 import {
   DISCUSSION_END,
   DISCUSSION_START,
@@ -36,7 +39,6 @@ import {
 import { useUnloadDisconnectSocket } from '@/hooks/useUnloadDisconnectSocket';
 import { Message } from '@/app/model/Message';
 import { useMessageStore } from '@/store/message';
-import useUpdateSession from '@/hooks/useUpdateSession';
 import isNull from '@/utils/isNull';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
@@ -44,6 +46,29 @@ import AgoraInfo from '../molecules/AgoraInfo';
 import HamburgerButton from '../atoms/HamburgerButton';
 import DiscussionStatus from '../molecules/DiscussionStatus';
 import patchChatExit from '../../_lib/patchChatExit';
+import SocketErrorHandler from '../../utils/SocketErrorHandler';
+
+type Props = {
+  memoizedTitle: string;
+  toggle: () => void;
+  refetchAgoraUserList: () => void;
+};
+
+const MenuItems = React.memo(function MenuItems({
+  memoizedTitle,
+  toggle,
+  refetchAgoraUserList,
+}: Props) {
+  return (
+    <div className="flex justify-end items-center mr-0.5rem">
+      <ShareButton title={memoizedTitle} />
+      <HamburgerButton
+        toggleMenu={toggle}
+        refetchUserList={refetchAgoraUserList}
+      />
+    </div>
+  );
+});
 
 export default function Header() {
   const { toggle } = useSidebarStore(
@@ -77,7 +102,7 @@ export default function Header() {
   const { setGoDown } = useMessageStore();
   const router = useRouter();
   const { handleError } = useApiError();
-  const { callReissueFn } = useUpdateSession();
+  const { chatSocketErrorHandler } = SocketErrorHandler();
   const session = useSession();
   const [agoraId, setAgoraId] = useState(enterAgora.id);
   const client = useRef<StompJs.Client>();
@@ -87,13 +112,13 @@ export default function Header() {
     SOCKET_URL: '',
   });
 
-  const getUrl = async () => {
+  const getUrl = useCallback(async () => {
     const key = await getKey();
     setURL({
       BASE_URL: key.BASE_URL || '',
       SOCKET_URL: key.SOCKET_URL || '',
     });
-  };
+  }, []);
 
   const refetchAgoraUserList = async () => {
     // 유저 리스트 캐시 무효화 및 재요청
@@ -116,8 +141,8 @@ export default function Header() {
   const mutation = useMutation({
     mutationFn: callChatExitAPI,
     onSuccess: (response) => onSuccessChatExit(response),
-    onError: (error) => {
-      handleError(error);
+    onError: async (error) => {
+      await handleError(error, mutation.mutate);
     },
   });
 
@@ -272,51 +297,8 @@ export default function Header() {
   };
 
   const subscribeErrorControl = async (err: any) => {
-    if (err.code === 1201) {
-      // await getToken();
-    } else if (err.code === 1003) {
-      const reissuResult = await callReissueFn();
-      if (reissuResult === AUTHORIZATION_FAIL) {
-        showToast('세션이 만료되었습니다.', 'info');
-        signOutWithCredentials();
-        router.replace('/');
-      }
-    } else if (err.code === 2000) {
-      showToast(
-        '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-        'error',
-      );
-    } else if (err.code === 2001) {
-      showToast('연결이 불안정합니다. 잠시 후 다시 시도해주세요.', 'error');
-    } else if (err.code === 1102) {
-      if (
-        err.message === CHAT_SOCKET_ERROR_MESSAGE.OBSERVER_MESSAGE_SEND_ERROR
-      ) {
-        showToast('관찰자는 메시지를 보낼 수 없습니다.', 'error');
-      } else if (err.message === CHAT_SOCKET_ERROR_MESSAGE.USER_NOT_FOUND) {
-        showToast('유저를 찾을 수 없습니다.', 'error');
-      }
-    } else if (err.code === 1301) {
-      if (err.message === CHAT_SOCKET_ERROR_MESSAGE.SESSION_NOT_FOUND) {
-        showToast('현재 아고라에 존재하지 않는 유저입니다.', 'error');
-      } else {
-        showToast('존재하지 않는 아고라입니다.', 'error');
-      }
-    } else if (err.code === 1303) {
-      showToast('존재하지 않는 채팅에 반응을 보낼 수 없습니다.', 'error');
-    } else if (err.code === 1001) {
-      if (err.message === CHAT_SOCKET_ERROR_MESSAGE.REACTION_TYPE_INVALID) {
-        showToast('리액션 타입이 잘못되었습니다.', 'error');
-      } else if (
-        err.message === CHAT_SOCKET_ERROR_MESSAGE.REACTION_TYPE_IS_NULL
-      ) {
-        showToast('리액션 타입이 비어있습니다.', 'error');
-      } else if (err.message === CHAT_SOCKET_ERROR_MESSAGE.CHAT_TYPE_INVALID) {
-        showToast('채팅 타입이 잘못되었습니다.', 'error');
-      } else if (err.message === CHAT_SOCKET_ERROR_MESSAGE.CHAT_TYPE_IS_NULL) {
-        showToast('채팅 타입이 비어있습니다.', 'error');
-      } else;
-    }
+    chatSocketErrorHandler(err);
+
     setSocketError({
       ...socketError,
       isError: true,
@@ -433,12 +415,20 @@ export default function Header() {
     return () => {
       reset();
     };
-  }, [reset]);
+  }, [reset, getUrl]);
 
   useUnloadDisconnectSocket({
     client: client.current,
     mutation: mutation.mutate,
   });
+
+  const memoizedTitle = useMemo(() => {
+    return (
+      metaData?.agora.title ||
+      enterAgora.title ||
+      '다양한 사람들과 토론에 함께하세요!'
+    );
+  }, [metaData?.agora.title, enterAgora.title]);
 
   return (
     <div className="flex flex-col w-full h-full justify-center dark:text-white dark:text-opacity-85">
@@ -447,17 +437,15 @@ export default function Header() {
         <div className="flex justify-center items-center text-sm under-mobile:text-xs">
           <DiscussionStatus meta={metaData} />
         </div>
-        <div className="flex justify-end items-center mr-0.5rem">
-          <ShareButton title={metaData?.agora.title || ''} />
-          <HamburgerButton
-            toggleMenu={toggle}
-            refetchUserList={refetchAgoraUserList}
-          />
-        </div>
+        <MenuItems
+          memoizedTitle={memoizedTitle}
+          toggle={toggle}
+          refetchAgoraUserList={refetchAgoraUserList}
+        />
       </div>
       <div className="flex justify-center items-center">
         <AgoraInfo
-          title={metaData?.agora.title || enterAgora.title || ''}
+          title={memoizedTitle}
           isClosed={enterAgora.status === AGORA_STATUS.CLOSED}
           pros={participants.pros}
           cons={participants.cons}

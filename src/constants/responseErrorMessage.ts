@@ -119,8 +119,22 @@ export const CHAT_SOCKET_ERROR_MESSAGE = {
   OBSERVER_MESSAGE_SEND_ERROR: 'Observer cannot send this request',
   SESSION_NOT_FOUND: 'Session not found',
   USER_NOT_FOUND: 'User is not participating in the agora',
-  REACTION_TYPE_INVALID: `Invalid value for field ${'reactiontype'}`,
   REACTION_TYPE_IS_NULL: 'Reaction type cannot be null',
   CHAT_TYPE_INVALID: `Invalid value for field ${'type'}`,
   CHAT_TYPE_IS_NULL: 'Chat type cannot be null',
+  AGORA_IS_CLOSED: 'Agora is closed',
+  CHAT_MESSAGE_IS_NULL: 'Chat message cannot be empty',
+  CHAT_OVER_LIMIT: 'content length exceeds maximum limit of 10000 characters',
+  RECONNECTION_FAILURE: 'Reconnection attempt failed',
+  SOCKET_EXCEPTION: 'Socket Exception',
+  RUNTIME_EXCEPTION: 'Runtime Exception',
+  NOT_FOUND_AGORA: 'Not found agora',
+};
+
+export const REACTION_SOCKET_ERROR_MESSAGE = {
+  REACTION_TYPE_INVALID: `Invalid value for field ${'reactiontype'}`,
+  REACTION_TYPE_IS_NULL: 'Reaction type cannot be null',
+  NOT_FOUND_CHAT: 'Not found chat.',
+  CHAT_WRITER_CANNOT_REACT_TEMSELVES:
+    'Chat writers cannot respond to themselves.',
 };
