@@ -2,7 +2,7 @@ import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { FILTER_BAD_WORDS } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
-import isNull from '@/utils/isNull';
+import isNull from '@/utils/validation/validateIsNull';
 
 type Props = {
   message: string;

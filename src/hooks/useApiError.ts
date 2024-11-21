@@ -13,7 +13,7 @@ import {
   QueryKey,
   UseMutateFunction,
 } from '@tanstack/react-query';
-import isNull from '@/utils/isNull';
+import isNull from '@/utils/validation/validateIsNull';
 import retryConfig from '@/lib/retryConfig';
 import useUpdateSession from './useUpdateSession';
 

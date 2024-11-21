@@ -3,8 +3,8 @@
 import type { Session } from 'next-auth';
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { ANYNYMOUS, AUTHENTICATED, AUTH_PROVIDERS } from '@/constants/Auth';
-import isNull from '@/utils/isNull';
+import { ANYNYMOUS, AUTHENTICATED, AUTH_PROVIDERS } from '@/constants/auth';
+import isNull from '@/utils/validation/validateIsNull';
 import AccountInfo from '../atoms/AccountInfo';
 
 type Props = {

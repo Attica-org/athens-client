@@ -3,7 +3,7 @@ import {
   AUTHORIZATION_SUCCESS,
 } from '@/constants/authErrorMessage';
 import { getReissuanceToken } from '@/lib/getReissuanceToken';
-import isNull from '@/utils/isNull';
+import isNull from '@/utils/validation/validateIsNull';
 import { useSession } from 'next-auth/react';
 
 const useUpdateSession = () => {

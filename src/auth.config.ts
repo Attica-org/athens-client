@@ -1,6 +1,6 @@
 import type { NextAuthConfig, User } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import isNull from './utils/isNull';
+import isNull from './utils/validation/validateIsNull';
 
 interface Authorize {
   accessToken?: string;

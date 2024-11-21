@@ -1,7 +1,7 @@
 import { AgoraMeta } from '@/app/model/AgoraMeta';
 import EyeIcon from '@/assets/icons/EyeIcon';
 import { AGORA_POSITION } from '@/constants/agora';
-import isNull from '@/utils/isNull';
+import isNull from '@/utils/validation/validateIsNull';
 import React from 'react';
 
 type Props = {
