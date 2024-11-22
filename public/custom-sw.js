@@ -42,25 +42,32 @@ const call = async (baseUrl, url, fetchNext, retry = 3) => {
   const response = await fetch(url, fetchNext);
 
   if (!response.ok) {
-    const res = await response.json();
-
-    // 인증 자격에 관한 오류 처리
-    if (response.error && AUTH_MESSAGE.includes(response.error.message)) {
-      await tokenErrorHandler(baseUrl);
-      // 재발급 후 재요청
-      if (retry !== 0) {
-        const newFetchNext = {
-          ...fetchNext,
-          headers: {
-            ...fetchNext.headers,
-            Authorization: `Bearer ${newAccessToken}`,
-          },
-        };
-        call(baseUrl, url, newFetchNext, retry - 1);
+    try {
+      const res = await response.json();
+      // 인증 자격에 관한 오류 처리
+      if (res.error !== null && AUTH_MESSAGE.includes(response.error.message)) {
+        await tokenErrorHandler(baseUrl);
+        // 재발급 후 재요청
+        if (retry !== 0) {
+          const newFetchNext = {
+            ...fetchNext,
+            headers: {
+              ...fetchNext.headers,
+              Authorization: `Bearer ${newAccessToken}`,
+            },
+          };
+          call(baseUrl, url, newFetchNext, retry - 1);
+        }
+      } else {
+        // 인증 외 오류는 호출한 곳에서 처리
+        return res;
       }
-    } else {
-      // 인증 외 오류는 호출한 곳에서 처리
-      return res;
+    } catch (error) {
+      // HTTP 에러
+      return {
+        success: false,
+        error: response.statusText,
+      };
     }
   }
 

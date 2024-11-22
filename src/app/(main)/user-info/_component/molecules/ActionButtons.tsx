@@ -4,7 +4,7 @@ import React from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { homeSegmentKey } from '@/constants/segmentKey';
-import { AUTHENTICATED } from '@/constants/Auth';
+import { AUTHENTICATED } from '@/constants/auth';
 import ActionButton from '../atoms/ActionButton';
 
 type Props = {

@@ -1,5 +1,5 @@
 import getKey from '@/utils/getKey';
-import isNull from '@/utils/isNull';
+import isNull from '@/utils/validation/validateIsNull';
 
 export class FetchWrapper {
   static #baseURL: string;

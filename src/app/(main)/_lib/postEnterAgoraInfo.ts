@@ -4,7 +4,7 @@ import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { SIGNIN_REQUIRED, TOKEN_EXPIRED } from '@/constants/authErrorMessage';
 import { getSession } from '@/serverActions/auth';
 import { AGORA_ENTER } from '@/constants/responseErrorMessage';
-import isNull from '@/utils/isNull';
+import isNull from '@/utils/validation/validateIsNull';
 
 type Props = {
   info: {

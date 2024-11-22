@@ -39,7 +39,7 @@ import {
 import { useUnloadDisconnectSocket } from '@/hooks/useUnloadDisconnectSocket';
 import { Message } from '@/app/model/Message';
 import { useMessageStore } from '@/store/message';
-import isNull from '@/utils/isNull';
+import isNull from '@/utils/validation/validateIsNull';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';

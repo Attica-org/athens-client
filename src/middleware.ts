@@ -1,7 +1,7 @@
 // middleware.ts
 import { NextResponse } from 'next/server';
 import { getSession } from './serverActions/auth';
-import isNull from './utils/isNull';
+import isNull from './utils/validation/validateIsNull';
 
 export async function middleware() {
   const session = await getSession();

@@ -4,7 +4,7 @@ import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { AGORA_CREATE } from '@/constants/responseErrorMessage';
-import isNull from '@/utils/isNull';
+import isNull from '@/utils/validation/validateIsNull';
 
 const TITLE_NULL = { title: '공백일 수 없습니다' };
 const CATEGORY_ERROR = { capacity: '1 이상이어야 합니다' };

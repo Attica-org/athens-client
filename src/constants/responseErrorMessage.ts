@@ -138,3 +138,7 @@ export const REACTION_SOCKET_ERROR_MESSAGE = {
   CHAT_WRITER_CANNOT_REACT_TEMSELVES:
     'Chat writers cannot respond to themselves.',
 };
+
+export const CHAT_VOTE_ERROR_MESSAGE = {
+  DUPLICATE_VOTE: 'User has already voted for Opinion in this agora',
+};
