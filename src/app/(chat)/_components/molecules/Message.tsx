@@ -116,7 +116,7 @@ export default function Message() {
   const myRole = useAgora((state) => state.enterAgora.role);
   const agoraId = useAgora((state) => state.enterAgora.id);
   const queryClient = useQueryClient();
-  const session = useSession();
+  const { data: session } = useSession();
   const { nickname: userNickname, reset } = useEnter(
     useShallow((state) => ({
       nickname: state.nickname,
@@ -197,7 +197,7 @@ export default function Message() {
       client.current = new StompJs.Client({
         brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
-          Authorization: `Bearer ${session.data?.user?.accessToken}`,
+          Authorization: `Bearer ${session?.user.accessToken}`,
           AgoraId: `${agoraId}`,
         },
         reconnectDelay: 500,

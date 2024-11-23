@@ -12,7 +12,7 @@ type Props = {
 };
 
 export function ActionButtons({ className }: Props) {
-  const session = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
 
   const handleSignOut = () => {

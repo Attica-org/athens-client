@@ -78,7 +78,7 @@ export default function Header() {
   const router = useRouter();
   const { handleError } = useApiError();
   const { callReissueFn } = useUpdateSession();
-  const session = useSession();
+  const { data: session } = useSession();
   const [agoraId, setAgoraId] = useState(enterAgora.id);
   const client = useRef<StompJs.Client>();
   const queryClient = useQueryClient();
@@ -360,14 +360,14 @@ export default function Header() {
     }
 
     function connect() {
-      if (!session.data?.user?.accessToken) {
+      if (!session?.user.accessToken) {
         showToast('로그인이 필요합니다.', 'error');
         signOut();
       }
       client.current = new StompJs.Client({
         brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
-          Authorization: `Bearer ${session.data?.user?.accessToken}`,
+          Authorization: `Bearer ${session?.user.accessToken}`,
           AgoraId: `${agoraId}`,
         },
         reconnectDelay: 500,

@@ -42,7 +42,7 @@ export default function EndAgora() {
   const [URL, setURL] = useState({
     BASE_URL: '',
   });
-  const session = useSession();
+  const { data: session } = useSession();
 
   useEffect(() => {
     const getUrl = async () => {
@@ -80,7 +80,7 @@ export default function EndAgora() {
           voteEndTime,
           agoraId,
           voteType: vote,
-          token: session.data?.user?.accessToken,
+          token: session?.user.accessToken,
           baseUrl: URL.BASE_URL,
         },
       });

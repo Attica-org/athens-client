@@ -11,13 +11,11 @@ export declare module 'next-auth' {
   }
 
   interface Session {
-    data: {
-      user: {
-        accessToken: string;
-        authProvider: string;
-        name: string;
-        email: string;
-      };
+    user: {
+      accessToken: string;
+      authProvider: string;
+      name: string;
+      email: string;
     };
     status: typeof AUTHENTICATED | typeof UNAUTHENTICATED;
   }
