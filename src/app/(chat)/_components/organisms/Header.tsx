@@ -38,6 +38,7 @@ import { Message } from '@/app/model/Message';
 import { useMessageStore } from '@/store/message';
 import useUpdateSession from '@/hooks/useUpdateSession';
 import isNull from '@/utils/isNull';
+import accessMessageConfig from '@/lib/accessMessageConfig';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
@@ -177,7 +178,7 @@ export default function Header() {
     // const lastMessageId = lastPage?.chats.at(-1)?.chatId;
 
     const newMessage = {
-      chatId: -1,
+      chatId: accessMessageConfig.getAccessMessageChatId(),
       user: {
         id: -1,
         nickname: username,
