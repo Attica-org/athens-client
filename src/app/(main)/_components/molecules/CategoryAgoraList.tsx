@@ -81,6 +81,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
   });
 
   const loadNextPage = () => {
+    console.log('test1');
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
@@ -112,6 +113,12 @@ export default function CategoryAgoraList({ searchParams }: Props) {
   const handleClickRefresh = () => {
     refetch();
   };
+
+  useEffect(() => {
+    if (data.pages.length <= 2) {
+      loadNextPage(); // 화면이 큰 경우 초기 데이터 10개로는 스크롤이 생기지 않아 추가 데이터 호출
+    }
+  }, [data]);
 
   return (
     <section
@@ -145,10 +152,10 @@ export default function CategoryAgoraList({ searchParams }: Props) {
       ) : (
         <VirtuosoGrid
           useWindowScroll={false}
-          className="scrollbar-hide w-full h-full"
+          className="w-full h-full scrollbar-hide"
           data={data.pages.flatMap((page) => page.agoras)}
           totalCount={data.pages[0].agoras.length}
-          overscan={10}
+          overscan={2}
           components={virtuosoGridComponents}
           itemContent={renderItemContent}
           endReached={() => loadNextPage()}
