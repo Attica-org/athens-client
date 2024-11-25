@@ -8,7 +8,7 @@ export const signInWithCredentials = async (tempToken: string) => {
     const tokenResponse = await fetch(
       `${process.env.NEXT_BASE_URL}/api/v1/open/member/token?temp-token=${tempToken}`,
       {
-        method: 'POST',
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
