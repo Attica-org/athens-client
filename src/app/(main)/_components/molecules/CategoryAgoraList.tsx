@@ -81,7 +81,6 @@ export default function CategoryAgoraList({ searchParams }: Props) {
   });
 
   const loadNextPage = () => {
-    console.log('test1');
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
