@@ -4,6 +4,7 @@ import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { AGORA_CREATE } from '@/constants/responseErrorMessage';
+import isNull from '@/utils/validation/validateIsNull';
 
 const TITLE_NULL = { title: '공백일 수 없습니다' };
 const CATEGORY_ERROR = { capacity: '1 이상이어야 합니다' };
@@ -37,14 +38,14 @@ export const postCreateAgora = async (info: AgoraConfig) => {
   formData.append('file', file);
 
   const session = await getSession();
-  if (!session) {
+  if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
   const res = await callFetchWrapper('/api/v1/auth/agoras', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${session.user.accessToken}`,
+      Authorization: `Bearer ${session.user?.accessToken}`,
     },
     credentials: 'include',
     body: formData,

@@ -40,8 +40,8 @@ export default function DiscussionTimer({ duration }: Props) {
 
       showToast('데이터 연결에 실패했습니다.', 'error');
     },
-    onError: (error) => {
-      handleError(error);
+    onError: async (error) => {
+      await handleError(error, agoraEndMutation.mutate);
     },
   });
 

@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
 import { useRouter } from 'next/navigation';
@@ -9,34 +15,60 @@ import * as StompJs from '@stomp/stompjs';
 import { AgoraMeta } from '@/app/model/AgoraMeta';
 import { useChatInfo } from '@/store/chatInfo';
 import showToast from '@/utils/showToast';
-import { getReissuanceToken } from '@/lib/getReissuanceToken';
 import { useVoteStore } from '@/store/vote';
-import getToken from '@/lib/getToken';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  InfiniteData,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import getKey from '@/utils/getKey';
-import swManager from '@/utils/swManager';
-import { saveTabId, deleteTabId } from '@/utils/indexedDB';
-import { getAgoraUserListQueryKey } from '@/constants/queryKey';
+import {
+  getAgoraUserListQueryKey,
+  getChatMessagesQueryKey,
+} from '@/constants/queryKey';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
-import { swalConfirmCancelAlert } from '@/utils/swalAlert';
-import { AUTHORIZATION_FAIL } from '@/constants/authErrorMessage';
-import { signOutWithCredentials } from '@/serverActions/auth';
+import { swalBackButtonAlert } from '@/utils/swalAlert';
 import useApiError from '@/hooks/useApiError';
 import { signOut, useSession } from 'next-auth/react';
-import { CHAT_SOCKET_ERROR_MESSAGE } from '@/constants/responseErrorMessage';
 import {
   DISCUSSION_END,
   DISCUSSION_START,
   DISCUSSION_TOAST_MESSAGE,
 } from '@/constants/chats';
 import { useUnloadDisconnectSocket } from '@/hooks/useUnloadDisconnectSocket';
+import { Message } from '@/app/model/Message';
+import { useMessageStore } from '@/store/message';
+import isNull from '@/utils/validation/validateIsNull';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
 import HamburgerButton from '../atoms/HamburgerButton';
 import DiscussionStatus from '../molecules/DiscussionStatus';
 import patchChatExit from '../../_lib/patchChatExit';
+import SocketErrorHandler from '../../utils/SocketErrorHandler';
+
+type Props = {
+  memoizedTitle: string;
+  toggle: () => void;
+  refetchAgoraUserList: () => void;
+};
+
+const MenuItems = React.memo(function MenuItems({
+  memoizedTitle,
+  toggle,
+  refetchAgoraUserList,
+}: Props) {
+  return (
+    <div className="flex justify-end items-center mr-0.5rem">
+      <ShareButton title={memoizedTitle} />
+      <HamburgerButton
+        toggleMenu={toggle}
+        refetchUserList={refetchAgoraUserList}
+      />
+    </div>
+  );
+});
 
 export default function Header() {
   const { toggle } = useSidebarStore(
@@ -67,8 +99,10 @@ export default function Header() {
     isError: false,
     count: 0,
   });
+  const { setGoDown } = useMessageStore();
   const router = useRouter();
   const { handleError } = useApiError();
+  const { chatSocketErrorHandler } = SocketErrorHandler();
   const session = useSession();
   const [agoraId, setAgoraId] = useState(enterAgora.id);
   const client = useRef<StompJs.Client>();
@@ -78,21 +112,13 @@ export default function Header() {
     SOCKET_URL: '',
   });
 
-  const getUrl = async () => {
+  const getUrl = useCallback(async () => {
     const key = await getKey();
     setURL({
       BASE_URL: key.BASE_URL || '',
       SOCKET_URL: key.SOCKET_URL || '',
     });
-  };
-
-  const deleteTabIdData = () => {
-    const tabId = swManager.getTabId();
-    if (tabId) {
-      swManager.clearTabId();
-      deleteTabId(tabId);
-    }
-  };
+  }, []);
 
   const refetchAgoraUserList = async () => {
     // 유저 리스트 캐시 무효화 및 재요청
@@ -115,8 +141,8 @@ export default function Header() {
   const mutation = useMutation({
     mutationFn: callChatExitAPI,
     onSuccess: (response) => onSuccessChatExit(response),
-    onError: (error) => {
-      handleError(error);
+    onError: async (error) => {
+      await handleError(error, mutation.mutate);
     },
   });
 
@@ -132,14 +158,7 @@ export default function Header() {
   };
 
   const handleBack = async () => {
-    const result = await swalConfirmCancelAlert.fire({
-      icon: 'warning',
-      title: '아고라를 나가시겠습니까?',
-      text: '설정한 프로필은 초기화됩니다.',
-      showCancelButton: true,
-      confirmButtonText: '확인',
-      cancelButtonText: '취소',
-    });
+    const result = await swalBackButtonAlert();
 
     if (result && result.isConfirmed) {
       handleAgoraExit();
@@ -154,12 +173,90 @@ export default function Header() {
     );
   };
 
+  const updateUserAccessMessage = (
+    userDisconnectTime: string,
+    enterAgoraId: number,
+    username: string,
+  ) => {
+    const curMessages = queryClient.getQueryData(
+      getChatMessagesQueryKey(enterAgora.id),
+    ) as InfiniteData<{
+      chats: Message[];
+      meta: { key: number; effectiveSize: number };
+    }>;
+
+    if (isNull(username) || isNull(curMessages)) return;
+
+    const newMessages = {
+      pageParams: [...curMessages.pageParams],
+      pages: [...curMessages.pages],
+    };
+
+    const lastPage = newMessages.pages.at(-1);
+
+    const newLastPage =
+      lastPage?.meta.key === -1
+        ? { chats: [...lastPage.chats], meta: { ...lastPage.meta } }
+        : { chats: [], meta: { key: 0, effectiveSize: 20 } };
+
+    // const lastMessageId = lastPage?.chats.at(-1)?.chatId;
+
+    const newMessage = {
+      chatId: -1,
+      user: {
+        id: -1,
+        nickname: username,
+        photoNumber: 0,
+        type: '',
+      },
+      content: '',
+      createdAt: '',
+      reactionCount: {
+        LIKE: 0,
+        DISLIKE: 0,
+        LOVE: 0,
+        HAPPY: 0,
+        SAD: 0,
+      },
+      access: userDisconnectTime === null ? 'enter' : 'exit',
+    };
+
+    newLastPage.chats.push(newMessage);
+
+    newMessages.pages[newMessages.pages.length - 1] = {
+      chats: newLastPage.chats,
+      meta: {
+        key: newLastPage.meta.key || 0,
+        effectiveSize: 20,
+      },
+    };
+
+    queryClient.setQueryData(
+      getChatMessagesQueryKey(enterAgoraId),
+      newMessages,
+    );
+    setGoDown(true);
+    // console.log('newMessages', newMessages);
+
+    // let accessStatus = null;
+
+    // if (userDisconnectTime === null) {
+    //   accessStatus = 'enter';
+    // } else if (userDisconnectTime.length > 0) {
+    //   accessStatus = 'exit';
+    // }
+
+    // queryClient.setQueryData(getChatMessagesQueryKey(enterAgoraId), {
+    //   status: accessStatus,
+    //   username,
+    // });
+  };
+
   const handleWebSocketResponse = (response: any) => {
     if (response.type === 'META') {
       setTitle(response.data.agora.title);
       setAgoraId(response.data.agora.id);
       setMetaData(response.data);
-      // console.log('META', response.data);
       // refetchAgoraUserList();
 
       if (response.data.agora.startAt) {
@@ -181,6 +278,13 @@ export default function Header() {
       );
 
       setParticipants(partcipantsCnt);
+
+      const { socketDisconnectTime, username } = response.data.agoraMemberInfo;
+      updateUserAccessMessage(
+        socketDisconnectTime,
+        response.data.agora.id,
+        username,
+      );
     } else if (response.type === DISCUSSION_START) {
       // console.log(data.data);
       showToast('토론이 시작되었습니다.', 'success');
@@ -193,51 +297,8 @@ export default function Header() {
   };
 
   const subscribeErrorControl = async (err: any) => {
-    if (err.code === 1201) {
-      await getToken();
-    } else if (err.code === 1003) {
-      const reissuResult = await getReissuanceToken();
-      if (reissuResult === AUTHORIZATION_FAIL) {
-        showToast('세션이 만료되었습니다.', 'info');
-        signOutWithCredentials();
-        router.replace('/');
-      }
-    } else if (err.code === 2000) {
-      showToast(
-        '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-        'error',
-      );
-    } else if (err.code === 2001) {
-      showToast('연결이 불안정합니다. 잠시 후 다시 시도해주세요.', 'error');
-    } else if (err.code === 1102) {
-      if (
-        err.message === CHAT_SOCKET_ERROR_MESSAGE.OBSERVER_MESSAGE_SEND_ERROR
-      ) {
-        showToast('관찰자는 메시지를 보낼 수 없습니다.', 'error');
-      } else if (err.message === CHAT_SOCKET_ERROR_MESSAGE.USER_NOT_FOUND) {
-        showToast('유저를 찾을 수 없습니다.', 'error');
-      }
-    } else if (err.code === 1301) {
-      if (err.message === CHAT_SOCKET_ERROR_MESSAGE.SESSION_NOT_FOUND) {
-        showToast('현재 아고라에 존재하지 않는 유저입니다.', 'error');
-      } else {
-        showToast('존재하지 않는 아고라입니다.', 'error');
-      }
-    } else if (err.code === 1303) {
-      showToast('존재하지 않는 채팅에 반응을 보낼 수 없습니다.', 'error');
-    } else if (err.code === 1001) {
-      if (err.message === CHAT_SOCKET_ERROR_MESSAGE.REACTION_TYPE_INVALID) {
-        showToast('리액션 타입이 잘못되었습니다.', 'error');
-      } else if (
-        err.message === CHAT_SOCKET_ERROR_MESSAGE.REACTION_TYPE_IS_NULL
-      ) {
-        showToast('리액션 타입이 비어있습니다.', 'error');
-      } else if (err.message === CHAT_SOCKET_ERROR_MESSAGE.CHAT_TYPE_INVALID) {
-        showToast('채팅 타입이 잘못되었습니다.', 'error');
-      } else if (err.message === CHAT_SOCKET_ERROR_MESSAGE.CHAT_TYPE_IS_NULL) {
-        showToast('채팅 타입이 비어있습니다.', 'error');
-      } else;
-    }
+    chatSocketErrorHandler(err);
+
     setSocketError({
       ...socketError,
       isError: true,
@@ -281,15 +342,14 @@ export default function Header() {
     }
 
     function connect() {
-      if (!session.data?.user.accessToken) {
+      if (!session.data?.user?.accessToken) {
         showToast('로그인이 필요합니다.', 'error');
         signOut();
       }
-      console.log('session', session);
       client.current = new StompJs.Client({
         brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${session.data?.user?.accessToken}`,
           AgoraId: `${agoraId}`,
         },
         reconnectDelay: 500,
@@ -354,37 +414,21 @@ export default function Header() {
 
     return () => {
       reset();
-      deleteTabIdData();
     };
-  }, [reset]);
-
-  useEffect(() => {
-    if (!URL.BASE_URL) return;
-
-    if (enterAgora.status !== AGORA_STATUS.CLOSED) {
-      const tabId = new Date().getTime().toString();
-      swManager.setTabId(tabId);
-      saveTabId(tabId);
-
-      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-        console.log(
-          'navigator.serviceWorker.controller',
-          navigator.serviceWorker.controller,
-        );
-        navigator.serviceWorker.controller.postMessage({
-          action: 'initialize',
-          tabId,
-          baseUrl: URL.BASE_URL,
-        });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enterAgora.status, URL.BASE_URL]);
+  }, [reset, getUrl]);
 
   useUnloadDisconnectSocket({
     client: client.current,
     mutation: mutation.mutate,
   });
+
+  const memoizedTitle = useMemo(() => {
+    return (
+      metaData?.agora.title ||
+      enterAgora.title ||
+      '다양한 사람들과 토론에 함께하세요!'
+    );
+  }, [metaData?.agora.title, enterAgora.title]);
 
   return (
     <div className="flex flex-col w-full h-full justify-center dark:text-white dark:text-opacity-85">
@@ -393,17 +437,15 @@ export default function Header() {
         <div className="flex justify-center items-center text-sm under-mobile:text-xs">
           <DiscussionStatus meta={metaData} />
         </div>
-        <div className="flex justify-end items-center mr-0.5rem">
-          <ShareButton title={metaData?.agora.title || ''} />
-          <HamburgerButton
-            toggleMenu={toggle}
-            refetchUserList={refetchAgoraUserList}
-          />
-        </div>
+        <MenuItems
+          memoizedTitle={memoizedTitle}
+          toggle={toggle}
+          refetchAgoraUserList={refetchAgoraUserList}
+        />
       </div>
       <div className="flex justify-center items-center">
         <AgoraInfo
-          title={metaData?.agora.title || enterAgora.title || ''}
+          title={memoizedTitle}
           isClosed={enterAgora.status === AGORA_STATUS.CLOSED}
           pros={participants.pros}
           cons={participants.cons}

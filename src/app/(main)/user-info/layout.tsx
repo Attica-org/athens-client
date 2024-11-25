@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from './_component/molecules/Header';
+import SideNav from '../_components/organisms/NavMenu';
 
 type Props = {
   children: React.ReactNode;
@@ -7,9 +8,12 @@ type Props = {
 
 export default function Layout({ children }: Props) {
   return (
-    <div className="h-dvh w-full inset-y-full justify-center items-center">
-      <Header />
-      <section>{children}</section>
-    </div>
+    <>
+      <SideNav />
+      <div className="flex flex-col flex-1 h-dvh flex-grow max-width-screen min-w-270 inset-y-full">
+        <Header />
+        <section>{children}</section>
+      </div>
+    </>
   );
 }

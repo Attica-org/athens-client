@@ -3,6 +3,7 @@ import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { AGORA_IMAGE_UPDATE } from '@/constants/responseErrorMessage';
+import isNull from '@/utils/validation/validateIsNull';
 
 type Props = {
   agoraId: number;
@@ -11,7 +12,7 @@ type Props = {
 
 export const patchAgoraImg = async ({ agoraId, fileUrl }: Props) => {
   const session = await getSession();
-  if (!session) {
+  if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
@@ -27,7 +28,7 @@ export const patchAgoraImg = async ({ agoraId, fileUrl }: Props) => {
     credentials: 'include',
     cache: 'no-cache',
     headers: {
-      Authorization: `Bearer ${session.user.accessToken}`,
+      Authorization: `Bearer ${session.user?.accessToken}`,
     },
     body: formData,
   });

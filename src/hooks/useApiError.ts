@@ -1,50 +1,78 @@
+'use client';
+
+import showToast from '@/utils/showToast';
+import { signOut } from 'next-auth/react';
+import { useCallback } from 'react';
 import {
   AUTHORIZATION_FAIL,
   AUTH_MESSAGE,
   SIGNIN_REQUIRED,
 } from '@/constants/authErrorMessage';
-import { getReissuanceToken } from '@/lib/getReissuanceToken';
-import showToast from '@/utils/showToast';
-import { signOut } from 'next-auth/react';
-import { redirect } from 'next/navigation';
-import { useCallback } from 'react';
+import {
+  QueryClient,
+  QueryKey,
+  UseMutateFunction,
+} from '@tanstack/react-query';
+import isNull from '@/utils/validation/validateIsNull';
+import retryConfig from '@/lib/retryConfig';
+import useUpdateSession from './useUpdateSession';
+
+const queryClient = new QueryClient();
 
 const useApiError = () => {
-  const signOutUser = useCallback(async () => {
-    await signOut();
-    redirect('/');
-  }, []);
+  const { callReissueFn } = useUpdateSession();
 
-  const authErrorHandlers = useCallback(async () => {
-    try {
-      const reissueResponse = await getReissuanceToken();
+  const authErrorHandlers = useCallback(
+    async (
+      retryMutation?: UseMutateFunction<any, Error, void, unknown>,
+      queryKey?: QueryKey,
+    ) => {
+      const reissueResponse = await callReissueFn();
 
       if (reissueResponse === AUTHORIZATION_FAIL) {
-        console.log('useApiError에서의 세션 만료 메시지', reissueResponse);
         showToast(
           '로그인 세션이 만료되었습니다. 다시 로그인 해주세요.',
           'error',
         );
-        await signOutUser();
+        retryConfig.tokenReissuance = 3;
+        // if (isNull(window)) {
+        //   import('@/serverActions/auth').then((module) => {
+        //     module.signOutWithCredentials();
+        //   });
+        // }
+        signOut();
       }
-      console.log('useApiError에서의 세션 만료 메시지', reissueResponse);
-      showToast('세션 발급 완료', 'success');
-      // else if (reissueResponse === AUTHORIZATION_SUCCESS) {
-      // }
-    } catch (error) {
-      console.log('useApi Auth Error Catch', error);
-    }
-  }, [signOutUser]);
+
+      if (!isNull(retryMutation) && retryConfig.tokenReissuance > 0) {
+        retryConfig.tokenReissuance -= 1;
+        retryMutation();
+        return;
+      }
+
+      if (!isNull(queryKey) && retryConfig.tokenReissuance > 0) {
+        retryConfig.tokenReissuance -= 1;
+        await queryClient.refetchQueries({ queryKey, exact: true });
+        return;
+      }
+
+      retryConfig.tokenReissuance = 3;
+    },
+    [callReissueFn],
+  );
 
   const handleError = useCallback(
-    async (error: Error) => {
+    async (
+      error: Error,
+      retryMutation?: UseMutateFunction<any, Error, void, unknown>,
+      queryKey?: QueryKey,
+    ) => {
       const response = error as any;
       if (error instanceof Error) {
         if (AUTH_MESSAGE.includes(error.message)) {
-          await authErrorHandlers();
+          await authErrorHandlers(retryMutation, queryKey);
         } else if (error.message === SIGNIN_REQUIRED) {
           showToast('로그인이 필요합니다.', 'error');
-          await signOutUser();
+          signOut();
         } else if (response.status === 500) {
           showToast(
             '서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.',

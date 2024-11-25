@@ -8,7 +8,7 @@ export const signInWithCredentials = async (tempToken: string) => {
     const tokenResponse = await fetch(
       `${process.env.NEXT_BASE_URL}/api/v1/open/member/token?temp-token=${tempToken}`,
       {
-        method: 'POST',
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -16,11 +16,14 @@ export const signInWithCredentials = async (tempToken: string) => {
       },
     );
 
-    const tokenResult = await tokenResponse.json();
-
-    if (!tokenResult.accessToken) {
-      return tokenResult;
+    if (!tokenResponse.ok) {
+      return {
+        success: false,
+        message: 'failed to login',
+      };
     }
+
+    const tokenResult = await tokenResponse.json();
 
     const result = {
       success: true,
@@ -45,7 +48,6 @@ export const getSession = async () => {
 };
 
 export const updateSession = async (session: string) => {
-  console.log('session', session);
   await update({
     user: {
       accessToken: session,

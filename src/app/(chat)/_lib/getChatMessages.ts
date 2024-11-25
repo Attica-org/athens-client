@@ -5,6 +5,7 @@ import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { CHAT_MESSAGE } from '@/constants/responseErrorMessage';
+import isNull from '@/utils/validation/validateIsNull';
 
 type Meta = {
   key: number | null;
@@ -32,7 +33,7 @@ export const getChatMessages: QueryFunction<
   const urlSearchParams = new URLSearchParams(Object.entries(searchParams));
 
   const session = await getSession();
-  if (!session) {
+  if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
@@ -46,7 +47,7 @@ export const getChatMessages: QueryFunction<
       cache: 'no-cache',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${session.user.accessToken}`,
+        Authorization: `Bearer ${session.user?.accessToken}`,
       },
     },
   );

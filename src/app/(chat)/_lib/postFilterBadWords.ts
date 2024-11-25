@@ -2,6 +2,7 @@ import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { FILTER_BAD_WORDS } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
+import isNull from '@/utils/validation/validateIsNull';
 
 type Props = {
   message: string;
@@ -10,7 +11,7 @@ type Props = {
 
 const postFilterBadWords = async ({ message, agoraId }: Props) => {
   const session = await getSession();
-  if (!session) {
+  if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
@@ -20,7 +21,7 @@ const postFilterBadWords = async ({ message, agoraId }: Props) => {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${session.user.accessToken}`,
+        Authorization: `Bearer ${session.user?.accessToken}`,
       },
       credentials: 'include',
       body: JSON.stringify({

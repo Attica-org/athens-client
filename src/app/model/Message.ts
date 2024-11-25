@@ -18,4 +18,5 @@ export interface Message {
   content: string;
   createdAt: string;
   reactionCount: Reaction;
+  access?: string;
 }

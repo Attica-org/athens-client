@@ -6,6 +6,7 @@ import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { VOTE_RESULT } from '@/constants/responseErrorMessage';
+import isNull from '@/utils/validation/validateIsNull';
 
 type VoteResult = {
   id: number;
@@ -20,7 +21,7 @@ export const getVoteResult: QueryFunction<
   const [_1, agoraId] = queryKey;
 
   const session = await getSession();
-  if (!session) {
+  if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
@@ -32,7 +33,7 @@ export const getVoteResult: QueryFunction<
     cache: 'no-cache',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.user.accessToken}`,
+      Authorization: `Bearer ${session.user?.accessToken}`,
     },
   });
 

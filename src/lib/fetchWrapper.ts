@@ -1,4 +1,5 @@
 import getKey from '@/utils/getKey';
+import isNull from '@/utils/validation/validateIsNull';
 
 export class FetchWrapper {
   static #baseURL: string;
@@ -8,8 +9,12 @@ export class FetchWrapper {
   }
 
   static async call(url: string, fetchNext: any): Promise<any> {
-    if (!this.#baseURL) {
-      await this.setBaseUrl();
+    if (isNull(this.#baseURL)) {
+      if (isNull(process.env.NEXT_BASE_URL)) {
+        await this.setBaseUrl();
+      } else if (!isNull(process.env.NEXT_BASE_URL)) {
+        this.#baseURL = process.env.NEXT_BASE_URL;
+      }
     }
 
     let response;
@@ -19,14 +24,11 @@ export class FetchWrapper {
         ...fetchNext,
         headers: {
           ...fetchNext.headers,
-          // Connection: 'keep-alive',
         },
       });
 
       return await response.json();
     } catch (error) {
-      console.log('error', error);
-      console.log('response', response);
       throw new Error('알 수 없는 에러가 발생했습니다.');
     }
   }

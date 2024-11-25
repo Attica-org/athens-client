@@ -1,5 +1,6 @@
 import 'next-auth';
 import '@auth/core/jwt';
+import { AUTHENTICATED, UNAUTHENTICATED } from '@/constants/auth';
 
 export declare module 'next-auth' {
   interface User {
@@ -10,10 +11,15 @@ export declare module 'next-auth' {
   }
 
   interface Session {
-    user: {
-      accessToken: string;
-      authProvider: string;
+    data: {
+      user: {
+        accessToken: string;
+        authProvider: string;
+        name: string;
+        email: string;
+      };
     };
+    status: typeof AUTHENTICATED | typeof UNAUTHENTICATED;
   }
 }
 

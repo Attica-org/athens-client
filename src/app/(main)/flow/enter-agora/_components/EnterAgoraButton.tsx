@@ -45,7 +45,7 @@ export default function EnterAgoraButton() {
 
   const mutation = useMutation({
     mutationFn: callEnterAgoraAPI,
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       if (response) {
         if (response === AGORA_STATUS.CLOSED) {
           showToast('종료된 아고라입니다.', 'info');
@@ -75,14 +75,14 @@ export default function EnterAgoraButton() {
           });
         }
         routePage();
-      } else {
-        setIsLoading(false);
-        handleError(new Error('입장 실패했습니다.\n 다시 시도해주세요.'));
+        return;
       }
-    },
-    onError: (error) => {
       setIsLoading(false);
-      handleError(error);
+      showToast('입장 실패했습니다.\n 다시 시도해주세요.', 'error');
+    },
+    onError: async (error) => {
+      setIsLoading(false);
+      await handleError(error, mutation.mutate);
     },
   });
 

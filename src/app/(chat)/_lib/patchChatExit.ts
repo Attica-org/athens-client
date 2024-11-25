@@ -2,6 +2,7 @@ import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { AGORA_EXIT } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
+import isNull from '@/utils/validation/validateIsNull';
 
 type Props = {
   agoraId: number;
@@ -9,7 +10,7 @@ type Props = {
 
 const patchChatExit = async ({ agoraId }: Props) => {
   const session = await getSession();
-  if (!session) {
+  if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
@@ -21,13 +22,11 @@ const patchChatExit = async ({ agoraId }: Props) => {
     credentials: 'include',
     cache: 'no-cache',
     headers: {
-      Authorization: `Bearer ${session.user.accessToken}`,
+      Authorization: `Bearer ${session.user?.accessToken}`,
     },
   });
 
-  console.log('res', res);
   if (!res.ok && !res.success) {
-    console.log('res.error', res.error);
     if (!res.error) {
       throw new Error(AGORA_EXIT.UNKNOWN_ERROR);
     }

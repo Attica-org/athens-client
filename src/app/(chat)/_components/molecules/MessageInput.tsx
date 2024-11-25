@@ -215,7 +215,7 @@ export default function MessageInput() {
       client.current = new StompJs.Client({
         brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${session.data?.user?.accessToken}`,
           AgoraId: `${enterAgora.id}`,
         },
         reconnectDelay: 500,
@@ -328,8 +328,8 @@ export default function MessageInput() {
 
       sendMessage();
     },
-    onError: (error) => {
-      handleError(error);
+    onError: async (error) => {
+      await handleError(error, filterBadWordsMutation.mutate);
     },
   });
 
