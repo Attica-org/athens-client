@@ -3,7 +3,7 @@
 import type { Session } from 'next-auth';
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { ANYNYMOUS, AUTHENTICATED, AUTH_PROVIDERS } from '@/constants/Auth';
+import { ANYNYMOUS, AUTH_PROVIDERS } from '@/constants/Auth';
 import isNull from '@/utils/isNull';
 import AccountInfo from '../atoms/AccountInfo';
 
@@ -31,7 +31,7 @@ export default function AccountInfos({ className }: Props) {
   };
 
   useEffect(() => {
-    if (!isNull(session) && session.status === AUTHENTICATED) {
+    if (!isNull(session)) {
       setName(session?.user.name ?? ANYNYMOUS);
       setEmail(session?.user.email ?? ANYNYMOUS);
       setAuthProvider(session?.user.authProvider ?? ANYNYMOUS);
