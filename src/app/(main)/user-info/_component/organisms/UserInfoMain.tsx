@@ -4,7 +4,7 @@ import Borderline from '../atoms/Borderline';
 import AccountInfos from '../molecules/AccountInfos';
 import { ActionButtons } from '../molecules/ActionButtons';
 
-export default function Main() {
+export default function UserInfoMain() {
   return (
     <main>
       <AccountInfos className="px-24 py-14" />

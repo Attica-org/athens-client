@@ -6,7 +6,7 @@ import isNull from './utils/validation/validateIsNull';
 export async function middleware() {
   const session = await getSession();
 
-  if (isNull(session)) {
+  if (isNull(session) || isNull(session?.user)) {
     return NextResponse.redirect(`${process.env.NEXT_CLIENT_URL}/`);
   }
 
@@ -14,5 +14,5 @@ export async function middleware() {
 }
 
 export const config = {
-  matcher: ['/agoras', '/flow/:path*', '/create-agora', '/user-info'],
+  matcher: ['/agoras/:path*', '/flow/:path*', '/create-agora', '/user-info'],
 };

@@ -2,8 +2,6 @@
 
 import React from 'react';
 import { signOut, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { homeSegmentKey } from '@/constants/segmentKey';
 import { AUTHENTICATED } from '@/constants/auth';
 import ActionButton from '../atoms/ActionButton';
 
@@ -13,12 +11,10 @@ type Props = {
 
 export function ActionButtons({ className }: Props) {
   const session = useSession();
-  const router = useRouter();
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     if (session?.status === AUTHENTICATED) {
-      signOut();
-      router.push(homeSegmentKey);
+      await signOut({ redirect: true });
     }
   };
 
