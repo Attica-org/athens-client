@@ -92,6 +92,23 @@ this.addEventListener('install', (event) => {
   // this.skipWaiting();
 });
 
+const offlineData = {
+  success: false,
+  response: null,
+  error: {
+    code: 503,
+    message: '인터넷 연결이 필요합니다. 다시 시도해주세요.',
+  },
+};
+
+const offlineResponse = new Response(JSON.stringify(offlineData), {
+  status: 200,
+  statusText: 'OK',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 this.addEventListener('fetch', async (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
@@ -105,20 +122,14 @@ this.addEventListener('fetch', async (event) => {
       // 네트워크 POST, PATCH 요청은 캐싱하지 않음
       if (['POST', 'PATCH'].includes(event.request.method)) {
         return fetch(event.request, { redirect: 'follow' }).catch(() => {
-          return new Response('', {
-            status: 200,
-            redirect: 'follow',
-          });
+          return offlineResponse.clone();
         });
       }
 
       // 로그인 요청은 캐싱하지 않음
       if (requestUrl.pathname.startsWith('/login')) {
         return fetch(event.request).catch(() => {
-          return new Response('', {
-            status: 200,
-            redirect: 'follow',
-          });
+          return offlineResponse.clone();
         });
       }
 
@@ -129,7 +140,7 @@ this.addEventListener('fetch', async (event) => {
             const cache = await caches.open(DYNAMIC_CACHE_NAME);
             // 캐시에 이미 같은 URL이 있다면 삭제 후 새로운 응답 캐싱 (캐시 업데이트)
             const cachedResponse = await cache.match(event.request.url);
-            if (cachedResponse) {
+            if (!isNull(cachedResponse)) {
               await cache.delete(event.request.url);
             }
             await cache.put(event.request.url, res.clone());
@@ -140,11 +151,8 @@ this.addEventListener('fetch', async (event) => {
             if (response) {
               return response;
             }
-            // 캐싱된 응답이 없다면 빈 응답 반환
-            return new Response('', {
-              status: 200,
-              redirect: 'follow',
-            });
+            // 캐싱된 응답이 없다면 서비스 불가 응답 반환
+            return offlineResponse.clone();
           });
       }
 
@@ -166,10 +174,7 @@ this.addEventListener('fetch', async (event) => {
           return res;
         })
         .catch(() => {
-          return new Response('', {
-            status: 200,
-            redirect: 'follow',
-          });
+          return offlineResponse.clone();
         });
     }),
   );

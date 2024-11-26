@@ -1,5 +1,8 @@
 import { AgoraData } from '@/app/model/Agora';
-import { AGORA_CATEGORY_SEARCH } from '@/constants/responseErrorMessage';
+import {
+  AGORA_CATEGORY_SEARCH,
+  NETWORK_ERROR_MESSAGE,
+} from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { QueryFunction } from '@tanstack/react-query';
 
@@ -50,6 +53,8 @@ export const getAgoraCategorySearch: QueryFunction<
       throw new Error(AGORA_CATEGORY_SEARCH.NOT_ALLOWED_CATEGORY);
     } else if (res.error.code === -1) {
       throw new Error(res.error.message);
+    } else if (res.error.code === 503) {
+      throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
 
     throw new Error(AGORA_CATEGORY_SEARCH.FAILED_TO_GET_AGORA_LIST);
