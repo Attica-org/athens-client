@@ -3,7 +3,10 @@
 import { QueryFunction } from '@tanstack/react-query';
 import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
-import { AGORA_INFO } from '@/constants/responseErrorMessage';
+import {
+  AGORA_INFO,
+  NETWORK_ERROR_MESSAGE,
+} from '@/constants/responseErrorMessage';
 
 export const getAgoraTitle: QueryFunction<
   { title: string; status: string; imageUrl: string; agoraColor: string },
@@ -29,6 +32,8 @@ export const getAgoraTitle: QueryFunction<
 
     if (res.error.code === 1301) {
       throw new Error(AGORA_INFO.NOT_EXIST_AGORA);
+    } else if (res.error.code === 503) {
+      throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
 
     throw new Error(AGORA_INFO.FAILED_TO_GET_AGORA_INFO);

@@ -1,5 +1,8 @@
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
-import { FILTER_BAD_WORDS } from '@/constants/responseErrorMessage';
+import {
+  FILTER_BAD_WORDS,
+  NETWORK_ERROR_MESSAGE,
+} from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import isNull from '@/utils/validation/validateIsNull';
@@ -43,6 +46,8 @@ const postFilterBadWords = async ({ message, agoraId }: Props) => {
       ) {
         throw new Error(FILTER_BAD_WORDS.USER_NOT_PARTICIPATING);
       }
+    } else if (res.error.code === 503) {
+      throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
 
     throw new Error(FILTER_BAD_WORDS.FAILED_TO_FILTER);

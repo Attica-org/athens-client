@@ -1,5 +1,8 @@
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
-import { AGORA_EXIT } from '@/constants/responseErrorMessage';
+import {
+  AGORA_EXIT,
+  NETWORK_ERROR_MESSAGE,
+} from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import isNull from '@/utils/validation/validateIsNull';
@@ -41,6 +44,8 @@ const patchChatExit = async ({ agoraId }: Props) => {
       ) {
         throw new Error(AGORA_EXIT.NOT_FOUND_USER);
       }
+    } else if (res.error.code === 503) {
+      throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
 
     throw new Error(AGORA_EXIT.FAILED_TO_EXIT);

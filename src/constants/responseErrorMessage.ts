@@ -142,3 +142,7 @@ export const REACTION_SOCKET_ERROR_MESSAGE = {
 export const CHAT_VOTE_ERROR_MESSAGE = {
   DUPLICATE_VOTE: 'User has already voted for Opinion in this agora',
 };
+
+export const NETWORK_ERROR_MESSAGE = {
+  OFFLINE: '인터넷 연결이 필요합니다. 다시 시도해주세요.',
+};

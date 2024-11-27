@@ -5,7 +5,10 @@ import { getVoteResultQueryKey as getVoteResultTags } from '@/constants/queryKey
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
-import { VOTE_RESULT } from '@/constants/responseErrorMessage';
+import {
+  NETWORK_ERROR_MESSAGE,
+  VOTE_RESULT,
+} from '@/constants/responseErrorMessage';
 import isNull from '@/utils/validation/validateIsNull';
 
 type VoteResult = {
@@ -44,6 +47,8 @@ export const getVoteResult: QueryFunction<
 
     if (res.error.code === 1301) {
       throw new Error(VOTE_RESULT.NOT_FOUND_AGORA);
+    } else if (res.error.code === 503) {
+      throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
 
     return {
