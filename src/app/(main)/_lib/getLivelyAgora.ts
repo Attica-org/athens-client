@@ -1,4 +1,7 @@
-import { AGORA_ACTIVE } from '@/constants/responseErrorMessage';
+import {
+  AGORA_ACTIVE,
+  NETWORK_ERROR_MESSAGE,
+} from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 
 export const getLivelyAgora = async () => {
@@ -20,6 +23,8 @@ export const getLivelyAgora = async () => {
 
     if (res.error.code === 1002) {
       throw new Error(AGORA_ACTIVE.BAD_REQUEST);
+    } else if (res.error.code === 503) {
+      throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
   }
 

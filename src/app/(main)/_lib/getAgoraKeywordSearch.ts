@@ -1,5 +1,8 @@
 import { Agora } from '@/app/model/Agora';
-import { AGORA_KEYWORD_SEARCH } from '@/constants/responseErrorMessage';
+import {
+  AGORA_KEYWORD_SEARCH,
+  NETWORK_ERROR_MESSAGE,
+} from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { QueryFunction } from '@tanstack/react-query';
 
@@ -44,9 +47,10 @@ export const getAgoraKeywordSearch: QueryFunction<
 
     if (res.error.code === 1001) {
       throw new Error(AGORA_KEYWORD_SEARCH.NOT_ALLOWED_STATUS);
-    }
-    if (res.error.code === -1) {
+    } else if (res.error.code === -1) {
       throw new Error(res.error.message);
+    } else if (res.error.code === 503) {
+      throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
 
     throw new Error(AGORA_KEYWORD_SEARCH.FAILED_TO_GET_AGORA_LIST);

@@ -2,6 +2,7 @@
 
 import {
   QueryClient,
+  UseMutateFunction,
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
@@ -36,10 +37,12 @@ function CreateAgoraBtn() {
     client.invalidateQueries({ queryKey });
   };
 
-  const failedCreateAgora = (error: Error) => {
-    showToast('아고라 생성에 실패했습니다.', 'error');
+  const failedCreateAgora = async (
+    error: Error,
+    mutation: UseMutateFunction<any, Error, void, unknown>,
+  ) => {
     setIsLoading(false);
-    handleError(error);
+    await handleError(error, mutation);
   };
 
   const mutation = useMutation({
@@ -69,10 +72,13 @@ function CreateAgoraBtn() {
         router.push(`/flow${enterAgoraSegmentKey}/${response.id}`);
         return;
       }
-      failedCreateAgora(new Error('아고라 생성에 실패했습니다.'));
+      failedCreateAgora(
+        new Error('아고라 생성에 실패했습니다.'),
+        mutation.mutate,
+      );
     },
     onError: (error) => {
-      failedCreateAgora(error);
+      failedCreateAgora(error, mutation.mutate);
     },
   });
 

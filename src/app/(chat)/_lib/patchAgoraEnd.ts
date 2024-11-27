@@ -1,8 +1,11 @@
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
-import { AGORA_END } from '@/constants/responseErrorMessage';
+import {
+  AGORA_END,
+  NETWORK_ERROR_MESSAGE,
+} from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
-import isNull from '@/utils/isNull';
+import isNull from '@/utils/validation/validateIsNull';
 
 export const patchAgoraEnd = async (agoraId: number) => {
   const session = await getSession();
@@ -40,6 +43,8 @@ export const patchAgoraEnd = async (agoraId: number) => {
       }
     } else if (res.error.code === 1102) {
       throw new Error(AGORA_END.OBSERVER_CANNOT_END);
+    } else if (res.error.code === 503) {
+      throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
 
     throw new Error(AGORA_END.NOT_FOUND_AGORA_OR_USER);

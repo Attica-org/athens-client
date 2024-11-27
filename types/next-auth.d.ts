@@ -1,6 +1,6 @@
 import 'next-auth';
 import '@auth/core/jwt';
-import { AUTHENTICATED, UNAUTHENTICATED } from '@/constants/Auth';
+import { AUTHENTICATED, UNAUTHENTICATED } from '@/constants/auth';
 
 export declare module 'next-auth' {
   interface User {

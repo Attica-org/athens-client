@@ -328,8 +328,8 @@ export default function MessageInput() {
 
       sendMessage();
     },
-    onError: (error) => {
-      handleError(error);
+    onError: async (error) => {
+      await handleError(error, filterBadWordsMutation.mutate);
     },
   });
 

@@ -21,7 +21,7 @@ import {
 import getKey from '@/utils/getKey';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { useSession } from 'next-auth/react';
-import isNull from '@/utils/isNull';
+import isNull from '@/utils/validation/validateIsNull';
 import MyMessage from '../atoms/MyMessage';
 import YourMessage from '../atoms/YourMessage';
 import { getChatMessages } from '../../_lib/getChatMessages';

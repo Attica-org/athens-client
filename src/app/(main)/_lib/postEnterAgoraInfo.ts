@@ -3,8 +3,11 @@ import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { SIGNIN_REQUIRED, TOKEN_EXPIRED } from '@/constants/authErrorMessage';
 import { getSession } from '@/serverActions/auth';
-import { AGORA_ENTER } from '@/constants/responseErrorMessage';
-import isNull from '@/utils/isNull';
+import {
+  AGORA_ENTER,
+  NETWORK_ERROR_MESSAGE,
+} from '@/constants/responseErrorMessage';
+import isNull from '@/utils/validation/validateIsNull';
 
 type Props = {
   info: {
@@ -83,6 +86,8 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
       }
     } else if (res.error.code === 2000) {
       throw new Error(AGORA_ENTER.FULL_CAPACITY);
+    } else if (res.error.code === 503) {
+      throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
 
     throw new Error(AGORA_ENTER.FAILED_TO_ENTER_AGORA);

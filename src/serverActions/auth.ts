@@ -16,23 +16,21 @@ export const signInWithCredentials = async (tempToken: string) => {
       },
     );
 
-    const tokenResult = await tokenResponse.json();
+    if (tokenResponse.ok) {
+      const tokenResult = await tokenResponse.json();
 
-    if (!tokenResult.accessToken) {
-      return tokenResult;
+      const result = {
+        success: true,
+        accessToken: tokenResult.accessToken,
+      };
+
+      return result;
     }
-
-    const result = {
-      success: true,
-      accessToken: tokenResult.accessToken,
-    };
-
-    return result;
   }
 
   return {
     success: false,
-    message: 'failed to login',
+    accessToken: '',
   };
 };
 
