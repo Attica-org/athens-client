@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/lib',
     },
-    sitemap: 'http://localhost:3000/sitemap.xml',
+    sitemap: `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap.xml`,
   };
 }

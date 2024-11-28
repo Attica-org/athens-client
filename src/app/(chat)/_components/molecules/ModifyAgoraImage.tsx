@@ -28,9 +28,9 @@ export default function ModifyAgoraImage() {
         // const { setEnterAgora, enterAgora, setSelectedAgora, selectedAgora } = useAgora.getState();
       }
     },
-    onError: (error) => {
+    onError: async (error) => {
       // console.dir(error);
-      handleError(error);
+      await handleError(error, modifyAgoraImgMutation.mutate);
     },
   });
 

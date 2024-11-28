@@ -2,8 +2,11 @@ import { base64ToFile } from '@/utils/base64ToFile';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
-import { AGORA_IMAGE_UPDATE } from '@/constants/responseErrorMessage';
-import isNull from '@/utils/isNull';
+import {
+  AGORA_IMAGE_UPDATE,
+  NETWORK_ERROR_MESSAGE,
+} from '@/constants/responseErrorMessage';
+import isNull from '@/utils/validation/validateIsNull';
 
 type Props = {
   agoraId: number;
@@ -42,6 +45,8 @@ export const patchAgoraImg = async ({ agoraId, fileUrl }: Props) => {
       throw new Error(AGORA_IMAGE_UPDATE.ONLY_HOST_CAN_UPDATE);
     } else if (res.error.code === 1301) {
       throw new Error(AGORA_IMAGE_UPDATE.NOT_FOUND_AGORA_OR_USER);
+    } else if (res.error.code === 503) {
+      throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
 
     throw new Error(AGORA_IMAGE_UPDATE.FAILED_TO_UPDATE_IMAGE);

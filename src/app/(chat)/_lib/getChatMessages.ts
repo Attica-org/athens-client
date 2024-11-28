@@ -4,8 +4,11 @@ import { getChatMessagesQueryKey as getChatMessagesTags } from '@/constants/quer
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
-import { CHAT_MESSAGE } from '@/constants/responseErrorMessage';
-import isNull from '@/utils/isNull';
+import {
+  CHAT_MESSAGE,
+  NETWORK_ERROR_MESSAGE,
+} from '@/constants/responseErrorMessage';
+import isNull from '@/utils/validation/validateIsNull';
 
 type Meta = {
   key: number | null;
@@ -61,6 +64,8 @@ export const getChatMessages: QueryFunction<
       throw new Error(CHAT_MESSAGE.NOT_FOUND_AGORA);
     } else if (res.error.code === -1) {
       throw new Error(res.error.message);
+    } else if (res.error.code === 503) {
+      throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
 
     throw new Error(CHAT_MESSAGE.FAILED_TO_GET_CHAT);

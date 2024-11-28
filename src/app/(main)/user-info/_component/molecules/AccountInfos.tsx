@@ -3,8 +3,8 @@
 import type { Session } from 'next-auth';
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { ANYNYMOUS, AUTH_PROVIDERS } from '@/constants/Auth';
-import isNull from '@/utils/isNull';
+import { ANYNYMOUS, AUTHENTICATED, AUTH_PROVIDERS } from '@/constants/auth';
+import isNull from '@/utils/validation/validateIsNull';
 import AccountInfo from '../atoms/AccountInfo';
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export default function AccountInfos({ className }: Props) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const [name, setName] = useState<Session['user']['name']>(ANYNYMOUS);
   const [email, setEmail] = useState<Session['user']['email']>(ANYNYMOUS);
@@ -31,7 +31,7 @@ export default function AccountInfos({ className }: Props) {
   };
 
   useEffect(() => {
-    if (!isNull(session)) {
+    if (!isNull(session) && status === AUTHENTICATED) {
       setName(session?.user.name ?? ANYNYMOUS);
       setEmail(session?.user.email ?? ANYNYMOUS);
       setAuthProvider(session?.user.authProvider ?? ANYNYMOUS);

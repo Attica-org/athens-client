@@ -1,8 +1,11 @@
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
-import { AGORA_TIME_OUT } from '@/constants/responseErrorMessage';
+import {
+  AGORA_TIME_OUT,
+  NETWORK_ERROR_MESSAGE,
+} from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
-import isNull from '@/utils/isNull';
+import isNull from '@/utils/validation/validateIsNull';
 
 export const patchAgoraTimeOut = async (agoraId: number) => {
   const session = await getSession();
@@ -34,7 +37,10 @@ export const patchAgoraTimeOut = async (agoraId: number) => {
       throw new Error(AGORA_TIME_OUT.NOT_FOUND_AGORA);
     } else if (res.error.code === 1002) {
       throw new Error(AGORA_TIME_OUT.ALREADY_TIME_OUT);
+    } else if (res.error.code === 503) {
+      throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
+
     throw new Error(AGORA_TIME_OUT.FAILED_TO_TIME_OUT);
 
     // return null;

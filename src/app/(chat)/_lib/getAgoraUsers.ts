@@ -6,8 +6,11 @@ import { getAgoraUserListQueryKey as getAgoraUserListTags } from '@/constants/qu
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
-import { AGORA_USER } from '@/constants/responseErrorMessage';
-import isNull from '@/utils/isNull';
+import {
+  AGORA_USER,
+  NETWORK_ERROR_MESSAGE,
+} from '@/constants/responseErrorMessage';
+import isNull from '@/utils/validation/validateIsNull';
 
 export const getAgoraUsers: QueryFunction<
   AgoraUserProfileType[],
@@ -40,6 +43,8 @@ export const getAgoraUsers: QueryFunction<
       throw new Error(AGORA_USER.NOT_FOUND_AGORA);
     } else if (res.error.code === -1) {
       throw new Error(res.error.message);
+    } else if (res.error.code === 503) {
+      throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
 
     throw new Error(AGORA_USER.FAILED_TO_GET_AGORA_USER);
