@@ -6,7 +6,7 @@ import { signInWithCredentials } from '@/serverActions/auth';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
-import isNull from '@/utils/isNull';
+import isNull from '@/utils/validation/validateIsNull';
 
 type Props = {
   user: string;
