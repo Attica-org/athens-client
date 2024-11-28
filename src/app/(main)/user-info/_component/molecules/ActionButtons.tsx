@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { signOut, useSession } from 'next-auth/react';
+import isNull from '@/utils/validation/validateIsNull';
 import { AUTHENTICATED } from '@/constants/auth';
 import ActionButton from '../atoms/ActionButton';
 
@@ -10,10 +11,10 @@ type Props = {
 };
 
 export function ActionButtons({ className }: Props) {
-  const session = useSession();
+  const { data: session, status } = useSession();
 
   const handleSignOut = async () => {
-    if (session?.status === AUTHENTICATED) {
+    if (!isNull(session) && status === AUTHENTICATED) {
       await signOut({ redirect: true });
     }
   };
