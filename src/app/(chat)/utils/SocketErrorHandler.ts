@@ -27,7 +27,7 @@ const SocketErrorHandler = () => {
           '로그인 세션이 만료되었습니다.\n다시 로그인해주세요.',
           'info',
         );
-        signOutWithCredentials();
+        await signOutWithCredentials();
       } else if (reissueResult === AUTHORIZATION_SUCCESS) {
         showToast('잠시후 다시 시도해주세요.', 'info');
         router.push(homeSegmentKey);
