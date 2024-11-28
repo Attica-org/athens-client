@@ -1,6 +1,6 @@
 import React from 'react';
-import Main from './_component/organisms/Main';
+import UserInfoMain from './_component/organisms/UserInfoMain';
 
 export default function Page() {
-  return <Main />;
+  return <UserInfoMain />;
 }

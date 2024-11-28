@@ -12,13 +12,12 @@ type Props = {
 };
 
 export default function AccountInfos({ className }: Props) {
-  const session = useSession();
+  const { data: session, status } = useSession();
 
-  const [name, setName] = useState<Session['data']['user']['name']>(ANYNYMOUS);
-  const [email, setEmail] =
-    useState<Session['data']['user']['email']>(ANYNYMOUS);
+  const [name, setName] = useState<Session['user']['name']>(ANYNYMOUS);
+  const [email, setEmail] = useState<Session['user']['email']>(ANYNYMOUS);
   const [authProvider, setAuthProvider] =
-    useState<Session['data']['user']['authProvider']>(ANYNYMOUS);
+    useState<Session['user']['authProvider']>(ANYNYMOUS);
 
   const convertAuthProvider = (provider: string) => {
     switch (provider) {
@@ -32,10 +31,10 @@ export default function AccountInfos({ className }: Props) {
   };
 
   useEffect(() => {
-    if (!isNull(session) && session.status === AUTHENTICATED) {
-      setName(session.data.user?.name ?? ANYNYMOUS);
-      setEmail(session.data.user?.email ?? ANYNYMOUS);
-      setAuthProvider(session.data.user?.authProvider ?? ANYNYMOUS);
+    if (!isNull(session) && status === AUTHENTICATED) {
+      setName(session?.user.name ?? ANYNYMOUS);
+      setEmail(session?.user.email ?? ANYNYMOUS);
+      setAuthProvider(session?.user.authProvider ?? ANYNYMOUS);
     }
   }, [session]);
 

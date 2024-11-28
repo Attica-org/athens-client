@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { signOut, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { homeSegmentKey } from '@/constants/segmentKey';
+import isNull from '@/utils/validation/validateIsNull';
 import { AUTHENTICATED } from '@/constants/auth';
 import ActionButton from '../atoms/ActionButton';
 
@@ -12,13 +11,11 @@ type Props = {
 };
 
 export function ActionButtons({ className }: Props) {
-  const session = useSession();
-  const router = useRouter();
+  const { data: session, status } = useSession();
 
-  const handleSignOut = () => {
-    if (session?.status === AUTHENTICATED) {
-      signOut();
-      router.push(homeSegmentKey);
+  const handleSignOut = async () => {
+    if (!isNull(session) && status === AUTHENTICATED) {
+      await signOut({ redirect: true });
     }
   };
 

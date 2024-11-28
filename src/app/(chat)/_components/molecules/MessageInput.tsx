@@ -47,7 +47,7 @@ export default function MessageInput() {
   const client = useRef<StompJs.Client>();
   const queryClient = useQueryClient();
   const [highlightedMessage, setHighlightedMessage] = useState<string>('');
-  const session = useSession();
+  const { data: session } = useSession();
 
   const pushMessage = useCallback(
     (data: any, type: string) => {
@@ -215,7 +215,7 @@ export default function MessageInput() {
       client.current = new StompJs.Client({
         brokerURL: `${URL.SOCKET_URL}/ws`,
         connectHeaders: {
-          Authorization: `Bearer ${session.data?.user?.accessToken}`,
+          Authorization: `Bearer ${session?.user.accessToken}`,
           AgoraId: `${enterAgora.id}`,
         },
         reconnectDelay: 500,

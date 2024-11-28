@@ -6,6 +6,7 @@ import { signInWithCredentials } from '@/serverActions/auth';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
+import isNull from '@/utils/isNull';
 
 type Props = {
   user: string;
@@ -13,7 +14,7 @@ type Props = {
 
 export default function AuthLogin({ user }: Props) {
   const router = useRouter();
-  const session = useSession();
+  const { data: session } = useSession();
 
   const getUserAccessToken = async (authuser: string) => {
     const tempToken = await signInWithCredentials(authuser);
@@ -34,7 +35,7 @@ export default function AuthLogin({ user }: Props) {
   };
 
   useEffect(() => {
-    if (session.data) {
+    if (isNull(session)) {
       router.replace('/home');
     }
   }, [session]);

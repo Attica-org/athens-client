@@ -1,6 +1,8 @@
 import React from 'react';
 import { getSession } from '@/serverActions/auth';
 import { redirect } from 'next/navigation';
+import isNull from '@/utils/validation/validateIsNull';
+import { homeSegmentKey } from '@/constants/segmentKey';
 import SignIn from './_components/templates/SignIn';
 
 export async function generateMetadata() {
@@ -26,8 +28,8 @@ export async function generateMetadata() {
 export default async function Page() {
   const session = await getSession();
 
-  if (session?.user) {
-    redirect('/home');
+  if (!isNull(session?.user)) {
+    redirect(homeSegmentKey);
     return null;
   }
 

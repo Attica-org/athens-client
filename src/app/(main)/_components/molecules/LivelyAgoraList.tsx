@@ -150,7 +150,7 @@ export default function LivelyAgoraList() {
   };
 
   return (
-    <section aria-label="인기 아고라 리스트" className="w-full h-1/2">
+    <section aria-label="인기 아고라 리스트" className="w-full h-fit">
       <h2
         aria-label="실시간 인기 아고라"
         className="flex justify-between items-center gap-x-6 text-md font-semibold dark:text-dark-line-light text-left pl-10 w-full mb-16 mt-7"

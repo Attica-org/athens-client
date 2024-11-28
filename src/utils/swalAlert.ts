@@ -9,8 +9,9 @@ const swalConfirmCancelCustomClass = Swal.mixin({
     title: 'p-0 text-sm mt-8 text-black dark:text-white',
     container: 'text-black dark:text-[#E2E2E2]',
     confirmButton:
-      'bg-backbutton-confirm w-100 h-27 text-xs text-white  rounded-md',
-    cancelButton: 'bg-backbutton-cancel ml-7 w-100 h-27 text-xs rounded-md',
+      'bg-backbutton-confirm w-100 h-27 text-xs text-white rounded-md',
+    cancelButton:
+      'bg-backbutton-cancel ml-7 w-100 h-27 text-xs text-black rounded-md',
   },
 });
 
@@ -22,6 +23,7 @@ const swalConfirmAlertCustomClass = Swal.mixin({
     container: 'text-black dark:text-[#E2E2E2]',
     confirmButton:
       'bg-backbutton-confirm text-white w-100 h-27 text-xs rounded-md mt-[0.6rem] mx-auto mb-0',
+    cancelButton: 'bg-[#F2F4F3] dark:bg-white text-black',
   },
 });
 
@@ -34,8 +36,8 @@ export const swalBackButtonAlert = async () => {
     confirmButtonText: '확인',
     cancelButtonText: '취소',
     width: '250px',
-    confirmButtonColor: 'bg-backbutton-confirm',
-    cancelButtonColor: 'bg-[#F2F4F3] dark:bg-white',
+    confirmButtonColor: '#10AE5D',
+    cancelButtonColor: '#F2F4F3',
   });
 };
 
@@ -46,6 +48,6 @@ export const swalKickedUserAlert = async () => {
     text: '과반수 이상의 참여자가 추방에 동의했습니다.',
     confirmButtonText: '확인',
     width: '250px',
-    confirmButtonColor: 'bg-backbutton-confirm',
+    confirmButtonColor: '#10AE5D',
   });
 };
