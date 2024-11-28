@@ -6,7 +6,7 @@ class AccessMessageConfig {
   }
 
   #reduceAccessMessageChatId() {
-    if (this.#accessMessageChatId === -Number.MAX_VALUE) {
+    if (this.#accessMessageChatId === -Number.MAX_SAFE_INTEGER) {
       this.#accessMessageChatId = 0;
     }
 
