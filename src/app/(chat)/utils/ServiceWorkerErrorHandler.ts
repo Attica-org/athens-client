@@ -6,10 +6,10 @@ import showToast from '@/utils/showToast';
 import { signOut } from 'next-auth/react';
 
 const ServiceWorkerErrorHandler = () => {
-  const voteErrorHandler = (event: MessageEvent) => {
+  const voteErrorHandler = async (event: MessageEvent) => {
     if (event.data.message === SIGNIN_REQUIRED) {
       showToast('로그인이 필요합니다.', 'error');
-      signOut();
+      await signOut({ redirect: true });
     }
 
     switch (event.data.message.code) {

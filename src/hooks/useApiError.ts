@@ -40,7 +40,7 @@ const useApiError = () => {
         //     module.signOutWithCredentials();
         //   });
         // }
-        signOut();
+        await signOut({ redirect: true });
       }
 
       if (!isNull(retryMutation) && retryConfig.tokenReissuance > 0) {
@@ -72,7 +72,7 @@ const useApiError = () => {
           await authErrorHandlers(retryMutation, queryKey);
         } else if (error.message === SIGNIN_REQUIRED) {
           showToast('로그인이 필요합니다.', 'error');
-          signOut();
+          await signOut({ redirect: true });
         } else if (response.status === 500) {
           showToast(
             '서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.',

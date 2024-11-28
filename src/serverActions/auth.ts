@@ -35,7 +35,7 @@ export const signInWithCredentials = async (tempToken: string) => {
 };
 
 export const signOutWithCredentials = async () => {
-  await signOut();
+  await signOut({ redirect: true });
 };
 
 export const getSession = async () => {

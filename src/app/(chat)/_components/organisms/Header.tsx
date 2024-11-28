@@ -341,10 +341,10 @@ export default function Header() {
       );
     }
 
-    function connect() {
+    async function connect() {
       if (!session.data?.user?.accessToken) {
         showToast('로그인이 필요합니다.', 'error');
-        signOut();
+        await signOut({ redirect: true });
       }
       client.current = new StompJs.Client({
         brokerURL: `${URL.SOCKET_URL}/ws`,
