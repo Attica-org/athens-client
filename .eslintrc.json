@@ -6,7 +6,8 @@
     "plugin:prettier/recommended"
   ],
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "project": "./tsconfig.json",
+    "sourceType": "module"
   },
   "plugins": ["@typescript-eslint"],
   "rules": {
@@ -24,5 +25,10 @@
       }
     ],
     "react/jsx-props-no-spreading": "off"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "serviceworker": true
   }
 }

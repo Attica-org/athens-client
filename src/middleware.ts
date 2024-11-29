@@ -6,7 +6,7 @@ import isNull from './utils/validation/validateIsNull';
 export async function middleware() {
   const session = await getSession();
 
-  if (isNull(session) || isNull(session?.user)) {
+  if (isNull(session)) {
     return NextResponse.redirect(`${process.env.NEXT_CLIENT_URL}/`);
   }
 
