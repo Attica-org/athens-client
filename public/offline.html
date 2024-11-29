@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    h1 {
+      font-size: 6rem;
+      color: #ff4500;
+      display: flex;
+      align-items: center;
+    }
+    .circle {
+      width: 110px;
+      height: 110px;
+      border: 1px solid #ffa500;
+      border-radius: 50%;
+      background-color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 20px;
+    }
+    .circle img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    h3 {
+      margin-top: 40px;
+      font-size: 1.5rem;
+      color: #333;
+    }
+    p {
+      margin-top: 10px;
+      font-size: 1rem;
+    }
+    button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      background-color: #ff4500;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e03e00;
+    }
+  </style>
+</head>
+<body>
+  <h1>
+    4
+    <div class="circle">
+      <img src="/img/bear.png" alt="도끼를 든 곰">
+    </div>
+    4
+  </h1>
+  <h3>Offline Mode</h3>
+  <p>인터넷 연결이 끊겼습니다. 다시 시도해주세요.</p>
+  <button onclick="window.location.reload()">다시 시도</button>
+</body>
+</html>
