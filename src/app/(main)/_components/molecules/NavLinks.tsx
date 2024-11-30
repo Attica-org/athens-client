@@ -39,10 +39,10 @@ export default function NavLinks() {
           </DesktopNavLink>
         </ul>
       </div>
-      <div className="sticky bottom-0 block lg:hidden w-full h-58 border-t-1 border-gray-100 dark:border-gray-500">
-        <ul className="flex flex-row h-full justify-around">
+      <div className="sticky bottom-0 lg:hidden w-full h-58 border-t-1 border-gray-100 dark:border-dark-light-600">
+        <ul className="w-full flex flex-row h-full">
           <MobileNavLink
-            className="flex p-5 text-xs flex-col justify-center items-center"
+            className="flex p-5 text-xs flex-col justify-center items-center flex-grow basis-1/3"
             href={homeSegmentKey}
             label="홈으로 가기"
           >
@@ -50,7 +50,7 @@ export default function NavLinks() {
           </MobileNavLink>
           <MobileNavLink
             label="아고라 생성하기"
-            className="flex flex-col text-xs justify-center items-center p-10"
+            className="flex flex-col text-xs justify-center items-center p-5 flex-grow basis-1/3"
             href={createAgoraSegmentKey}
           >
             <NavIconDecider
@@ -60,7 +60,7 @@ export default function NavLinks() {
             아고라생성
           </MobileNavLink>
           <MobileNavLink
-            className="flex flex-col text-xs justify-center items-center p-10"
+            className="flex flex-col text-xs justify-center items-center p-5 flex-grow basis-1/3"
             href={userInfoSegmentKey}
             label="사용자 정보"
           >

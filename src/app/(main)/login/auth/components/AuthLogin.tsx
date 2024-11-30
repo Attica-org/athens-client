@@ -35,7 +35,7 @@ export default function AuthLogin({ user }: Props) {
   };
 
   useEffect(() => {
-    if (isNull(session)) {
+    if (!isNull(session)) {
       router.replace('/home');
     }
   }, [session]);

@@ -51,8 +51,8 @@ function YourMessage({ message, isSameUser, shouldShowTime, client }: Props) {
                 ? PROFLELIST[message.user.photoNumber - 1].file
                 : PROFLELIST[0].file
             }
-            w={50}
-            h={50}
+            w={45}
+            h={45}
           />
         </div>
       ) : (

@@ -65,8 +65,8 @@ export default function AgoraListDecider({ searchParams }: Props) {
           <ErrorBoundary FallbackComponent={FallbackComponent}>
             <LivelyAgoraList />
           </ErrorBoundary>
-          <div className="h-12 w-full mb-16">
-            <div className="h-full mx-10 bg-athens-gray dark:bg-dark-light-200" />
+          <div className="h-6 w-full mb-16">
+            <div className="h-full mx-10 bg-gray-400 opacity-15" />
           </div>
         </>
       )}

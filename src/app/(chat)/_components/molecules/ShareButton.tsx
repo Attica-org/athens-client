@@ -41,7 +41,7 @@ export default function ShareButton({ title }: Props) {
       type="button"
       aria-label="SNS 공유하기"
       onClick={shareSNS}
-      className="cursor-pointer pr-3"
+      className="cursor-pointer pr-5"
     >
       <ShareIcon className="w-18 lg:w-20 mr-1rem under-mobile:mr-0.5rem" />
       <BottomSheet onDismiss={handleDismiss} open={open}>

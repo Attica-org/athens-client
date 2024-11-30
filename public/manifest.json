@@ -45,9 +45,9 @@
     "social"
   ],
   "display_override": [
+    "standalone",
     "fullscreen",
     "minimal-ui",
-    "standalone",
     "window-controls-overlay",
     "browser"
   ]

@@ -112,8 +112,8 @@ function MyMessage({ message, isSameUser, shouldShowTime, client }: Props) {
                 : PROFLELIST[0].file
             }
             className="w-50 h-50 under-mobile:w-40 under-mobile:h-40 flex rounded-3xl"
-            w={50}
-            h={50}
+            w={45}
+            h={45}
           />
         </div>
       ) : (
