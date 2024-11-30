@@ -64,7 +64,7 @@ export default function DiscussionTimer({ duration }: Props) {
     <div
       role="timer"
       aria-label="토론 제한 시간"
-      className="text-xs lg:text-sm italic border-1 border-athens-main p-4 pl-15 pr-15 under-mobile:pl-10 under-mobile:pr-10 rounded-lg"
+      className="text-xs italic border-1 border-athens-main p-4 pl-15 pr-15 under-mobile:pl-10 under-mobile:pr-10 rounded-lg"
     >
       {isFinished ? '00:00' : formattedTime}
     </div>

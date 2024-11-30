@@ -29,7 +29,7 @@ export default function AgoraUserList({ position, userList }: Props) {
             : '반대측 참여자 목록'
         }
         id={position}
-        className="text-sm pb-10 lg:pb-1rem dark:text-white dark:text-opacity-85"
+        className="foldable:text-sm text-xs pb-10 lg:pb-1rem dark:text-white dark:text-opacity-85"
       >
         {position === AGORA_POSITION.PROS ? '찬성측' : '반대측'}
       </h3>
