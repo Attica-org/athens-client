@@ -30,7 +30,7 @@ export default React.memo(function AgoraInfo({
         <div
           role="status"
           aria-label="현재 참여 인원"
-          className="flex justify-around items-center w-full text-sm under-mobile:text-xxs p-6 pt-0"
+          className="flex justify-around items-center w-full text-xs under-mobile:text-xxs p-6 pt-0"
         >
           <div className="text-blue-600 dark:text-dark-pro-color">
             찬성 {pros}
