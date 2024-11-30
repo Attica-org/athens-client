@@ -16,7 +16,12 @@ import { AGORACATEGORY } from '@/constants/consts';
 import CategoryButton from '../atoms/CategoryButton';
 
 export default function CategoryButtonList() {
-  const search = useSearchStore();
+  const { reset } = useSearchStore(
+    useShallow((state) => ({
+      reset: state.reset,
+    })),
+  );
+
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -46,7 +51,7 @@ export default function CategoryButtonList() {
 
       newSearchParams.set('category', isValidCategoryKey(id) ? id : '1');
       newSearchParams.delete('q');
-      search.reset();
+      reset();
 
       const newUrl = `${homeSegmentKey}?${newSearchParams.toString()}`;
       window.history.pushState(

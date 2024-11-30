@@ -6,7 +6,7 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useCreateAgora } from '@/store/create';
 import { useRouter } from 'next/navigation';
 import { useAgora } from '@/store/agora';
@@ -17,6 +17,7 @@ import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import { AGORA_CREATE, AGORA_STATUS } from '@/constants/agora';
 import useApiError from '@/hooks/useApiError';
 import { COLOR } from '@/constants/consts';
+import { useShallow } from 'zustand/react/shallow';
 import { postCreateAgora } from '../../_lib/postCreateAgora';
 
 function CreateAgoraBtn() {
@@ -32,6 +33,17 @@ function CreateAgoraBtn() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const queryClient = useQueryClient();
   const { handleError } = useApiError();
+  const { reset } = useCreateAgora(
+    useShallow((state) => ({
+      reset: state.reset,
+    })),
+  );
+
+  const { setSelectedAgora } = useAgora(
+    useShallow((state) => ({
+      setSelectedAgora: state.setSelectedAgora,
+    })),
+  );
 
   const invalidAgora = (client: QueryClient, queryKey: string[]) => {
     client.invalidateQueries({ queryKey });
@@ -53,8 +65,6 @@ function CreateAgoraBtn() {
       return postCreateAgora(info);
     },
     onSuccess: async (response) => {
-      const { reset } = useCreateAgora.getState();
-      const { setSelectedAgora } = useAgora.getState();
       reset();
 
       if (response.id) {
@@ -111,12 +121,6 @@ function CreateAgoraBtn() {
     setIsLoading(true);
     mutation.mutate();
   };
-  useEffect(() => {
-    return () => {
-      const { reset } = useCreateAgora.getState();
-      reset(); // 언마운트시 초기화
-    };
-  }, []);
 
   return (
     <div className="mt-1rem w-full">

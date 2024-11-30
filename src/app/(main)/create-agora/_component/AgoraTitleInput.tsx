@@ -6,10 +6,14 @@ import { useRouter } from 'next/navigation';
 import React, { ChangeEventHandler, useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
-function AgoraTitleInput() {
+export default function AgoraTitleInput() {
   const [message, setMessage] = useState<string | null>('주제를 입력해주세요.');
-  const { reset } = useSearchStore();
   const router = useRouter();
+  const { reset } = useSearchStore(
+    useShallow((state) => ({
+      reset: state.reset,
+    })),
+  );
   const { title, setTitle } = useCreateAgora(
     useShallow((state) => ({
       title: state.title,
@@ -61,5 +65,3 @@ function AgoraTitleInput() {
     </>
   );
 }
-
-export default AgoraTitleInput;
