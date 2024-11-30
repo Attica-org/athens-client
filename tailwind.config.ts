@@ -64,7 +64,7 @@ const config: Config = {
         'agora-point-color5': '#FFBEC1',
         'agora-point-color6': '#35627B',
 
-        'dark-bg-light': '#262626',
+        'dark-bg-light': '#080808',
         'dark-bg-dark': '#191919',
         'dark-line': '#D0CDCD',
         'dark-line-light': '#E9E9E9',
@@ -72,7 +72,7 @@ const config: Config = {
         'dark-light-600': '#3f3f3f',
         'dark-light-500': '#636366',
         'dark-light-400': '#A6A6A6',
-        'dark-light-300': '#3A3A3B',
+        'dark-light-300': '#262626',
         'dark-light-200': '#404040',
         'dark-light-100': '#383838',
         'dark-pro-color': '#73BBFF',
@@ -80,7 +80,6 @@ const config: Config = {
 
         'backbutton-confirm': '#10AE5D',
         'backbutton-cancel': '#F2F4F3',
-
       },
     },
     screens: {
@@ -115,7 +114,7 @@ const config: Config = {
         '.text-xxs': {
           fontSize: '0.625rem',
         },
-        '.text-xxxs':{
+        '.text-xxxs': {
           fontSize: '0.5rem',
         },
         '.max-width-screen': {
