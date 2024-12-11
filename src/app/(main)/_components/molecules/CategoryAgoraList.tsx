@@ -111,7 +111,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
     }
   }, [data, loadNextPage]);
 
-  const content = () => {
+  const Content = useCallback(() => {
     if (isFetching || isPending || isFetchingNextPage) {
       return (
         <DeferredComponent>
@@ -138,7 +138,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
         endReached={() => loadNextPage()}
       />
     );
-  };
+  }, [data, isFetching, isPending, isFetchingNextPage, renderItemContent]);
 
   return (
     <section
@@ -147,7 +147,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
       }
       className="w-full h-full"
     >
-      {content()}
+      {Content()}
     </section>
   );
 }
