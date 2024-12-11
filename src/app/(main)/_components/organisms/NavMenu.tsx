@@ -4,7 +4,7 @@ import React from 'react';
 import Athens from '@/assets/icons/Athens';
 import NavLinks from '../molecules/NavLinks';
 
-export default function SideNav() {
+function SideNav() {
   return (
     <nav className="lg:h-dvh flex-1 max-w-12rem flex-grow">
       <div className="hidden lg:block fixed h-dvh xl:w-12rem lg:w-12rem pl-1rem border-r-1 border-r-gray-50 bg-white dark:bg-dark-light-300 dark:border-dark-light-300">
@@ -37,3 +37,5 @@ export default function SideNav() {
     </nav>
   );
 }
+
+export default React.memo(SideNav);
