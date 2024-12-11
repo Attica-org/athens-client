@@ -2,9 +2,6 @@ import React from 'react';
 import PageTitle from '../_components/molecules/PageTitle';
 import AgoraStatus from '../_components/atoms/AgoraStatus';
 import SideNav from '../_components/organisms/NavMenu';
-import SearchBarSuspense from '../_components/molecules/SearchBarSuspense';
-import AgoraStatusSuspense from '../_components/molecules/AgoraStatusTabSuspense';
-import CategoryButtonContainer from '../_components/organisms/CategoryButtonContainer';
 
 type Props = {
   children: React.ReactNode;
@@ -23,18 +20,7 @@ export default function Layout({ children }: Props) {
             <AgoraStatus />
           </PageTitle>
         </header>
-        <div>
-          <section className="sticky top-0 z-10 bg-white dark:bg-dark-bg-light">
-            <div className="p-1rem pt-8 pb-0.5rem ">
-              <SearchBarSuspense />
-            </div>
-            <div className="w-full pb-0.5rem">
-              <AgoraStatusSuspense />
-              <CategoryButtonContainer />
-            </div>
-          </section>
-          {children}
-        </div>
+        <div>{children}</div>
       </section>
     </>
   );
