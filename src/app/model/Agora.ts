@@ -50,6 +50,11 @@ interface ColorType {
   value: string;
 }
 
+export interface ImageData {
+  dataUrl: string;
+  file: File;
+}
+
 export type AgoraConfig = {
   title: string;
   thumbnail: string;

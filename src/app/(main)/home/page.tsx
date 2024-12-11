@@ -3,6 +3,9 @@ import { SearchParams } from '@/app/model/Agora';
 import { AGORACATEGORY } from '@/constants/consts';
 import { isValidCategoryKey } from '@/utils/validation/validateCategoryKey';
 import Main from '../_components/templates/Main';
+import SearchBarSuspense from '../_components/molecules/SearchBarSuspense';
+import AgoraStatusTabSuspense from '../_components/molecules/AgoraStatusTabSuspense';
+import CategoryButtonContainer from '../_components/organisms/CategoryButtonContainer';
 
 type Props = {
   searchParams: SearchParams;
@@ -41,5 +44,18 @@ export async function generateMetadata({ searchParams }: Props) {
 }
 
 export default function Page({ searchParams }: Props) {
-  return <Main searchParams={searchParams} />;
+  return (
+    <>
+      <section className="sticky top-0 z-10 bg-white dark:bg-dark-bg-light">
+        <div className="p-1rem pt-8 pb-0.5rem ">
+          <SearchBarSuspense />
+        </div>
+        <div className="w-full pb-0.5rem">
+          <AgoraStatusTabSuspense />
+          <CategoryButtonContainer />
+        </div>
+      </section>
+      <Main searchParams={searchParams} />
+    </>
+  );
 }

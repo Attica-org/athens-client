@@ -1,11 +1,13 @@
+import { useDarkMode } from '@/store/darkMode';
 import React from 'react';
 
 type Props = {
   className: string;
-  fill?: string;
 };
 
-export default function CheckIcon({ className, fill }: Props) {
+export default function CheckIcon({ className }: Props) {
+  const { darkMode } = useDarkMode();
+
   return (
     <svg
       aria-hidden
@@ -15,7 +17,7 @@ export default function CheckIcon({ className, fill }: Props) {
       fill="#e8eaed"
     >
       <path
-        fill={fill || '#e8eaed'}
+        fill={darkMode ? '#fff' : '#000'}
         d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
       />
     </svg>

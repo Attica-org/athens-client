@@ -8,7 +8,7 @@ type Props = {
   label?: string;
 };
 
-export default function MobileNavLink({
+function MobileNavLink({
   className,
   href,
   children,
@@ -22,3 +22,5 @@ export default function MobileNavLink({
     </li>
   );
 }
+
+export default React.memo(MobileNavLink);

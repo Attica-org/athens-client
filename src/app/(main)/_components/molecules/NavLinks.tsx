@@ -8,7 +8,7 @@ import MobileNavLink from '../atoms/MobileNavLink';
 import DesktopNavLink from '../atoms/DesktopNavLink';
 import NavIconDecider from '../atoms/NavIconDecider';
 
-export default function NavLinks() {
+function NavLinks() {
   return (
     <>
       <div className="hidden lg:block">
@@ -72,3 +72,5 @@ export default function NavLinks() {
     </>
   );
 }
+
+export default React.memo(NavLinks);
