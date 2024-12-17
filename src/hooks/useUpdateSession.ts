@@ -1,3 +1,5 @@
+'use client';
+
 import {
   AUTHORIZATION_FAIL,
   AUTHORIZATION_SUCCESS,

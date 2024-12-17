@@ -142,6 +142,11 @@ html {
   border-bottom-color: white !important;
 }
 
+.ReactCrop__child-wrapper{
+  height: inherit !important;
+  display: flex;
+}
+
 [contenteditable="true"]:empty:before{
   content: attr(data-placeholder);
   color: rgba(0, 0, 0, 0.4);
