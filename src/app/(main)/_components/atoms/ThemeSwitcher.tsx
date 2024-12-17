@@ -4,9 +4,15 @@ import DarkIcon from '@/assets/icons/DarkIcon';
 import LightIcon from '@/assets/icons/LightIcon';
 import { useDarkMode } from '@/store/darkMode';
 import React from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function ThemeSwitcher() {
-  const { darkMode, toggleTheme } = useDarkMode();
+  const { darkMode, toggleTheme } = useDarkMode(
+    useShallow((state) => ({
+      darkMode: state.darkMode,
+      toggleTheme: state.toggleTheme,
+    })),
+  );
 
   return (
     <div>

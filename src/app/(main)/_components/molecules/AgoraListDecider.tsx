@@ -9,6 +9,7 @@ import Loading from '@/app/_components/atoms/loading';
 import { useSearchStore } from '@/store/search';
 import { useShallow } from 'zustand/react/shallow';
 import LivelyAgoraList from './LivelyAgoraList';
+import CategoryAgoraNowTitle from '../atoms/CategoryAgoraNowTitle';
 
 const KeywordAgoraList = dynamic(() => import('./KeywordAgoraList'), {
   loading: () => (
@@ -71,6 +72,7 @@ export default function AgoraListDecider({ searchParams }: Props) {
         </>
       )}
       <ErrorBoundary FallbackComponent={FallbackComponent}>
+        <CategoryAgoraNowTitle tabStatus={tabStatus} />
         <CategoryAgoraList searchParams={searchParams} />
       </ErrorBoundary>
     </>
