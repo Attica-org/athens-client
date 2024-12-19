@@ -1,11 +1,14 @@
-import { headers } from 'next/headers';
 import React from 'react';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
-import ErrorBoundaryMessage from '../../_components/organisms/ErrorBoundaryMessage';
+import MessageContainer from '../../_components/organisms/MessageContainer';
 
-export async function generateMetadata() {
-  const agoraId = headers().get('referer')?.split('/').pop();
+type Props = {
+  params: { agora: string };
+};
+
+export async function generateMetadata({ params }: Props) {
+  const agoraId = params.agora;
   let agoraTitle = '';
 
   const res = await callFetchWrapper(`/api/v1/open/agoras/${agoraId}/title`, {
@@ -45,17 +48,11 @@ export async function generateMetadata() {
   };
 }
 
-type Props = {
-  params: {
-    agora: string;
-  };
-};
-
 export default function Page({ params }: Props) {
   const agoraId = Number(params.agora);
   return (
     <main aria-label="채팅" className="flex flex-col justify-between h-full">
-      <ErrorBoundaryMessage agoraId={agoraId} />
+      <MessageContainer agoraId={agoraId} />
     </main>
   );
 }
