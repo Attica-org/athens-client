@@ -3,11 +3,10 @@ import {
   QueryClient,
   dehydrate,
 } from '@tanstack/react-query';
-
 import React from 'react';
 import { getChatMessagesQueryKey } from '@/constants/queryKey';
-import { getChatMessages } from '../../_lib/getChatMessages';
-import Message from '../molecules/Message';
+import { getChatMessagesServer } from '../../_lib/getChatMessagesServer';
+import ErrorBoundaryMessage from './ErrorBoundaryMessage';
 
 type Props = {
   agoraId: number;
@@ -19,7 +18,7 @@ export default async function MessageContainer({ agoraId }: Props) {
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: getChatMessagesQueryKey(agoraId),
-    queryFn: getChatMessages,
+    queryFn: getChatMessagesServer,
     initialPageParam: { meta: { key: null, effectiveSize: 20 } },
   });
 
@@ -27,7 +26,7 @@ export default async function MessageContainer({ agoraId }: Props) {
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <Message />
+      <ErrorBoundaryMessage />
     </HydrationBoundary>
   );
 }
