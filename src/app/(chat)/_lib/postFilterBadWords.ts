@@ -1,4 +1,4 @@
-import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import {
   FILTER_BAD_WORDS,
   NETWORK_ERROR_MESSAGE,
@@ -48,6 +48,8 @@ const postFilterBadWords = async ({ message, agoraId }: Props) => {
       }
     } else if (res.error.code === 503) {
       throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
+    } else if (AUTH_MESSAGE.includes(res.error.message)) {
+      throw new Error(res.error.message);
     }
 
     throw new Error(FILTER_BAD_WORDS.FAILED_TO_FILTER);

@@ -1,6 +1,6 @@
 import { getChatMessagesQueryKey as getChatMessagesTags } from '@/constants/queryKey';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
-import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import {
   CHAT_MESSAGE,
   NETWORK_ERROR_MESSAGE,
@@ -56,6 +56,8 @@ export const getChatMessages = (session: any) => {
         throw new Error(res.error.message);
       } else if (res.error.code === 503) {
         throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
+      } else if (AUTH_MESSAGE.includes(res.error.message)) {
+        throw new Error(res.error.message);
       }
 
       throw new Error(CHAT_MESSAGE.FAILED_TO_GET_CHAT);

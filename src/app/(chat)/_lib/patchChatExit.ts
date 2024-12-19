@@ -1,4 +1,4 @@
-import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import {
   AGORA_EXIT,
   NETWORK_ERROR_MESSAGE,
@@ -46,6 +46,8 @@ const patchChatExit = async ({ agoraId }: Props) => {
       }
     } else if (res.error.code === 503) {
       throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
+    } else if (AUTH_MESSAGE.includes(res.error.message)) {
+      throw new Error(res.error.message);
     }
 
     throw new Error(AGORA_EXIT.FAILED_TO_EXIT);
