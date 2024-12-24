@@ -1,6 +1,5 @@
 import { Message } from '@/app/model/Message';
 import React, { useRef, useState } from 'react';
-import * as StompJs from '@stomp/stompjs';
 import useClickOutside from '@/hooks/useClickOutside';
 import useTouchHandler from '@/hooks/useTouchHandler';
 import { AGORA_POSITION } from '@/constants/agora';
@@ -15,10 +14,9 @@ type Props = {
   message: Message;
   isSameUser: boolean;
   shouldShowTime: boolean;
-  client: React.RefObject<StompJs.Client> | null;
 };
 
-function MyMessage({ message, isSameUser, shouldShowTime, client }: Props) {
+function MyMessage({ message, isSameUser, shouldShowTime }: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const [showEmojiModal, setShowEmojiModal] = useState(false);
 
@@ -88,7 +86,6 @@ function MyMessage({ message, isSameUser, shouldShowTime, client }: Props) {
                 <EmojiModal
                   className="w-20 h-20"
                   chatId={message.chatId}
-                  client={client}
                   setShowEmojiModal={setShowEmojiModal}
                 />
               </div>
