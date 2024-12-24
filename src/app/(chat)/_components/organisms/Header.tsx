@@ -412,7 +412,7 @@ export default function Header() {
     }
 
     return () => {
-      if (webSocketClient && webSocketClient.connected) {
+      if (webSocketClient && webSocketClientConnected) {
         disconnect();
       }
       voteResultReset();
@@ -451,7 +451,7 @@ export default function Header() {
 
     function subscribeError() {
       // console.log('Subscribing Error...');
-      if (isNull(webSocketClient) || !webSocketClient.connected) return;
+      if (isNull(webSocketClient) || !webSocketClientConnected) return;
       webSocketClient.subscribe(
         '/user/queue/errors',
         async (received_message: StompJs.IFrame) => {
