@@ -58,7 +58,7 @@ export default function ScrollToBottomBtn({ listRef }: Props) {
         aria-label="스크롤 하단으로 내리기"
         onKeyDown={keyDownScrollToBottom}
         onClick={handleScrollToBottom}
-        className="rounded-full flex justify-center items-center cursor-pointer fixed bottom-65 right-10 dark:bg-dark-light-300 bg-dark-light-400 opacity-90"
+        className="rounded-full flex justify-center items-center cursor-pointer fixed bottom-65 right-10 dark:bg-dark-light-300 bg-gray-100 border-1 border-gray-300 dark:border-dark-light-300 opacity-90"
       >
         <ArrowDownIcon className="w-40 h-40" />
       </button>
