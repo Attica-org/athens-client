@@ -38,14 +38,6 @@ export const getChatMessagesServer: QueryFunction<
   const session = await getSession();
   if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
-
-    // return {
-    //   chats: [],
-    //   meta: {
-    //     key: -1,
-    //     effectiveSize: 0,
-    //   },
-    // };
   }
 
   const res = await callFetchWrapper(
@@ -79,13 +71,6 @@ export const getChatMessagesServer: QueryFunction<
     }
 
     throw new Error(CHAT_MESSAGE.FAILED_TO_GET_CHAT);
-    // return {
-    //   chats: [],
-    //   meta: {
-    //     key: -1,
-    //     effectiveSize: 0,
-    //   },
-    // };
   }
 
   const result = res.response;
