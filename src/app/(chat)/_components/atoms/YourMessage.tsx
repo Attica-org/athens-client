@@ -36,31 +36,31 @@ function YourMessage({ message, isSameUser, shouldShowTime, client }: Props) {
   return (
     <article
       key={message.chatId}
-      className={`flex justify-start items-start p-0.5rem ${isSameUser && 'pt-0'} pl-12 pb-0 h-full`}
+      className="flex justify-start items-center p-0.5rem pl-12 py-0 h-full"
     >
       {!isSameUser ? (
         <div
           aria-hidden
-          className="border-1 border-gray-300 w-fit rounded-3xl dark:bg-white"
+          className="w-fit flex justify-center items-end rounded-3xl dark:bg-white"
         >
           <UserImage
-            className="w-50 h-50 under-mobile:w-40 under-mobile:h-40 flex rounded-3xl"
+            className="w-45 h-45 under-mobile:w-35 under-mobile:h-35 flex rounded-3xl"
             name={message.user.nickname || '익명'}
             file={
               message.user.photoNumber
                 ? PROFLELIST[message.user.photoNumber - 1].file
                 : PROFLELIST[0].file
             }
-            w={45}
-            h={45}
+            w={40}
+            h={40}
           />
         </div>
       ) : (
-        <div className="w-50 under-mobile:w-40" />
+        <div className="w-45 under-mobile:w-35" />
       )}
       <div
         ref={modalRef}
-        className={`p-0.5rem ${isSameUser && 'pt-0'} pb-0 flex flex-col justify-center items-start`}
+        className={`p-0.5rem ${isSameUser ? 'pt-0' : 'pt-3'} pb-0 flex flex-col justify-center items-start`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onTouchStart={handleTouchStart}

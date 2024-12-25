@@ -36,11 +36,11 @@ function MyMessage({ message, isSameUser, shouldShowTime, client }: Props) {
   return (
     <article
       key={message.chatId}
-      className={`flex justify-end items-start p-0.5rem ${isSameUser && 'pt-0'} pr-12 pb-0 h-full`}
+      className="flex justify-end items-start p-0.5rem pr-12 py-0 h-full"
     >
       <div
         ref={modalRef}
-        className={`p-0.5rem ${isSameUser && 'pt-0'} pb-0 flex flex-col justify-center items-end`}
+        className={`p-0.5rem ${isSameUser ? 'pt-0' : 'pt-3'} pb-0 flex flex-col justify-center items-end`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onTouchStart={handleTouchStart}
@@ -104,10 +104,7 @@ function MyMessage({ message, isSameUser, shouldShowTime, client }: Props) {
         </div>
       </div>
       {!isSameUser ? (
-        <div
-          aria-hidden
-          className="border-1 border-gray-300 w-fit rounded-3xl dark:bg-white"
-        >
+        <div aria-hidden className="w-fit mt-12 rounded-3xl dark:bg-white">
           <UserImage
             name={message.user.nickname}
             file={
@@ -115,13 +112,13 @@ function MyMessage({ message, isSameUser, shouldShowTime, client }: Props) {
                 ? PROFLELIST[message.user.photoNumber - 1].file
                 : PROFLELIST[0].file
             }
-            className="w-50 h-50 under-mobile:w-40 under-mobile:h-40 flex rounded-3xl"
-            w={45}
-            h={45}
+            className="w-45 h-45 under-mobile:w-35 under-mobile:h-35 flex rounded-3xl"
+            w={40}
+            h={40}
           />
         </div>
       ) : (
-        <div className="w-50 under-mobile:w-40" />
+        <div className="w-45 under-mobile:w-35" />
       )}
     </article>
   );
