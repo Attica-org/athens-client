@@ -81,43 +81,42 @@ function YourMessage({ message, isSameUser, shouldShowTime, client }: Props) {
             className={`max-w-[60vw] relative whitespace-pre-line ${message.user.type === AGORA_POSITION.CONS ? 'bg-red-200' : 'bg-blue-200'} rounded-tr-lg ${isSameUser && 'rounded-tl-lg'} rounded-bl-lg rounded-br-lg p-7 pl-10 pr-10 text-xs lg:text-sm`}
           >
             {message.content}
-            {showEmojiModal && (
-              <div
-                className="absolute mt-[26px] top-1/2 left-0 z-20 whitespace-nowrap bg-athens-gray dark:bg-white p-4 rounded-md border-1 border-gray-200
-              before:content-[''] before:absolute before:top-[-14px] before:left-20  before:-translate-x-1/2 before:border-8 before:border-transparent custom-before before:z-10"
-              >
-                <EmojiModal
-                  className="w-20 h-20"
-                  chatId={message.chatId}
-                  client={client}
-                  setShowEmojiModal={setShowEmojiModal}
-                />
-              </div>
-            )}
           </div>
           <div className="flex">
-            {isHovered
-              ? canSendEmoji && (
-                  <div className="flex justify-center items-center">
-                    <ReactionMenuButton
-                      className="ml-10 p-4 bg-dark-light-600 rounded-md"
-                      toggleEmojiModal={toggleEmojiModal}
-                    />
-                  </div>
-                )
-              : shouldShowTime && (
-                  <div className="flex justify-end items-end">
-                    <time className="text-xxs pl-8 dark:text-dark-line">
-                      {message.createdAt &&
-                        new Date(message.createdAt)
-                          .toLocaleTimeString()
-                          .slice(0, -3)}
-                    </time>
-                  </div>
-                )}
+            {isHovered && canSendEmoji ? (
+              <div className="flex justify-center items-center">
+                <ReactionMenuButton
+                  className="ml-10 p-4 bg-dark-light-600 rounded-md"
+                  toggleEmojiModal={toggleEmojiModal}
+                />
+              </div>
+            ) : (
+              shouldShowTime && (
+                <div className="flex justify-end items-end">
+                  <time className="text-xxs pl-8 dark:text-dark-line">
+                    {message.createdAt &&
+                      new Date(message.createdAt)
+                        .toLocaleTimeString()
+                        .slice(0, -3)}
+                  </time>
+                </div>
+              )
+            )}
           </div>
         </div>
-
+        {showEmojiModal && (
+          <div
+            className="z-20 relative mt-6 whitespace-nowrap bg-athens-gray dark:bg-white p-4 rounded-md border-1 border-gray-200
+              before:content-[''] before:absolute before:top-[-14px] before:left-20  before:-translate-x-1/2 before:border-8 before:border-transparent custom-before before:z-10"
+          >
+            <EmojiModal
+              className="w-20 h-20"
+              chatId={message.chatId}
+              client={client}
+              setShowEmojiModal={setShowEmojiModal}
+            />
+          </div>
+        )}
         <div className="mt-5">
           <UserReaction className="w-16 h-16" chatId={message.chatId} />
         </div>
