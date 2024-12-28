@@ -112,20 +112,10 @@ export default function CategoryAgoraList({ searchParams }: Props) {
   }, [data, loadNextPage]);
 
   const Content = useCallback(() => {
-    if (isFetching || isPending || isFetchingNextPage) {
-      return (
-        <DeferredComponent>
-          <Loading
-            w="26"
-            h="26"
-            className="m-5 flex justify-center items-center"
-          />
-        </DeferredComponent>
-      );
-    }
     if (data?.pages[0].agoras.length < 1) {
       return <NoAgoraMessage />;
     }
+
     return (
       <VirtuosoGrid
         useWindowScroll={false}
@@ -138,7 +128,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
         endReached={() => loadNextPage()}
       />
     );
-  }, [data, isFetching, isPending, isFetchingNextPage, renderItemContent]);
+  }, [data, loadNextPage, renderItemContent]);
 
   return (
     <section
@@ -148,6 +138,15 @@ export default function CategoryAgoraList({ searchParams }: Props) {
       className="w-full h-full"
     >
       {Content()}
+      {(isFetching || isPending || isFetchingNextPage) && (
+        <DeferredComponent>
+          <Loading
+            w="32"
+            h="32"
+            className="m-5 flex justify-center items-center"
+          />
+        </DeferredComponent>
+      )}
     </section>
   );
 }

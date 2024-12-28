@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { AgoraEmojis } from '@/app/model/Agora';
 import * as StompJs from '@stomp/stompjs';
@@ -36,7 +34,9 @@ export default function EmojiModal({
           reactionType: reaction,
         }),
       });
-      toggleEmojiModal();
+      setTimeout(() => {
+        toggleEmojiModal();
+      }, 200);
     }
   };
 
