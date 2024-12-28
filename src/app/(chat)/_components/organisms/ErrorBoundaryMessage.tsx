@@ -3,7 +3,7 @@
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import ErrorFallback from '@/app/_components/templates/ErrorFallback';
 import React from 'react';
-import MessageContainer from './MessageContainer';
+import Message from '../molecules/Message';
 
 const errorFallbackProps = {
   headerLabel: '채팅 불러오기 오류',
@@ -14,14 +14,10 @@ function FallbackComponent(props: FallbackProps) {
   return <ErrorFallback {...props} {...errorFallbackProps} />;
 }
 
-type Props = {
-  agoraId: number;
-};
-
-export default function ErrorBoundaryMessage({ agoraId }: Props) {
+export default function ErrorBoundaryMessage() {
   return (
     <ErrorBoundary FallbackComponent={FallbackComponent}>
-      <MessageContainer agoraId={agoraId} />
+      <Message />
     </ErrorBoundary>
   );
 }

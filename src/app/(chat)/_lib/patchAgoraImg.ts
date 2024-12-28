@@ -1,7 +1,7 @@
 import { base64ToFile } from '@/utils/base64ToFile';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
-import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import {
   AGORA_IMAGE_UPDATE,
   NETWORK_ERROR_MESSAGE,
@@ -47,6 +47,8 @@ export const patchAgoraImg = async ({ agoraId, fileUrl }: Props) => {
       throw new Error(AGORA_IMAGE_UPDATE.NOT_FOUND_AGORA_OR_USER);
     } else if (res.error.code === 503) {
       throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
+    } else if (AUTH_MESSAGE.includes(res.error.message)) {
+      throw new Error(res.error.message);
     }
 
     throw new Error(AGORA_IMAGE_UPDATE.FAILED_TO_UPDATE_IMAGE);
