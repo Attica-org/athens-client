@@ -1,4 +1,4 @@
-import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import {
   AGORA_END,
   NETWORK_ERROR_MESSAGE,
@@ -45,6 +45,8 @@ export const patchAgoraEnd = async (agoraId: number) => {
       throw new Error(AGORA_END.OBSERVER_CANNOT_END);
     } else if (res.error.code === 503) {
       throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
+    } else if (AUTH_MESSAGE.includes(res.error.message)) {
+      throw new Error(res.error.message);
     }
 
     throw new Error(AGORA_END.NOT_FOUND_AGORA_OR_USER);

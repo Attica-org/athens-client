@@ -435,7 +435,7 @@ export default function Header() {
     <div className="flex flex-col w-full h-full justify-center dark:text-white dark:text-opacity-85">
       <div className="flex justify-between items-center pb-10 border-b-1 border-gray-200 dark:border-dark-bg-light">
         <BackButton onClick={handleBack} />
-        <div className="flex justify-center items-center text-sm under-mobile:text-xs">
+        <div className="flex justify-center items-center text-xs">
           <DiscussionStatus meta={metaData} />
         </div>
         <MenuItems

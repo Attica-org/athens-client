@@ -4,10 +4,10 @@ import React from 'react';
 import Athens from '@/assets/icons/Athens';
 import NavLinks from '../molecules/NavLinks';
 
-export default function SideNav() {
+function SideNav() {
   return (
     <nav className="lg:h-dvh flex-1 max-w-12rem flex-grow">
-      <div className="hidden lg:block fixed h-dvh xl:w-12rem lg:w-12rem pl-1rem border-r-1 border-r-gray-50 dark:bg-dark-light-200 dark:border-dark-light-300">
+      <div className="hidden lg:block fixed h-dvh xl:w-12rem lg:w-12rem pl-1rem border-r-1 border-r-gray-50 bg-white dark:bg-dark-light-300 dark:border-dark-light-300">
         <div className="w-lg flex flex-col">
           <div className="flex-col">
             <Link
@@ -29,7 +29,7 @@ export default function SideNav() {
           </div>
         </div>
       </div>
-      <div className="block lg:hidden w-full min-w-300 fixed bottom-0rem bg-white z-10 dark:bg-dark-light-200">
+      <div className="block lg:hidden w-full min-w-300 fixed bottom-0rem bg-white z-10 dark:bg-dark-light-300">
         <div className="w-lg flex flex-row justify-center items-center">
           <NavLinks />
         </div>
@@ -37,3 +37,5 @@ export default function SideNav() {
     </nav>
   );
 }
+
+export default React.memo(SideNav);

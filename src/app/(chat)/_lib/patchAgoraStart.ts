@@ -1,4 +1,4 @@
-import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import {
   AGORA_START,
   NETWORK_ERROR_MESSAGE,
@@ -39,6 +39,8 @@ export const patchAgoraStart = async (agoraId: number) => {
       throw new Error(AGORA_START.OBSERVER_CANNOT_START);
     } else if (res.error.code === 503) {
       throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
+    } else if (AUTH_MESSAGE.includes(res.error.message)) {
+      throw new Error(res.error.message);
     }
 
     throw new Error(AGORA_START.FAILED_TO_START_AGORA);

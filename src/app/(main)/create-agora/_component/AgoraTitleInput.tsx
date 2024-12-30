@@ -1,9 +1,7 @@
 'use client';
 
 import { useCreateAgora } from '@/store/create';
-import { useSearchStore } from '@/store/search';
-import { useRouter } from 'next/navigation';
-import React, { ChangeEventHandler, useEffect, useState } from 'react';
+import React, { ChangeEventHandler, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 export default function AgoraTitleInput() {
@@ -32,16 +30,6 @@ export default function AgoraTitleInput() {
       setMessage(null);
     }
   };
-
-  const dataReset = () => {
-    setTitle('');
-    setMessage(null);
-    reset();
-  };
-
-  useEffect(() => {
-    dataReset();
-  }, [router]);
 
   return (
     <>

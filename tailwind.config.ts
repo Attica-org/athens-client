@@ -64,7 +64,7 @@ const config: Config = {
         'agora-point-color5': '#FFBEC1',
         'agora-point-color6': '#35627B',
 
-        'dark-bg-light': '#262626',
+        'dark-bg-light': '#080808',
         'dark-bg-dark': '#191919',
         'dark-line': '#D0CDCD',
         'dark-line-light': '#E9E9E9',
@@ -72,7 +72,7 @@ const config: Config = {
         'dark-light-600': '#3f3f3f',
         'dark-light-500': '#636366',
         'dark-light-400': '#A6A6A6',
-        'dark-light-300': '#3A3A3B',
+        'dark-light-300': '#262626',
         'dark-light-200': '#404040',
         'dark-light-100': '#383838',
         'dark-pro-color': '#73BBFF',
@@ -80,22 +80,21 @@ const config: Config = {
 
         'backbutton-confirm': '#10AE5D',
         'backbutton-cancel': '#F2F4F3',
-
       },
     },
     screens: {
       'under-mobile': { max: '359px' },
-      mobile: '360px',
+      mobile: { min: '360px' },
       'under-foldable': { max: '522px', min: '410px' },
-      foldable: '523px',
-      sm: '640px',
+      foldable: { min: '523px' },
+      sm: { min: '640px' },
       'under-tablet': { max: '767px', min: '695px' },
-      tablet: '768px',
-      md: '768px',
+      tablet: { min: '768px' },
+      md: { min: '768px' },
       'under-large': { max: '1023px', min: '865px' },
-      lg: '1024px',
+      lg: { min: '1024px' },
       'under-xl': { max: '1279px', min: '1024px' },
-      xl: '1280px',
+      xl: { min: '1280px' },
       '2xl': { min: '1536px' },
     },
     spacing: {
@@ -115,7 +114,7 @@ const config: Config = {
         '.text-xxs': {
           fontSize: '0.625rem',
         },
-        '.text-xxxs':{
+        '.text-xxxs': {
           fontSize: '0.5rem',
         },
         '.max-width-screen': {

@@ -1,35 +1,44 @@
 'use client';
 
-import AgoraImageUpload from '@/app/_components/molecules/AgoraImageUpload';
+import AgoraImageUpload from '@/app/_components/organisms/AgoraImageUpload';
 import { useMutation } from '@tanstack/react-query';
-import React, { useState } from 'react';
+import React from 'react';
 import showToast from '@/utils/showToast';
 import { useAgora } from '@/store/agora';
 import useApiError from '@/hooks/useApiError';
+import { useUploadImage } from '@/store/uploadImage';
+import { useShallow } from 'zustand/react/shallow';
 import { patchAgoraImg } from '../../_lib/patchAgoraImg';
 
 export default function ModifyAgoraImage() {
   const { enterAgora } = useAgora();
   const { handleError } = useApiError();
-  const [cropedPreview, setCropedPreview] = useState<string>(
-    enterAgora.thumbnail,
+  const { cropedPreview } = useUploadImage(
+    useShallow((state) => ({
+      cropedPreview: state.cropedPreview,
+    })),
   );
 
   const modifyAgoraImgMutation = useMutation({
     mutationFn: async () =>
       patchAgoraImg({
         agoraId: enterAgora.id,
-        fileUrl: cropedPreview,
+        fileUrl: cropedPreview.dataUrl,
       }),
     onSuccess: async (response) => {
       if (response) {
         showToast('이미지가 변경되었습니다.', 'success');
         // useAgora의 enterAgora와 selectedAgora의 thumbnail 변경
-        // const { setEnterAgora, enterAgora, setSelectedAgora, selectedAgora } = useAgora.getState();
+        const { setEnterAgora, setSelectedAgora, selectedAgora } =
+          useAgora.getState();
+        setEnterAgora({ ...enterAgora, thumbnail: cropedPreview.dataUrl });
+        setSelectedAgora({
+          ...selectedAgora,
+          thumbnail: cropedPreview.dataUrl,
+        });
       }
     },
     onError: async (error) => {
-      // console.dir(error);
       await handleError(error, modifyAgoraImgMutation.mutate);
     },
   });
@@ -42,8 +51,7 @@ export default function ModifyAgoraImage() {
   return (
     <div className="relative">
       <AgoraImageUpload
-        setPreView={setCropedPreview}
-        preView={cropedPreview}
+        page={`/agoras/${enterAgora.id}`}
         image={enterAgora.thumbnail}
         color={enterAgora.agoraColor}
       />
