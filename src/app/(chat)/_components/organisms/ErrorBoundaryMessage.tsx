@@ -2,7 +2,9 @@
 
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import ErrorFallback from '@/app/_components/templates/ErrorFallback';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useChatInfo } from '@/store/chatInfo';
+import { useShallow } from 'zustand/react/shallow';
 import MessageContainer from './MessageContainer';
 
 const errorFallbackProps = {
@@ -19,6 +21,18 @@ type Props = {
 };
 
 export default function ErrorBoundaryMessage({ agoraId }: Props) {
+  const { resetParticipants } = useChatInfo(
+    useShallow((state) => ({
+      resetParticipants: state.resetParticipants,
+    })),
+  );
+
+  useEffect(() => {
+    return () => {
+      resetParticipants();
+    };
+  });
+
   return (
     <ErrorBoundary FallbackComponent={FallbackComponent}>
       <MessageContainer agoraId={agoraId} />

@@ -150,3 +150,16 @@ html {
 :is(.dark) [contenteditable="true"]:empty:before{
   color: rgba(255, 255, 255, 0.6);
 }
+
+.swal2-validation-message {
+  font-weight: 200 !important;
+  margin: 0 !important;
+  color: #ef4444;
+
+}
+
+.swal2-validation-message:is(.dark *){
+  font-weight: 200 !important;
+  margin: 0 !important;
+  color: #FF9685;
+}

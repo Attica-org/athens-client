@@ -1,8 +1,18 @@
-import React from 'react';
+'use client';
+
+import React, { useCallback, useEffect } from 'react';
 import { ParticipationPosition } from '@/app/model/Agora';
 import { AGORA_POSITION } from '@/constants/agora';
 import { PROFLELIST } from '@/constants/consts';
+import { useMutation } from '@tanstack/react-query';
+import { useChatInfo } from '@/store/chatInfo';
+import { useShallow } from 'zustand/react/shallow';
+import { useAgora } from '@/store/agora';
+import { useWebSocketClient } from '@/store/webSocket';
+import * as StompJs from '@stomp/stompjs';
+import isNull from '@/utils/validation/validateIsNull';
 import UserImage from '../../../_components/atoms/UserImage';
+import { postKickVote } from '../../_lib/postKickVote';
 
 type UserList = {
   id: number;
@@ -14,12 +24,96 @@ type UserList = {
 type Props = {
   position: ParticipationPosition;
   userList: UserList[];
+  subscribeCount: React.MutableRefObject<number>;
+  decrementSubscribeCount: () => void;
 };
 
-export default function AgoraUserList({ position, userList }: Props) {
-  const handleKick = () => {
-    alert('추방하기 확인');
+type KickMutationProps = {
+  targetMemberId: number;
+  currentMemberCount: number;
+  agoraId: number;
+};
+
+type KickVoteResponse = {
+  type: string;
+  kickVoteInfo: {
+    targetMemberId: number;
+    message: string;
   };
+};
+
+export default function AgoraUserList({
+  position,
+  userList,
+  subscribeCount,
+  decrementSubscribeCount,
+}: Props) {
+  const { participants } = useChatInfo(
+    useShallow((state) => ({
+      participants: state.participants,
+    })),
+  );
+
+  const { enterAgora } = useAgora(
+    useShallow((state) => ({
+      enterAgora: state.enterAgora,
+    })),
+  );
+  const { webSocketClient, webSocketClientConnected } = useWebSocketClient(
+    useShallow((state) => ({
+      webSocketClient: state.webSocketClient,
+      webSocketClientConnected: state.webSocketClientConnected,
+    })),
+  );
+
+  const kickVoteMutation = useMutation({
+    mutationFn: async ({
+      targetMemberId,
+      currentMemberCount,
+      agoraId,
+    }: KickMutationProps) =>
+      postKickVote(targetMemberId, currentMemberCount, agoraId),
+  });
+
+  const handleKick = (targetMemberId: number, agoraId: number) => {
+    const currentMemberCount = participants.size;
+
+    kickVoteMutation.mutate({ targetMemberId, currentMemberCount, agoraId });
+  };
+
+  const handleKickVoteResponse = useCallback(
+    (response: KickVoteResponse) => {
+      if (
+        response.type === 'KICK' &&
+        enterAgora.userId === response.kickVoteInfo.targetMemberId
+      ) {
+        // 홈으로 이동시키고, 강제퇴장 모달 보여주기
+      }
+    },
+    [enterAgora.userId],
+  );
+
+  useEffect(() => {
+    function subscribeKickVote() {
+      if (
+        isNull(webSocketClient) ||
+        !webSocketClientConnected ||
+        subscribeCount.current <= 0
+      )
+        return;
+
+      decrementSubscribeCount();
+      webSocketClient.subscribe(
+        `/topic/agora/${enterAgora.id}`,
+        async (receivedMessage: StompJs.IFrame) => {
+          const response = await JSON.parse(receivedMessage.body);
+          handleKickVoteResponse(response);
+        },
+      );
+    }
+    subscribeKickVote();
+  }, [webSocketClientConnected]);
+
   return (
     <div className="pb-0.5rem">
       <h3
@@ -64,7 +158,7 @@ export default function AgoraUserList({ position, userList }: Props) {
                 </div>
                 <button
                   type="button"
-                  onClick={handleKick}
+                  onClick={() => handleKick(user.id, enterAgora.id)}
                   className="w-70 h-24 text-xs bg-red-500 text-white rounded-md"
                 >
                   추방하기
