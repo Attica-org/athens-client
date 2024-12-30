@@ -90,19 +90,14 @@ export default function Header() {
       removeParticipant: state.removeParticipant,
     })),
   );
-  const {
-    webSocketClient,
-    setWebSocketClient,
-    webSocketClientConnected,
-    setWebSocketClientConnected,
-  } = useWebSocketClient(
-    useShallow((state) => ({
-      webSocketClient: state.webSocketClient,
-      setWebSocketClient: state.setWebSocketClient,
-      webSocketClientConnected: state.webSocketClientConnected,
-      setWebSocketClientConnected: state.setWebSocketClientConnected,
-    })),
-  );
+  const { webSocketClient, setWebSocketClient, webSocketClientConnected } =
+    useWebSocketClient(
+      useShallow((state) => ({
+        webSocketClient: state.webSocketClient,
+        setWebSocketClient: state.setWebSocketClient,
+        webSocketClientConnected: state.webSocketClientConnected,
+      })),
+    );
 
   const voteResultReset = useVoteStore(useShallow((state) => state.reset));
   const [metaData, setMetaData] = useState<AgoraMeta>();
@@ -285,8 +280,9 @@ export default function Header() {
   };
 
   const handleWebSocketResponse = (response: any) => {
+    console.log(response);
     if (response.type === 'META') {
-      console.log('META', response.data);
+      // console.log('META', response.data);
       setTitle(response.data.agora.title);
       setAgoraId(response.data.agora.id);
       setMetaData(response.data);
@@ -364,14 +360,10 @@ export default function Header() {
         },
         reconnectDelay: 500,
         onConnect: () => {
-          console.log('onConnect webSocket');
-          setWebSocketClientConnected(true);
-          // subscribeMeta();
-          // subscribeError();
+          setWebSocketClient(newClient);
         },
         onDisconnect: () => {
           setWebSocketClient(null);
-          setWebSocketClientConnected(false);
         },
         onWebSocketError: async () => {
           setSocketError((prev) => ({
@@ -387,9 +379,7 @@ export default function Header() {
         },
       });
 
-      setWebSocketClient(newClient);
-
-      newClient?.activate(); // connect()
+      newClient.activate();
     }
 
     if (socketError.isError && socketError.count < 5) {
