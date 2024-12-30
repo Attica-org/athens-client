@@ -33,10 +33,16 @@ export function ActionButtons({ className }: Props) {
     })),
   );
 
+  const logoutMutation = useMutation({
+    mutationFn: async () => postLogout(),
+    onSuccess: async () => {
+      await signOut({ redirect: true });
+    },
+  });
+
   const handleSignOut = async () => {
     if (!isNull(session) && status === AUTHENTICATED) {
-      await postLogout();
-      await signOut({ redirect: true });
+      logoutMutation.mutate();
     }
   };
 
