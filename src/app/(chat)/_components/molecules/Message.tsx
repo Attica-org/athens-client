@@ -153,10 +153,9 @@ export default function Message() {
   );
 
   useEffect(() => {
-    if (isNull(webSocketClient) || !webSocketClientConnected) return;
-
     const subscribeReactions = () => {
-      webSocketClient?.subscribe(
+      if (isNull(webSocketClient) || !webSocketClientConnected) return;
+      webSocketClient.subscribe(
         `/topic/agoras/${agoraId}/reactions`,
         async (received_reaction: StompJs.IFrame) => {
           const userReactionData = JSON.parse(received_reaction.body);
@@ -164,7 +163,6 @@ export default function Message() {
         },
       );
     };
-
     subscribeReactions();
   }, [webSocketClientConnected, agoraId, handleWebSocketReaction]);
 
