@@ -20,12 +20,12 @@ const postLogout = async () => {
   });
 
   if (!res.ok && res.error?.message) {
-    if (!res.error) {
-      throw new Error(LOGOUT_ERROR_MESSAGE.UNKNOWN_ERROR);
-    }
-
     if (res.error.code === 1201) {
       throw new Error(LOGOUT_ERROR_MESSAGE.EXPIRED_TOKEN);
+    }
+
+    if (!res.error) {
+      throw new Error(LOGOUT_ERROR_MESSAGE.UNKNOWN_ERROR);
     }
   }
 };
