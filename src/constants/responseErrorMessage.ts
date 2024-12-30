@@ -151,3 +151,15 @@ export const LOGOUT_ERROR_MESSAGE = {
   UNKNOWN_ERROR: '로그아웃 중 알 수 없는 에러가 발생했습니다.',
   EXPIRED_TOKEN: '이미 로그아웃 한 유저입니다.',
 };
+
+export const DELETE_USER_ERROR_MESSAGE = {
+  UNKNOWN_ERROR: '회원 탈퇴 중 알 수 없는 에러가 발생했습니다.',
+  NOT_FOUND_USER: '존재하지 않는 사용자입니다.',
+};
+
+export const PATCH_USER_KICK_VOTE_ERROR_MESSAGE = {
+  UNKNOWN_ERROR: '회원 탈퇴 중 알 수 없는 에러가 발생했습니다.',
+  NOT_FOUND_USER: '아고라 멤버 ID와 일치하는 유저를 찾을 수 없습니다.',
+  NOT_FOUND_AGORA: '아고라 ID와 일치하는 아고라를 찾을 수 없습니다.',
+  ALREADY_VOTE: '이미 퇴장 투표한 대상입니다.',
+};
