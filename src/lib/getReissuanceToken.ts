@@ -8,6 +8,7 @@ export const getReissuanceToken = async (token: string) => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
+    'Cache-Control': 'no-cache',
   });
 
   if (!res.ok && !res.success) {

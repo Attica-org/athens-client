@@ -6,7 +6,7 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCreateAgora } from '@/store/create';
 import { useRouter } from 'next/navigation';
 import { useAgora } from '@/store/agora';
@@ -18,6 +18,8 @@ import { AGORA_CREATE, AGORA_STATUS } from '@/constants/agora';
 import useApiError from '@/hooks/useApiError';
 import { COLOR } from '@/constants/consts';
 import { useShallow } from 'zustand/react/shallow';
+import { useUploadImage } from '@/store/uploadImage';
+import { useSearchStore } from '@/store/search';
 import { postCreateAgora } from '../../_lib/postCreateAgora';
 
 function CreateAgoraBtn() {
@@ -65,7 +67,9 @@ function CreateAgoraBtn() {
       return postCreateAgora(info);
     },
     onSuccess: async (response) => {
+      const { cancleCrop } = useUploadImage.getState();
       reset();
+      cancleCrop();
 
       if (response.id) {
         setSelectedAgora({
@@ -82,13 +86,13 @@ function CreateAgoraBtn() {
         router.push(`/flow${enterAgoraSegmentKey}/${response.id}`);
         return;
       }
-      failedCreateAgora(
+      await failedCreateAgora(
         new Error('아고라 생성에 실패했습니다.'),
         mutation.mutate,
       );
     },
-    onError: (error) => {
-      failedCreateAgora(error, mutation.mutate);
+    onError: async (error) => {
+      await failedCreateAgora(error, mutation.mutate);
     },
   });
 
@@ -121,6 +125,18 @@ function CreateAgoraBtn() {
     setIsLoading(true);
     mutation.mutate();
   };
+
+  useEffect(() => {
+    return () => {
+      const { reset: createStoreReset } = useCreateAgora.getState();
+      const { cancleCrop } = useUploadImage.getState();
+      const { reset: searchReset } = useSearchStore.getState();
+
+      createStoreReset(); // 언마운트시 초기
+      searchReset();
+      cancleCrop();
+    };
+  }, []);
 
   return (
     <div className="mt-1rem w-full">

@@ -26,7 +26,7 @@ export default function ModalPositionSelectBtn({
       className={`p-5 mobile:pr-1rem mobile:pl-1rem pr-10 pl-10 ${
         selectedPosition === position
           ? `text-white ${bgColor} font-semibold`
-          : `${color === 'athens-main' ? 'text-athens-main' : `text-${color}-400`} bg-white dark:text-white dark:bg-dark-light-500`
+          : `${color === 'athens-main' ? 'text-athens-main' : `text-${color}-400`} bg-white dark:text-white dark:bg-dark-light-600`
       } rounded-xl mr-4 text-xs tablet:text-sm`}
     >
       {children}

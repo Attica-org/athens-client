@@ -38,7 +38,7 @@ export default function UserReaction({ className, chatId }: Props) {
         const count = reactionCount[reactionType as keyof Reaction];
         return count > 0 ? (
           <div
-            className={`flex justify-center items-center border-1 py-4 px-4 rounded-md bg-white ${reactionType === 'LIKE' ? '' : 'ml-4'}`}
+            className={`mb-5 flex justify-center items-center border-1 py-4 px-4 rounded-md bg-white ${reactionType === 'LIKE' ? '' : 'ml-4'}`}
             key={reactionType}
           >
             <span className="mr-2">

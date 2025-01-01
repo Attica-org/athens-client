@@ -441,7 +441,9 @@ export default function Header() {
 
     function subscribeError() {
       // console.log('Subscribing Error...');
+      console.log(isNull(webSocketClient), !webSocketClientConnected);
       if (isNull(webSocketClient) || !webSocketClientConnected) return;
+      console.log('구독');
       webSocketClient.subscribe(
         '/user/queue/errors',
         async (received_message: StompJs.IFrame) => {
@@ -450,7 +452,7 @@ export default function Header() {
         },
       );
     }
-
+    console.log('test');
     subscribeMeta();
     subscribeError();
   }, [webSocketClientConnected, socketError, subscribeErrorControl]);
@@ -479,7 +481,7 @@ export default function Header() {
     <div className="flex flex-col w-full h-full justify-center dark:text-white dark:text-opacity-85">
       <div className="flex justify-between items-center pb-10 border-b-1 border-gray-200 dark:border-dark-bg-light">
         <BackButton onClick={handleBack} />
-        <div className="flex justify-center items-center text-sm under-mobile:text-xs">
+        <div className="flex justify-center items-center text-xs">
           <DiscussionStatus meta={metaData} />
         </div>
         <MenuItems

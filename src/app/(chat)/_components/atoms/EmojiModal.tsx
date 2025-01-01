@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { AgoraEmojis } from '@/app/model/Agora';
 import { useShallow } from 'zustand/react/shallow';
@@ -41,7 +39,9 @@ export default function EmojiModal({
           reactionType: reaction,
         }),
       });
-      toggleEmojiModal();
+      setTimeout(() => {
+        toggleEmojiModal();
+      }, 200);
     }
   };
 

@@ -34,31 +34,31 @@ function YourMessage({ message, isSameUser, shouldShowTime }: Props) {
   return (
     <article
       key={message.chatId}
-      className={`flex justify-start items-start p-0.5rem ${isSameUser && 'pt-0'} pl-12 pb-0 h-full`}
+      className="flex justify-start items-center p-0.5rem pl-12 py-0 h-full"
     >
       {!isSameUser ? (
         <div
           aria-hidden
-          className="border-1 border-gray-300 w-fit rounded-3xl dark:bg-white"
+          className="w-fit flex justify-center items-end rounded-3xl dark:bg-white"
         >
           <UserImage
-            className="w-50 h-50 under-mobile:w-40 under-mobile:h-40 flex rounded-3xl"
+            className="w-45 h-45 under-mobile:w-35 under-mobile:h-35 flex rounded-3xl"
             name={message.user.nickname || '익명'}
             file={
               message.user.photoNumber
                 ? PROFLELIST[message.user.photoNumber - 1].file
                 : PROFLELIST[0].file
             }
-            w={50}
-            h={50}
+            w={40}
+            h={40}
           />
         </div>
       ) : (
-        <div className="w-50 under-mobile:w-40" />
+        <div className="w-45 under-mobile:w-35" />
       )}
       <div
         ref={modalRef}
-        className={`p-0.5rem ${isSameUser && 'pt-0'} pb-0 flex flex-col justify-center items-start`}
+        className={`p-0.5rem ${isSameUser ? 'pt-0' : 'pt-3'} pb-0 flex flex-col justify-center items-start`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onTouchStart={handleTouchStart}
@@ -93,28 +93,39 @@ function YourMessage({ message, isSameUser, shouldShowTime }: Props) {
             )}
           </div>
           <div className="flex">
-            {isHovered
-              ? canSendEmoji && (
-                  <div className="flex justify-center items-center">
-                    <ReactionMenuButton
-                      className="ml-10 p-4 bg-dark-light-600 rounded-md"
-                      toggleEmojiModal={toggleEmojiModal}
-                    />
-                  </div>
-                )
-              : shouldShowTime && (
-                  <div className="flex justify-end items-end">
-                    <time className="text-xxs pl-8 dark:text-dark-line">
-                      {message.createdAt &&
-                        new Date(message.createdAt)
-                          .toLocaleTimeString()
-                          .slice(0, -3)}
-                    </time>
-                  </div>
-                )}
+            {isHovered && canSendEmoji ? (
+              <div className="flex justify-center items-center">
+                <ReactionMenuButton
+                  className="ml-10 p-4 bg-dark-light-600 rounded-md"
+                  toggleEmojiModal={toggleEmojiModal}
+                />
+              </div>
+            ) : (
+              shouldShowTime && (
+                <div className="flex justify-end items-end">
+                  <time className="text-xxs pl-8 dark:text-dark-line">
+                    {message.createdAt &&
+                      new Date(message.createdAt)
+                        .toLocaleTimeString()
+                        .slice(0, -3)}
+                  </time>
+                </div>
+              )
+            )}
           </div>
         </div>
-
+        {showEmojiModal && (
+          <div
+            className="z-20 relative mt-6 whitespace-nowrap bg-athens-gray dark:bg-white p-4 rounded-md border-1 border-gray-200
+              before:content-[''] before:absolute before:top-[-14px] before:left-20  before:-translate-x-1/2 before:border-8 before:border-transparent custom-before before:z-10"
+          >
+            <EmojiModal
+              className="w-20 h-20"
+              chatId={message.chatId}
+              setShowEmojiModal={setShowEmojiModal}
+            />
+          </div>
+        )}
         <div className="mt-5">
           <UserReaction className="w-16 h-16" chatId={message.chatId} />
         </div>

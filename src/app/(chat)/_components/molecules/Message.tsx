@@ -1,7 +1,13 @@
 'use client';
 
 import { Message as IMessage } from '@/app/model/Message';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  // useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   InfiniteData,
   QueryClient,
@@ -21,6 +27,9 @@ import {
 import { AGORA_POSITION } from '@/constants/agora';
 import isNull from '@/utils/validation/validateIsNull';
 import { useWebSocketClient } from '@/store/webSocket';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { unstable_batchedUpdates } from 'react-dom';
+import { useSession } from 'next-auth/react';
 import MyMessage from '../atoms/MyMessage';
 import YourMessage from '../atoms/YourMessage';
 import { getChatMessages } from '../../_lib/getChatMessages';
@@ -98,10 +107,9 @@ function MessageItem({
 }
 
 export default function Message() {
-  const [pageRendered, setPageRendered] = useState(false);
+  // const [pageRendered, setPageRendered] = useState(false);
   const [adjustScroll, setAdjustScroll] = useState(false);
   const [newMessageView, setNewMessageView] = useState(false);
-  const [messages, setMessages] = useState<IMessage[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
   const { shouldGoDown, setGoDown } = useMessageStore();
   const myRole = useAgora((state) => state.enterAgora.role);
@@ -113,6 +121,8 @@ export default function Message() {
     })),
   );
   const queryClient = useQueryClient();
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  const { data: session } = useSession();
   const { nickname: userNickname, reset } = useEnter(
     useShallow((state) => ({
       nickname: state.nickname,
@@ -129,7 +139,7 @@ export default function Message() {
       { meta: Meta }
     >({
       queryKey: getChatMessagesQueryKey(agoraId),
-      queryFn: getChatMessages,
+      queryFn: getChatMessages(session),
       staleTime: 60 * 1000,
       gcTime: 500 * 1000,
       initialPageParam: { meta: { key: null, effectiveSize: 20 } },
@@ -172,34 +182,47 @@ export default function Message() {
     rootMargin: '100px',
   });
 
+  const virtualizer = useVirtualizer({
+    count: messages.length,
+    getScrollElement: () => listRef.current,
+    overscan: 10,
+    estimateSize: () => 30,
+    scrollMargin: -15,
+    measureElement:
+      typeof window !== 'undefined' &&
+      navigator.userAgent.indexOf('Firefox') === -1
+        ? (element) => element?.getBoundingClientRect().height
+        : undefined,
+  });
+
   useEffect(() => {
     if (inView && hasPreviousPage && !isFetching && !adjustScroll) {
-      const prevHeight = listRef.current?.scrollHeight || 0;
+      let newMessageCount = 0;
+
       setAdjustScroll(() => true);
 
-      fetchPreviousPage().then(() => {
-        setMessages((prev) => {
-          const newMessages = data?.pages[0].chats || [];
-          return [...newMessages, ...prev];
+      unstable_batchedUpdates(() => {
+        fetchPreviousPage().then(() => {
+          setMessages((prev) => {
+            const newMessages = data?.pages[0].chats || [];
+            newMessageCount = newMessages.length;
+            return [...newMessages, ...prev];
+          });
+
+          requestAnimationFrame(() => {
+            if (!isNull(listRef.current)) {
+              virtualizer.scrollToIndex(newMessageCount, {
+                align: 'start',
+                behavior: 'auto',
+              });
+
+              setAdjustScroll(false);
+            }
+          });
         });
-        setTimeout(() => {
-          if (listRef.current) {
-            const moveScroll = listRef.current.scrollHeight - prevHeight;
-            listRef.current.scrollTop = moveScroll;
-          }
-          setAdjustScroll(false);
-        }, 0);
       });
     }
   }, [inView, fetchPreviousPage, isFetching, hasPreviousPage, adjustScroll]);
-
-  const hasMessage = data?.pages[0].chats.length > 0;
-  useEffect(() => {
-    if (hasMessage && !pageRendered) {
-      listRef.current?.scrollTo(0, listRef.current.scrollHeight);
-      setPageRendered(true);
-    }
-  }, [hasMessage, pageRendered]);
 
   useEffect(() => {
     if (shouldGoDown) {
@@ -228,16 +251,18 @@ export default function Message() {
           }
         }
       }, 0);
-      // listRef.current?.scrollTo(0, listRef.current.scrollHeight);
       setGoDown(false);
     }
   }, [shouldGoDown, setGoDown, userNickname, data.pages]);
 
   useEffect(() => {
     return () => {
+      queryClient.removeQueries({
+        queryKey: getChatMessagesQueryKey(agoraId),
+      });
       reset();
     };
-  }, [reset]);
+  }, []);
 
   const isMyType = useCallback(
     (type: string) =>
@@ -252,22 +277,46 @@ export default function Message() {
   }, []);
 
   return (
-    <div key={agoraId} ref={listRef} className="overflow-y-auto flex-1">
-      {!adjustScroll && pageRendered && <div ref={ref} className="h-1" />}
-      {messages.length > 0 &&
-        messages.map((message, idx) => (
-          <div key={message.chatId || Math.random()}>
+    <div
+      key={agoraId}
+      ref={listRef}
+      className="overflow-y-auto flex-1 w-full h-full"
+    >
+      {!adjustScroll && <div ref={ref} className="h-3" />}
+      <div
+        className="relative w-full"
+        style={{
+          height: virtualizer.getTotalSize(),
+          contain: 'strict',
+          overflowAnchor: 'none',
+          overscrollBehavior: 'none',
+        }}
+      >
+        {virtualizer.getVirtualItems().map((item) => (
+          <div
+            ref={virtualizer.measureElement}
+            key={item.key}
+            data-index={item.index}
+            className="absolute top-0 left-0 w-full"
+            style={{
+              zIndex: 0,
+              transform: `translateY(${item.start + 15}px)`,
+              willChange: 'transform',
+              containIntrinsicSize: `auto ${item.size}px`,
+            }}
+          >
             <MessageItem
-              message={message}
+              message={messages[item.index]}
               isMyType={isMyType}
               getTimeString={getTimeString}
-              nextMessage={messages[idx + 1] || null}
-              prevMessage={messages[idx - 1] || null}
+              nextMessage={messages[item.index + 1] || null}
+              prevMessage={messages[item.index - 1] || null}
               queryClient={queryClient}
               agoraId={agoraId}
             />
           </div>
         ))}
+      </div>
       <ChatNotification />
       {newMessageView && (
         <NotificationNewMessage

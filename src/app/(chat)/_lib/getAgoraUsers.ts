@@ -5,7 +5,7 @@ import { QueryFunction } from '@tanstack/react-query';
 import { getAgoraUserListQueryKey as getAgoraUserListTags } from '@/constants/queryKey';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
-import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import {
   AGORA_USER,
   NETWORK_ERROR_MESSAGE,
@@ -45,6 +45,8 @@ export const getAgoraUsers: QueryFunction<
       throw new Error(res.error.message);
     } else if (res.error.code === 503) {
       throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
+    } else if (AUTH_MESSAGE.includes(res.error.message)) {
+      throw new Error(res.error.message);
     }
 
     throw new Error(AGORA_USER.FAILED_TO_GET_AGORA_USER);

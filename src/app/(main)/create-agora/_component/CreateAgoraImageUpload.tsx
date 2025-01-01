@@ -1,12 +1,19 @@
 'use client';
 
-import AgoraImageUpload from '@/app/_components/molecules/AgoraImageUpload';
+import AgoraImageUpload from '@/app/_components/organisms/AgoraImageUpload';
 import { useCreateAgora } from '@/store/create';
-import React, { useEffect, useState } from 'react';
+import { initialImage, useUploadImage } from '@/store/uploadImage';
+import isNull from '@/utils/validation/validateIsNull';
+import React, { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 export default function CreateAgoraImageUpload() {
-  const [cropedPreview, setCropedPreview] = useState<string>('');
+  const { cropedPreview, setCropedPreview } = useUploadImage(
+    useShallow((state) => ({
+      cropedPreview: state.cropedPreview,
+      setCropedPreview: state.setCropedPreview,
+    })),
+  );
   const { setThumbnail, thumbnail } = useCreateAgora(
     useShallow((state) => ({
       setThumbnail: state.setThumbnail,
@@ -15,22 +22,18 @@ export default function CreateAgoraImageUpload() {
   );
 
   useEffect(() => {
-    if (cropedPreview.length === 0) {
+    if (isNull(cropedPreview.dataUrl)) {
       setThumbnail('');
     } else {
-      setThumbnail(cropedPreview);
+      setThumbnail(cropedPreview.dataUrl);
     }
-  }, [cropedPreview, setThumbnail]);
+  }, [cropedPreview.dataUrl, setThumbnail]);
 
   useEffect(() => {
     if (thumbnail === '') {
-      setCropedPreview('');
-    } else if (cropedPreview.length === 0 && cropedPreview !== thumbnail) {
-      setCropedPreview(thumbnail);
+      setCropedPreview(initialImage);
     }
   }, [thumbnail]);
 
-  return (
-    <AgoraImageUpload setPreView={setCropedPreview} preView={cropedPreview} />
-  );
+  return <AgoraImageUpload />;
 }

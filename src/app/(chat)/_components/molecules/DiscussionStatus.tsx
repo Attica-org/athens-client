@@ -80,7 +80,7 @@ export default function DiscussionStatus({ meta }: Props) {
           type="button"
           onClick={toggleProgress}
           aria-label={`토론 ${start ? '종료하기' : '시작하기'}`}
-          className={`text-xs lg:text-sm italic 
+          className={`text-xs italic 
             ${start ? 'bg-athens-main' : 'bg-red-500'} 
             ${isEndClicked ? 'opacity-60' : 'opacity-100'}
           p-4 pl-15 pr-15 under-mobile:pl-10 under-mobile:pr-10 rounded-lg text-white mr-0.5rem`}
@@ -101,7 +101,7 @@ export default function DiscussionStatus({ meta }: Props) {
   ) : (
     <Suspense
       fallback={
-        <div className="flex text-sm justify-center items-center">
+        <div className="flex text-xs justify-center items-center">
           결과 불러오는 중...
           <Loading
             w="12"

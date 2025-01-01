@@ -14,6 +14,7 @@ export default function AgoraTitleInput() {
       reset: state.reset,
     })),
   );
+
   const { title, setTitle } = useCreateAgora(
     useShallow((state) => ({
       title: state.title,
@@ -32,7 +33,6 @@ export default function AgoraTitleInput() {
       setMessage(null);
     }
   };
-
   const dataReset = () => {
     setTitle('');
     setMessage(null);

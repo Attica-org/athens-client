@@ -109,11 +109,11 @@ export default function LivelyAgoraList() {
   const content = () => {
     if (isFetching || isPending) {
       return (
-        <div className="h-168 w-full">
+        <div className="min-h-64 w-full">
           <DeferredComponent>
             <Loading
-              w="32"
-              h="32"
+              w="26"
+              h="26"
               className="m-5 flex justify-center items-center"
             />
           </DeferredComponent>
