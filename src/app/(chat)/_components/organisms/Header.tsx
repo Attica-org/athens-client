@@ -158,7 +158,11 @@ export default function Header() {
   };
 
   const handleBack = async () => {
-    const result = await swalBackButtonAlert();
+    const text =
+      enterAgora.status === AGORA_STATUS.CLOSED
+        ? ''
+        : '설정한 프로필은 초기화됩니다.';
+    const result = await swalBackButtonAlert(text);
 
     if (result && result.isConfirmed) {
       handleAgoraExit();

@@ -27,11 +27,11 @@ const swalConfirmAlertCustomClass = Swal.mixin({
   },
 });
 
-export const swalBackButtonAlert = async () => {
+export const swalBackButtonAlert = async (text: string) => {
   return swalConfirmCancelCustomClass.fire({
     icon: 'warning',
     title: '아고라를 나가시겠습니까?',
-    text: '설정한 프로필은 초기화됩니다.',
+    text,
     showCancelButton: true,
     confirmButtonText: '확인',
     cancelButtonText: '취소',
