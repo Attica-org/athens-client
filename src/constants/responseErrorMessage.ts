@@ -146,3 +146,8 @@ export const CHAT_VOTE_ERROR_MESSAGE = {
 export const NETWORK_ERROR_MESSAGE = {
   OFFLINE: '인터넷 연결이 필요합니다. 다시 시도해주세요.',
 };
+
+export const LOGOUT_ERROR_MESSAGE = {
+  UNKNOWN_ERROR: '로그아웃 중 알 수 없는 에러가 발생했습니다.',
+  EXPIRED_TOKEN: '이미 로그아웃 한 유저입니다.',
+};
