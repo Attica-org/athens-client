@@ -79,18 +79,6 @@ function YourMessage({ message, isSameUser, shouldShowTime }: Props) {
             className={`max-w-[60vw] relative whitespace-pre-line ${message.user.type === AGORA_POSITION.CONS ? 'bg-red-200' : 'bg-blue-200'} rounded-tr-lg ${isSameUser && 'rounded-tl-lg'} rounded-bl-lg rounded-br-lg p-7 pl-10 pr-10 text-xs lg:text-sm`}
           >
             {message.content}
-            {showEmojiModal && (
-              <div
-                className="absolute mt-[26px] top-1/2 left-0 z-20 whitespace-nowrap bg-athens-gray dark:bg-white p-4 rounded-md border-1 border-gray-200
-              before:content-[''] before:absolute before:top-[-14px] before:left-20  before:-translate-x-1/2 before:border-8 before:border-transparent custom-before before:z-10"
-              >
-                <EmojiModal
-                  className="w-20 h-20"
-                  chatId={message.chatId}
-                  setShowEmojiModal={setShowEmojiModal}
-                />
-              </div>
-            )}
           </div>
           <div className="flex">
             {isHovered && canSendEmoji ? (
