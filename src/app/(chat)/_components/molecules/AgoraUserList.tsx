@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect } from 'react';
-import { ParticipationPosition } from '@/app/model/Agora';
+import { KickVoteResponse, ParticipationPosition } from '@/app/model/Agora';
 import { AGORA_POSITION } from '@/constants/agora';
 import { PROFLELIST } from '@/constants/consts';
 import { useMutation } from '@tanstack/react-query';
@@ -32,14 +32,6 @@ type KickMutationProps = {
   targetMemberId: number;
   currentMemberCount: number;
   agoraId: number;
-};
-
-type KickVoteResponse = {
-  type: string;
-  kickVoteInfo: {
-    targetMemberId: number;
-    message: string;
-  };
 };
 
 export default function AgoraUserList({
@@ -159,6 +151,7 @@ export default function AgoraUserList({
                 <button
                   type="button"
                   onClick={() => handleKick(user.id, enterAgora.id)}
+                  onKeyDown={() => handleKick(user.id, enterAgora.id)}
                   className="w-70 h-24 text-xs bg-red-500 text-white rounded-md"
                 >
                   추방하기
