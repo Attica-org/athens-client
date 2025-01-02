@@ -11,8 +11,8 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import { useAgora } from '@/store/agora';
 import { useShallow } from 'zustand/react/shallow';
-import showToast from '@/utils/showToast';
 import Swal from 'sweetalert2';
+import useApiError from '@/hooks/useApiError';
 import ActionButton from '../atoms/ActionButton';
 import postLogout from '../../_lib/postLogout';
 import deleteUserAccount from '../../_lib/deleteUserAccount';
@@ -32,11 +32,15 @@ export function ActionButtons({ className }: Props) {
       userId: state.enterAgora.userId,
     })),
   );
+  const { handleError } = useApiError();
 
   const logoutMutation = useMutation({
     mutationFn: async () => postLogout(),
     onSuccess: async () => {
       await signOut({ redirect: true });
+    },
+    onError: async (error) => {
+      await handleError(error, logoutMutation.mutate);
     },
   });
 
@@ -56,8 +60,10 @@ export function ActionButtons({ className }: Props) {
         }
       });
     },
-    onError: () => {
-      showToast('계정 삭제에 실패했습니다.', 'error');
+    onError: async (error) => {
+      await handleError(error, () =>
+        deleteAccountMutation.mutate({ memberId: userId }),
+      );
     },
   });
 
