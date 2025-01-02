@@ -100,7 +100,7 @@ function MessageItem({
 }
 
 export default function Message() {
-  const [newMessageView, setNewMessageView] = useState(true);
+  const [newMessageView, setNewMessageView] = useState(false);
   const adjustScrollRef = useRef(false);
   const listRef = useRef<HTMLDivElement>(null);
   const { shouldGoDown, setGoDown } = useMessageStore();
