@@ -191,7 +191,7 @@ export default function Message() {
   useEffect(() => {
     const [lastItem] = [...virtualItems].reverse();
 
-    if (!lastItem) {
+    if (isNull(lastItem)) {
       return;
     }
 
@@ -224,19 +224,19 @@ export default function Message() {
       e.preventDefault();
       const currentTarget = e.currentTarget as HTMLElement;
 
-      if (currentTarget) {
+      if (!isNull(currentTarget)) {
         currentTarget.scrollTop -= e.deltaY;
       }
     };
 
     const currentListRef = listRef.current;
-    if (currentListRef) {
+    if (!isNull(currentListRef)) {
       currentListRef.addEventListener('wheel', handleScroll, {
         passive: false,
       });
     }
     return () => {
-      if (currentListRef) {
+      if (!isNull(currentListRef)) {
         currentListRef.removeEventListener('wheel', handleScroll);
       }
     };
@@ -250,7 +250,7 @@ export default function Message() {
 
       // 새로 전달받은 메시지 업데이트 후에 스크롤 조정
       setTimeout(() => {
-        if (listRef.current) {
+        if (!isNull(listRef.current)) {
           // 입퇴장 속성이 있다면, 스크롤을 조정하지 않음
           if (lastMessage.access !== undefined) {
             setGoDown(false);
@@ -297,10 +297,7 @@ export default function Message() {
       <div
         key={agoraId}
         ref={listRef}
-        className="h-full w-full flex overflow-auto flex-col"
-        style={{
-          transform: 'scaleY(-1)',
-        }}
+        className="h-full w-full flex overflow-auto flex-col transform-scale-y-inverted"
       >
         <ChatNotification />
         <div

@@ -44,6 +44,9 @@ export default function AuthLogin({ user }: Props) {
   }, [router, session]);
 
   useLayoutEffect(() => {
+    if (isNull(user)) {
+      return;
+    }
     getUserAccessToken(user);
   }, [getUserAccessToken, user]);
 
