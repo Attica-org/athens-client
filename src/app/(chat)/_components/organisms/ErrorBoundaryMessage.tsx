@@ -27,7 +27,7 @@ export default function ErrorBoundaryMessage() {
     return () => {
       resetParticipants();
     };
-  });
+  }, []);
 
   return (
     <ErrorBoundary FallbackComponent={FallbackComponent}>
