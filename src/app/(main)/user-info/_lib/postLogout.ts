@@ -27,6 +27,8 @@ const postLogout = async () => {
     if (!res.error) {
       throw new Error(LOGOUT_ERROR_MESSAGE.UNKNOWN_ERROR);
     }
+
+    throw new Error(LOGOUT_ERROR_MESSAGE.FAILED_TO_LOGOUT);
   }
 };
 

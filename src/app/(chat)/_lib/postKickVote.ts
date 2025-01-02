@@ -45,9 +45,7 @@ export const postKickVote = async (
   );
 
   if (!res.ok && !res.success) {
-    if (!res.error) {
-      throw new Error(PATCH_USER_KICK_VOTE_ERROR_MESSAGE.UNKNOWN_ERROR);
-    } else if (res.error.code === 1301) {
+    if (res.error.code === 1301) {
       if (res.error.message === NOT_FOUND_USER(agoraId, targetMemberId)) {
         throw new Error(PATCH_USER_KICK_VOTE_ERROR_MESSAGE.NOT_FOUND_USER);
       } else if (res.error.message === NOT_FOUND_AGORA(agoraId)) {
@@ -56,5 +54,11 @@ export const postKickVote = async (
         throw new Error(PATCH_USER_KICK_VOTE_ERROR_MESSAGE.ALREADY_VOTE);
       }
     }
+
+    if (!res.error) {
+      throw new Error(PATCH_USER_KICK_VOTE_ERROR_MESSAGE.UNKNOWN_ERROR);
+    }
+
+    throw new Error(PATCH_USER_KICK_VOTE_ERROR_MESSAGE.FAILED_TO_KICK_VOTE);
   }
 };

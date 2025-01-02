@@ -21,13 +21,15 @@ const deleteUserAccount = async (memberId: number) => {
   });
 
   if (!res.ok && isNull(res.error?.message)) {
+    if (res.error.code === 1301) {
+      throw new Error(DELETE_USER_ERROR_MESSAGE.NOT_FOUND_USER);
+    }
+
     if (isNull(res.error)) {
       throw new Error(DELETE_USER_ERROR_MESSAGE.UNKNOWN_ERROR);
     }
 
-    if (res.error.code === 1301) {
-      throw new Error(DELETE_USER_ERROR_MESSAGE.NOT_FOUND_USER);
-    }
+    throw new Error(DELETE_USER_ERROR_MESSAGE.FAILED_TO_DELETE_USER);
   }
 };
 
