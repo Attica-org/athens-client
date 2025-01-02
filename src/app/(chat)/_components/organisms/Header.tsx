@@ -280,7 +280,6 @@ export default function Header() {
   };
 
   const handleWebSocketResponse = (response: any) => {
-    console.log(response);
     if (response.type === 'META') {
       // console.log('META', response.data);
       setTitle(response.data.agora.title);
@@ -441,9 +440,7 @@ export default function Header() {
 
     function subscribeError() {
       // console.log('Subscribing Error...');
-      console.log(isNull(webSocketClient), !webSocketClientConnected);
       if (isNull(webSocketClient) || !webSocketClientConnected) return;
-      console.log('구독');
       webSocketClient.subscribe(
         '/user/queue/errors',
         async (received_message: StompJs.IFrame) => {
@@ -452,7 +449,6 @@ export default function Header() {
         },
       );
     }
-    console.log('test');
     subscribeMeta();
     subscribeError();
   }, [webSocketClientConnected, socketError, subscribeErrorControl]);
