@@ -24,12 +24,12 @@ import {
   getChatMessagesQueryKey,
   getUserReactionQueryKey,
 } from '@/constants/queryKey';
-import getKey from '@/utils/getKey';
-import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
-import { useSession } from 'next-auth/react';
+import { AGORA_POSITION } from '@/constants/agora';
 import isNull from '@/utils/validation/validateIsNull';
+import { useWebSocketClient } from '@/store/webSocket';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { unstable_batchedUpdates } from 'react-dom';
+import { useSession } from 'next-auth/react';
 import MyMessage from '../atoms/MyMessage';
 import YourMessage from '../atoms/YourMessage';
 import { getChatMessages } from '../../_lib/getChatMessages';
@@ -49,7 +49,6 @@ type MessageItemProps = {
   getTimeString: (time: string) => string;
   nextMessage: IMessage | null;
   prevMessage: IMessage | null;
-  client: React.RefObject<StompJs.Client> | null;
   queryClient: QueryClient;
   agoraId: number;
 };
@@ -60,7 +59,6 @@ function MessageItem({
   getTimeString,
   nextMessage,
   prevMessage,
-  client,
   queryClient,
   agoraId,
 }: MessageItemProps) {
@@ -98,14 +96,12 @@ function MessageItem({
       isSameUser={isPrevSameUser || false}
       shouldShowTime={shouldShowTime}
       message={message}
-      client={client}
     />
   ) : (
     <YourMessage
       isSameUser={isPrevSameUser || false}
       shouldShowTime={shouldShowTime}
       message={message}
-      client={client}
     />
   );
 }
@@ -115,13 +111,15 @@ export default function Message() {
   const [adjustScroll, setAdjustScroll] = useState(false);
   const [newMessageView, setNewMessageView] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
-  const client = useRef<StompJs.Client | null>(null);
-  const [URL, setURL] = useState({
-    SOCKET_URL: '',
-  });
   const { shouldGoDown, setGoDown } = useMessageStore();
   const myRole = useAgora((state) => state.enterAgora.role);
   const agoraId = useAgora((state) => state.enterAgora.id);
+  const { webSocketClient, webSocketClientConnected } = useWebSocketClient(
+    useShallow((state) => ({
+      webSocketClient: state.webSocketClient,
+      webSocketClientConnected: state.webSocketClientConnected,
+    })),
+  );
   const queryClient = useQueryClient();
   const [messages, setMessages] = useState<IMessage[]>([]);
   const { data: session } = useSession();
@@ -130,9 +128,6 @@ export default function Message() {
       nickname: state.nickname,
       reset: state.reset,
     })),
-  );
-  const { enterAgora } = useAgora(
-    useShallow((state) => ({ enterAgora: state.enterAgora })),
   );
 
   const { data, hasPreviousPage, isFetching, fetchPreviousPage } =
@@ -155,85 +150,31 @@ export default function Message() {
         lastPage.meta.key !== -1 ? { meta: lastPage.meta } : undefined,
     });
 
-  // 채팅 반응하기 구독
-  const getUrl = async () => {
-    const key = await getKey();
-    setURL({
-      SOCKET_URL: key.SOCKET_URL || '',
-    });
-  };
-
-  const handleWebSocketReaction = (response: any) => {
-    if (response.type === 'REACTION') {
-      queryClient.setQueryData(
-        getUserReactionQueryKey(agoraId, response.data.chatId),
-        response.data.reactionCount,
-      );
-    }
-  };
-
-  useEffect(() => {}, []);
-
-  useEffect(() => {
-    const isPossibleConnect = () => {
-      return (
-        navigator.onLine &&
-        URL.SOCKET_URL !== '' &&
-        enterAgora.status !== AGORA_STATUS.CLOSED
-      );
-    };
-
-    const disconnect = () => {
-      client.current?.deactivate();
-    };
-
-    const subscribe = () => {
-      if (client.current?.connected) {
-        client.current?.subscribe(
-          `/topic/agoras/${agoraId}/reactions`,
-          async (received_reaction: StompJs.IFrame) => {
-            const userReactionData = JSON.parse(received_reaction.body);
-            handleWebSocketReaction(userReactionData);
-          },
+  const handleWebSocketReaction = useCallback(
+    (response: any) => {
+      if (response.type === 'REACTION') {
+        queryClient.setQueryData(
+          getUserReactionQueryKey(agoraId, response.data.chatId),
+          response.data.reactionCount,
         );
       }
+    },
+    [agoraId, queryClient],
+  );
+
+  useEffect(() => {
+    const subscribeReactions = () => {
+      if (isNull(webSocketClient) || !webSocketClientConnected) return;
+      webSocketClient.subscribe(
+        `/topic/agoras/${agoraId}/reactions`,
+        async (received_reaction: StompJs.IFrame) => {
+          const userReactionData = JSON.parse(received_reaction.body);
+          handleWebSocketReaction(userReactionData);
+        },
+      );
     };
-
-    const connect = () => {
-      client.current = new StompJs.Client({
-        brokerURL: `${URL.SOCKET_URL}/ws`,
-        connectHeaders: {
-          Authorization: `Bearer ${session?.user.accessToken}`,
-          AgoraId: `${agoraId}`,
-        },
-        reconnectDelay: 500,
-        onConnect: () => {
-          subscribe();
-        },
-        onWebSocketError: async () => {
-          // showToast('네트워크가 불안정합니다.', 'error');
-          // await getReissuanceToken();
-          // connect();
-        },
-        onStompError: async () => {
-          // await getReissuanceToken();
-          // connect();
-        },
-      });
-
-      client.current.activate();
-    };
-
-    if (isPossibleConnect()) {
-      connect();
-    }
-
-    return () => {
-      if (client.current && client.current.connected) {
-        disconnect();
-      }
-    };
-  }, [agoraId, enterAgora.status, URL]);
+    subscribeReactions();
+  }, [webSocketClientConnected, agoraId, handleWebSocketReaction]);
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -315,8 +256,6 @@ export default function Message() {
   }, [shouldGoDown, setGoDown, userNickname, data.pages]);
 
   useEffect(() => {
-    getUrl();
-
     return () => {
       queryClient.removeQueries({
         queryKey: getChatMessagesQueryKey(agoraId),
@@ -372,7 +311,6 @@ export default function Message() {
               getTimeString={getTimeString}
               nextMessage={messages[item.index + 1] || null}
               prevMessage={messages[item.index - 1] || null}
-              client={client}
               queryClient={queryClient}
               agoraId={agoraId}
             />

@@ -59,6 +59,7 @@ export default function EnterAgoraButton() {
 
           setEnterAgora({
             id: Number(pathname.split('/')[3]),
+            userId: response.userId,
             thumbnail: selectedAgora.thumbnail,
             title: selectedAgora.title,
             status: AGORA_STATUS.CLOSED,
@@ -73,6 +74,7 @@ export default function EnterAgoraButton() {
         } else {
           setEnterAgora({
             id: response.agoraId,
+            userId: response.userId,
             thumbnail: selectedAgora.thumbnail,
             title: selectedAgora.title,
             status: selectedAgora.status,

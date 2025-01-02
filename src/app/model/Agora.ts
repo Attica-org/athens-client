@@ -83,3 +83,11 @@ export type AgoraEmojis = {
   HAPPY: number;
   SAD: number;
 };
+
+export type KickVoteResponse = {
+  type: string;
+  kickVoteInfo: {
+    targetMemberId: number;
+    message: string;
+  };
+};

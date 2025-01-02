@@ -1,12 +1,6 @@
 'use client';
 
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
 import { useRouter } from 'next/navigation';
@@ -41,6 +35,7 @@ import { Message } from '@/app/model/Message';
 import { useMessageStore } from '@/store/message';
 import isNull from '@/utils/validation/validateIsNull';
 import accessMessageConfig from '@/lib/accessMessageConfig';
+import { useWebSocketClient } from '@/store/webSocket';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
@@ -78,15 +73,32 @@ export default function Header() {
   const { enterAgora } = useAgora(
     useShallow((state) => ({ enterAgora: state.enterAgora })),
   );
-  const { setTitle, setDiscussionStart, setDiscurreionEnd, reset } =
-    useChatInfo(
+  const {
+    setTitle,
+    setDiscussionStart,
+    setDiscurreionEnd,
+    reset,
+    addParticipant,
+    removeParticipant,
+  } = useChatInfo(
+    useShallow((state) => ({
+      setTitle: state.setTitle,
+      setDiscussionStart: state.setDiscussionStart,
+      setDiscurreionEnd: state.setDiscussionEnd,
+      reset: state.reset,
+      addParticipant: state.addParticipant,
+      removeParticipant: state.removeParticipant,
+    })),
+  );
+  const { webSocketClient, setWebSocketClient, webSocketClientConnected } =
+    useWebSocketClient(
       useShallow((state) => ({
-        setTitle: state.setTitle,
-        setDiscussionStart: state.setDiscussionStart,
-        setDiscurreionEnd: state.setDiscussionEnd,
-        reset: state.reset,
+        webSocketClient: state.webSocketClient,
+        setWebSocketClient: state.setWebSocketClient,
+        webSocketClientConnected: state.webSocketClientConnected,
       })),
     );
+
   const voteResultReset = useVoteStore(useShallow((state) => state.reset));
   const [metaData, setMetaData] = useState<AgoraMeta>();
   const [participants, setParticipants] = useState<{
@@ -104,9 +116,9 @@ export default function Header() {
   const router = useRouter();
   const { handleError } = useApiError();
   const { chatSocketErrorHandler } = SocketErrorHandler();
-  const session = useSession();
+  const { data: session } = useSession();
   const [agoraId, setAgoraId] = useState(enterAgora.id);
-  const client = useRef<StompJs.Client>();
+
   const queryClient = useQueryClient();
   const [URL, setURL] = useState({
     BASE_URL: '',
@@ -253,8 +265,23 @@ export default function Header() {
     // });
   };
 
+  const updateParticipantList = (
+    userDisconnectTime: string,
+    memberId: number,
+    username: string,
+  ) => {
+    if (isNull(username)) return;
+
+    if (isNull(userDisconnectTime)) {
+      addParticipant(memberId, username);
+      return;
+    }
+    removeParticipant(memberId);
+  };
+
   const handleWebSocketResponse = (response: any) => {
     if (response.type === 'META') {
+      // console.log('META', response.data);
       setTitle(response.data.agora.title);
       setAgoraId(response.data.agora.id);
       setMetaData(response.data);
@@ -280,12 +307,15 @@ export default function Header() {
 
       setParticipants(partcipantsCnt);
 
-      const { socketDisconnectTime, username } = response.data.agoraMemberInfo;
+      const { socketDisconnectTime, username, memberId } =
+        response.data.agoraMemberInfo;
+
       updateUserAccessMessage(
         socketDisconnectTime,
         response.data.agora.id,
         username,
       );
+      updateParticipantList(socketDisconnectTime, memberId, username);
     } else if (response.type === DISCUSSION_START) {
       // console.log(data.data);
       showToast('토론이 시작되었습니다.', 'success');
@@ -297,24 +327,101 @@ export default function Header() {
     }
   };
 
-  const subscribeErrorControl = async (err: any) => {
-    chatSocketErrorHandler(err);
+  const subscribeErrorControl = useCallback(
+    async (err: any) => {
+      await chatSocketErrorHandler(err);
 
-    setSocketError({
-      ...socketError,
-      isError: true,
-    });
-  };
+      setSocketError({
+        ...socketError,
+        isError: true,
+      });
+    },
+    [setSocketError, socketError],
+  );
   // 최초 렌더링 시 실행
   useEffect(() => {
     const disconnect = () => {
-      client.current?.deactivate();
+      webSocketClient?.deactivate();
       // console.log('Disconnected');
     };
 
-    const subscribe = () => {
+    async function connect() {
+      if (isNull(session?.user.accessToken)) {
+        showToast('로그인이 필요합니다.', 'error');
+        await signOut({ redirect: true });
+      }
+
+      const newClient = new StompJs.Client({
+        brokerURL: `${URL.SOCKET_URL}/ws`,
+        connectHeaders: {
+          Authorization: `Bearer ${session?.user.accessToken}`,
+          AgoraId: `${agoraId}`,
+        },
+        reconnectDelay: 500,
+        onConnect: () => {
+          setWebSocketClient(newClient);
+        },
+        onDisconnect: () => {
+          setWebSocketClient(null);
+        },
+        onWebSocketError: async () => {
+          setSocketError((prev) => ({
+            isError: false,
+            count: prev.count + 1,
+          }));
+        },
+        onStompError: async () => {
+          setSocketError((prev) => ({
+            isError: false,
+            count: prev.count + 1,
+          }));
+        },
+      });
+
+      newClient.activate();
+    }
+
+    if (socketError.isError && socketError.count < 5) {
+      connect();
+      setSocketError((prev) => ({
+        isError: false,
+        count: prev.count + 1,
+      }));
+    }
+    if (socketError.count >= 5) {
+      showToast(
+        '서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
+        'error',
+      );
+      disconnect();
+      mutation.mutate();
+    }
+    if (isPossibleConnect()) {
+      connect();
+    }
+
+    return () => {
+      if (webSocketClient && webSocketClientConnected) {
+        disconnect();
+      }
+      voteResultReset();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    agoraId,
+    socketError.isError,
+    router,
+    setDiscussionStart,
+    enterAgora.status,
+    URL.SOCKET_URL,
+  ]);
+
+  useEffect(() => {
+    const subscribeMeta = () => {
       // getMetadata();
-      client.current?.subscribe(
+      if (isNull(webSocketClient) || !webSocketClientConnected) return;
+
+      webSocketClient.subscribe(
         `/topic/agoras/${agoraId}`,
         async (received_message: StompJs.IFrame) => {
           const data = await JSON.parse(received_message.body);
@@ -333,7 +440,8 @@ export default function Header() {
 
     function subscribeError() {
       // console.log('Subscribing Error...');
-      client.current?.subscribe(
+      if (isNull(webSocketClient) || !webSocketClientConnected) return;
+      webSocketClient.subscribe(
         '/user/queue/errors',
         async (received_message: StompJs.IFrame) => {
           const data = JSON.parse(received_message.body);
@@ -341,74 +449,9 @@ export default function Header() {
         },
       );
     }
-
-    async function connect() {
-      if (!session.data?.user?.accessToken) {
-        showToast('로그인이 필요합니다.', 'error');
-        await signOut({ redirect: true });
-      }
-      client.current = new StompJs.Client({
-        brokerURL: `${URL.SOCKET_URL}/ws`,
-        connectHeaders: {
-          Authorization: `Bearer ${session.data?.user?.accessToken}`,
-          AgoraId: `${agoraId}`,
-        },
-        reconnectDelay: 500,
-        onConnect: () => {
-          subscribeError();
-          subscribe();
-        },
-        onWebSocketError: async () => {
-          setSocketError((prev) => ({
-            isError: false,
-            count: prev.count + 1,
-          }));
-        },
-        onStompError: async () => {
-          setSocketError((prev) => ({
-            isError: false,
-            count: prev.count + 1,
-          }));
-        },
-      });
-      client.current.activate();
-    }
-
-    if (socketError.isError && socketError.count < 5) {
-      connect();
-      setSocketError((prev) => ({
-        isError: false,
-        count: prev.count + 1,
-      }));
-    }
-    if (socketError.count >= 5) {
-      showToast(
-        '서버 연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
-        'error',
-      );
-      disconnect();
-      mutation.mutate();
-    }
-
-    if (isPossibleConnect()) {
-      connect();
-    }
-
-    return () => {
-      if (client.current && client.current.connected) {
-        disconnect();
-      }
-      voteResultReset();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    agoraId,
-    socketError.isError,
-    router,
-    setDiscussionStart,
-    enterAgora.status,
-    URL.SOCKET_URL,
-  ]);
+    subscribeMeta();
+    subscribeError();
+  }, [webSocketClientConnected, socketError, subscribeErrorControl]);
 
   useEffect(() => {
     getUrl();
@@ -419,7 +462,6 @@ export default function Header() {
   }, [reset, getUrl]);
 
   useUnloadDisconnectSocket({
-    client: client.current,
     mutation: mutation.mutate,
   });
 

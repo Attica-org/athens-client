@@ -6,7 +6,7 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCreateAgora } from '@/store/create';
 import { useRouter } from 'next/navigation';
 import { useAgora } from '@/store/agora';
@@ -67,8 +67,6 @@ function CreateAgoraBtn() {
       return postCreateAgora(info);
     },
     onSuccess: async (response) => {
-      const { reset } = useCreateAgora.getState();
-      const { setSelectedAgora } = useAgora.getState();
       const { cancleCrop } = useUploadImage.getState();
       reset();
       cancleCrop();
