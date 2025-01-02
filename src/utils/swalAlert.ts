@@ -1,6 +1,7 @@
 'use client';
 
 import Swal from 'sweetalert2';
+import isNull from './validation/validateIsNull';
 
 const swalConfirmCancelCustomClass = Swal.mixin({
   customClass: {
@@ -27,6 +28,24 @@ const swalConfirmAlertCustomClass = Swal.mixin({
   },
 });
 
+const swalDeleteAccountClass = Swal.mixin({
+  customClass: {
+    popup: 'bg-white dark:bg-dark-light-300',
+    title: 'text-black dark:text-white',
+    confirmButton: 'text-sm',
+    cancelButton: 'text-sm',
+    validationMessage: 'bg-white dark:bg-dark-light-300 text-xs',
+    input: 'text-black dark:text-white bg-white dark:bg-dark-light-300',
+  },
+});
+
+const swalDeleteAccountSuccessAlertClass = Swal.mixin({
+  customClass: {
+    popup: 'bg-white dark:bg-dark-light-300',
+    title: 'text-black dark:text-white text-base',
+  },
+});
+
 export const swalBackButtonAlert = async (text: string) => {
   return swalConfirmCancelCustomClass.fire({
     icon: 'warning',
@@ -49,5 +68,56 @@ export const swalKickedUserAlert = async () => {
     confirmButtonText: '확인',
     width: '250px',
     confirmButtonColor: '#10AE5D',
+  });
+};
+
+export const swalDeleteAccountConfirm = async () => {
+  return swalDeleteAccountClass.fire({
+    width: '300px',
+    title: '<p class="text-lg">Athens 탈퇴</p>',
+    input: 'checkbox',
+    inputPlaceholder: `
+      Athens 탈퇴에 동의합니다.
+    `,
+    confirmButtonText: '탈퇴',
+    confirmButtonColor: '#10AE5D',
+    cancelButtonText: '취소',
+    showCancelButton: true,
+    inputValidator: (result) => {
+      if (!result) {
+        return '탈퇴에 동의해야 합니다.';
+      }
+
+      return null;
+    },
+  });
+};
+
+let timerInterval: ReturnType<typeof setInterval>;
+
+export const swalDeleteAccountSuccessAlert = async () => {
+  return swalDeleteAccountSuccessAlertClass.fire({
+    width: '300px',
+    title: '계정이 삭제 되었습니다',
+    html: '<b></b> 초 뒤에 로그인 화면으로 이동합니다.',
+    timer: 5000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+      const timer = Swal.getPopup()?.querySelector('b');
+
+      if (!isNull(timer)) {
+        timerInterval = setInterval(() => {
+          const timerLeft = Swal.getTimerLeft();
+
+          if (!isNull(timerLeft)) {
+            timer!.textContent = `${Math.floor(timerLeft / 1000)}`;
+          }
+        }, 100);
+      }
+    },
+    willClose: () => {
+      clearInterval(timerInterval);
+    },
   });
 };

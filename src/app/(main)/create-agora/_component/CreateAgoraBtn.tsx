@@ -17,6 +17,7 @@ import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import { AGORA_CREATE, AGORA_STATUS } from '@/constants/agora';
 import useApiError from '@/hooks/useApiError';
 import { COLOR } from '@/constants/consts';
+import { useShallow } from 'zustand/react/shallow';
 import { useUploadImage } from '@/store/uploadImage';
 import { useSearchStore } from '@/store/search';
 import { postCreateAgora } from '../../_lib/postCreateAgora';
@@ -34,6 +35,17 @@ function CreateAgoraBtn() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const queryClient = useQueryClient();
   const { handleError } = useApiError();
+  const { reset } = useCreateAgora(
+    useShallow((state) => ({
+      reset: state.reset,
+    })),
+  );
+
+  const { setSelectedAgora } = useAgora(
+    useShallow((state) => ({
+      setSelectedAgora: state.setSelectedAgora,
+    })),
+  );
 
   const invalidAgora = (client: QueryClient, queryKey: string[]) => {
     client.invalidateQueries({ queryKey });
@@ -55,8 +67,6 @@ function CreateAgoraBtn() {
       return postCreateAgora(info);
     },
     onSuccess: async (response) => {
-      const { reset } = useCreateAgora.getState();
-      const { setSelectedAgora } = useAgora.getState();
       const { cancleCrop } = useUploadImage.getState();
       reset();
       cancleCrop();

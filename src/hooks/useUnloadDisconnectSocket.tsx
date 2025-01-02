@@ -1,26 +1,30 @@
 'use client';
 
-import * as StompJs from '@stomp/stompjs';
+import { useWebSocketClient } from '@/store/webSocket';
 import { useCallback, useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 type Props = {
-  client: StompJs.Client | undefined;
   mutation?: () => void;
 };
 
-export function useUnloadDisconnectSocket({ client, mutation }: Props) {
+export function useUnloadDisconnectSocket({ mutation }: Props) {
+  const { webSocketClient, webSocketClientConnected } = useWebSocketClient(
+    useShallow((state) => ({
+      webSocketClient: state.webSocketClient,
+      webSocketClientConnected: state.webSocketClientConnected,
+    })),
+  );
+
   const handleAgoraExit = useCallback(
     (e: BeforeUnloadEvent) => {
       e.preventDefault();
 
-      if (client) {
-        client.deactivate();
-      }
-      if (mutation) {
-        mutation();
-      }
+      webSocketClient?.deactivate();
+
+      mutation?.();
     },
-    [client, mutation],
+    [webSocketClientConnected, mutation],
   );
 
   useEffect(() => {
@@ -29,5 +33,5 @@ export function useUnloadDisconnectSocket({ client, mutation }: Props) {
     return () => {
       window.onbeforeunload = null;
     };
-  }, [client, mutation, handleAgoraExit]);
+  }, [mutation, handleAgoraExit]);
 }
