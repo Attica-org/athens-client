@@ -26,6 +26,12 @@ const getCategoryAgoraListQueryKey = (
   { ...searchParams, category: selectedCategory },
 ];
 
+const getCategoryAgoraListBasicQueryKey = () => [
+  'agoras',
+  'search',
+  'category',
+];
+
 const getKeywordAgoraListQueryKey = (
   searchParams: SearchParams,
   search?: string,
@@ -51,6 +57,7 @@ export {
   getChatMessagesQueryKey,
   getAgoraUserListQueryKey,
   getCategoryAgoraListQueryKey,
+  getCategoryAgoraListBasicQueryKey,
   getKeywordAgoraListQueryKey,
   getSelectedAgoraQueryKey,
   getUserReactionQueryKey,

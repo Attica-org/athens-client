@@ -4,6 +4,7 @@ import Image from 'next/image';
 import React, {
   ChangeEventHandler,
   KeyboardEventHandler,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -143,27 +144,31 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
     }
   };
 
-  const renderMedia = (file: { dataUrl: string; file: File }) => {
-    if (file.file.type === 'image/gif') {
+  const renderMedia = useCallback(
+    (file: { dataUrl: string; file: File }) => {
+      if (file.file.type === 'image/gif') {
+        return (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={file.dataUrl}
+            alt="아고라 프로필"
+            className="object-cover h-full rounded-3xl under-mobile:rounded-2xl"
+          />
+        );
+      }
+
       return (
-        <img
+        <Image
+          alt="아고라 프로필"
+          layout="fill"
+          objectFit="cover"
+          className="rounded-3xl under-mobile:rounded-2xl"
           src={file.dataUrl}
-          alt="얍프로필"
-          className="object-cover h-full rounded-3xl under-mobile:rounded-2xl"
         />
       );
-    }
-
-    return (
-      <Image
-        alt="아고라 프로필"
-        layout="fill"
-        objectFit="cover"
-        className="rounded-3xl under-mobile:rounded-2xl"
-        src={file.dataUrl}
-      />
-    );
-  };
+    },
+    [uploadImage.dataUrl, cropedPreview.dataUrl],
+  );
 
   return (
     <div className="relative">

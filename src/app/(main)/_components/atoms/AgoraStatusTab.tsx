@@ -2,7 +2,7 @@
 
 import { homeSegmentKey } from '@/constants/segmentKey';
 import { useSearchStore } from '@/store/search';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -15,14 +15,14 @@ function AgoraStatusTab() {
       tabStatus: state.tabStatus,
     })),
   );
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const [status, setStatus] = useState<Status>(tabStatus as Status);
   const router = useRouter();
   const pathname = usePathname();
 
   const changeParams = useCallback(() => {
     if (pathname !== homeSegmentKey) return;
-    const newSearchParams = new URLSearchParams(searchParams);
+    const newSearchParams = new URLSearchParams(window.location.search);
 
     newSearchParams.set('status', status);
     setTabStatus(status);
@@ -33,10 +33,7 @@ function AgoraStatusTab() {
       '',
       newUrl,
     );
-
-    // newSearchParams.set('status', status);
-    // router.push(`${homeSegmentKey}?${newSearchParams.toString()}`);
-  }, [router, searchParams, status, pathname]);
+  }, [router, status, pathname]);
 
   useEffect(() => {
     changeParams();

@@ -6,7 +6,7 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
+import React, { KeyboardEventHandler, useEffect, useState } from 'react';
 import { useCreateAgora } from '@/store/create';
 import { useRouter } from 'next/navigation';
 import { useAgora } from '@/store/agora';
@@ -126,6 +126,12 @@ function CreateAgoraBtn() {
     mutation.mutate();
   };
 
+  const handleKeyDown: KeyboardEventHandler<HTMLButtonElement> = (e) => {
+    if (e.key === 'Enter') {
+      handleClick();
+    }
+  };
+
   useEffect(() => {
     return () => {
       const { reset: createStoreReset } = useCreateAgora.getState();
@@ -139,25 +145,24 @@ function CreateAgoraBtn() {
   }, []);
 
   return (
-    <div className="mt-1rem w-full">
-      <button
-        onClick={handleClick}
-        type="button"
-        disabled={isLoading}
-        aria-label="아고라 생성하기"
-        className="w-full bg-athens-main text-white font-semibold pt-10 pb-10 under-mobile:pt-10 under-mobile:pb-10 under-mobile:mt-1rem text-base rounded-lg"
-      >
-        {isLoading ? (
-          <Loading
-            w="16"
-            h="16"
-            className="m-2 flex justify-center items-center"
-          />
-        ) : (
-          '아고라 생성'
-        )}
-      </button>
-    </div>
+    <button
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      type="submit"
+      disabled={isLoading}
+      aria-label="아고라 생성하기"
+      className="mt-1rem w-full bg-athens-main text-white pt-6 pb-6 under-mobile:pt-6 under-mobile:pb-6 under-mobile:mt-1rem text-base rounded-lg"
+    >
+      {isLoading ? (
+        <Loading
+          w="19"
+          h="19"
+          className="m-2 flex justify-center items-center"
+        />
+      ) : (
+        '아고라 생성'
+      )}
+    </button>
   );
 }
 

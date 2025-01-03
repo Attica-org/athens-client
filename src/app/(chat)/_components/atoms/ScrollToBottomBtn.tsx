@@ -13,7 +13,7 @@ export default function ScrollToBottomBtn({ listRef }: Props) {
   const handleScrollToBottom = () => {
     if (listRef.current) {
       setScrollToBottom(false);
-      listRef.current.scrollTo(0, listRef.current.scrollHeight);
+      listRef.current.scrollTo({ top: 0 });
     }
   };
 
@@ -31,11 +31,7 @@ export default function ScrollToBottomBtn({ listRef }: Props) {
     // 스크롤이 아래로 내려가면 새 메시지 알림을 숨김
     const handleScroll = () => {
       if (listRef.current) {
-        const scrollPosition =
-          listRef.current.scrollTop + listRef.current.clientHeight;
-        const { scrollHeight } = listRef.current;
-
-        if (scrollHeight - scrollPosition <= 200) {
+        if (listRef.current.scrollTop <= 200) {
           setScrollToBottom(false);
         } else {
           setScrollToBottom(true);
