@@ -7,6 +7,7 @@ import Loading from '@/app/_components/atoms/loading';
 import { usePathname, useRouter } from 'next/navigation';
 import { getSelectedAgoraQueryKey } from '@/constants/queryKey';
 import { homeSegmentKey } from '@/constants/segmentKey';
+import { useShallow } from 'zustand/react/shallow';
 import { getAgoraTitle } from '../../_lib/getAgoraTitle';
 import ModalPosSelectContainer from '../../flow/enter-agora/_components/ModalPosSelectContainer';
 import InputErrorMessage from '../../flow/enter-agora/_components/InputErrorMessage';
@@ -14,7 +15,13 @@ import SetUserProfile from '../../flow/enter-agora/_components/SetUserProfile';
 import EnterAgoraButton from '../../flow/enter-agora/_components/EnterAgoraButton';
 
 export default function EnterAgoraContent() {
-  const { selectedAgora, setSelectedAgora } = useAgora();
+  const { selectedAgora, setSelectedAgora } = useAgora(
+    useShallow((state) => ({
+      selectedAgora: state.selectedAgora,
+      setSelectedAgora: state.setSelectedAgora,
+    })),
+  );
+
   const router = useRouter();
   const pathname = usePathname();
   const agoraId = pathname.split('/')[3];

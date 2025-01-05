@@ -66,7 +66,7 @@ export const getChatMessages = (session: any) => {
     const result = res.response;
 
     return {
-      chats: result.chats.reverse(),
+      chats: result.chats,
       meta: result.meta,
     };
   };

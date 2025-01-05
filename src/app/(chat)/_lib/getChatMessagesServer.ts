@@ -76,7 +76,7 @@ export const getChatMessagesServer: QueryFunction<
   const result = res.response;
 
   return {
-    chats: result.chats.reverse(),
+    chats: result.chats,
     meta: result.meta,
   };
 };

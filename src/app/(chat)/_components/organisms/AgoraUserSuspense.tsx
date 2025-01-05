@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AgoraUserProfileType } from '@/app/model/Agora';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
@@ -10,6 +10,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { getAgoraUserListQueryKey } from '@/constants/queryKey';
 import { useAgora } from '@/store/agora';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
+import isNull from '@/utils/validation/validateIsNull';
 import AgoraUserList from '../molecules/AgoraUserList';
 import { getAgoraUsers } from '../../_lib/getAgoraUsers';
 
@@ -28,9 +29,10 @@ function FallbackComponent(props: FallbackProps) {
 
 export default function AgoraUserSuspense({ agoraId }: Props) {
   const { enterAgora } = useAgora();
-  const { end } = useChatInfo(
+  const { end, addParticipant } = useChatInfo(
     useShallow((state) => ({
       end: state.end,
+      addParticipant: state.addParticipant,
     })),
   );
 
@@ -47,13 +49,46 @@ export default function AgoraUserSuspense({ agoraId }: Props) {
     enabled: enterAgora.status !== AGORA_STATUS.CLOSED && !end,
   });
 
+  const subscribeCount = useRef<number>(1);
+
+  const decrementSubscribeCount = () => {
+    subscribeCount.current -= 1;
+  };
+
+  useEffect(() => {
+    if (isNull(userList)) return;
+    userList.forEach((user) => {
+      const { id, nickname } = user;
+
+      if (isNull(nickname)) return;
+
+      addParticipant(id, nickname);
+    });
+  }, [userList]);
+
+  useEffect(() => {
+    return () => {
+      subscribeCount.current = 1;
+    };
+  }, []);
+
   return (
     <div>
       {userList && !end && (
         <ErrorBoundary FallbackComponent={FallbackComponent}>
-          <AgoraUserList position={AGORA_POSITION.PROS} userList={userList} />
+          <AgoraUserList
+            position={AGORA_POSITION.PROS}
+            userList={userList}
+            subscribeCount={subscribeCount}
+            decrementSubscribeCount={decrementSubscribeCount}
+          />
           <div className="border-b-1 border-gray-200 mb-1rem dark:border-gray-500" />
-          <AgoraUserList position={AGORA_POSITION.CONS} userList={userList} />
+          <AgoraUserList
+            position={AGORA_POSITION.CONS}
+            userList={userList}
+            subscribeCount={subscribeCount}
+            decrementSubscribeCount={decrementSubscribeCount}
+          />
         </ErrorBoundary>
       )}
     </div>

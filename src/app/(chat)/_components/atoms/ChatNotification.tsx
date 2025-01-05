@@ -25,7 +25,7 @@ export default function ChatNotification() {
   return (
     !showMessage &&
     enterAgora.status !== AGORA_STATUS.CLOSED && (
-      <div className="flex p-0.5rem pl-1rem pr-1rem">
+      <div className="flex p-0.5rem pl-1rem pr-1rem transform-scale-y-inverted">
         <div
           role="alert"
           aria-live="polite"

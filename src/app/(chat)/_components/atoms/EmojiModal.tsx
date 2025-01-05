@@ -1,33 +1,38 @@
 import React from 'react';
 import { AgoraEmojis } from '@/app/model/Agora';
-import * as StompJs from '@stomp/stompjs';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgora } from '@/store/agora';
+import { useWebSocketClient } from '@/store/webSocket';
+import isNull from '@/utils/validation/validateIsNull';
 import Emojis from './Emojis';
 
 type Props = {
   className: string;
   chatId: number;
-  client: React.RefObject<StompJs.Client> | null;
   setShowEmojiModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function EmojiModal({
   className,
   chatId,
-  client,
   setShowEmojiModal,
 }: Props) {
   const { enterAgora } = useAgora(
     useShallow((state) => ({ enterAgora: state.enterAgora })),
+  );
+  const { webSocketClient, webSocketClientConnected } = useWebSocketClient(
+    useShallow((state) => ({
+      webSocketClient: state.webSocketClient,
+      webSocketClientConnected: state.webSocketClientConnected,
+    })),
   );
   const toggleEmojiModal = () => {
     setShowEmojiModal((prev) => !prev);
   };
 
   const handleEmojiClick = (reaction: string) => {
-    if (client?.current?.connected) {
-      client?.current?.publish({
+    if (webSocketClientConnected && !isNull(webSocketClient)) {
+      webSocketClient.publish({
         destination: `/app/agoras/${enterAgora.id}/chats/${chatId}/reactions`,
         body: JSON.stringify({
           type: 'REACTION',

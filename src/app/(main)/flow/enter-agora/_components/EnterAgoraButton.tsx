@@ -11,6 +11,7 @@ import React, { useState } from 'react';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import useApiError from '@/hooks/useApiError';
 import showToast from '@/utils/showToast';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function EnterAgoraButton() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -18,7 +19,13 @@ export default function EnterAgoraButton() {
   const pathname = usePathname();
 
   const router = useRouter();
-  const { selectedAgora, setSelectedAgora, setEnterAgora } = useAgora();
+  const { selectedAgora, setSelectedAgora, setEnterAgora } = useAgora(
+    useShallow((state) => ({
+      selectedAgora: state.selectedAgora,
+      setSelectedAgora: state.setSelectedAgora,
+      setEnterAgora: state.setEnterAgora,
+    })),
+  );
 
   const routePage = () => {
     if (!selectedAgora.id) {
@@ -52,6 +59,7 @@ export default function EnterAgoraButton() {
 
           setEnterAgora({
             id: Number(pathname.split('/')[3]),
+            userId: response.userId,
             thumbnail: selectedAgora.thumbnail,
             title: selectedAgora.title,
             status: AGORA_STATUS.CLOSED,
@@ -66,6 +74,7 @@ export default function EnterAgoraButton() {
         } else {
           setEnterAgora({
             id: response.agoraId,
+            userId: response.userId,
             thumbnail: selectedAgora.thumbnail,
             title: selectedAgora.title,
             status: selectedAgora.status,
