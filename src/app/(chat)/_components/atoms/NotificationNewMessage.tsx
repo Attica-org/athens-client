@@ -2,6 +2,7 @@ import React, { KeyboardEventHandler, useEffect } from 'react';
 import UserImage from '@/app/_components/atoms/UserImage';
 import { Message } from '@/app/model/Message';
 import { PROFLELIST } from '@/constants/consts';
+import isNull from '@/utils/validation/validateIsNull';
 
 type Props = {
   message: Message;
@@ -19,7 +20,7 @@ export default function NotificationNewMessage({
   const clickMessage = () => {
     if (listRef.current) {
       setView(false);
-      listRef.current.scrollTo(0, listRef.current.scrollHeight);
+      listRef.current.scrollTo({ top: 0 });
     }
   };
 
@@ -35,11 +36,7 @@ export default function NotificationNewMessage({
     // 스크롤이 아래로 내려가면 새 메시지 알림을 숨김
     const handleScroll = () => {
       if (listRef.current) {
-        const scrollPosition =
-          listRef.current.scrollTop + listRef.current.clientHeight;
-        const { scrollHeight } = listRef.current;
-
-        if (scrollHeight - scrollPosition <= 100) {
+        if (listRef.current.scrollTop <= 100) {
           setView(false);
         }
       }
@@ -53,8 +50,10 @@ export default function NotificationNewMessage({
     };
   }, [view, listRef, setView]);
 
+  if (isNull(message)) return null;
+
   return (
-    <div className="w-full px-8 fixed bottom-55">
+    <div className="w-full px-8 absolute bottom-0">
       <button
         type="button"
         aria-label="새로운 메시지"

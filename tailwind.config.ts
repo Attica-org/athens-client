@@ -134,6 +134,9 @@ const config: Config = {
           },
           appearance: 'textfield',
         },
+        '.transform-scale-y-inverted': {
+          transform: 'scaleY(-1)',
+        },
       });
     },
   ],

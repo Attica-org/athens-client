@@ -51,7 +51,10 @@ export async function generateMetadata({ params }: Props) {
 export default function Page({ params }: Props) {
   const agoraId = Number(params.agora);
   return (
-    <main aria-label="채팅" className="flex flex-col justify-between h-full">
+    <main
+      aria-label="채팅"
+      className="relative flex flex-col justify-between h-full"
+    >
       <MessageContainer agoraId={agoraId} />
     </main>
   );
