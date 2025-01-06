@@ -29,6 +29,7 @@ export default function CategoryAgora({ agora, className }: Props) {
   const setAgoraData = () => {
     setEnterAgora({
       id: agora.id,
+      userId: 0,
       thumbnail: agora.imageUrl,
       title: agora.agoraTitle,
       status: agora.status,
