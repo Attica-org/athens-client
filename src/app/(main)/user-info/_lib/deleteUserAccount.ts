@@ -4,14 +4,14 @@ import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import isNull from '@/utils/validation/validateIsNull';
 
-const deleteUserAccount = async (memberId: number | undefined) => {
+const deleteUserAccount = async () => {
   const session = await getSession();
 
   if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper(`/api/v1/auth/member/${memberId}`, {
+  const res = await callFetchWrapper('/api/v1/auth/member', {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
