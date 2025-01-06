@@ -9,8 +9,6 @@ import {
   swalDeleteAccountSuccessAlert,
 } from '@/utils/swalAlert';
 import { useMutation } from '@tanstack/react-query';
-import { useAgora } from '@/store/agora';
-import { useShallow } from 'zustand/react/shallow';
 import Swal from 'sweetalert2';
 import useApiError from '@/hooks/useApiError';
 import ActionButton from '../atoms/ActionButton';
@@ -21,17 +19,8 @@ type Props = {
   className?: string;
 };
 
-type DeleteAccountMutationProps = {
-  memberId: number;
-};
-
 export function ActionButtons({ className }: Props) {
   const { data: session, status } = useSession();
-  const { userId } = useAgora(
-    useShallow((state) => ({
-      userId: state.enterAgora.userId,
-    })),
-  );
   const { handleError } = useApiError();
 
   const logoutMutation = useMutation({
@@ -51,8 +40,7 @@ export function ActionButtons({ className }: Props) {
   };
 
   const deleteAccountMutation = useMutation({
-    mutationFn: async ({ memberId }: DeleteAccountMutationProps) =>
-      deleteUserAccount(memberId),
+    mutationFn: async () => deleteUserAccount(),
     onSuccess: async () => {
       await swalDeleteAccountSuccessAlert().then((result) => {
         if (result.dismiss === Swal.DismissReason.timer) {
@@ -61,9 +49,7 @@ export function ActionButtons({ className }: Props) {
       });
     },
     onError: async (error) => {
-      await handleError(error, () =>
-        deleteAccountMutation.mutate({ memberId: userId }),
-      );
+      await handleError(error, () => deleteAccountMutation.mutate());
     },
   });
 
@@ -71,7 +57,7 @@ export function ActionButtons({ className }: Props) {
     const result = await swalDeleteAccountConfirm();
 
     if (result.isConfirmed) {
-      deleteAccountMutation.mutate({ memberId: userId });
+      deleteAccountMutation.mutate();
     }
   };
   return (
