@@ -4,7 +4,7 @@ import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import isNull from '@/utils/validation/validateIsNull';
 
-const deleteUserAccount = async (memberId: number) => {
+const deleteUserAccount = async (memberId: number | undefined) => {
   const session = await getSession();
 
   if (isNull(session)) {

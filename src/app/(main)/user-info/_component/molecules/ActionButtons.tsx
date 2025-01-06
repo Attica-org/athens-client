@@ -22,7 +22,7 @@ type Props = {
 };
 
 type DeleteAccountMutationProps = {
-  memberId: number;
+  memberId: number | undefined;
 };
 
 export function ActionButtons({ className }: Props) {
@@ -52,7 +52,7 @@ export function ActionButtons({ className }: Props) {
 
   const deleteAccountMutation = useMutation({
     mutationFn: async ({ memberId }: DeleteAccountMutationProps) =>
-      deleteUserAccount(memberId),
+      deleteUserAccount({ memberId }),
     onSuccess: async () => {
       await swalDeleteAccountSuccessAlert().then((result) => {
         if (result.dismiss === Swal.DismissReason.timer) {
