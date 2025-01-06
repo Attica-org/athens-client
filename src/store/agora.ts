@@ -11,7 +11,7 @@ type Agora = {
 
 type EnterAgora = {
   id: number;
-  userId: number;
+  userId?: number;
   thumbnail: string;
   title: string;
   status: string;
@@ -48,7 +48,13 @@ export const useAgora = create<AgoraState>((set) => ({
     agoraColor: COLOR[0].value,
   },
   setEnterAgora(agora: EnterAgora) {
-    set({ enterAgora: agora });
+    set((state) => ({
+      enterAgora: {
+        ...state.enterAgora,
+        ...agora,
+        userId: agora.userId ?? 0,
+      },
+    }));
   },
   setSelectedAgora(agora: Agora) {
     set({ selectedAgora: agora });
