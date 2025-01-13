@@ -123,7 +123,7 @@ export const authConfig: NextAuthConfig = {
     },
     redirect: async ({ url, baseUrl }) => {
       if (url) {
-        const { search, origin, pathname } = new URL(url);
+        const { search, pathname } = new URL(url);
         const callbackUrl = new URLSearchParams(search).get('callbackUrl');
 
         if (!isNull(callbackUrl)) {
@@ -137,7 +137,7 @@ export const authConfig: NextAuthConfig = {
           return `${baseUrl}/home`;
         }
 
-        if (origin === baseUrl) return url;
+        // if (origin === baseUrl) return url;
       }
 
       return baseUrl;
