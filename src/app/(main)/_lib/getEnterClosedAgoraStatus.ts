@@ -13,14 +13,17 @@ export const getEnterClosedAgoraStatus = async (agoraId: number) => {
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper(`/api/v1/auth/${agoraId}/participate`, {
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.user?.accessToken}`,
+  const res = await callFetchWrapper(
+    `/api/v1/auth/agoras/${agoraId}/participants`,
+    {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.user?.accessToken}`,
+      },
+      credentials: 'include',
     },
-    credentials: 'include',
-  });
+  );
 
   if (!res.ok && !res.success) {
     if (!res.error) {
