@@ -30,8 +30,8 @@ export async function generateMetadata() {
 
 export default function Page() {
   return (
-    <section className="overflow-y-scroll scrollbar-hide flex flex-col pb-57 lg:pb-25 flex-1 h-dvh min-w-270 flex-grow">
-      <main className="flex h-dvh flex-1 flex-grow min-w-270 justify-between items-stretch p-1rem pt-0 under-mobile:pl-1rem under-mobile:pr-1rem flex-col">
+    <section className="overflow-y-scroll scrollbar-hide flex flex-col pb-70 lg:pb-25 flex-1 h-dvh min-w-270 flex-grow">
+      <main className="flex h-dvh flex-1 flex-grow min-w-270 justify-between items-stretch py-0 px-1rem under-mobile:pl-1rem under-mobile:pr-1rem flex-col">
         <div className="flex flex-col w-full under-mobile:mt-10 dark:text-white dark:text-opacity-85">
           <div className="flex justify-around flex-col w-full">
             <section>
