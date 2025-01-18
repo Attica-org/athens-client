@@ -141,8 +141,8 @@ export default function CategoryAgoraList({ searchParams }: Props) {
       {(isFetching || isPending || isFetchingNextPage) && (
         <DeferredComponent>
           <Loading
-            w="32"
-            h="32"
+            w="25"
+            h="25"
             className="m-5 flex justify-center items-center"
           />
         </DeferredComponent>

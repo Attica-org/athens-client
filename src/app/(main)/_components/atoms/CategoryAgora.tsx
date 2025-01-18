@@ -3,30 +3,43 @@
 import { AgoraData } from '@/app/model/Agora';
 import { useAgora } from '@/store/agora';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import isActiveAgora from '@/utils/validation/validateIsActiveAgora';
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import Image from 'next/image';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { isValidImgUrl } from '@/utils/validation/validateImage';
 import { COLOR } from '@/constants/consts';
+import { useQuery } from '@tanstack/react-query';
+import { getClosedAgoraQueryKey } from '@/constants/queryKey';
+import isNull from '@/utils/validation/validateIsNull';
+import Loading from '@/app/_components/atoms/loading';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
+import { getEnterClosedAgoraStatus } from '../../_lib/getEnterClosedAgoraStatus';
 
 type Props = {
   agora: AgoraData;
   className?: string;
 };
 
-export default function CategoryAgora({ agora, className }: Props) {
+function CategoryAgora({ agora, className }: Props) {
   const router = useRouter();
-  const { setSelectedAgora, setEnterAgora } = useAgora();
+  const { setSelectedAgora, setEnterAgora, selectedAgora } = useAgora();
   const [selectedColor, setSelectedColor] = useState(COLOR[0].value);
 
-  const routeAgoraPage = () => {
-    router.push(`/agoras/${agora.id}`);
-  };
+  const { data, isLoading } = useQuery({
+    queryKey: getClosedAgoraQueryKey(agora.id),
+    queryFn: () => getEnterClosedAgoraStatus(agora.id),
+    enabled:
+      agora.id === selectedAgora.id &&
+      selectedAgora.status === AGORA_STATUS.CLOSED,
+  });
 
-  const setAgoraData = () => {
+  const routeAgoraPage = useCallback(() => {
+    router.push(`/agoras/${agora.id}`);
+  }, [agora.id, router]);
+
+  const setAgoraData = useCallback(() => {
     setEnterAgora({
       id: agora.id,
       userId: 0,
@@ -37,10 +50,10 @@ export default function CategoryAgora({ agora, className }: Props) {
       isCreator: false,
       agoraColor: agora.agoraColor,
     });
-  };
+  }, [agora, setEnterAgora]);
 
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
-  const enterAgora = () => {
+  const handleEnterAgora = () => {
     setSelectedAgora({
       id: agora.id,
       thumbnail: agora.imageUrl,
@@ -54,17 +67,33 @@ export default function CategoryAgora({ agora, className }: Props) {
       agora.status === AGORA_STATUS.RUNNING
     ) {
       router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
-    } else if (agora.status === AGORA_STATUS.CLOSED) {
+    }
+  };
+
+  useEffect(() => {
+    // 종료된 아고라 입장 시 아고라 데이터 설정
+    if (
+      selectedAgora.status === AGORA_STATUS.CLOSED &&
+      !isNull(data) &&
+      !isLoading
+    ) {
       setAgoraData();
       routeAgoraPage();
     }
-  };
+  }, [data, isLoading, selectedAgora.status]);
 
   useEffect(() => {
     setSelectedColor(
       COLOR.find((color) => color.value === agora.agoraColor)?.value ||
         COLOR[0].value,
     );
+  }, []);
+
+  const getButtonText = useCallback((status: string) => {
+    if (status === AGORA_STATUS.CLOSED) {
+      return '결과보기';
+    }
+    return '입장하기';
   }, []);
 
   return (
@@ -135,12 +164,14 @@ export default function CategoryAgora({ agora, className }: Props) {
       </div>
       <button
         aria-label="아고라 입장하기"
-        onClick={enterAgora}
+        onClick={handleEnterAgora}
         type="button"
-        className="text-sm under-mobile:text-xs text-white bg-athens-main p-4 pt-5 pb-5 mt-10 w-9rem under-mobile:w-110 rounded-md"
+        className="flex justify-center items-center text-sm under-mobile:text-xs text-white bg-athens-main p-4 pt-5 pb-5 mt-10 w-9rem under-mobile:w-110 rounded-md"
       >
-        {agora.status === AGORA_STATUS.CLOSED ? '결과보기' : '입장하기'}
+        {isLoading ? <Loading w="19" /> : getButtonText(agora.status)}
       </button>
     </article>
   );
 }
+
+export default React.memo(CategoryAgora);

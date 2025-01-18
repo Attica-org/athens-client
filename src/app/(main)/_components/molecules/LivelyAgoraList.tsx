@@ -112,8 +112,8 @@ export default function LivelyAgoraList() {
         <div className="min-h-64 w-full">
           <DeferredComponent>
             <Loading
-              w="26"
-              h="26"
+              w="25"
+              h="25"
               className="m-5 flex justify-center items-center"
             />
           </DeferredComponent>

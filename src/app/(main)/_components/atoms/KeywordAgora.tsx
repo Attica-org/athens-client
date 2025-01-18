@@ -1,6 +1,6 @@
 'use client';
 
-import React, { KeyboardEventHandler } from 'react';
+import React, { KeyboardEventHandler, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AgoraData } from '@/app/model/Agora';
 import { formatDistanceToNow } from 'date-fns';
@@ -12,7 +12,11 @@ import Image from 'next/image';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { isValidImgUrl } from '@/utils/validation/validateImage';
 import { COLOR } from '@/constants/consts';
+import { useQuery } from '@tanstack/react-query';
+import { getClosedAgoraQueryKey } from '@/constants/queryKey';
+import isNull from '@/utils/validation/validateIsNull';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
+import { getEnterClosedAgoraStatus } from '../../_lib/getEnterClosedAgoraStatus';
 
 type Props = {
   agora: AgoraData;
@@ -20,22 +24,30 @@ type Props = {
 
 export default function KeywordAgora({ agora }: Props) {
   const router = useRouter();
-  const { setSelectedAgora, setEnterAgora } = useAgora();
+  const { setSelectedAgora, setEnterAgora, selectedAgora } = useAgora();
+
+  const { data, isLoading } = useQuery({
+    queryKey: getClosedAgoraQueryKey(agora.id),
+    queryFn: () => getEnterClosedAgoraStatus(agora.id),
+    enabled:
+      agora.id === selectedAgora.id &&
+      selectedAgora.status === AGORA_STATUS.CLOSED,
+  });
+
+  const setAgoraData = useCallback(() => {
+    setEnterAgora({
+      id: agora.id,
+      thumbnail: agora.imageUrl,
+      title: agora.agoraTitle,
+      status: agora.status,
+      role: AGORA_POSITION.OBSERVER,
+      isCreator: false,
+      agoraColor: agora.agoraColor,
+    });
+  }, [agora, setEnterAgora]);
 
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
-  const enterAgoraHandle = () => {
-    const setAgoraData = () => {
-      setEnterAgora({
-        id: agora.id,
-        thumbnail: agora.imageUrl,
-        title: agora.agoraTitle,
-        status: agora.status,
-        role: AGORA_POSITION.OBSERVER,
-        isCreator: false,
-        agoraColor: agora.agoraColor,
-      });
-    };
-
+  const handleEnterAgora = () => {
     // TODO: 아고라 id를 받아서 해당 아고라로 이동
     setSelectedAgora({
       id: agora.id,
@@ -50,18 +62,26 @@ export default function KeywordAgora({ agora }: Props) {
       agora.status === AGORA_STATUS.RUNNING
     ) {
       router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
-    } else if (agora.status === AGORA_STATUS.CLOSED) {
-      // 만약 status가 closed라면, /agoras/${id}로 이동
-      setAgoraData();
-      router.push(`/agoras/${agora.id}`);
     }
   };
 
   const handleKeyDownEnterAgora: KeyboardEventHandler<HTMLElement> = (e) => {
     if (e.key === 'Enter') {
-      enterAgoraHandle();
+      handleEnterAgora();
     }
   };
+
+  useEffect(() => {
+    // 종료된 아고라 입장 시 아고라 데이터 설정
+    if (
+      selectedAgora.status === AGORA_STATUS.CLOSED &&
+      !isNull(data) &&
+      !isLoading
+    ) {
+      setAgoraData();
+      router.push(`/agoras/${agora.id}`);
+    }
+  }, [data, isLoading, selectedAgora.status]);
 
   const getRelativeTime = () => {
     const relativeDate = formatDistanceToNow(agora.createdAt as string, {
@@ -78,7 +98,7 @@ export default function KeywordAgora({ agora }: Props) {
         tabIndex={0}
         aria-label="아고라"
         onKeyDown={handleKeyDownEnterAgora}
-        onClick={enterAgoraHandle}
+        onClick={handleEnterAgora}
         className="w-full flex mb-15 pb-15 pl-1rem pr-1rem justify-center items-center cursor-pointer border-b-1 border-gray-100 dark:border-0"
       >
         <div className="flex-1 p-0.5rem pl-0">

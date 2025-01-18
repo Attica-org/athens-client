@@ -3,7 +3,7 @@ import { SearchParams } from '@/app/model/Agora';
 const getVoteResultQueryKey = (agoraId: number): [string, string, string] => [
   'agora',
   `${agoraId}`,
-  'closed',
+  'voteResult',
 ];
 
 const getChatMessagesQueryKey = (agoraId: number): [string, string, string] => [
@@ -32,6 +32,12 @@ const getCategoryAgoraListBasicQueryKey = () => [
   'category',
 ];
 
+const getClosedAgoraQueryKey = (agoraId: number): [string, string, string] => [
+  'agora',
+  `${agoraId}`,
+  'closed',
+];
+
 const getKeywordAgoraListQueryKey = (
   searchParams: SearchParams,
   search?: string,
@@ -58,6 +64,7 @@ export {
   getAgoraUserListQueryKey,
   getCategoryAgoraListQueryKey,
   getCategoryAgoraListBasicQueryKey,
+  getClosedAgoraQueryKey,
   getKeywordAgoraListQueryKey,
   getSelectedAgoraQueryKey,
   getUserReactionQueryKey,

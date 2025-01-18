@@ -13,11 +13,11 @@ const AgoraListDeciderHydration = dynamic(
 
 export default function Main({ searchParams }: Props) {
   return (
-    <main className="justify-center items-stretch flex flex-col h-dvh flex-1 relative">
-      <section
-        aria-label="아고라 리스트"
-        className="flex h-full flex-col p-5 pt-3 pb-5rem justify-start items-center"
-      >
+    <main
+      aria-label="아고라 리스트"
+      className="justify-center items-stretch flex flex-col h-dvh flex-1 relative"
+    >
+      <div className="flex h-full flex-col p-5 pt-3 pb-5rem justify-start items-center">
         <Suspense
           fallback={
             <Loading className="m-5 flex justify-center items-center" />
@@ -25,7 +25,7 @@ export default function Main({ searchParams }: Props) {
         >
           <AgoraListDeciderHydration searchParams={searchParams} />
         </Suspense>
-      </section>
+      </div>
     </main>
   );
 }

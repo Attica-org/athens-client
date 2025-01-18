@@ -11,7 +11,7 @@ export default function SNSLogin() {
       <Link
         href={getRedirectUri('kakao')}
         aria-label="카카오로 로그인하기"
-        className="text-sm relative flex justify-center items-center w-full bg-[#FEE500] border-1 border-[#FEE500] rounded-md h-42 p-12"
+        className="text-sm text-black relative flex justify-center items-center w-full bg-[#FEE500] border-1 border-[#FEE500] rounded-md h-42 p-12"
       >
         <div className="absolute left-12" aria-hidden>
           <svg
@@ -26,14 +26,17 @@ export default function SNSLogin() {
             />
           </svg>
         </div>
-        <div className="opacity-85 flex-1 justify-center items-center text-center">
+        <div
+          aria-hidden
+          className="opacity-85 flex-1 justify-center items-center text-center"
+        >
           카카오 로그인
         </div>
       </Link>
       <Link
         href={getRedirectUri('google')}
         aria-label="구글로 로그인하기"
-        className="text-sm relative flex justify-center items-center w-full bg-white border-1 border-dark-line-semilight rounded-md h-42 p-12"
+        className="text-sm text-black relative flex justify-center items-center w-full bg-white border-1 border-dark-line-semilight rounded-md h-42 p-12"
       >
         <div className="absolute left-12" aria-hidden>
           <svg
@@ -60,7 +63,10 @@ export default function SNSLogin() {
             />
           </svg>
         </div>
-        <div className="opacity-85 flex-1 justify-center items-center text-center">
+        <div
+          aria-hidden
+          className="opacity-85 flex-1 justify-center items-center text-center"
+        >
           구글 로그인
         </div>
       </Link>

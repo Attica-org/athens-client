@@ -10,7 +10,7 @@ export default function Loading({ w = '30', h = '30', className = '' }: Props) {
   const size = `w-${w} h-${h}`;
 
   return (
-    <div role="status" className={className}>
+    <div role="status" aria-label="로딩중" className={className}>
       <svg
         aria-hidden="true"
         className={`${size} max-w-30 max-h-30 text-gray-200 animate-spin dark:text-gray-600 fill-athens-main`}
