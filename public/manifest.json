@@ -1,5 +1,9 @@
 {
-  "theme_color": "#10AE5D",
+  "theme_color": "#262626",
+  "theme_colors": [
+    { "color": "#262626", "media":"(prefers-color-scheme: dark)" },
+    { "color": "#ffffff", "media":"(prefers-color-scheme: light)" }
+  ],
   "background_color": "#ffffff",
   "display": "standalone",
   "scope": "/",
