@@ -54,6 +54,10 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
       throw new Error(AGORA_ENTER.UNKNOWN_ERROR);
     }
 
+    if (AUTH_MESSAGE.includes(res.error.message)) {
+      throw new Error(res.error.message);
+    }
+
     if (res.error.code === 1001) {
       if (info.id === null) {
         throw new Error(AGORA_ENTER.PROFILE_NULL);

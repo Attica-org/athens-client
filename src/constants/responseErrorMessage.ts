@@ -36,6 +36,7 @@ export const AGORA_CREATE = {
 export const AGORA_ENTER = {
   FAILED_TO_ENTER_AGORA: '입장 실패했습니다.\n 다시 시도해주세요.',
   CLOSED_AGORA: '종료된 아고라입니다.',
+  ACTIVATE_AGORA: '종료되지 않은 아고라입니다.',
   ALREADY_PARTICIPATED: '이미 참여한 아고라입니다.',
   NICKNAME_DUPLICATED: '닉네임이 중복됩니다.',
   NOT_ALLOWED_POSITION: '허용되지 않는 입장 타입 입니다.',
