@@ -80,9 +80,9 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/21214958-c034-47b4-9632-50e1c61e98bd" style="max-width: 100%;"></img></td>
-      <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/8e3cc507-683f-4f56-bf04-2f6bc2c627f7" style="max-width: 100%;"</img></td>
-  <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/8e3cc507-683f-4f56-bf04-2f6bc2c627f7" style="max-width: 100%;"</img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/2a6e09c8-b003-406a-b1d9-b1abb30250d1" style="max-width: 100%;"></img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/68da75e0-2fda-4394-9aae-80e578a63354" style="max-width: 100%;"</img></td>
+  <td align="center"><img width="200" src="https://github.com/user-attachments/assets/1a3db1a6-501d-4852-955a-8c6fa3f379a2" style="max-width: 100%;"</img></td>
     </tr>
 </table>
 
@@ -102,9 +102,9 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/21214958-c034-47b4-9632-50e1c61e98bd" style="max-width: 100%;"></img></td>
-      <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/8e3cc507-683f-4f56-bf04-2f6bc2c627f7" style="max-width: 100%;"</img></td>
-  <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/8e3cc507-683f-4f56-bf04-2f6bc2c627f7" style="max-width: 100%;"</img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/109fb2ba-3fe6-4993-b2bf-c604e0b6c334" style="max-width: 100%;"></img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/9e2ff490-a472-4325-bca1-649b0fd476ba" style="max-width: 100%;"</img></td>
+  <td align="center"><img width="200" src="https://github.com/user-attachments/assets/7bcea8ec-ce42-44a0-8a3e-1a00686180fd" style="max-width: 100%;"</img></td>
     </tr>
 </table>
 
@@ -121,8 +121,8 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/21214958-c034-47b4-9632-50e1c61e98bd" style="max-width: 100%;"></img></td>
-      <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/8e3cc507-683f-4f56-bf04-2f6bc2c627f7" style="max-width: 100%;"</img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/4ec2c25f-3118-4d4c-9483-94b8cf89983d" style="max-width: 100%;"></img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/12cfa622-5eba-4b4b-bb14-539405b9c9ff" style="max-width: 100%;"</img></td>
     </tr>
 </table>
 
@@ -142,9 +142,9 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/21214958-c034-47b4-9632-50e1c61e98bd" style="max-width: 100%;"></img></td>
-      <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/8e3cc507-683f-4f56-bf04-2f6bc2c627f7" style="max-width: 100%;"</img></td>
-    <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/8e3cc507-683f-4f56-bf04-2f6bc2c627f7" style="max-width: 100%;"</img></td>
+      <td align="center"><img width="200" src="https://github.com/kkmcProject/Web/assets/132376178/21214958-c034-47b4-9632-50e1c61e98bd" style="max-width: 100%;"></img></td>
+      <td align="center"><img width="200" src="https://github.com/kkmcProject/Web/assets/132376178/8e3cc507-683f-4f56-bf04-2f6bc2c627f7" style="max-width: 100%;"</img></td>
+    <td align="center"><img width="200" src="https://github.com/kkmcProject/Web/assets/132376178/8e3cc507-683f-4f56-bf04-2f6bc2c627f7" style="max-width: 100%;"</img></td>
     </tr>
 </table>
 
@@ -164,9 +164,9 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/21214958-c034-47b4-9632-50e1c61e98bd" style="max-width: 100%;"></img></td>
-      <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/8e3cc507-683f-4f56-bf04-2f6bc2c627f7" style="max-width: 100%;"</img></td>
-    <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/8e3cc507-683f-4f56-bf04-2f6bc2c627f7" style="max-width: 100%;"</img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/1c4c2f24-52cd-4d1d-a551-057b4085e5cc" style="max-width: 100%;"></img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/9631d0d2-1990-47d4-81ff-fdae946c557a" style="max-width: 100%;"</img></td>
+    <td align="center"><img width="200" src="https://github.com/kkmcProject/Web/assets/132376178/8e3cc507-683f-4f56-bf04-2f6bc2c627f7" style="max-width: 100%;"</img></td>
     </tr>
 </table>
 
@@ -183,8 +183,8 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/21214958-c034-47b4-9632-50e1c61e98bd" style="max-width: 100%;"></img></td>
-      <td align="center"><img width="400" src="https://github.com/kkmcProject/Web/assets/132376178/8e3cc507-683f-4f56-bf04-2f6bc2c627f7" style="max-width: 100%;"</img></td>
+      <td align="center"><img width="200" src="https://github.com/kkmcProject/Web/assets/132376178/21214958-c034-47b4-9632-50e1c61e98bd" style="max-width: 100%;"></img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/7871770a-473f-492d-ace0-d761a073f16d" style="max-width: 100%;"</img></td>
     </tr>
 </table>
 
