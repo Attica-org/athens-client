@@ -8,6 +8,8 @@ import { SearchParams } from '@/app/model/Agora';
 import Loading from '@/app/_components/atoms/loading';
 import { useSearchStore } from '@/store/search';
 import { useShallow } from 'zustand/react/shallow';
+import { useKickedStore } from '@/store/kick';
+import { swalKickedUserAlert } from '@/utils/swalAlert';
 import LivelyAgoraList from './LivelyAgoraList';
 import CategoryAgoraNowTitle from '../atoms/CategoryAgoraNowTitle';
 
@@ -44,12 +46,32 @@ export default function AgoraListDecider({ searchParams }: Props) {
       tabStatus: state.tabStatus,
     })),
   );
+  const { kicked, reset } = useKickedStore(
+    useShallow((state) => ({
+      kicked: state.kicked,
+      reset: state.reset,
+    })),
+  );
 
   useEffect(() => {
     if (q) {
       setSearch(q);
     }
   }, [q, setSearch]);
+
+  useEffect(() => {
+    const handleKicked = async () => {
+      if (kicked) {
+        const result = await swalKickedUserAlert();
+
+        if (result && result.isConfirmed) {
+          reset();
+        }
+      }
+    };
+
+    handleKicked();
+  }, [kicked]);
 
   if (search) {
     return (
