@@ -11,8 +11,13 @@ import { useAgora } from '@/store/agora';
 import { useWebSocketClient } from '@/store/webSocket';
 import * as StompJs from '@stomp/stompjs';
 import isNull from '@/utils/validation/validateIsNull';
+import { useRouter } from 'next/navigation';
+import { homeSegmentKey } from '@/constants/segmentKey';
+import useApiError from '@/hooks/useApiError';
+import { useKickedStore } from '@/store/kick';
 import UserImage from '../../../_components/atoms/UserImage';
 import { postKickVote } from '../../_lib/postKickVote';
+import patchChatExit from '../../_lib/patchChatExit';
 
 type UserList = {
   id: number;
@@ -51,6 +56,7 @@ export default function AgoraUserList({
       enterAgora: state.enterAgora,
     })),
   );
+
   const { webSocketClient, webSocketClientConnected } = useWebSocketClient(
     useShallow((state) => ({
       webSocketClient: state.webSocketClient,
@@ -67,11 +73,37 @@ export default function AgoraUserList({
       postKickVote(targetMemberId, currentMemberCount, agoraId),
   });
 
+  const { setKicked } = useKickedStore(
+    useShallow((state) => ({
+      setKicked: state.setKicked,
+    })),
+  );
+
+  const router = useRouter();
+  const { handleError } = useApiError();
+
   const handleKick = (targetMemberId: number, agoraId: number) => {
     const currentMemberCount = participants.size;
 
     kickVoteMutation.mutate({ targetMemberId, currentMemberCount, agoraId });
   };
+
+  const callChatExitAPI = async () => patchChatExit({ agoraId: enterAgora.id });
+
+  const onSuccessChatExit = (response: any) => {
+    if (response) {
+      setKicked(true);
+      router.replace(`${homeSegmentKey}?status=active`);
+    }
+  };
+
+  const chatExitmutation = useMutation({
+    mutationFn: callChatExitAPI,
+    onSuccess: (response) => onSuccessChatExit(response),
+    onError: async (error) => {
+      await handleError(error, chatExitmutation.mutate);
+    },
+  });
 
   const handleKickVoteResponse = useCallback(
     (response: KickVoteResponse) => {
@@ -79,7 +111,7 @@ export default function AgoraUserList({
         response.type === 'KICK' &&
         enterAgora.userId === response.kickVoteInfo.targetMemberId
       ) {
-        // 홈으로 이동시키고, 강제퇴장 모달 보여주기
+        chatExitmutation.mutate();
       }
     },
     [enterAgora.userId],
@@ -96,7 +128,7 @@ export default function AgoraUserList({
 
       decrementSubscribeCount();
       webSocketClient.subscribe(
-        `/topic/agora/${enterAgora.id}`,
+        `/topic/agoras/${enterAgora.id}/kick`,
         async (receivedMessage: StompJs.IFrame) => {
           const response = await JSON.parse(receivedMessage.body);
           handleKickVoteResponse(response);
