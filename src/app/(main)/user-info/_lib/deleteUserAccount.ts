@@ -11,7 +11,7 @@ const deleteUserAccount = async () => {
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper('/api/v1/auth/member', {
+  const res = await callFetchWrapper('/api/v1/auth/member/', {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ const deleteUserAccount = async () => {
     credentials: 'include',
   });
 
-  if (!res.ok && isNull(res.error?.message)) {
+  if (!res.ok && !isNull(res.error?.message)) {
     if (res.error.code === 1301) {
       throw new Error(DELETE_USER_ERROR_MESSAGE.NOT_FOUND_USER);
     }

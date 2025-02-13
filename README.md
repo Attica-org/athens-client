@@ -166,7 +166,7 @@
     <tr>
       <td align="center"><img width="200" src="https://github.com/user-attachments/assets/1c4c2f24-52cd-4d1d-a551-057b4085e5cc" style="max-width: 100%;"></img></td>
       <td align="center"><img width="200" src="https://github.com/user-attachments/assets/9631d0d2-1990-47d4-81ff-fdae946c557a" style="max-width: 100%;"</img></td>
-    <td align="center"><img width="200" src="https://github.com/kkmcProject/Web/assets/132376178/8e3cc507-683f-4f56-bf04-2f6bc2c627f7" style="max-width: 100%;"</img></td>
+    <td align="center"><img width="200" src="https://github.com/user-attachments/assets/8051c39f-56d1-4774-bf58-76a9ad0ada3c" style="max-width: 100%;"</img></td>
     </tr>
 </table>
 

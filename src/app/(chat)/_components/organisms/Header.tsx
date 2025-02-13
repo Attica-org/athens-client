@@ -149,8 +149,7 @@ export default function Header() {
 
   const onSuccessChatExit = (response: any) => {
     if (response) {
-      // 나가기 성공 로직 구현
-      router.push(homeSegmentKey);
+      router.replace(`${homeSegmentKey}?status=active`);
     }
   };
 
