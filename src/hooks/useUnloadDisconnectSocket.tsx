@@ -16,22 +16,25 @@ export function useUnloadDisconnectSocket({ mutation }: Props) {
     })),
   );
 
-  const handleAgoraExit = useCallback(
-    (e: BeforeUnloadEvent) => {
-      e.preventDefault();
+  const handleAgoraExit = useCallback(() => {
+    webSocketClient?.deactivate();
+    mutation?.();
+  }, [webSocketClientConnected, mutation]);
 
-      webSocketClient?.deactivate();
+  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    e.preventDefault();
+  };
 
-      mutation?.();
-    },
-    [webSocketClientConnected, mutation],
-  );
+  const handleUnload = () => {
+    handleAgoraExit();
+  };
 
   useEffect(() => {
-    window.onbeforeunload = handleAgoraExit;
-
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('unload', handleUnload);
     return () => {
-      window.onbeforeunload = null;
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('unload', handleUnload);
     };
   }, [mutation, handleAgoraExit]);
 }
