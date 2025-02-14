@@ -16,17 +16,13 @@ export function useUnloadDisconnectSocket({ mutation }: Props) {
     })),
   );
 
-  const handleAgoraExit = useCallback(() => {
+  const handleUnload = useCallback(() => {
     webSocketClient?.deactivate();
     mutation?.();
   }, [webSocketClientConnected, mutation]);
 
   const handleBeforeUnload = (e: BeforeUnloadEvent) => {
     e.preventDefault();
-  };
-
-  const handleUnload = () => {
-    handleAgoraExit();
   };
 
   useEffect(() => {
@@ -36,5 +32,5 @@ export function useUnloadDisconnectSocket({ mutation }: Props) {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('unload', handleUnload);
     };
-  }, [mutation, handleAgoraExit]);
+  }, [mutation, handleUnload]);
 }
