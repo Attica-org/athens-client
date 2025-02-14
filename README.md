@@ -183,11 +183,9 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center"><img width="200" src="https://github.com/kkmcProject/Web/assets/132376178/21214958-c034-47b4-9632-50e1c61e98bd" style="max-width: 100%;"></img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/c96a1795-4598-4e0a-b383-c337f97ff416" style="max-width: 100%;"></img></td>
       <td align="center"><img width="200" src="https://github.com/user-attachments/assets/7871770a-473f-492d-ace0-d761a073f16d" style="max-width: 100%;"</img></td>
     </tr>
-</table>
-
 <br />
 
 ## Project Wiki
