@@ -1,6 +1,7 @@
 import RefreshIcon from '@/assets/icons/RefreshIcon';
 import { getCategoryAgoraListBasicQueryKey } from '@/constants/queryKey';
 import { useQueryClient } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 
 type ActiveHeaderProps = {
@@ -9,6 +10,7 @@ type ActiveHeaderProps = {
 
 function CategoryAgoraNowTitle({ tabStatus }: ActiveHeaderProps) {
   const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
 
   const handleKeyDownRefresh = useCallback(
     (e: React.KeyboardEvent) => {
@@ -22,8 +24,15 @@ function CategoryAgoraNowTitle({ tabStatus }: ActiveHeaderProps) {
   );
 
   const handleClickRefresh = useCallback(() => {
-    queryClient.invalidateQueries({
+    const category = searchParams.get('category') ?? '';
+    const status = searchParams.get('status') ?? 'active';
+
+    queryClient.resetQueries({
       queryKey: getCategoryAgoraListBasicQueryKey(),
+    });
+    queryClient.invalidateQueries({
+      queryKey: ['agoras', 'search', 'category', { status, category }],
+      type: 'all',
     });
   }, [queryClient]);
 

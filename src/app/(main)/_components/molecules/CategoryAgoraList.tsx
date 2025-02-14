@@ -13,7 +13,10 @@ import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 import { VirtuosoGrid } from 'react-virtuoso';
 import { useSearchStore } from '@/store/search';
-import { getCategoryAgoraListQueryKey } from '@/constants/queryKey';
+import {
+  getCategoryAgoraListBasicQueryKey,
+  getCategoryAgoraListQueryKey,
+} from '@/constants/queryKey';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
 import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
 import CategoryAgora from '../atoms/CategoryAgora';
@@ -92,8 +95,8 @@ export default function CategoryAgoraList({ searchParams }: Props) {
 
   useEffect(() => {
     // 초기 데이터 호출 후 카테고리 변경 시 데이터 재호출
-    queryClient.removeQueries({
-      queryKey: ['agoras', 'search', 'category'],
+    queryClient.resetQueries({
+      queryKey: getCategoryAgoraListBasicQueryKey(),
     });
     queryClient.invalidateQueries({
       queryKey: [
