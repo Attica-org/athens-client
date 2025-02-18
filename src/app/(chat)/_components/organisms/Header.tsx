@@ -36,6 +36,7 @@ import { useMessageStore } from '@/store/message';
 import isNull from '@/utils/validation/validateIsNull';
 import accessMessageConfig from '@/lib/accessMessageConfig';
 import { useWebSocketClient } from '@/store/webSocket';
+import { useEnter } from '@/store/enter';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
@@ -149,6 +150,14 @@ export default function Header() {
 
   const onSuccessChatExit = (response: any) => {
     if (response) {
+      // 채팅방 정보 및 유저 채팅 프로필 정보 초기화
+      useEnter.getState().reset();
+      useAgora.getState().reset();
+      useAgora.getState().enterAgoraReset();
+
+      useEnter.persist.rehydrate();
+      useAgora.persist.rehydrate();
+
       router.replace(`${homeSegmentKey}?status=active`);
     }
   };
@@ -164,7 +173,8 @@ export default function Header() {
   const handleAgoraExit = () => {
     if (enterAgora.status === AGORA_STATUS.CLOSED) {
       selectedAgoraReset();
-      router.push(homeSegmentKey);
+
+      router.replace(homeSegmentKey);
     } else if (
       enterAgora.status === AGORA_STATUS.RUNNING ||
       enterAgora.status === AGORA_STATUS.QUEUED
@@ -345,13 +355,23 @@ export default function Header() {
     },
     [setSocketError, socketError],
   );
+
+  const disconnect = useCallback(async () => {
+    console.log('before disconnect', webSocketClient, webSocketClientConnected);
+
+    if (!isNull(webSocketClient) && webSocketClientConnected) {
+      console.log('강제 연결 종료');
+      await webSocketClient.deactivate();
+      console.log(
+        'after disconnect',
+        webSocketClient,
+        webSocketClientConnected,
+      );
+    }
+  }, [webSocketClient, webSocketClientConnected]);
+
   // 최초 렌더링 시 실행
   useEffect(() => {
-    const disconnect = () => {
-      webSocketClient?.deactivate();
-      // console.log('Disconnected');
-    };
-
     async function connect() {
       if (isNull(session?.user.accessToken)) {
         showToast('로그인이 필요합니다.', 'error');
@@ -408,9 +428,6 @@ export default function Header() {
     }
 
     return () => {
-      if (webSocketClient && webSocketClientConnected) {
-        disconnect();
-      }
       voteResultReset();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -422,6 +439,12 @@ export default function Header() {
     enterAgora.status,
     URL.SOCKET_URL,
   ]);
+
+  useEffect(() => {
+    return () => {
+      disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const subscribeMeta = () => {
@@ -467,6 +490,22 @@ export default function Header() {
       reset();
     };
   }, [reset, getUrl]);
+
+  // 브라우저 뒤로가기 버튼 클릭 시 페이지 이탈 방지 모달 띄우기
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      event.preventDefault();
+      window.history.pushState(null, '', window.location.pathname); // 뒤로가기 무효화
+      handleBack();
+    };
+
+    window.history.pushState(null, '', window.location.pathname); // 현재 상태 추가
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
 
   useUnloadDisconnectSocket({
     mutation: mutation.mutate,
