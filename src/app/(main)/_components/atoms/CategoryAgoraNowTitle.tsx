@@ -1,3 +1,4 @@
+import { SearchParams } from '@/app/model/Agora';
 import RefreshIcon from '@/assets/icons/RefreshIcon';
 import { getCategoryAgoraListBasicQueryKey } from '@/constants/queryKey';
 import { useQueryClient } from '@tanstack/react-query';
@@ -6,11 +7,12 @@ import React, { useCallback } from 'react';
 
 type ActiveHeaderProps = {
   tabStatus: string;
+  searchParams: SearchParams;
 };
 
-function CategoryAgoraNowTitle({ tabStatus }: ActiveHeaderProps) {
+function CategoryAgoraNowTitle({ tabStatus, searchParams }: ActiveHeaderProps) {
   const queryClient = useQueryClient();
-  const searchParams = useSearchParams();
+  const params = useSearchParams();
 
   const handleKeyDownRefresh = useCallback(
     (e: React.KeyboardEvent) => {
@@ -23,18 +25,20 @@ function CategoryAgoraNowTitle({ tabStatus }: ActiveHeaderProps) {
     [queryClient],
   );
 
-  const handleClickRefresh = useCallback(() => {
-    const category = searchParams.get('category') ?? '';
-    const status = searchParams.get('status') ?? 'active';
+  const handleClickRefresh = () => {
+    const category = params.get('category') ?? '';
+    const status = params.get('status') ?? 'active';
 
-    queryClient.resetQueries({
-      queryKey: getCategoryAgoraListBasicQueryKey(),
-    });
     queryClient.invalidateQueries({
-      queryKey: ['agoras', 'search', 'category', { status, category }],
-      type: 'all',
+      queryKey: [
+        'agoras',
+        'search',
+        'category',
+        { ...searchParams, status, category },
+      ],
+      exact: false,
     });
-  }, [queryClient]);
+  };
 
   return (
     tabStatus === 'active' && (

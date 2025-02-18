@@ -82,6 +82,17 @@ export default function CategoryAgoraList({ searchParams }: Props) {
     },
   });
 
+  console.log(
+    'searchParams',
+    searchParams,
+    'tabStatus',
+    tabStatus,
+    'selectedCategory',
+    selectedCategory,
+  );
+
+  console.log('data', data);
+
   const loadNextPage = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -95,9 +106,11 @@ export default function CategoryAgoraList({ searchParams }: Props) {
 
   useEffect(() => {
     // 초기 데이터 호출 후 카테고리 변경 시 데이터 재호출
-    queryClient.resetQueries({
+    queryClient.removeQueries({
       queryKey: getCategoryAgoraListBasicQueryKey(),
+      exact: false,
     });
+
     queryClient.invalidateQueries({
       queryKey: [
         'agoras',
@@ -105,6 +118,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
         'category',
         { ...searchParams, status: tabStatus, category: selectedCategory },
       ],
+      exact: false,
     });
   }, [selectedCategory, queryClient, tabStatus, searchParams, refetch]);
 
