@@ -6,6 +6,7 @@ import isNull from '@/utils/validation/validateIsNull';
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import React, { useEffect } from 'react';
+import ChatPageLoading from '../(chat)/_components/atoms/ChatPageLoading';
 
 type Props = {
   children: React.ReactNode;
@@ -53,7 +54,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
     isNull(agoraTitle) ||
     !isSameAgora(prevAgoraId, agoraId)
   ) {
-    return <div className="text-white">페이지 로딩 중</div>;
+    return <ChatPageLoading />;
   }
 
   return children;
