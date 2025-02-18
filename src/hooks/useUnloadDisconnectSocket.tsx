@@ -26,11 +26,15 @@ export function useUnloadDisconnectSocket({ mutation }: Props) {
   };
 
   useEffect(() => {
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('unload', handleUnload);
+    if (window) {
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      window.addEventListener('unload', handleUnload);
+    }
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      window.removeEventListener('unload', handleUnload);
+      if (window) {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+        window.removeEventListener('unload', handleUnload);
+      }
     };
   }, [mutation, handleUnload]);
 }
