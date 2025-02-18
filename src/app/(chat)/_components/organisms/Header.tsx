@@ -357,16 +357,8 @@ export default function Header() {
   );
 
   const disconnect = useCallback(async () => {
-    console.log('before disconnect', webSocketClient, webSocketClientConnected);
-
     if (!isNull(webSocketClient) && webSocketClientConnected) {
-      console.log('강제 연결 종료');
       await webSocketClient.deactivate();
-      console.log(
-        'after disconnect',
-        webSocketClient,
-        webSocketClientConnected,
-      );
     }
   }, [webSocketClient, webSocketClientConnected]);
 
