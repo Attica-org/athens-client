@@ -25,9 +25,19 @@ function CategoryAgoraNowTitle({ tabStatus, searchParams }: ActiveHeaderProps) {
     [queryClient],
   );
 
-  const handleClickRefresh = () => {
+  const handleClickRefresh = async () => {
     const category = params.get('category') ?? '';
     const status = params.get('status') ?? 'active';
+
+    await queryClient.resetQueries({
+      queryKey: [
+        'agoras',
+        'search',
+        'category',
+        { ...searchParams, status, category },
+      ],
+      exact: false,
+    });
 
     queryClient.invalidateQueries({
       queryKey: [
