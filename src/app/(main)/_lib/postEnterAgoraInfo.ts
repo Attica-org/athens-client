@@ -1,7 +1,11 @@
 import { ParticipationPosition } from '@/app/model/Agora';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
-import { SIGNIN_REQUIRED, TOKEN_EXPIRED } from '@/constants/authErrorMessage';
+import {
+  AUTH_MESSAGE,
+  SIGNIN_REQUIRED,
+  TOKEN_EXPIRED,
+} from '@/constants/authErrorMessage';
 import { getSession } from '@/serverActions/auth';
 import {
   AGORA_ENTER,
