@@ -9,9 +9,9 @@ export default function SignIn() {
   return (
     <main
       aria-label="로그인 페이지"
-      className="mx-auto tablet:w-[768px] min-h-screen w-full p-50 flex flex-col justify-around items-center"
+      className="mx-auto tablet:w-[768px] min-h-screen w-full p-50 px-30 flex flex-col justify-around items-center"
     >
-      <div className="flex w-full h-full justify-center items-center relative">
+      <div className="flex w-full h-full px-10 justify-center items-center relative">
         <div className="justify-center items-center w-full h-full flex">
           <h1
             aria-label="Athens"
