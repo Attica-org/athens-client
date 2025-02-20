@@ -346,12 +346,14 @@ export default function Header() {
     [setSocketError, socketError],
   );
   // 최초 렌더링 시 실행
-  useEffect(() => {
-    const disconnect = () => {
-      webSocketClient?.deactivate();
-      // console.log('Disconnected');
-    };
 
+  const disconnect = useCallback(async () => {
+    if (!isNull(webSocketClient) && webSocketClientConnected) {
+      await webSocketClient.deactivate();
+    }
+  }, [webSocketClient, webSocketClientConnected]);
+
+  useEffect(() => {
     async function connect() {
       if (isNull(session?.user.accessToken)) {
         showToast('로그인이 필요합니다.', 'error');
@@ -408,9 +410,6 @@ export default function Header() {
     }
 
     return () => {
-      if (webSocketClient && webSocketClientConnected) {
-        disconnect();
-      }
       voteResultReset();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -422,6 +421,12 @@ export default function Header() {
     enterAgora.status,
     URL.SOCKET_URL,
   ]);
+
+  useEffect(() => {
+    return () => {
+      disconnect();
+    };
+  }, [disconnect]);
 
   useEffect(() => {
     const subscribeMeta = () => {
