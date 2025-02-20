@@ -356,13 +356,14 @@ export default function Header() {
     [setSocketError, socketError],
   );
 
+  // 최초 렌더링 시 실행
+
   const disconnect = useCallback(async () => {
     if (!isNull(webSocketClient) && webSocketClientConnected) {
       await webSocketClient.deactivate();
     }
   }, [webSocketClient, webSocketClientConnected]);
 
-  // 최초 렌더링 시 실행
   useEffect(() => {
     async function connect() {
       if (isNull(session?.user.accessToken)) {
@@ -436,7 +437,7 @@ export default function Header() {
     return () => {
       disconnect();
     };
-  }, []);
+  }, [disconnect]);
 
   useEffect(() => {
     const subscribeMeta = () => {
