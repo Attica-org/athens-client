@@ -11,10 +11,11 @@ interface WebSocketClient {
 export const useWebSocketClient = create<WebSocketClient>((set) => ({
   webSocketClient: null,
   setWebSocketClient: (newClient) => {
-    set({
+    set((state) => ({
+      ...state,
       webSocketClient: newClient,
       webSocketClientConnected: !isNull(newClient),
-    });
+    }));
   },
   webSocketClientConnected: false,
 }));
