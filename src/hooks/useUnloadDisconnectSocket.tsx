@@ -9,7 +9,7 @@ type Props = {
 };
 
 export function useUnloadDisconnectSocket({ mutation }: Props) {
-  const { webSocketClient, webSocketClientConnected } = useWebSocketClient(
+  const { webSocketClient } = useWebSocketClient(
     useShallow((state) => ({
       webSocketClient: state.webSocketClient,
       webSocketClientConnected: state.webSocketClientConnected,
@@ -19,11 +19,11 @@ export function useUnloadDisconnectSocket({ mutation }: Props) {
   const handleUnload = useCallback(() => {
     webSocketClient?.deactivate();
     mutation?.();
-  }, [webSocketClientConnected, mutation]);
+  }, [webSocketClient, mutation]);
 
-  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+  const handleBeforeUnload = useCallback((e: BeforeUnloadEvent) => {
     e.preventDefault();
-  };
+  }, []);
 
   useEffect(() => {
     if (window) {
@@ -36,5 +36,5 @@ export function useUnloadDisconnectSocket({ mutation }: Props) {
         window.removeEventListener('unload', handleUnload);
       }
     };
-  }, [mutation, handleUnload]);
+  }, [mutation, handleUnload, handleBeforeUnload]);
 }
