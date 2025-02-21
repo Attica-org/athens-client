@@ -12,9 +12,8 @@ type Props = {
 
 function CategoryAgoraNowTitle({ searchParams }: Props) {
   const queryClient = useQueryClient();
-  const { category: selectedCategory } = useCreateAgora(
+  const { category } = useCreateAgora(
     useShallow((state) => ({
-      setCategory: state.setCategory,
       category: state.category,
     })),
   );
@@ -33,7 +32,7 @@ function CategoryAgoraNowTitle({ searchParams }: Props) {
             'agoras',
             'search',
             'category',
-            { status: tabStatus, category: selectedCategory },
+            { ...searchParams, status: tabStatus, category },
           ],
           exact: false,
         });
@@ -43,23 +42,22 @@ function CategoryAgoraNowTitle({ searchParams }: Props) {
             'agoras',
             'search',
             'category',
-            { status: tabStatus, category: selectedCategory },
+            { ...searchParams, status: tabStatus, category },
           ],
           exact: false,
         });
       }
     },
-    [queryClient, tabStatus, selectedCategory],
+    [queryClient, tabStatus, category],
   );
 
   const handleClickRefresh = useCallback(async () => {
-    console.log('category', selectedCategory, 'status', tabStatus);
     await queryClient.invalidateQueries({
       queryKey: [
         'agoras',
         'search',
         'category',
-        { ...searchParams, status: tabStatus, category: selectedCategory },
+        { ...searchParams, status: tabStatus, category },
       ],
       exact: false,
     });
@@ -69,11 +67,11 @@ function CategoryAgoraNowTitle({ searchParams }: Props) {
         'agoras',
         'search',
         'category',
-        { ...searchParams, status: tabStatus, category: selectedCategory },
+        { ...searchParams, status: tabStatus, category },
       ],
       exact: false,
     });
-  }, [queryClient, tabStatus, selectedCategory]);
+  }, [queryClient, tabStatus, category]);
 
   return (
     tabStatus === 'active' && (

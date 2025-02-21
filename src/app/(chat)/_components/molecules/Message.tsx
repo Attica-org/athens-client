@@ -136,7 +136,14 @@ export default function Message() {
     { meta: Meta }
   >({
     queryKey: getChatMessagesQueryKey(agoraId),
-    queryFn: getChatMessages(session),
+    queryFn: isNull(session)
+      ? async () => {
+          return {
+            chats: [],
+            meta: { key: null, effectiveSize: 20 },
+          };
+        }
+      : getChatMessages(session),
     staleTime: 60 * 1000,
     gcTime: 500 * 1000,
     initialPageParam: { meta: { key: null, effectiveSize: 20 } },

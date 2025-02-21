@@ -1,11 +1,7 @@
 import { ParticipationPosition } from '@/app/model/Agora';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
-import {
-  AUTH_MESSAGE,
-  SIGNIN_REQUIRED,
-  TOKEN_EXPIRED,
-} from '@/constants/authErrorMessage';
+import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { getSession } from '@/serverActions/auth';
 import {
   AGORA_ENTER,
@@ -75,11 +71,9 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
         throw new Error(AGORA_ENTER.NOT_ALLOWED_POSITION);
       }
     } else if (res.error.code === 1002) {
-      if (res.error.message === TOKEN_EXPIRED) {
-        throw new Error(res.error.message);
+      if (res.error.message === AGORA_ENTER.SERVER_RESPONSE_CLOSED_AGORA) {
+        return AGORA_STATUS.CLOSED;
       }
-
-      return AGORA_STATUS.CLOSED;
     } else if (res.error.code === 1004) {
       if (
         splitMessage(res.error.message) ===
