@@ -1,40 +1,79 @@
+import { SearchParams } from '@/app/model/Agora';
 import RefreshIcon from '@/assets/icons/RefreshIcon';
-import { getCategoryAgoraListBasicQueryKey } from '@/constants/queryKey';
+import { useCreateAgora } from '@/store/create';
+import { useSearchStore } from '@/store/search';
 import { useQueryClient } from '@tanstack/react-query';
-import { useSearchParams } from 'next/navigation';
 import React, { useCallback } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
-type ActiveHeaderProps = {
-  tabStatus: string;
+type Props = {
+  searchParams: SearchParams;
 };
 
-function CategoryAgoraNowTitle({ tabStatus }: ActiveHeaderProps) {
+function CategoryAgoraNowTitle({ searchParams }: Props) {
   const queryClient = useQueryClient();
-  const searchParams = useSearchParams();
+  const { category: selectedCategory } = useCreateAgora(
+    useShallow((state) => ({
+      setCategory: state.setCategory,
+      category: state.category,
+    })),
+  );
+
+  const { tabStatus } = useSearchStore(
+    useShallow((state) => ({
+      tabStatus: state.tabStatus,
+    })),
+  );
 
   const handleKeyDownRefresh = useCallback(
-    (e: React.KeyboardEvent) => {
+    async (e: React.KeyboardEvent) => {
       if (e.key === 'Enter') {
-        queryClient.invalidateQueries({
-          queryKey: getCategoryAgoraListBasicQueryKey(),
+        await queryClient.invalidateQueries({
+          queryKey: [
+            'agoras',
+            'search',
+            'category',
+            { status: tabStatus, category: selectedCategory },
+          ],
+          exact: false,
+        });
+
+        await queryClient.refetchQueries({
+          queryKey: [
+            'agoras',
+            'search',
+            'category',
+            { status: tabStatus, category: selectedCategory },
+          ],
+          exact: false,
         });
       }
     },
-    [queryClient],
+    [queryClient, tabStatus, selectedCategory],
   );
 
-  const handleClickRefresh = useCallback(() => {
-    const category = searchParams.get('category') ?? '';
-    const status = searchParams.get('status') ?? 'active';
+  const handleClickRefresh = useCallback(async () => {
+    console.log('category', selectedCategory, 'status', tabStatus);
+    await queryClient.invalidateQueries({
+      queryKey: [
+        'agoras',
+        'search',
+        'category',
+        { ...searchParams, status: tabStatus, category: selectedCategory },
+      ],
+      exact: false,
+    });
 
-    queryClient.resetQueries({
-      queryKey: getCategoryAgoraListBasicQueryKey(),
+    await queryClient.refetchQueries({
+      queryKey: [
+        'agoras',
+        'search',
+        'category',
+        { ...searchParams, status: tabStatus, category: selectedCategory },
+      ],
+      exact: false,
     });
-    queryClient.invalidateQueries({
-      queryKey: ['agoras', 'search', 'category', { status, category }],
-      type: 'all',
-    });
-  }, [queryClient]);
+  }, [queryClient, tabStatus, selectedCategory]);
 
   return (
     tabStatus === 'active' && (
