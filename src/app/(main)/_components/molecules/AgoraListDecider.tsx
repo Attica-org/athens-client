@@ -95,10 +95,7 @@ export default function AgoraListDecider({ searchParams }: Props) {
         </>
       )}
       <ErrorBoundary FallbackComponent={FallbackComponent}>
-        <CategoryAgoraNowTitle
-          tabStatus={tabStatus}
-          searchParams={searchParams}
-        />
+        <CategoryAgoraNowTitle searchParams={searchParams} />
         <CategoryAgoraList searchParams={searchParams} />
       </ErrorBoundary>
     </>

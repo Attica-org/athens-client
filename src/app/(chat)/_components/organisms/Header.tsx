@@ -142,6 +142,10 @@ export default function Header() {
     await queryClient.invalidateQueries({
       queryKey: getAgoraUserListQueryKey(agoraId),
     });
+
+    await queryClient.refetchQueries({
+      queryKey: getAgoraUserListQueryKey(agoraId),
+    });
   };
 
   const callChatExitAPI = async () => {
