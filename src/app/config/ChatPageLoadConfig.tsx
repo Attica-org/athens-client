@@ -16,8 +16,16 @@ export default function ChatPageLoadConfig({ children }: Props) {
   const { data: session } = useSession();
   const { title: agoraTitle, id: prevAgoraId } = useAgora().enterAgora;
   const agoraInfoReset = useAgora().enterAgoraReset;
+  const selectedAgoraInfoReset = useAgora().reset;
   const userProfilReset = useEnter().reset;
   const agoraId = usePathname().split('/').at(-1);
+
+  const isSameAgora = (prevId: number, currentId: string | undefined) => {
+    if (prevId === Number(currentId)) {
+      return true;
+    }
+    return false;
+  };
 
   useEffect(() => {
     // 채팅방으로 페이지 이동시 다른 탭에서 이미 입장한 유저라면(session storage 데이터 없음) 내보내기
@@ -29,10 +37,14 @@ export default function ChatPageLoadConfig({ children }: Props) {
       if (entries?.type === 'navigate' && isNull(agoraTitle)) {
         // 채팅방 입장하기 페이지 띄우기
         window.location.replace(`/flow/enter-agora/${agoraId}`);
-      } else if (entries?.type === 'navigate' && !isNull(agoraTitle)) {
+      } else if (
+        entries?.type === 'navigate' &&
+        !isSameAgora(prevAgoraId, agoraId)
+      ) {
         // 채팅방에서 다른 채팅방으로 이동, storage 데이터 초기화 후 입장하기 페이지 띄우기
         agoraInfoReset();
         userProfilReset();
+        selectedAgoraInfoReset();
 
         useAgora.persist.rehydrate();
         useEnter.persist.rehydrate();
@@ -41,13 +53,6 @@ export default function ChatPageLoadConfig({ children }: Props) {
       }
     }
   }, [session]);
-
-  const isSameAgora = (prevId: number, currentId: string | undefined) => {
-    if (prevId === Number(currentId)) {
-      return true;
-    }
-    return false;
-  };
 
   if (
     isNull(session) ||

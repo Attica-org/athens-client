@@ -94,25 +94,22 @@ export default function CategoryAgoraList({ searchParams }: Props) {
   );
 
   useEffect(() => {
-    const queryDataCacheRefresh = async () => {
-      // 초기 데이터 호출 후 카테고리 변경 시 데이터 재호출
+    const refetchAgoraList = async () => {
       await queryClient.resetQueries({
         queryKey: getCategoryAgoraListBasicQueryKey(),
-        exact: false,
       });
 
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: [
           'agoras',
           'search',
           'category',
           { ...searchParams, status: tabStatus, category: selectedCategory },
         ],
-        exact: false,
       });
     };
-
-    queryDataCacheRefresh();
+    // 초기 데이터 호출 후 카테고리 변경 시 데이터 재호출
+    refetchAgoraList();
   }, [selectedCategory, queryClient, tabStatus, searchParams, refetch]);
 
   useEffect(() => {

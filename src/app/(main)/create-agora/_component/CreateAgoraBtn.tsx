@@ -47,8 +47,8 @@ function CreateAgoraBtn() {
     })),
   );
 
-  const invalidAgora = (client: QueryClient, queryKey: string[]) => {
-    client.invalidateQueries({ queryKey });
+  const invalidAgora = async (client: QueryClient, queryKey: string[]) => {
+    await client.invalidateQueries({ queryKey });
   };
 
   const failedCreateAgora = async (
@@ -82,7 +82,7 @@ function CreateAgoraBtn() {
 
         setIsLoading(false);
 
-        invalidAgora(queryClient, ['agora']);
+        await invalidAgora(queryClient, ['agora']);
         router.push(`/flow${enterAgoraSegmentKey}/${response.id}`);
         return;
       }
