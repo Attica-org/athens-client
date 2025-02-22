@@ -36,6 +36,7 @@ import { useMessageStore } from '@/store/message';
 import isNull from '@/utils/validation/validateIsNull';
 import accessMessageConfig from '@/lib/accessMessageConfig';
 import { useWebSocketClient } from '@/store/webSocket';
+import { useEnter } from '@/store/enter';
 import BackButton from '../../../_components/atoms/BackButton';
 import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
@@ -141,6 +142,10 @@ export default function Header() {
     await queryClient.invalidateQueries({
       queryKey: getAgoraUserListQueryKey(agoraId),
     });
+
+    await queryClient.refetchQueries({
+      queryKey: getAgoraUserListQueryKey(agoraId),
+    });
   };
 
   const callChatExitAPI = async () => {
@@ -149,6 +154,14 @@ export default function Header() {
 
   const onSuccessChatExit = (response: any) => {
     if (response) {
+      // 채팅방 정보 및 유저 채팅 프로필 정보 초기화
+      useEnter.getState().reset();
+      useAgora.getState().reset();
+      useAgora.getState().enterAgoraReset();
+
+      useEnter.persist.rehydrate();
+      useAgora.persist.rehydrate();
+
       router.replace(`${homeSegmentKey}?status=active`);
     }
   };
@@ -164,7 +177,8 @@ export default function Header() {
   const handleAgoraExit = () => {
     if (enterAgora.status === AGORA_STATUS.CLOSED) {
       selectedAgoraReset();
-      router.push(homeSegmentKey);
+
+      router.replace(homeSegmentKey);
     } else if (
       enterAgora.status === AGORA_STATUS.RUNNING ||
       enterAgora.status === AGORA_STATUS.QUEUED
@@ -345,6 +359,7 @@ export default function Header() {
     },
     [setSocketError, socketError],
   );
+
   // 최초 렌더링 시 실행
 
   const disconnect = useCallback(async () => {
@@ -472,6 +487,22 @@ export default function Header() {
       reset();
     };
   }, [reset, getUrl]);
+
+  // 브라우저 뒤로가기 버튼 클릭 시 페이지 이탈 방지 모달 띄우기
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      event.preventDefault();
+      window.history.pushState(null, '', window.location.pathname); // 뒤로가기 무효화
+      handleBack();
+    };
+
+    window.history.pushState(null, '', window.location.pathname); // 현재 상태 추가
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
 
   useUnloadDisconnectSocket({
     mutation: mutation.mutate,
