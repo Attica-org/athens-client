@@ -46,6 +46,7 @@ export const AGORA_ENTER = {
   UNKNOWN_ERROR: '알 수 없는 에러가 발생했습니다.',
   SERVER_RESPONSE_ALREADY_PARTICIPATED: 'User has already participated',
   SERVER_RESPONSE_NICKNAME_DUPLICATED: 'The nickname is already in use',
+  SERVER_RESPONSE_CLOSED_AGORA: 'Agora is closed',
 } as const;
 
 export const AGORA_USER = {
