@@ -3,7 +3,7 @@ import React, { forwardRef } from 'react';
 export default forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   function CustomList(props, ref) {
     return (
-      <div className="flex flex-1 flex-col p-0.5rem pt-3 pb-5rem md:ml-5 justify-start items-center">
+      <div className="flex flex-1 flex-col p-5 pt-3 pb-5rem md:ml-5 justify-start items-center">
         <div
           {...props}
           ref={ref} // 전달된 ref를 내부 div에 연결
