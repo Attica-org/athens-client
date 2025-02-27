@@ -13,6 +13,44 @@ html {
   overflow-y: hidden;
 } */
 
+:root {
+  --icon-color-render-add: #282828;
+  --icon-color-add: #282828;
+  --icon-color-arrow-down: #000;
+  --icon-color-athens: #858C88;
+  --icon-color-back: #000;
+  --icon-color-check: #000;
+  --icon-color-eye: #A9A5A5;
+  --icon-color-hamburger: #000;
+  --icon-color-render-home: #282828;
+  --icon-color-home: #282828;
+  --icon-color-remove: #282828;
+  --icon-color-search: #282828;
+  --icon-color-send: #fff;
+  --icon-color-share: #000;
+  --icon-color-render-user: #282828;
+  --icon-color-user: #282828;
+}
+
+[data-theme="dark"] {
+  --icon-color-render-add: #E9E9E9;
+  --icon-color-add: #A6A6A6;
+  --icon-color-arrow-down: #e8eaed;
+  --icon-color-athens: #ffffff;
+  --icon-color-back: #fff;
+  --icon-color-check: #fff;
+  --icon-color-eye: #D0CDCD;
+  --icon-color-hamburger: #fff;
+  --icon-color-render-home: #E9E9E9;
+  --icon-color-home: #A6A6A6;
+  --icon-color-remove: #ffff;
+  --icon-color-search: #fff;
+  --icon-color-send: #000;
+  --icon-color-share: #fff;
+  --icon-color-render-user: #E9E9E9;
+  --icon-color-user: #A6A6A6;
+}
+
 .swiper-slide {
   width: auto !important;
 }
