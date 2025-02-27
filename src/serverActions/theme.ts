@@ -1,6 +1,6 @@
 'use server';
 
-import { THEME, THEME_KEY } from '@/constants/theme';
+import { THEME, THEME_KEY, THEME_MAINTENANCE } from '@/constants/theme';
 import { cookies } from 'next/headers';
 
 function hasThemeCookie() {
@@ -19,11 +19,17 @@ export async function getThemeValue() {
 export async function toggleThemeValue() {
   const theme = await getThemeValue();
   if (theme === THEME.DARK) {
-    cookies().set(THEME_KEY, THEME.LIGHT, { path: '/', maxAge: 60 * 60 * 24 });
+    cookies().set(THEME_KEY, THEME.LIGHT, {
+      path: '/',
+      maxAge: THEME_MAINTENANCE,
+    });
     return THEME.LIGHT;
   }
   if (theme === THEME.LIGHT) {
-    cookies().set(THEME_KEY, THEME.DARK, { path: '/', maxAge: 60 * 60 * 24 });
+    cookies().set(THEME_KEY, THEME.DARK, {
+      path: '/',
+      maxAge: THEME_MAINTENANCE,
+    });
     return THEME.DARK;
   }
 
