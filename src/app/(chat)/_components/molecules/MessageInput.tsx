@@ -256,7 +256,7 @@ export default function MessageInput() {
           aria-label="메세지 보내기"
           className="bg-athens-main pl-10 pr-10 cursor-pointer h-full"
         >
-          <SendIcon className="w-30" fill="white" />
+          <SendIcon className="w-30" />
         </button>
       </section>
     )

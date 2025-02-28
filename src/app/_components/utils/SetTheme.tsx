@@ -1,18 +1,15 @@
 'use client';
 
-import { useDarkMode } from '@/store/darkMode';
 import { useEffect } from 'react';
 
-export default function SetTheme() {
-  const { darkMode } = useDarkMode();
+type Props = {
+  theme: string;
+};
 
+export default function SetTheme({ theme }: Props) {
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
+    document.documentElement.setAttribute('data-theme', theme);
+  }, []);
 
   return null;
 }

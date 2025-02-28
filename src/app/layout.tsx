@@ -4,6 +4,8 @@ import './globals.css';
 import { Noto_Sans_KR } from 'next/font/google';
 import Script from 'next/script';
 import { FetchWrapper } from '@/lib/fetchWrapper';
+import { getThemeValue } from '@/serverActions/theme';
+import { THEME } from '@/constants/theme';
 import MSWComponent from './config/MSWComponent';
 import RQProvider from './config/RQProvider';
 import ServiceWorkerRegistration from './config/ServiceWorkerRegistration';
@@ -49,24 +51,26 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   await FetchWrapper.setBaseUrl();
+  const theme = await getThemeValue();
 
   return (
-    <html lang="ko" className="">
+    <html lang="ko" className={theme === THEME.LIGHT ? '' : theme}>
       <link rel="manifest" href="/manifest.json" />
       <body
         className={`h-dvh inset-y-full under-large:w-full min-w-300 lg:flex scrollbar-hide overflow-x-hidden overflow-y-hidden justify-center items-start w-full dark:bg-dark-bg-light ${noto.className} antialiased`}
       >
         <AuthSession>
+          <SetTheme theme={theme || THEME.LIGHT} />
           <MSWComponent />
           <ServiceWorkerRegistration />
           <RQProvider>
-            <SetTheme />
             {children}
             <ToasterContainer />
           </RQProvider>
         </AuthSession>
       </body>
       <Script
+        defer
         src="https://developers.kakao.com/sdk/js/kakao.js"
         strategy="afterInteractive"
       />

@@ -1,4 +1,6 @@
 import React from 'react';
+import { getThemeValue } from '@/serverActions/theme';
+import { THEME } from '@/constants/theme';
 import ThemeSwitcher from '../atoms/ThemeSwitcher';
 
 type Props = {
@@ -7,7 +9,8 @@ type Props = {
   children?: React.ReactNode;
 };
 
-function PageTitle({ title, desc, children = null }: Props) {
+async function PageTitle({ title, desc, children = null }: Props) {
+  const theme = await getThemeValue();
   return (
     <>
       <div className="flex justify-between items-center">
@@ -17,7 +20,7 @@ function PageTitle({ title, desc, children = null }: Props) {
         >
           {title}
         </h1>
-        <ThemeSwitcher />
+        <ThemeSwitcher theme={theme || THEME.LIGHT} />
       </div>
       <div className="flex justify-between items-center break-words">
         <p className="under-mobile:mt-0.5rem under-mobile:mb-0 mt-1rem text-xs lg:text-sm text-gray-700 mb-1rem break-keep dark:text-white dark:text-opacity-85">
