@@ -2,26 +2,59 @@
 
 import DarkIcon from '@/assets/icons/DarkIcon';
 import LightIcon from '@/assets/icons/LightIcon';
-import { useDarkMode } from '@/store/darkMode';
-import React from 'react';
-import { useShallow } from 'zustand/react/shallow';
+import { THEME, THEME_CONTENT } from '@/constants/theme';
+import { toggleThemeValue } from '@/serverActions/theme';
+import isNull from '@/utils/validation/validateIsNull';
+import React, { useState } from 'react';
 
-export default function ThemeSwitcher() {
-  const { darkMode, toggleTheme } = useDarkMode(
-    useShallow((state) => ({
-      darkMode: state.darkMode,
-      toggleTheme: state.toggleTheme,
-    })),
-  );
+type Props = {
+  theme: string;
+};
+
+export default function ThemeSwitcher({ theme }: Props) {
+  const [isDarkMode, setIsDarkMode] = useState(theme === THEME.DARK);
+
+  const handleToggleTheme = async () => {
+    const currentTheme = await toggleThemeValue();
+    let metaThemeColor = document.querySelector('meta[name="theme-color"]');
+
+    if (isNull(metaThemeColor)) {
+      metaThemeColor = document.createElement('meta');
+      metaThemeColor.setAttribute('name', 'theme-color');
+      document.head.appendChild(metaThemeColor);
+    }
+
+    if (currentTheme === THEME.LIGHT) {
+      document.documentElement.classList.remove(THEME.DARK);
+      document.documentElement.setAttribute('data-theme', THEME.LIGHT);
+      metaThemeColor.setAttribute('content', THEME_CONTENT.LIGHT);
+
+      setIsDarkMode(false);
+    } else if (currentTheme === THEME.DARK) {
+      document.documentElement.classList.add(THEME.DARK);
+      document.documentElement.setAttribute('data-theme', THEME.DARK);
+      metaThemeColor.setAttribute('content', THEME_CONTENT.DARK);
+
+      setIsDarkMode(true);
+    }
+  };
 
   return (
     <div>
-      {!darkMode ? (
-        <button aria-label="다크모드" type="button" onClick={toggleTheme}>
+      {!isDarkMode ? (
+        <button
+          aria-label="다크모드로 바꾸기"
+          type="button"
+          onClick={handleToggleTheme}
+        >
           <DarkIcon fill="#636366" className="w-24 h-24 mr-5" />
         </button>
       ) : (
-        <button aria-label="라이트모드" type="button" onClick={toggleTheme}>
+        <button
+          aria-label="라이트모드로 바꾸기"
+          type="button"
+          onClick={handleToggleTheme}
+        >
           <LightIcon fill="#d0d0d0" className="w-24 h-24 mr-5" />
         </button>
       )}

@@ -9,7 +9,7 @@ import ShareButton from '../molecules/ShareButton';
 import DiscussionStatus from '../molecules/DiscussionStatus';
 import AgoraInfo from '../molecules/AgoraInfo';
 
-export default function () {
+export default function ChatPageLoading() {
   return (
     <div className="h-dvh w-full relative">
       <div className="min-w-300 w-full h-dvh flex absolute justify-center items-center z-10 top-0 right-0 left-0 bottom-0 bg-opacity-50 bg-dark-bg-dark">
@@ -59,7 +59,7 @@ export default function () {
                 aria-label="메세지 보내기"
                 className="bg-athens-main pl-10 pr-10 cursor-pointer h-full"
               >
-                <SendIcon className="w-30" fill="white" />
+                <SendIcon className="w-30" />
               </div>
             </section>
           </section>
