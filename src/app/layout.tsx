@@ -5,7 +5,7 @@ import { Noto_Sans_KR } from 'next/font/google';
 import Script from 'next/script';
 import { FetchWrapper } from '@/lib/fetchWrapper';
 import { getThemeValue } from '@/serverActions/theme';
-import { THEME } from '@/constants/theme';
+import { THEME, THEME_CONTENT } from '@/constants/theme';
 import MSWComponent from './config/MSWComponent';
 import RQProvider from './config/RQProvider';
 import ServiceWorkerRegistration from './config/ServiceWorkerRegistration';
@@ -14,7 +14,7 @@ import SetTheme from './_components/utils/SetTheme';
 import AuthSession from './_components/utils/AuthSession';
 
 export const viewport: Viewport = {
-  themeColor: '#3A3A3B',
+  themeColor: '#ffffff',
   width: 'device-width',
   initialScale: 1,
   minimumScale: 1,
@@ -56,6 +56,12 @@ export default async function RootLayout({
   return (
     <html lang="ko" className={theme === THEME.LIGHT ? '' : theme}>
       <link rel="manifest" href="/manifest.json" />
+      <meta
+        name="theme-color"
+        content={
+          theme === THEME.LIGHT ? THEME_CONTENT.LIGHT : THEME_CONTENT.DARK
+        }
+      />
       <body
         className={`h-dvh inset-y-full under-large:w-full min-w-300 lg:flex scrollbar-hide overflow-x-hidden overflow-y-hidden justify-center items-start w-full dark:bg-dark-bg-light ${noto.className} antialiased`}
       >
