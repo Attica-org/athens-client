@@ -9,7 +9,7 @@ type Props = {
 export default function SetTheme({ theme }: Props) {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-  }, []);
+  }, [theme]);
 
   return null;
 }
