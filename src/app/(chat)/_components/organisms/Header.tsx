@@ -44,6 +44,7 @@ import HamburgerButton from '../atoms/HamburgerButton';
 import DiscussionStatus from '../molecules/DiscussionStatus';
 import patchChatExit from '../../_lib/patchChatExit';
 import SocketErrorHandler from '../../utils/SocketErrorHandler';
+import { resetStateOnChatExit } from '../../utils/resetStateOnChatExit';
 
 type Props = {
   memoizedTitle: string;
@@ -153,11 +154,9 @@ export default function Header() {
   };
 
   const onSuccessChatExit = (response: any) => {
-    if (response) {
-      // 채팅방 정보 및 유저 채팅 프로필 정보 초기화
-      useEnter.getState().reset();
-      useAgora.getState().reset();
-      useAgora.getState().enterAgoraReset();
+    // 채팅방 정보 및 유저 채팅 프로필 정보 초기화
+    if (!isNull(response)) {
+      resetStateOnChatExit();
 
       useEnter.persist.rehydrate();
       useAgora.persist.rehydrate();
