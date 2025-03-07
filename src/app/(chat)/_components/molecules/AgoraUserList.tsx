@@ -90,28 +90,29 @@ export default function AgoraUserList({
 
   const callChatExitAPI = async () => patchChatExit({ agoraId: enterAgora.id });
 
-  const onSuccessChatExit = (response: any) => {
-    if (response) {
+  const handleApprovedKickVote = (response: any) => {
+    if (!isNull(response)) {
       setKicked(true);
       router.replace(`${homeSegmentKey}?status=active`);
     }
   };
 
-  const chatExitmutation = useMutation({
+  const handleApprovedKickVoteMutation = useMutation({
     mutationFn: callChatExitAPI,
-    onSuccess: (response) => onSuccessChatExit(response),
+    onSuccess: (response) => handleApprovedKickVote(response),
     onError: async (error) => {
-      await handleError(error, chatExitmutation.mutate);
+      await handleError(error, handleApprovedKickVoteMutation.mutate);
     },
   });
 
+  const isKickVoteApproved = (response: KickVoteResponse) =>
+    response.type === 'KICK' &&
+    enterAgora.userId === response.kickVoteInfo.targetMemberId;
+
   const handleKickVoteResponse = useCallback(
     (response: KickVoteResponse) => {
-      if (
-        response.type === 'KICK' &&
-        enterAgora.userId === response.kickVoteInfo.targetMemberId
-      ) {
-        chatExitmutation.mutate();
+      if (isKickVoteApproved(response)) {
+        handleApprovedKickVoteMutation.mutate();
       }
     },
     [enterAgora.userId],
