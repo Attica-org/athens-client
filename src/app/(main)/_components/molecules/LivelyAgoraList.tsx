@@ -166,7 +166,7 @@ export default function LivelyAgoraList() {
           <span className="text-xs mr-5 text-athens-sub font-bold">
             새로고침
           </span>
-          <RefreshIcon className="w-16 h-16" fill="#FEAC3E" />
+          <RefreshIcon className="w-16 h-16" />
         </button>
       </h2>
       {content()}

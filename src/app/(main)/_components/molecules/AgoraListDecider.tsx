@@ -46,6 +46,7 @@ export default function AgoraListDecider({ searchParams }: Props) {
       tabStatus: state.tabStatus,
     })),
   );
+
   const { kicked, reset } = useKickedStore(
     useShallow((state) => ({
       kicked: state.kicked,
@@ -94,7 +95,7 @@ export default function AgoraListDecider({ searchParams }: Props) {
         </>
       )}
       <ErrorBoundary FallbackComponent={FallbackComponent}>
-        <CategoryAgoraNowTitle tabStatus={tabStatus} />
+        <CategoryAgoraNowTitle searchParams={searchParams} />
         <CategoryAgoraList searchParams={searchParams} />
       </ErrorBoundary>
     </>
