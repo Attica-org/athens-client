@@ -18,6 +18,7 @@ import { useKickedStore } from '@/store/kick';
 import UserImage from '../../../_components/atoms/UserImage';
 import { postKickVote } from '../../_lib/postKickVote';
 import patchChatExit from '../../_lib/patchChatExit';
+import { resetStateOnChatExit } from '../../utils/resetStateOnChatExit';
 
 type UserList = {
   id: number;
@@ -93,6 +94,7 @@ export default function AgoraUserList({
   const handleApprovedKickVote = (response: any) => {
     if (!isNull(response)) {
       setKicked(true);
+      resetStateOnChatExit();
       router.replace(`${homeSegmentKey}?status=active`);
     }
   };
