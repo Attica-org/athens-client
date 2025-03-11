@@ -1,6 +1,7 @@
 'use client';
 
 import { Status } from '@/app/model/Agora';
+import { AGORA_STATUS } from '@/constants/agora';
 import { useWebSocketClient } from '@/store/webSocket';
 import { useCallback, useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
@@ -20,7 +21,7 @@ export function useUnloadDisconnectSocket({ mutation, agoraStatus }: Props) {
 
   const handleUnload = useCallback(() => {
     webSocketClient?.deactivate();
-    if (agoraStatus !== 'CLOSED') {
+    if (agoraStatus !== AGORA_STATUS.CLOSED) {
       mutation?.();
     }
   }, [webSocketClient, mutation]);

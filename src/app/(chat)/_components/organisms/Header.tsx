@@ -189,8 +189,8 @@ export default function Header() {
     return (
       (navigator.onLine &&
         URL.SOCKET_URL !== '' &&
-        enterAgora.status === 'QUEUED') ||
-      enterAgora.status === 'RUNNING'
+        enterAgora.status === AGORA_STATUS.QUEUED) ||
+      enterAgora.status === AGORA_STATUS.RUNNING
     );
   };
 

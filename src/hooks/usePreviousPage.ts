@@ -2,7 +2,7 @@
 
 import {
   STORAGE_CURRENT_URL_KEY,
-  STORAGE_PREVIOUSE_URK_KEY,
+  STORAGE_PREVIOUSE_URL_KEY,
 } from '@/constants/segmentKey';
 import isNull from '@/utils/validation/validateIsNull';
 import { usePathname, useSearchParams } from 'next/navigation';
@@ -19,7 +19,7 @@ export default function usePreviousPage() {
     const previousUrl = storage.getItem(STORAGE_CURRENT_URL_KEY);
 
     if (!isNull(previousUrl)) {
-      storage.setItem(STORAGE_PREVIOUSE_URK_KEY, previousUrl);
+      storage.setItem(STORAGE_PREVIOUSE_URL_KEY, previousUrl);
     }
 
     storage.setItem(STORAGE_CURRENT_URL_KEY, currentUrl);

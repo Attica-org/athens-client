@@ -5,7 +5,7 @@ const userInfoSegmentKey = '/user-info';
 const uploadImageSegmentKey = '/upload-image';
 
 const STORAGE_CURRENT_URL_KEY = 'athens-cur';
-const STORAGE_PREVIOUSE_URK_KEY = 'athens-previous';
+const STORAGE_PREVIOUSE_URL_KEY = 'athens-previous';
 
 type HomeSegmentKeyType = '/home';
 type CreateAgoraSegmentKeyType = '/create-agora';
@@ -22,7 +22,7 @@ export type SegmentKeyType =
 
 export {
   STORAGE_CURRENT_URL_KEY,
-  STORAGE_PREVIOUSE_URK_KEY,
+  STORAGE_PREVIOUSE_URL_KEY,
   homeSegmentKey,
   createAgoraSegmentKey,
   enterAgoraSegmentKey,

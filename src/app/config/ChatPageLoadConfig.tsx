@@ -11,7 +11,7 @@ import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import showToast from '@/utils/showToast';
 import useApiError from '@/hooks/useApiError';
 import {
-  STORAGE_PREVIOUSE_URK_KEY,
+  STORAGE_PREVIOUSE_URL_KEY,
   homeSegmentKey,
 } from '@/constants/segmentKey';
 import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
@@ -121,7 +121,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
         'navigation',
       )[0] as PerformanceNavigationTiming;
       const sessionNavigatorPrevious = sessionStorage.getItem(
-        STORAGE_PREVIOUSE_URK_KEY,
+        STORAGE_PREVIOUSE_URL_KEY,
       );
 
       const previousUrl = `${window.location.origin}${sessionNavigatorPrevious ?? ''}`;
@@ -132,8 +132,8 @@ export default function ChatPageLoadConfig({ children }: Props) {
         hasMutated.current = true;
         // 기존 아고라가 ACTIVE라면 재입장 API 호출
         if (
-          selectedAgora.status === 'QUEUED' ||
-          selectedAgora.status === 'RUNNING'
+          selectedAgora.status === AGORA_STATUS.QUEUED ||
+          selectedAgora.status === AGORA_STATUS.RUNNING
         ) {
           activeAgoraEnterMutation.mutate();
         }
@@ -155,7 +155,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
   useEffect(() => {
     if (!isNull(agoraInfo)) {
       // CLOSED AGORA일 때, 종료된 아고라 showToast 띄우기
-      if (agoraInfo.status === 'CLOSED') {
+      if (agoraInfo.status === AGORA_STATUS.CLOSED) {
         setSelectedAgora({
           id: Number(agoraId),
           thumbnail: '',
@@ -178,7 +178,10 @@ export default function ChatPageLoadConfig({ children }: Props) {
         useEnter.persist.rehydrate();
       }
       // ACTIVE AGORA일 때, /flow 입장하기 모달 출력
-      if (agoraInfo.status === 'QUEUED' || agoraInfo.status === 'RUNNING') {
+      if (
+        agoraInfo.status === AGORA_STATUS.QUEUED ||
+        agoraInfo.status === AGORA_STATUS.RUNNING
+      ) {
         agoraInfoReset();
         selectedAgoraInfoReset();
 
@@ -188,11 +191,12 @@ export default function ChatPageLoadConfig({ children }: Props) {
   }, [agoraInfo]);
 
   const isLoadingInActiveAgora =
-    (selectedAgora.status === 'QUEUED' || selectedAgora.status === 'RUNNING') &&
+    (selectedAgora.status === AGORA_STATUS.QUEUED ||
+      selectedAgora.status === AGORA_STATUS.RUNNING) &&
     activeAgoraEnterMutation.isPending;
 
   const isLoadingInClosedAgora =
-    selectedAgora.status === 'CLOSED' && LoadingGetBasicFacts;
+    selectedAgora.status === AGORA_STATUS.CLOSED && LoadingGetBasicFacts;
 
   if (isNull(session) || isLoadingInActiveAgora || isLoadingInClosedAgora) {
     return <ChatPageLoading />;
