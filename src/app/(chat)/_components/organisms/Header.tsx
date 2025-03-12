@@ -101,8 +101,8 @@ export default function Header() {
   const { setGoDown } = useMessageStore();
   const router = useRouter();
   const { handleError } = useApiError();
-  const { chatSocketErrorHandler } = SocketErrorHandler();
   const { data: session } = useSession();
+  const { chatSocketErrorHandler } = SocketErrorHandler();
   const [agoraId, setAgoraId] = useState(enterAgora.id);
 
   const queryClient = useQueryClient();
@@ -337,7 +337,7 @@ export default function Header() {
 
   const subscribeErrorControl = useCallback(
     async (err: any) => {
-      await chatSocketErrorHandler(err);
+      await chatSocketErrorHandler(err, session);
 
       setSocketError({
         ...socketError,
