@@ -5,7 +5,7 @@ import BackButton from '@/app/_components/atoms/BackButton';
 import Loading from '@/app/_components/atoms/loading';
 import HamburgerIcon from '@/assets/icons/HamburgerIcon';
 import SendIcon from '@/assets/icons/SendIcon';
-import ShareButton from '../molecules/ShareButton';
+import ShareButton from './ShareButton';
 import DiscussionStatus from '../molecules/DiscussionStatus';
 import AgoraInfo from '../molecules/AgoraInfo';
 

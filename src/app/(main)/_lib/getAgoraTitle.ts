@@ -7,9 +7,10 @@ import {
   AGORA_INFO,
   NETWORK_ERROR_MESSAGE,
 } from '@/constants/responseErrorMessage';
+import { Status } from '@/app/model/Agora';
 
 export const getAgoraTitle: QueryFunction<
-  { title: string; status: string; imageUrl: string; agoraColor: string },
+  { title: string; status: Status | ''; imageUrl: string; agoraColor: string },
   [_1: string, _2: string]
 > = async ({ queryKey }) => {
   const [_, agoraId] = queryKey;

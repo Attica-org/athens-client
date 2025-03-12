@@ -6,12 +6,13 @@ import {
 } from '@/constants/authErrorMessage';
 import { getReissuanceToken } from '@/lib/getReissuanceToken';
 import isNull from '@/utils/validation/validateIsNull';
+import { Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
 
 const useUpdateSession = () => {
-  const { data: session, update } = useSession();
+  const { update } = useSession();
 
-  const callReissueFn = async () => {
+  const callReissueFn = async (session: Session | null) => {
     if (isNull(session) || isNull(session?.user)) {
       return AUTHORIZATION_FAIL;
     }

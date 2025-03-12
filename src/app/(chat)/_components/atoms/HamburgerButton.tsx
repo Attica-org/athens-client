@@ -16,7 +16,12 @@ export default function HamburgerButton({
   };
 
   return (
-    <button aria-label="메뉴 열기" onClick={handleClick} type="button">
+    <button
+      className="pl-5"
+      aria-label="메뉴 열기"
+      onClick={handleClick}
+      type="button"
+    >
       <HamburgerIcon className="w-20 lg:w-22 cursor-pointer" />
     </button>
   );
