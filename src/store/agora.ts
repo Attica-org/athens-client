@@ -1,3 +1,4 @@
+import { Status } from '@/app/model/Agora';
 import { COLOR } from '@/constants/consts';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -6,7 +7,7 @@ type Agora = {
   id: number;
   thumbnail: string;
   title: string;
-  status: string;
+  status: Status | '';
   agoraColor: string;
 };
 
@@ -15,7 +16,7 @@ type EnterAgora = {
   userId?: number;
   thumbnail: string;
   title: string;
-  status: string;
+  status: Status | '';
   role: string;
   isCreator: boolean;
   agoraColor: string;

@@ -160,7 +160,7 @@ export default function KeywordAgora({ agora }: Props) {
           )}
           {agora.status !== AGORA_STATUS.CLOSED && (
             <span
-              className={`absolute top-2 left-50 inline-block w-13 h-13 ${agora.status === 'queued' ? 'bg-athens-button' : 'bg-red-400'} rounded-full ml-3`}
+              className={`absolute top-2 left-50 inline-block w-13 h-13 ${agora.status === AGORA_STATUS.QUEUED ? 'bg-athens-button' : 'bg-red-400'} rounded-full ml-3`}
             />
           )}
         </div>

@@ -38,42 +38,24 @@ import accessMessageConfig from '@/lib/accessMessageConfig';
 import { useWebSocketClient } from '@/store/webSocket';
 import { useEnter } from '@/store/enter';
 import BackButton from '../../../_components/atoms/BackButton';
-import ShareButton from '../molecules/ShareButton';
 import AgoraInfo from '../molecules/AgoraInfo';
-import HamburgerButton from '../atoms/HamburgerButton';
 import DiscussionStatus from '../molecules/DiscussionStatus';
 import patchChatExit from '../../_lib/patchChatExit';
 import SocketErrorHandler from '../../utils/SocketErrorHandler';
-
-type Props = {
-  memoizedTitle: string;
-  toggle: () => void;
-  refetchAgoraUserList: () => void;
-};
-
-const MenuItems = React.memo(function MenuItems({
-  memoizedTitle,
-  toggle,
-  refetchAgoraUserList,
-}: Props) {
-  return (
-    <div className="flex justify-end items-center mr-0.5rem">
-      <ShareButton title={memoizedTitle} />
-      <HamburgerButton
-        toggleMenu={toggle}
-        refetchUserList={refetchAgoraUserList}
-      />
-    </div>
-  );
-});
+import MenuItems from '../molecules/MenuItems';
 
 export default function Header() {
   const { toggle } = useSidebarStore(
     useShallow((state) => ({ toggle: state.toggle })),
   );
-  const { enterAgora, reset: selectedAgoraReset } = useAgora(
+  const {
+    enterAgora,
+    reset: selectedAgoraReset,
+    enterAgoraReset,
+  } = useAgora(
     useShallow((state) => ({
       enterAgora: state.enterAgora,
+      enterAgoraReset: state.enterAgoraReset,
       reset: state.reset,
     })),
   );
@@ -149,7 +131,10 @@ export default function Header() {
   };
 
   const callChatExitAPI = async () => {
-    return patchChatExit({ agoraId });
+    if (enterAgora.status !== AGORA_STATUS.CLOSED) {
+      return patchChatExit({ agoraId });
+    }
+    return () => {};
   };
 
   const onSuccessChatExit = (response: any) => {
@@ -177,8 +162,9 @@ export default function Header() {
   const handleAgoraExit = () => {
     if (enterAgora.status === AGORA_STATUS.CLOSED) {
       selectedAgoraReset();
+      enterAgoraReset();
 
-      router.replace(homeSegmentKey);
+      onSuccessChatExit(true);
     } else if (
       enterAgora.status === AGORA_STATUS.RUNNING ||
       enterAgora.status === AGORA_STATUS.QUEUED
@@ -201,9 +187,10 @@ export default function Header() {
 
   const isPossibleConnect = () => {
     return (
-      navigator.onLine &&
-      URL.SOCKET_URL !== '' &&
-      enterAgora.status !== AGORA_STATUS.CLOSED
+      (navigator.onLine &&
+        URL.SOCKET_URL !== '' &&
+        enterAgora.status === AGORA_STATUS.QUEUED) ||
+      enterAgora.status === AGORA_STATUS.RUNNING
     );
   };
 
@@ -506,6 +493,7 @@ export default function Header() {
 
   useUnloadDisconnectSocket({
     mutation: mutation.mutate,
+    agoraStatus: enterAgora.status,
   });
 
   const memoizedTitle = useMemo(() => {
@@ -527,6 +515,7 @@ export default function Header() {
           memoizedTitle={memoizedTitle}
           toggle={toggle}
           refetchAgoraUserList={refetchAgoraUserList}
+          isClosed={enterAgora.status === AGORA_STATUS.CLOSED}
         />
       </div>
       <div className="flex justify-center items-center">

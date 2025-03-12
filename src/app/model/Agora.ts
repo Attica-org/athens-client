@@ -25,10 +25,15 @@ export interface ClosedAgora {
   consCount: number;
   totalMember: number;
   createdAt: string;
-  status: string;
+  status: Status | '';
 }
 
 export type AgoraData = Agora | ClosedAgora;
+
+export interface AgoraBasicFacts {
+  title: string;
+  status: Status;
+}
 
 export interface AgoraUserProfileType {
   id: number;

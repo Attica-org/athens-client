@@ -1,7 +1,7 @@
 'use client';
 
 import showToast from '@/utils/showToast';
-import { signOut } from 'next-auth/react';
+import { getSession, signOut } from 'next-auth/react';
 import { useCallback } from 'react';
 import {
   AUTHORIZATION_FAIL,
@@ -27,7 +27,8 @@ const useApiError = () => {
       retryMutation?: UseMutateFunction<any, Error, void, unknown>,
       queryKey?: QueryKey,
     ) => {
-      const reissueResponse = await callReissueFn();
+      const session = await getSession();
+      const reissueResponse = await callReissueFn(session);
 
       if (reissueResponse === AUTHORIZATION_FAIL) {
         showToast(
