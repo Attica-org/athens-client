@@ -5,7 +5,7 @@ import ShareIcon from '@/assets/icons/ShareIcon';
 import { useParams, useRouter } from 'next/navigation';
 import React, { MouseEventHandler, useState } from 'react';
 import { BottomSheet } from 'react-spring-bottom-sheet';
-import SocialShareLogos from '../atoms/SocialShareLogos';
+import SocialShareLogos from './SocialShareLogos';
 
 import 'react-spring-bottom-sheet/dist/style.css';
 
@@ -41,7 +41,7 @@ export default function ShareButton({ title }: Props) {
       type="button"
       aria-label="SNS 공유하기"
       onClick={shareSNS}
-      className="cursor-pointer pr-5"
+      className="cursor-pointer"
     >
       <ShareIcon className="w-18 lg:w-20 mr-1rem under-mobile:mr-0.5rem" />
       <BottomSheet onDismiss={handleDismiss} open={open}>

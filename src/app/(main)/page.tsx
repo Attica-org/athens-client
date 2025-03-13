@@ -29,7 +29,7 @@ export default async function Page() {
   const session = await getSession();
 
   if (!isNull(session?.user)) {
-    redirect(homeSegmentKey);
+    redirect(`${process.env.NEXT_CLIENT_URL}/${homeSegmentKey}`);
     return null;
   }
 

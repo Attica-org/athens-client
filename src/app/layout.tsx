@@ -12,6 +12,7 @@ import ServiceWorkerRegistration from './config/ServiceWorkerRegistration';
 import ToasterContainer from './config/ToasterContainer';
 import SetTheme from './_components/utils/SetTheme';
 import AuthSession from './_components/utils/AuthSession';
+import SuspensePreviousPageComponent from './_components/utils/SessionNavigationObserver';
 
 export const viewport: Viewport = {
   themeColor: '#ffffff',
@@ -69,6 +70,7 @@ export default async function RootLayout({
           <SetTheme theme={theme || THEME.LIGHT} />
           <MSWComponent />
           <ServiceWorkerRegistration />
+          <SuspensePreviousPageComponent />
           <RQProvider>
             {children}
             <ToasterContainer />

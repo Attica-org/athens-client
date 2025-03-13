@@ -1,4 +1,4 @@
-import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
+import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { LOGOUT_ERROR_MESSAGE } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
@@ -22,6 +22,8 @@ const postLogout = async () => {
   if (!res.ok && res.error?.message) {
     if (res.error.code === 1201) {
       throw new Error(LOGOUT_ERROR_MESSAGE.EXPIRED_TOKEN);
+    } else if (AUTH_MESSAGE.includes(res.error.message)) {
+      throw new Error(res.error.message);
     }
 
     if (!res.error) {

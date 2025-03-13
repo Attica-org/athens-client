@@ -24,15 +24,14 @@ type Props = {
 
 function CategoryAgora({ agora, className }: Props) {
   const router = useRouter();
-  const { setSelectedAgora, setEnterAgora, selectedAgora } = useAgora();
+  const { setSelectedAgora, setEnterAgora } = useAgora();
   const [selectedColor, setSelectedColor] = useState(COLOR[0].value);
+  const [isClicked, setIsClicked] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: getClosedAgoraQueryKey(agora.id),
     queryFn: () => getEnterClosedAgoraStatus(agora.id),
-    enabled:
-      agora.id === selectedAgora.id &&
-      selectedAgora.status === AGORA_STATUS.CLOSED,
+    enabled: agora.status === AGORA_STATUS.CLOSED && isClicked,
   });
 
   const routeAgoraPage = useCallback(() => {
@@ -54,6 +53,8 @@ function CategoryAgora({ agora, className }: Props) {
 
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
   const handleEnterAgora = () => {
+    setIsClicked(true);
+
     setSelectedAgora({
       id: agora.id,
       thumbnail: agora.imageUrl,
@@ -61,6 +62,8 @@ function CategoryAgora({ agora, className }: Props) {
       status: agora.status,
       agoraColor: agora.agoraColor,
     });
+
+    setAgoraData();
 
     if (
       agora.status === AGORA_STATUS.QUEUED ||
@@ -73,14 +76,14 @@ function CategoryAgora({ agora, className }: Props) {
   useEffect(() => {
     // 종료된 아고라 입장 시 아고라 데이터 설정
     if (
-      selectedAgora.status === AGORA_STATUS.CLOSED &&
+      agora.status === AGORA_STATUS.CLOSED &&
       !isNull(data) &&
-      !isLoading
+      !isLoading &&
+      isClicked
     ) {
-      setAgoraData();
       routeAgoraPage();
     }
-  }, [data, isLoading, selectedAgora.status]);
+  }, [data, isLoading, isClicked]);
 
   useEffect(() => {
     setSelectedColor(

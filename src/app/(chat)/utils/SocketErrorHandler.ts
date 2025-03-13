@@ -14,14 +14,18 @@ import {
 } from '@/constants/responseErrorMessage';
 import { useRouter } from 'next/navigation';
 import { homeSegmentKey } from '@/constants/segmentKey';
+import { Session } from 'next-auth';
 
 const SocketErrorHandler = () => {
   const { callReissueFn } = useUpdateSession();
   const router = useRouter();
 
-  const chatSocketErrorHandler = async (socketError: any) => {
+  const chatSocketErrorHandler = async (
+    socketError: any,
+    session: Session | null,
+  ) => {
     if (AUTH_MESSAGE.includes(socketError.message)) {
-      const reissueResult = await callReissueFn();
+      const reissueResult = await callReissueFn(session);
       if (reissueResult === AUTHORIZATION_FAIL) {
         showToast(
           '로그인 세션이 만료되었습니다.\n다시 로그인해주세요.',
