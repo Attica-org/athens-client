@@ -59,6 +59,7 @@ export const useChatInfo = create(
         end: '',
         duration: 30,
         observer: 0,
+        participants: new Map(),
       }),
     addParticipant: (id, username) =>
       set((state) => {

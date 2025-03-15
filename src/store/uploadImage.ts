@@ -12,7 +12,7 @@ interface UploadImageState {
   cropedPreview: ImageData;
   setCropedPreview: (cropedPreview: ImageData) => void;
   setUploadImage: (uploadImage: ImageData) => void;
-  cancleCrop: () => void;
+  resetUploadImageState: () => void;
 }
 
 const initialState: UploadImageState = {
@@ -20,7 +20,7 @@ const initialState: UploadImageState = {
   cropedPreview: initialImage,
   setCropedPreview: () => {},
   setUploadImage: () => {},
-  cancleCrop: () => {},
+  resetUploadImageState: () => {},
 };
 
 export const useUploadImage = create(
@@ -28,7 +28,7 @@ export const useUploadImage = create(
     ...initialState,
     setCropedPreview: (cropedPreview: ImageData) => set({ cropedPreview }),
     setUploadImage: (uploadImage: ImageData) => set({ uploadImage }),
-    cancleCrop: () =>
+    resetUploadImageState: () =>
       set({
         cropedPreview: initialImage,
         uploadImage: initialImage,

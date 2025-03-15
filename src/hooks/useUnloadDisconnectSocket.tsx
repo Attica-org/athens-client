@@ -21,6 +21,7 @@ export function useUnloadDisconnectSocket({ mutation, agoraStatus }: Props) {
 
   const handleUnload = useCallback(() => {
     webSocketClient?.deactivate();
+
     if (agoraStatus !== AGORA_STATUS.CLOSED) {
       mutation?.();
     }
