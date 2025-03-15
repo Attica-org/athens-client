@@ -40,7 +40,11 @@ function CreateAgoraBtn() {
       reset: state.reset,
     })),
   );
-
+  const { resetUploadImageState } = useUploadImage(
+    useShallow((state) => ({
+      resetUploadImageState: state.resetUploadImageState,
+    })),
+  );
   const { setSelectedAgora } = useAgora(
     useShallow((state) => ({
       setSelectedAgora: state.setSelectedAgora,
@@ -67,9 +71,8 @@ function CreateAgoraBtn() {
       return postCreateAgora(info);
     },
     onSuccess: async (response) => {
-      const { cancleCrop } = useUploadImage.getState();
       reset();
-      cancleCrop();
+      resetUploadImageState();
 
       if (response.id) {
         setSelectedAgora({
@@ -135,12 +138,11 @@ function CreateAgoraBtn() {
   useEffect(() => {
     return () => {
       const { reset: createStoreReset } = useCreateAgora.getState();
-      const { cancleCrop } = useUploadImage.getState();
       const { reset: searchReset } = useSearchStore.getState();
 
       createStoreReset(); // 언마운트시 초기
       searchReset();
-      cancleCrop();
+      resetUploadImageState();
     };
   }, []);
 

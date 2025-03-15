@@ -122,7 +122,7 @@ function CategoryAgora({ agora, className }: Props) {
           />
         )}
       </div>
-      <h3 className="text-xs under-mobile:font-semibold pt-10 dark:text-white break-all w-full text-center">
+      <h3 className="text-xs under-mobile:font-semibold pt-10 dark:text-white w-full text-center whitespace-nowrap overflow-hidden text-ellipsis">
         {agora.agoraTitle}
       </h3>
       <div
