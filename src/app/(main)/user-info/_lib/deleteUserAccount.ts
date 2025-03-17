@@ -11,7 +11,7 @@ const deleteUserAccount = async () => {
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper('/api/v1/auth/member/', {
+  const res = await callFetchWrapper('/api/v1/auth/member', {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
