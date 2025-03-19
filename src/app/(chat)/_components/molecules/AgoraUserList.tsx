@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import useApiError from '@/hooks/useApiError';
 import { useKickedStore } from '@/store/kick';
+import showToast from '@/utils/showToast';
 import UserImage from '../../../_components/atoms/UserImage';
 import { postKickVote } from '../../_lib/postKickVote';
 import patchChatExit from '../../_lib/patchChatExit';
@@ -72,6 +73,14 @@ export default function AgoraUserList({
       agoraId,
     }: KickMutationProps) =>
       postKickVote(targetMemberId, currentMemberCount, agoraId),
+    onSuccess: (response) => {
+      if (response.success) {
+        showToast('강퇴 투표에 성공하였습니다.', 'success');
+        return;
+      }
+
+      showToast('강퇴 투표에 실패하였습니다', 'error');
+    },
   });
 
   const { setKicked } = useKickedStore(
