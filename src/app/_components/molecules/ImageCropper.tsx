@@ -77,15 +77,19 @@ export default function ImageCropper() {
   const dialogRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [loading, setLoading] = useState(false);
-  const { uploadImage, setCropedPreview, cancleCrop, setUploadImage } =
-    useUploadImage(
-      useShallow((state) => ({
-        uploadImage: state.uploadImage,
-        setUploadImage: state.setUploadImage,
-        setCropedPreview: state.setCropedPreview,
-        cancleCrop: state.cancleCrop,
-      })),
-    );
+  const {
+    uploadImage,
+    setCropedPreview,
+    resetUploadImageState,
+    setUploadImage,
+  } = useUploadImage(
+    useShallow((state) => ({
+      uploadImage: state.uploadImage,
+      setUploadImage: state.setUploadImage,
+      setCropedPreview: state.setCropedPreview,
+      resetUploadImageState: state.resetUploadImageState,
+    })),
+  );
   const router = useRouter();
 
   const onImageLoaded = (e: HTMLImageElement) => {
@@ -169,7 +173,7 @@ export default function ImageCropper() {
   const handleKeyDownCancelCrop = useCallback(
     (e: KeyboardEvent<HTMLButtonElement>) => {
       if (e.key === 'Enter') {
-        handleCancelCrop();
+        resetUploadImageState();
       }
     },
     [handleCancelCrop],
@@ -196,7 +200,7 @@ export default function ImageCropper() {
     }
     if (file.file.type === 'image/gif') {
       setCropedPreview(file);
-      cancleCrop();
+      resetUploadImageState();
     }
 
     return null; // 이미지 또는 비디오가 아닌 파일이 선택된 경우

@@ -45,21 +45,16 @@ import AgoraInfo from '../molecules/AgoraInfo';
 import DiscussionStatus from '../molecules/DiscussionStatus';
 import patchChatExit from '../../_lib/patchChatExit';
 import SocketErrorHandler from '../../utils/SocketErrorHandler';
+import { resetStateOnChatExit } from '../../utils/resetStateOnChatExit';
 import MenuItems from '../molecules/MenuItems';
 
 export default function Header() {
   const { toggle } = useSidebarStore(
     useShallow((state) => ({ toggle: state.toggle })),
   );
-  const {
-    enterAgora,
-    reset: selectedAgoraReset,
-    enterAgoraReset,
-  } = useAgora(
+  const { enterAgora } = useAgora(
     useShallow((state) => ({
       enterAgora: state.enterAgora,
-      enterAgoraReset: state.enterAgoraReset,
-      reset: state.reset,
     })),
   );
   const {
@@ -141,11 +136,9 @@ export default function Header() {
   };
 
   const onSuccessChatExit = (response: any) => {
-    if (response) {
-      // 채팅방 정보 및 유저 채팅 프로필 정보 초기화
-      useEnter.getState().reset();
-      useAgora.getState().reset();
-      useAgora.getState().enterAgoraReset();
+    // 채팅방 정보 및 유저 채팅 프로필 정보 초기화
+    if (!isNull(response)) {
+      resetStateOnChatExit();
 
       useEnter.persist.rehydrate();
       useAgora.persist.rehydrate();
@@ -164,9 +157,6 @@ export default function Header() {
 
   const handleAgoraExit = () => {
     if (enterAgora.status === AGORA_STATUS.CLOSED) {
-      selectedAgoraReset();
-      enterAgoraReset();
-
       onSuccessChatExit(true);
     } else if (
       enterAgora.status === AGORA_STATUS.RUNNING ||
