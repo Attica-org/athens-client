@@ -454,17 +454,25 @@ export default function Header() {
 
   // 브라우저 뒤로가기 버튼 클릭 시 페이지 이탈 방지 모달 띄우기
   useEffect(() => {
+    const isChatModalPath = (url: string, pathname: string) => {
+      if (
+        url === `${pathname}/flow/social-share` ||
+        url === `${pathname}/flow/end-agora` ||
+        url === `${pathname}/flow/result-agora`
+      ) {
+        return true;
+      }
+      return false;
+    };
+
     const handlePopState = (event: PopStateEvent) => {
       event.preventDefault();
       const { pathname } = window.location;
       window.history.pushState(null, '', pathname); // 뒤로가기 무효화
 
-      const previousPath = sessionStorage.getItem(STORAGE_PREVIOUSE_URL_KEY);
-      if (
-        previousPath === `${pathname}/flow/social-share` ||
-        previousPath === `${pathname}/flow/end-agora` ||
-        previousPath === `${pathname}/flow/result-agora`
-      ) {
+      const previousPath =
+        sessionStorage.getItem(STORAGE_PREVIOUSE_URL_KEY) ?? '';
+      if (isChatModalPath(previousPath, pathname)) {
         sessionStorage.setItem(STORAGE_PREVIOUSE_URL_KEY, pathname);
         return;
       }
