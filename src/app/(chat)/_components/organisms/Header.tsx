@@ -20,7 +20,10 @@ import {
   getAgoraUserListQueryKey,
   getChatMessagesQueryKey,
 } from '@/constants/queryKey';
-import { homeSegmentKey } from '@/constants/segmentKey';
+import {
+  STORAGE_PREVIOUSE_URL_KEY,
+  homeSegmentKey,
+} from '@/constants/segmentKey';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { swalBackButtonAlert } from '@/utils/swalAlert';
 import useApiError from '@/hooks/useApiError';
@@ -257,20 +260,6 @@ export default function Header() {
       newMessages,
     );
     setGoDown(true);
-    // console.log('newMessages', newMessages);
-
-    // let accessStatus = null;
-
-    // if (userDisconnectTime === null) {
-    //   accessStatus = 'enter';
-    // } else if (userDisconnectTime.length > 0) {
-    //   accessStatus = 'exit';
-    // }
-
-    // queryClient.setQueryData(getChatMessagesQueryKey(enterAgoraId), {
-    //   status: accessStatus,
-    //   username,
-    // });
   };
 
   const updateParticipantList = (
@@ -346,8 +335,6 @@ export default function Header() {
     },
     [setSocketError, socketError],
   );
-
-  // 최초 렌더링 시 실행
 
   const disconnect = useCallback(async () => {
     if (!isNull(webSocketClient) && webSocketClientConnected) {
@@ -479,7 +466,19 @@ export default function Header() {
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
       event.preventDefault();
-      window.history.pushState(null, '', window.location.pathname); // 뒤로가기 무효화
+      const { pathname } = window.location;
+      window.history.pushState(null, '', pathname); // 뒤로가기 무효화
+
+      const previousPath = sessionStorage.getItem(STORAGE_PREVIOUSE_URL_KEY);
+      if (
+        previousPath === `${pathname}/flow/social-share` ||
+        previousPath === `${pathname}/flow/end-agora` ||
+        previousPath === `${pathname}/flow/result-agora`
+      ) {
+        sessionStorage.setItem(STORAGE_PREVIOUSE_URL_KEY, pathname);
+        return;
+      }
+
       handleBack();
     };
 
