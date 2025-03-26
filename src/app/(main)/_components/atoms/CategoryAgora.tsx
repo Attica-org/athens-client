@@ -10,12 +10,11 @@ import Image from 'next/image';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { isValidImgUrl } from '@/utils/validation/validateImage';
 import { COLOR } from '@/constants/consts';
-import { useQuery } from '@tanstack/react-query';
-import { getClosedAgoraQueryKey } from '@/constants/queryKey';
-import isNull from '@/utils/validation/validateIsNull';
+import { useMutation } from '@tanstack/react-query';
 import Loading from '@/app/_components/atoms/loading';
+import useApiError from '@/hooks/useApiError';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
-import { getEnterClosedAgoraStatus } from '../../_lib/getEnterClosedAgoraStatus';
+import { postEnterClosedAgora } from '../../_lib/postEnterClosedAgora';
 
 type Props = {
   agora: AgoraData;
@@ -26,35 +25,14 @@ function CategoryAgora({ agora, className }: Props) {
   const router = useRouter();
   const { setSelectedAgora, setEnterAgora } = useAgora();
   const [selectedColor, setSelectedColor] = useState(COLOR[0].value);
-  const [isClicked, setIsClicked] = useState(false);
-
-  const { data, isLoading } = useQuery({
-    queryKey: getClosedAgoraQueryKey(agora.id),
-    queryFn: () => getEnterClosedAgoraStatus(agora.id),
-    enabled: agora.status === AGORA_STATUS.CLOSED && isClicked,
-  });
+  const { handleError } = useApiError();
+  const [isLoading, setIsLoading] = useState(false);
 
   const routeAgoraPage = useCallback(() => {
     router.push(`/agoras/${agora.id}`);
   }, [agora.id, router]);
 
-  const setAgoraData = useCallback(() => {
-    setEnterAgora({
-      id: agora.id,
-      userId: 0,
-      thumbnail: agora.imageUrl,
-      title: agora.agoraTitle,
-      status: agora.status,
-      role: AGORA_POSITION.OBSERVER,
-      isCreator: false,
-      agoraColor: agora.agoraColor,
-    });
-  }, [agora, setEnterAgora]);
-
-  // TODO: 아고라 id를 받아서 해당 아고라로 이동
-  const handleEnterAgora = () => {
-    setIsClicked(true);
-
+  const setSelectAgoraData = useCallback(() => {
     setSelectedAgora({
       id: agora.id,
       thumbnail: agora.imageUrl,
@@ -62,28 +40,47 @@ function CategoryAgora({ agora, className }: Props) {
       status: agora.status,
       agoraColor: agora.agoraColor,
     });
+  }, [setSelectedAgora]);
 
-    setAgoraData();
+  const enterClosedAgoraMutation = useMutation({
+    mutationFn: () => postEnterClosedAgora(agora.id),
+    onSuccess: () => {
+      setIsLoading(false);
+      setSelectAgoraData();
+      setEnterAgora({
+        id: agora.id,
+        userId: 0,
+        thumbnail: agora.imageUrl,
+        title: agora.agoraTitle,
+        status: agora.status,
+        role: AGORA_POSITION.OBSERVER,
+        isCreator: false,
+        agoraColor: agora.agoraColor,
+      });
+      routeAgoraPage();
+    },
+    onError: async (error) => {
+      setIsLoading(false);
+      await handleError(error, enterClosedAgoraMutation.mutate);
+    },
+  });
+
+  // TODO: 아고라 id를 받아서 해당 아고라로 이동
+  const handleEnterAgora = () => {
+    if (agora.status === AGORA_STATUS.CLOSED) {
+      setIsLoading(true);
+      enterClosedAgoraMutation.mutate();
+      return;
+    }
 
     if (
       agora.status === AGORA_STATUS.QUEUED ||
       agora.status === AGORA_STATUS.RUNNING
     ) {
+      setSelectAgoraData();
       router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
     }
   };
-
-  useEffect(() => {
-    // 종료된 아고라 입장 시 아고라 데이터 설정
-    if (
-      agora.status === AGORA_STATUS.CLOSED &&
-      !isNull(data) &&
-      !isLoading &&
-      isClicked
-    ) {
-      routeAgoraPage();
-    }
-  }, [data, isLoading, isClicked]);
 
   useEffect(() => {
     setSelectedColor(

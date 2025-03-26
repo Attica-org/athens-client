@@ -7,16 +7,16 @@ import {
 } from '@/constants/responseErrorMessage';
 import isNull from '@/utils/validation/validateIsNull';
 
-export const getEnterClosedAgoraStatus = async (agoraId: number) => {
+export const postEnterClosedAgora = async (agoraId: number) => {
   const session = await getSession();
   if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
   const res = await callFetchWrapper(
-    `/api/v1/auth/agoras/${agoraId}/participants`,
+    `/api/v1/auth/agoras/${agoraId}/closed/participants`,
     {
-      method: 'get',
+      method: 'post',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${session.user?.accessToken}`,

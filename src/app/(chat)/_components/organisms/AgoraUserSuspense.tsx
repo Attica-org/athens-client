@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { AgoraUserProfileType } from '@/app/model/Agora';
+import { AgoraSideBarDataType } from '@/app/model/Agora';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import ErrorFallback from '@/app/_components/templates/ErrorFallback';
 import { useChatInfo } from '@/store/chatInfo';
@@ -28,7 +28,8 @@ function FallbackComponent(props: FallbackProps) {
 }
 
 export default function AgoraUserSuspense({ agoraId }: Props) {
-  const { enterAgora } = useAgora();
+  const { enterAgora, selectedAgora, setSelectedAgora, setEnterAgora } =
+    useAgora();
   const { end, addParticipant } = useChatInfo(
     useShallow((state) => ({
       end: state.end,
@@ -36,10 +37,10 @@ export default function AgoraUserSuspense({ agoraId }: Props) {
     })),
   );
 
-  const { data: userList } = useQuery<
-    AgoraUserProfileType[],
+  const { data } = useQuery<
+    AgoraSideBarDataType,
     Object,
-    AgoraUserProfileType[],
+    AgoraSideBarDataType,
     [string, string, string]
   >({
     queryKey: getAgoraUserListQueryKey(agoraId),
@@ -55,16 +56,31 @@ export default function AgoraUserSuspense({ agoraId }: Props) {
     subscribeCount.current -= 1;
   };
 
+  const updateAgoraThumnail = (thumbnail: string) => {
+    setEnterAgora({
+      ...enterAgora,
+      thumbnail,
+    });
+
+    setSelectedAgora({
+      ...selectedAgora,
+      thumbnail,
+    });
+  };
+
   useEffect(() => {
-    if (isNull(userList)) return;
-    userList.forEach((user) => {
+    if (isNull(data)) return;
+
+    updateAgoraThumnail(data.imageUrl);
+
+    data.participants.forEach((user) => {
       const { id, nickname } = user;
 
       if (isNull(nickname)) return;
 
       addParticipant(id, nickname);
     });
-  }, [userList]);
+  }, [data]);
 
   useEffect(() => {
     return () => {
@@ -74,18 +90,18 @@ export default function AgoraUserSuspense({ agoraId }: Props) {
 
   return (
     <div>
-      {userList && !end && (
+      {data?.participants && !end && (
         <ErrorBoundary FallbackComponent={FallbackComponent}>
           <AgoraUserList
             position={AGORA_POSITION.PROS}
-            userList={userList}
+            userList={data.participants}
             subscribeCount={subscribeCount}
             decrementSubscribeCount={decrementSubscribeCount}
           />
           <div className="border-b-1 border-gray-200 mb-1rem dark:border-gray-500" />
           <AgoraUserList
             position={AGORA_POSITION.CONS}
-            userList={userList}
+            userList={data.participants}
             subscribeCount={subscribeCount}
             decrementSubscribeCount={decrementSubscribeCount}
           />

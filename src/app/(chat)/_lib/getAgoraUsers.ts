@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { AgoraUserProfileType } from '@/app/model/Agora';
+import { AgoraSideBarDataType } from '@/app/model/Agora';
 import { QueryFunction } from '@tanstack/react-query';
 import { getAgoraUserListQueryKey as getAgoraUserListTags } from '@/constants/queryKey';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
@@ -13,7 +13,7 @@ import {
 import isNull from '@/utils/validation/validateIsNull';
 
 export const getAgoraUsers: QueryFunction<
-  AgoraUserProfileType[],
+  AgoraSideBarDataType,
   [string, string, string]
 > = async ({ queryKey }) => {
   const [_1, _2, agoraId] = queryKey;
@@ -52,7 +52,7 @@ export const getAgoraUsers: QueryFunction<
     throw new Error(AGORA_USER.FAILED_TO_GET_AGORA_USER);
   }
 
-  const result = res.response.participants;
+  const result = res.response;
 
   return result;
 };
