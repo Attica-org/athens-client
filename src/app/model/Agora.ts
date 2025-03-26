@@ -42,6 +42,12 @@ export interface AgoraUserProfileType {
   type: ParticipationPosition;
 }
 
+export interface AgoraSideBarDataType {
+  agoraId: number;
+  imageUrl: string;
+  participants: AgoraUserProfileType[];
+}
+
 export type ParticipantCountAction = 'DECREASE' | 'INCREASE';
 
 export interface SearchParams {
