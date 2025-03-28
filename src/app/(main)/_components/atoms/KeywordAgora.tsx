@@ -1,6 +1,6 @@
 'use client';
 
-import React, { KeyboardEventHandler, useCallback, useEffect } from 'react';
+import React, { KeyboardEventHandler, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { AgoraData } from '@/app/model/Agora';
 import { formatDistanceToNow } from 'date-fns';
@@ -12,11 +12,10 @@ import Image from 'next/image';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { isValidImgUrl } from '@/utils/validation/validateImage';
 import { COLOR } from '@/constants/consts';
-import { useQuery } from '@tanstack/react-query';
-import { getClosedAgoraQueryKey } from '@/constants/queryKey';
-import isNull from '@/utils/validation/validateIsNull';
+import { useMutation } from '@tanstack/react-query';
+import useApiError from '@/hooks/useApiError';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
-import { getEnterClosedAgoraStatus } from '../../_lib/getEnterClosedAgoraStatus';
+import { postEnterClosedAgora } from '../../_lib/postEnterClosedAgora';
 
 type Props = {
   agora: AgoraData;
@@ -24,15 +23,8 @@ type Props = {
 
 export default function KeywordAgora({ agora }: Props) {
   const router = useRouter();
-  const { setSelectedAgora, setEnterAgora, selectedAgora } = useAgora();
-
-  const { data, isLoading } = useQuery({
-    queryKey: getClosedAgoraQueryKey(agora.id),
-    queryFn: () => getEnterClosedAgoraStatus(agora.id),
-    enabled:
-      agora.id === selectedAgora.id &&
-      selectedAgora.status === AGORA_STATUS.CLOSED,
-  });
+  const { setSelectedAgora, setEnterAgora } = useAgora();
+  const { handleError } = useApiError();
 
   const setAgoraData = useCallback(() => {
     setEnterAgora({
@@ -45,6 +37,17 @@ export default function KeywordAgora({ agora }: Props) {
       agoraColor: agora.agoraColor,
     });
   }, [agora, setEnterAgora]);
+
+  const enterClosedAgoraMutation = useMutation({
+    mutationFn: () => postEnterClosedAgora(agora.id),
+    onSuccess: () => {
+      setAgoraData();
+      router.push(`/agoras/${agora.id}`);
+    },
+    onError: async (error) => {
+      await handleError(error, enterClosedAgoraMutation.mutate);
+    },
+  });
 
   // TODO: 아고라 id를 받아서 해당 아고라로 이동
   const handleEnterAgora = () => {
@@ -62,6 +65,8 @@ export default function KeywordAgora({ agora }: Props) {
       agora.status === AGORA_STATUS.RUNNING
     ) {
       router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
+    } else if (agora.status === AGORA_STATUS.CLOSED) {
+      enterClosedAgoraMutation.mutate();
     }
   };
 
@@ -70,18 +75,6 @@ export default function KeywordAgora({ agora }: Props) {
       handleEnterAgora();
     }
   };
-
-  useEffect(() => {
-    // 종료된 아고라 입장 시 아고라 데이터 설정
-    if (
-      selectedAgora.status === AGORA_STATUS.CLOSED &&
-      !isNull(data) &&
-      !isLoading
-    ) {
-      setAgoraData();
-      router.push(`/agoras/${agora.id}`);
-    }
-  }, [data, isLoading, selectedAgora.status]);
 
   const getRelativeTime = () => {
     const relativeDate = formatDistanceToNow(agora.createdAt as string, {
