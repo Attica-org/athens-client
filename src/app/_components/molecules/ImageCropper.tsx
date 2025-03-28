@@ -120,7 +120,7 @@ export default function ImageCropper() {
 
     try {
       await new Promise<void>((resolve) => {
-        setTimeout(() => {
+        setTimeout(async () => {
           if (
             isNull(imgRef.current) ||
             isNull(canvasRef.current) ||
@@ -129,7 +129,7 @@ export default function ImageCropper() {
             return;
           }
 
-          getCroppedImg(
+          const croppedImage = await getCroppedImg(
             imgRef.current,
             canvasRef.current,
             convertToPixelCrop(
@@ -137,12 +137,15 @@ export default function ImageCropper() {
               imgRef.current?.width,
               imgRef.current?.height,
             ),
+            'image/jpeg',
+            0.9, // 90% 품질의 JPEG로 변환
           );
 
-          const dataUrl = canvasRef.current.toDataURL();
           setCropedPreview({
-            dataUrl,
-            file: new File([dataUrl], 'image'),
+            dataUrl: croppedImage,
+            file: new File([croppedImage], 'image.jpeg', {
+              type: 'image/jpeg',
+            }),
           });
 
           resolve();
