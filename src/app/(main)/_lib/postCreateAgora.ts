@@ -1,5 +1,4 @@
 import { AgoraConfig } from '@/app/model/Agora';
-import { base64ToFile } from '@/utils/base64ToFile';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
@@ -33,12 +32,24 @@ export const postCreateAgora = async (info: AgoraConfig) => {
   });
 
   // base64로 인코딩된 이미지를 디코딩하여 파일로 변환
-  const file = info.thumbnail
-    ? base64ToFile(info.thumbnail, `${info.title}.jpg`)
-    : '';
-
+  // const file = info.thumbnail
+  //   ? base64ToFile(info.thumbnail, `${info.title}.jpg`)
+  //   : '';
   formData.append('request', blob);
-  formData.append('file', file);
+
+  if (!isNull(info.thumbnail)) {
+    try {
+      const response = await fetch(info.thumbnail);
+      const blobData = await response.blob();
+      const file = new File([blobData], `${info.title}.jpg`, {
+        type: blobData.type || 'image/jpeg',
+      });
+
+      formData.append('file', file);
+    } catch (error) {
+      throw new Error('이미지 업로드 중 오류가 발생했습니다.');
+    }
+  }
 
   const session = await getSession();
   if (isNull(session)) {
