@@ -79,10 +79,17 @@ function MessageItem({
   const isSameTime = nextMessage && currentMessageTime === nextMessageTime;
   const shouldShowTime = !isNextSameUser || !isSameTime;
 
-  queryClient.setQueryData(
+  const beforeReactions = queryClient.getQueryData(
     getUserReactionQueryKey(agoraId, message.chatId),
-    message.reactionCount,
   );
+
+  if (isNull(beforeReactions)) {
+    // 캐시에 저장된 값이 없을 때만, 초기 데이터를 set
+    queryClient.setQueryData(
+      getUserReactionQueryKey(agoraId, message.chatId),
+      message.reactionCount,
+    );
+  }
 
   return isMyMessage ? (
     <MyMessage
@@ -157,6 +164,8 @@ export default function Message() {
   const handleWebSocketReaction = useCallback(
     (response: any) => {
       if (response.type === 'REACTION') {
+        console.log('reaction', response);
+        console.log(agoraId, response.data.chatId);
         queryClient.setQueryData(
           getUserReactionQueryKey(agoraId, response.data.chatId),
           response.data.reactionCount,

@@ -61,4 +61,6 @@ export const postKickVote = async (
 
     throw new Error(PATCH_USER_KICK_VOTE_ERROR_MESSAGE.FAILED_TO_KICK_VOTE);
   }
+
+  return res;
 };
