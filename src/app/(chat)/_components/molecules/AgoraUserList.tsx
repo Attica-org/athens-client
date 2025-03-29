@@ -15,6 +15,8 @@ import { useRouter } from 'next/navigation';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import useApiError from '@/hooks/useApiError';
 import { useKickedStore } from '@/store/kick';
+import showToast from '@/utils/showToast';
+import { useEnter } from '@/store/enter';
 import UserImage from '../../../_components/atoms/UserImage';
 import { postKickVote } from '../../_lib/postKickVote';
 import patchChatExit from '../../_lib/patchChatExit';
@@ -46,6 +48,9 @@ export default function AgoraUserList({
   subscribeCount,
   decrementSubscribeCount,
 }: Props) {
+  const router = useRouter();
+  const { handleError } = useApiError();
+
   const { participants } = useChatInfo(
     useShallow((state) => ({
       participants: state.participants,
@@ -72,6 +77,17 @@ export default function AgoraUserList({
       agoraId,
     }: KickMutationProps) =>
       postKickVote(targetMemberId, currentMemberCount, agoraId),
+    onSuccess: (response) => {
+      if (response.success) {
+        showToast('강퇴 투표에 성공하였습니다.', 'success');
+        return;
+      }
+
+      showToast('강퇴 투표에 실패하였습니다', 'error');
+    },
+    onError: async (error, variables) => {
+      await handleError(error, () => kickVoteMutation.mutate(variables));
+    },
   });
 
   const { setKicked } = useKickedStore(
@@ -80,10 +96,16 @@ export default function AgoraUserList({
     })),
   );
 
-  const router = useRouter();
-  const { handleError } = useApiError();
+  const handleKick = (
+    targetMemberId: number,
+    agoraId: number,
+    nickname: string,
+  ) => {
+    if (useEnter.getState().nickname === nickname) {
+      showToast('자신에게 투표할 수 없습니다.', 'error');
+      return;
+    }
 
-  const handleKick = (targetMemberId: number, agoraId: number) => {
     const currentMemberCount = participants.size;
 
     kickVoteMutation.mutate({ targetMemberId, currentMemberCount, agoraId });
@@ -185,8 +207,12 @@ export default function AgoraUserList({
                 </div>
                 <button
                   type="button"
-                  onClick={() => handleKick(user.id, enterAgora.id)}
-                  onKeyDown={() => handleKick(user.id, enterAgora.id)}
+                  onClick={() =>
+                    handleKick(user.id, enterAgora.id, user.nickname)
+                  }
+                  onKeyDown={() =>
+                    handleKick(user.id, enterAgora.id, user.nickname)
+                  }
                   className="w-70 h-24 text-xs bg-red-500 text-white rounded-md"
                 >
                   추방하기
