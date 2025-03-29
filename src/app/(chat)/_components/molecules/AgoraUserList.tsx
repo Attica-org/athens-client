@@ -48,6 +48,9 @@ export default function AgoraUserList({
   subscribeCount,
   decrementSubscribeCount,
 }: Props) {
+  const router = useRouter();
+  const { handleError } = useApiError();
+
   const { participants } = useChatInfo(
     useShallow((state) => ({
       participants: state.participants,
@@ -82,6 +85,9 @@ export default function AgoraUserList({
 
       showToast('강퇴 투표에 실패하였습니다', 'error');
     },
+    onError: async (error, variables) => {
+      await handleError(error, () => kickVoteMutation.mutate(variables));
+    },
   });
 
   const { setKicked } = useKickedStore(
@@ -89,9 +95,6 @@ export default function AgoraUserList({
       setKicked: state.setKicked,
     })),
   );
-
-  const router = useRouter();
-  const { handleError } = useApiError();
 
   const handleKick = (
     targetMemberId: number,
