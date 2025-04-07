@@ -5,7 +5,11 @@ import Image from 'next/image';
 import BackIcon from '@/assets/icons/BackIcon';
 import Link from 'next/link';
 
-export default function SignIn() {
+type Props = {
+  callbackUrl: string;
+};
+
+export default function SignIn({ callbackUrl }: Props) {
   return (
     <main
       aria-label="로그인 페이지"
@@ -39,7 +43,7 @@ export default function SignIn() {
       <section className="w-full flex flex-col justify-center items-center text-sm dark:text-dark-line text-dark-light-500">
         <div className="flex flex-col gap-y-12 w-full justify-center items-center p-10 pb-20">
           <h2 className="mb-12">SNS 계정으로 로그인</h2>
-          <SNSLogin />
+          <SNSLogin callbackUrl={callbackUrl} />
         </div>
         <Link
           href="/home"

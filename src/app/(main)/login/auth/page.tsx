@@ -5,16 +5,17 @@ import AuthLogin from './components/AuthLogin';
 type Props = {
   searchParams: {
     user: string;
+    callbackUrl: string;
   };
 };
 
 export default function LoginConfirm({ searchParams }: Props) {
-  const { user } = searchParams;
+  const { user, callbackUrl } = searchParams;
 
   return (
     <div>
-      <SignIn />
-      <AuthLogin user={user} />
+      <SignIn callbackUrl={callbackUrl ?? ''} />
+      <AuthLogin user={user} callbackUrl={callbackUrl ?? ''} />
     </div>
   );
 }
