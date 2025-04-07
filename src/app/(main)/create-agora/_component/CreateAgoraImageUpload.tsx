@@ -3,6 +3,7 @@
 import AgoraImageUpload from '@/app/_components/organisms/AgoraImageUpload';
 import { useCreateAgora } from '@/store/create';
 import { initialImage, useUploadImage } from '@/store/uploadImage';
+import { convertBase64ToBlobUrl } from '@/utils/convertBase64ToBlobUrl';
 import isNull from '@/utils/validation/validateIsNull';
 import React, { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
@@ -25,7 +26,7 @@ export default function CreateAgoraImageUpload() {
     if (isNull(cropedPreview.dataUrl)) {
       setThumbnail('');
     } else {
-      setThumbnail(cropedPreview.dataUrl);
+      setThumbnail(convertBase64ToBlobUrl(cropedPreview.dataUrl));
     }
   }, [cropedPreview.dataUrl, setThumbnail]);
 

@@ -1,5 +1,4 @@
 import { AgoraConfig } from '@/app/model/Agora';
-import { base64ToFile } from '@/utils/base64ToFile';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
@@ -15,6 +14,7 @@ const COLOR_NULL = { color: '공백일 수 없습니다' };
 const CAPACITY_NULL = { categoryId: '널이어서는 안됩니다' };
 const DURATION_UNDER_ERROR = { duration: '1 이상이어야 합니다' };
 const DURATION_OVER_ERROR = { duration: '180 이하이어야 합니다' };
+const FILE_SIZE_OVER_ERROR = 'File size cannot exceed 5MB.';
 
 export const postCreateAgora = async (info: AgoraConfig) => {
   const requestInfo = {
@@ -33,12 +33,26 @@ export const postCreateAgora = async (info: AgoraConfig) => {
   });
 
   // base64로 인코딩된 이미지를 디코딩하여 파일로 변환
-  const file = info.thumbnail
-    ? base64ToFile(info.thumbnail, `${info.title}.jpg`)
-    : '';
-
+  // const file = info.thumbnail
+  //   ? base64ToFile(info.thumbnail, `${info.title}.jpg`)
+  //   : '';
   formData.append('request', blob);
-  formData.append('file', file);
+
+  if (!isNull(info.thumbnail)) {
+    try {
+      const response = await fetch(info.thumbnail);
+      const blobData = await response.blob();
+      const file = new File([blobData], `${info.title}.jpg`, {
+        type: blobData.type || 'image/jpeg',
+      });
+
+      formData.append('file', file);
+    } catch (error) {
+      throw new Error('이미지 업로드 중 오류가 발생했습니다.');
+    }
+  } else if (isNull(info.thumbnail)) {
+    formData.append('file', info.thumbnail);
+  }
 
   const session = await getSession();
   if (isNull(session)) {
@@ -86,6 +100,8 @@ export const postCreateAgora = async (info: AgoraConfig) => {
         res.error.message === DURATION_OVER_ERROR
       ) {
         throw new Error(AGORA_CREATE.DURATION_OVER);
+      } else if (res.error.message === FILE_SIZE_OVER_ERROR) {
+        throw new Error(AGORA_CREATE.FILE_SIZE_OVER);
       }
     } else if (res.error.code === 503) {
       throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
