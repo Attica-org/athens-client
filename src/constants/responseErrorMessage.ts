@@ -29,6 +29,7 @@ export const AGORA_CREATE = {
   TITLE_NULL: '아고라 제목을 입력해주세요.',
   DURATION_UNDER: '토론 시간을 입력해주세요.',
   DURATION_OVER: '토론 시간을 180분 이하로 입력해주세요.',
+  FILE_SIZE_OVER: '이미지 사이즈가 너무 큽니다.',
   FAIED_TO_CREATE_AGORA: '아고라 생성에 실패했습니다.',
   UNKNOWN_ERROR: '알 수 없는 에러가 발생했습니다.',
 } as const;

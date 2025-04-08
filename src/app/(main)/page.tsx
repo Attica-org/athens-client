@@ -5,6 +5,12 @@ import isNull from '@/utils/validation/validateIsNull';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import SignIn from './_components/templates/SignIn';
 
+type Props = {
+  searchParams: {
+    callbackUrl: string;
+  };
+};
+
 export async function generateMetadata() {
   return {
     title: 'Athens',
@@ -25,13 +31,14 @@ export async function generateMetadata() {
   };
 }
 
-export default async function Page() {
+export default async function Page({ searchParams }: Props) {
   const session = await getSession();
+  const { callbackUrl } = searchParams;
 
   if (!isNull(session?.user)) {
     redirect(`${process.env.NEXT_CLIENT_URL}/${homeSegmentKey}`);
     return null;
   }
 
-  return <SignIn />;
+  return <SignIn callbackUrl={callbackUrl ?? ''} />;
 }
