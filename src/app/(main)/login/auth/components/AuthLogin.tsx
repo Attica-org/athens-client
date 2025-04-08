@@ -7,12 +7,14 @@ import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useLayoutEffect } from 'react';
 import isNull from '@/utils/validation/validateIsNull';
+import { homeSegmentKey } from '@/constants/segmentKey';
 
 type Props = {
   user: string;
+  callbackUrl: string;
 };
 
-export default function AuthLogin({ user }: Props) {
+export default function AuthLogin({ user, callbackUrl }: Props) {
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -38,8 +40,8 @@ export default function AuthLogin({ user }: Props) {
   );
 
   useEffect(() => {
-    if (!isNull(session)) {
-      router.replace('/home');
+    if (!isNull(callbackUrl) && !isNull(session)) {
+      router.replace(homeSegmentKey);
     }
   }, [router, session]);
 
