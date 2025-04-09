@@ -164,8 +164,6 @@ export default function Message() {
   const handleWebSocketReaction = useCallback(
     (response: any) => {
       if (response.type === 'REACTION') {
-        console.log('reaction', response);
-        console.log(agoraId, response.data.chatId);
         queryClient.setQueryData(
           getUserReactionQueryKey(agoraId, response.data.chatId),
           response.data.reactionCount,
