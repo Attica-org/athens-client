@@ -70,6 +70,12 @@ export default function AgoraUserList({
     })),
   );
 
+  const { removeParticipant } = useChatInfo(
+    useShallow((state) => ({
+      removeParticipant: state.removeParticipant,
+    })),
+  );
+
   const kickVoteMutation = useMutation({
     mutationFn: async ({
       targetMemberId,
@@ -130,13 +136,20 @@ export default function AgoraUserList({
   });
 
   const isKickVoteApproved = (response: KickVoteResponse) =>
-    response.type === 'KICK' &&
+    response.type === 'KICK';
+
+  const amIKicked = (response: KickVoteResponse) =>
     enterAgora.userId === response.kickVoteInfo.targetMemberId;
 
   const handleKickVoteResponse = useCallback(
     (response: KickVoteResponse) => {
       if (isKickVoteApproved(response)) {
-        handleApprovedKickVoteMutation.mutate();
+        if (amIKicked(response)) {
+          handleApprovedKickVoteMutation.mutate();
+          return;
+        }
+        // 내가 강퇴된 것이 아니라면, participants의 숫자를 조정
+        removeParticipant(response.kickVoteInfo.targetMemberId);
       }
     },
     [enterAgora.userId],
