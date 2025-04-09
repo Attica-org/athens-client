@@ -30,10 +30,11 @@ function FallbackComponent(props: FallbackProps) {
 export default function AgoraUserSuspense({ agoraId }: Props) {
   const { enterAgora, selectedAgora, setSelectedAgora, setEnterAgora } =
     useAgora();
-  const { end, addParticipant } = useChatInfo(
+  const { end, addParticipant, resetParticipants } = useChatInfo(
     useShallow((state) => ({
       end: state.end,
       addParticipant: state.addParticipant,
+      resetParticipants: state.resetParticipants,
     })),
   );
 
@@ -72,6 +73,7 @@ export default function AgoraUserSuspense({ agoraId }: Props) {
     if (isNull(data)) return;
 
     updateAgoraThumnail(data.imageUrl);
+    resetParticipants();
 
     data.participants.forEach((user) => {
       const { id, nickname } = user;

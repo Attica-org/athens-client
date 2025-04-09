@@ -98,7 +98,7 @@ let timerInterval: ReturnType<typeof setInterval>;
 export const swalDeleteAccountSuccessAlert = async () => {
   return swalDeleteAccountSuccessAlertClass.fire({
     width: '300px',
-    title: '계정이 삭제 되었습니다',
+    title: '계정을 삭제 하는 중입니다..',
     html: '<b></b> 초 뒤에 로그인 화면으로 이동합니다.',
     timer: 5000,
     timerProgressBar: true,
