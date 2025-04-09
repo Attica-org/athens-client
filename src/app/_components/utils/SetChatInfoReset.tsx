@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import isNull from '@/utils/validation/validateIsNull';
 import { usePathname } from 'next/navigation';
+import { useChatInfo } from '@/store/chatInfo';
 
 export default function SetChatInfoReset() {
   const {
@@ -19,6 +20,13 @@ export default function SetChatInfoReset() {
       reset: state.reset,
     })),
   );
+
+  const { resetParticipants } = useChatInfo(
+    useShallow((state) => ({
+      resetParticipants: state.resetParticipants,
+    })),
+  );
+
   const { reset: userProfileReset } = useEnter();
   const pathname = usePathname();
 
@@ -34,6 +42,7 @@ export default function SetChatInfoReset() {
         agoraInfoReset();
         userProfileReset();
         selectedAgoraInfoReset();
+        resetParticipants();
 
         useAgora.persist.rehydrate();
         useEnter.persist.rehydrate();
