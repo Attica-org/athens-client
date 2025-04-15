@@ -51,7 +51,7 @@ export const postCreateAgora = async (info: AgoraConfig) => {
       throw new Error('이미지 업로드 중 오류가 발생했습니다.');
     }
   } else if (isNull(info.thumbnail)) {
-    formData.append('file', info.thumbnail);
+    formData.append('file', new File([''], 'no-img'));
   }
 
   const session = await getSession();
