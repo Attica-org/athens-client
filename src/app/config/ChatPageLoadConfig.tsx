@@ -11,6 +11,7 @@ import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import showToast from '@/utils/showToast';
 import useApiError from '@/hooks/useApiError';
 import {
+  STORAGE_CURRENT_URL_KEY,
   STORAGE_PREVIOUSE_URL_KEY,
   homeSegmentKey,
 } from '@/constants/segmentKey';
@@ -90,7 +91,13 @@ export default function ChatPageLoadConfig({ children }: Props) {
     },
   });
 
-  const isRedirect = isNull(selectedAgora.title) && isNull(enterAgora.title);
+  const sessionNavigatorCurrent = sessionStorage.getItem(
+    STORAGE_CURRENT_URL_KEY,
+  );
+  const isRedirect =
+    !sessionNavigatorCurrent?.startsWith(homeSegmentKey) &&
+    isNull(selectedAgora.title) &&
+    isNull(enterAgora.title);
 
   const {
     data: agoraInfo,
@@ -154,6 +161,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
         // storage 데이터 초기화 후 입장하기 페이지 띄우기
         isAccessToAnotherAgora.current = true;
         userProfilReset();
+        window.location.replace(`/flow/enter-agora/${agoraId}`);
       }
     }
   }, [session]);
