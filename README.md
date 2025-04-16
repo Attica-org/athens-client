@@ -6,6 +6,8 @@
 
 <br />
 
+📎 아직 몇 가지 버그가 남아있어 불편할 수 있어요. 버그 수정 마무리하고 곧 더 안정된 버전으로 업데이트할 예정입니다. 참고해 주세요!
+
 - 배포 URL: https://athens-client-mu.vercel.app
 - 개발 기간: 2024.04 - 현재
 
@@ -62,7 +64,8 @@
 
 ## 📌 주요 기능
 
-**추가 예정**
+⚠ 현 시점 데모 영상은 버그 수정 이전 버전입니다. 현재 수정 작업 중이며, 업데이트 완료 후 새로운 데모 영상을 업로드할 계획입니다. 
+<br/>참고 부탁드립니다!
 
 <table>
     <thead>
@@ -121,8 +124,8 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/4ec2c25f-3118-4d4c-9483-94b8cf89983d" style="max-width: 100%;"></img></td>
-      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/12cfa622-5eba-4b4b-bb14-539405b9c9ff" style="max-width: 100%;"</img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/0ccc9d7c-e108-4fad-9789-0878d12dfac8" style="max-width: 100%;"></img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/df121614-6e4f-44d4-887f-8fcd8d13c58d" style="max-width: 100%;"</img></td>
     </tr>
 </table>
 
@@ -142,9 +145,9 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/ae562bf4-8d2b-4273-9e4c-89273baf2eab" style="max-width: 100%;"></img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/f9796edf-60d8-4edd-bd3c-904f0cf4f254" style="max-width: 100%;"></img></td>
       <td align="center"><img width="200" src="https://github.com/user-attachments/assets/b79b1bda-d6a0-4a48-9815-6ceade6a6613" style="max-width: 100%;"</img></td>
-    <td align="center"><img width="200" src="https://github.com/user-attachments/assets/c4b8da02-c2e4-4182-8a4e-61a128a97d49" style="max-width: 100%;"</img></td>
+    <td align="center"><img width="200" src="https://github.com/user-attachments/assets/8406925e-5393-4552-a961-51510baf6bd1" style="max-width: 100%;"</img></td>
     </tr>
 </table>
 
@@ -164,8 +167,8 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/1c4c2f24-52cd-4d1d-a551-057b4085e5cc" style="max-width: 100%;"></img></td>
-      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/9631d0d2-1990-47d4-81ff-fdae946c557a" style="max-width: 100%;"</img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/7367c47b-22c4-4b32-b9db-6a5ac89f375f" style="max-width: 100%;"></img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/cf82b62b-de9d-4823-be29-29bb7387f14a" style="max-width: 100%;"</img></td>
     <td align="center"><img width="200" src="https://github.com/user-attachments/assets/8051c39f-56d1-4774-bf58-76a9ad0ada3c" style="max-width: 100%;"</img></td>
     </tr>
 </table>
@@ -174,7 +177,10 @@
     <thead>
     <tr>
       <th colspan="1" align="center">
-        토론 시작/종료
+        토론 시작
+      </th>
+      <th colspan="1" align="center">
+        토론 종료
       </th>
       <th colspan="1" align="center">
         종료된 아고라
@@ -183,10 +189,13 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/c96a1795-4598-4e0a-b383-c337f97ff416" style="max-width: 100%;"></img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/acc88d32-9ff9-4451-b536-06281bd09fbd" style="max-width: 100%;"></img></td>
+      <td align="center"><img width="200" src="" style="max-width: 100%;"></img></td>
       <td align="center"><img width="200" src="https://github.com/user-attachments/assets/7871770a-473f-492d-ace0-d761a073f16d" style="max-width: 100%;"</img></td>
     </tr>
-<br />
+<br/>
+</table>
+
 
 ## Project Wiki
 
