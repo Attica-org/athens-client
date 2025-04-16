@@ -44,7 +44,7 @@ export interface AgoraUserProfileType {
 
 export interface AgoraSideBarDataType {
   agoraId: number;
-  agoraThumbnailUrl: string;
+  agoraThumbnailUrl: string | null;
   participants: AgoraUserProfileType[];
 }
 

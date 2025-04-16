@@ -5,7 +5,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 type Agora = {
   id: number;
-  thumbnail: string;
+  thumbnail: string | null;
   title: string;
   status: Status | '';
   agoraColor: string;
@@ -14,7 +14,7 @@ type Agora = {
 type EnterAgora = {
   id: number;
   userId?: number;
-  thumbnail: string;
+  thumbnail: string | null;
   title: string;
   status: Status | '';
   role: string;
