@@ -121,8 +121,8 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/4ec2c25f-3118-4d4c-9483-94b8cf89983d" style="max-width: 100%;"></img></td>
-      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/12cfa622-5eba-4b4b-bb14-539405b9c9ff" style="max-width: 100%;"</img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/0ccc9d7c-e108-4fad-9789-0878d12dfac8" style="max-width: 100%;"></img></td>
+      <td align="center"><img width="200" src="https://github.com/user-attachments/assets/df121614-6e4f-44d4-887f-8fcd8d13c58d" style="max-width: 100%;"</img></td>
     </tr>
 </table>
 
@@ -186,7 +186,9 @@
       <td align="center"><img width="200" src="https://github.com/user-attachments/assets/c96a1795-4598-4e0a-b383-c337f97ff416" style="max-width: 100%;"></img></td>
       <td align="center"><img width="200" src="https://github.com/user-attachments/assets/7871770a-473f-492d-ace0-d761a073f16d" style="max-width: 100%;"</img></td>
     </tr>
-<br />
+<br/>
+</table>
+
 
 ## Project Wiki
 
