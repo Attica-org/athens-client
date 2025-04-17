@@ -52,7 +52,7 @@ export default function ModifyAgoraImage() {
     <div className="relative">
       <AgoraImageUpload
         page={`/agoras/${enterAgora.id}`}
-        image={enterAgora.thumbnail}
+        image={enterAgora.thumbnail ?? ''}
         color={enterAgora.agoraColor}
       />
       {/* TODO: 이미지 수정 했을 때만 저장 버튼 출력하도록 수정 */}
