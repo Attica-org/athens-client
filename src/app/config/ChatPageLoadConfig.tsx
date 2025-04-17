@@ -154,6 +154,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
         // storage 데이터 초기화 후 입장하기 페이지 띄우기
         isAccessToAnotherAgora.current = true;
         userProfilReset();
+        window.location.replace(`/flow/enter-agora/${agoraId}`);
       }
     }
   }, [session]);

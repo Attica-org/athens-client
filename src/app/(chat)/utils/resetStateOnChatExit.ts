@@ -6,7 +6,7 @@ import { useUploadImage } from '@/store/uploadImage';
 
 export const resetStateOnChatExit = () => {
   useEnter.getState().reset();
-  useAgora.getState().reset();
+  // useAgora.getState().reset();
   useAgora.getState().enterAgoraReset();
   useUploadImage.getState().resetUploadImageState();
   useChatInfo.getState().reset();

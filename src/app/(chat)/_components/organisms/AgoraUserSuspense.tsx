@@ -72,7 +72,7 @@ export default function AgoraUserSuspense({ agoraId }: Props) {
   useEffect(() => {
     if (isNull(data)) return;
 
-    updateAgoraThumnail(data.imageUrl);
+    updateAgoraThumnail(data.agoraThumbnailUrl ?? '');
     resetParticipants();
 
     data.participants.forEach((user) => {
