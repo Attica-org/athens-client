@@ -7,6 +7,8 @@
 // }
 import { Reaction } from './Reaction';
 
+export type AccessStatus = 'enter' | 'exit' | 'kicked';
+
 export interface Message {
   chatId: number;
   user: {
@@ -18,5 +20,5 @@ export interface Message {
   content: string;
   createdAt: string;
   reactionCount: Reaction;
-  access?: string;
+  access?: AccessStatus;
 }

@@ -99,6 +99,7 @@ export type KickVoteResponse = {
   type: string;
   kickVoteInfo: {
     targetMemberId: number;
+    nickname: string;
     message: string;
   };
 };
