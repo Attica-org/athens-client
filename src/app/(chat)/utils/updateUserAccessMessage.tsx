@@ -1,8 +1,9 @@
 import { getChatMessagesQueryKey } from '@/constants/queryKey';
 import { InfiniteData, QueryClient } from '@tanstack/react-query';
-import { AccessStatus, Message } from '@/app/model/Message';
+import { Message } from '@/app/model/Message';
 import accessMessageConfig from '@/lib/accessMessageConfig';
 import isNull from '@/utils/validation/validateIsNull';
+import { AccessStatus } from '@/app/model/AccessStatus';
 
 export const updateUserAccessMessage = (
   queryClient: QueryClient,
