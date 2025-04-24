@@ -18,7 +18,7 @@ class KickedUsers {
   }
 
   reset() {
-    this.#nicknames = new Set();
+    this.#nicknames.clear();
   }
 }
 
