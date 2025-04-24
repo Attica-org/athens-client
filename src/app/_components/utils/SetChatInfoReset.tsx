@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import isNull from '@/utils/validation/validateIsNull';
 import { usePathname } from 'next/navigation';
-import { useChatInfo } from '@/store/chatInfo';
+import { resetStateOnChatExit } from '@/app/(chat)/utils/resetStateOnChatExit';
 
 export default function SetChatInfoReset() {
   const {
@@ -18,12 +18,6 @@ export default function SetChatInfoReset() {
       selectedAgora: state.selectedAgora,
       enterAgoraReset: state.enterAgoraReset,
       reset: state.reset,
-    })),
-  );
-
-  const { resetParticipants } = useChatInfo(
-    useShallow((state) => ({
-      resetParticipants: state.resetParticipants,
     })),
   );
 
@@ -42,7 +36,7 @@ export default function SetChatInfoReset() {
         agoraInfoReset();
         userProfileReset();
         selectedAgoraInfoReset();
-        resetParticipants();
+        resetStateOnChatExit();
 
         useAgora.persist.rehydrate();
         useEnter.persist.rehydrate();
