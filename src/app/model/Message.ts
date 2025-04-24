@@ -5,9 +5,8 @@
 //   content: string;
 //   createdAt: string;
 // }
+import { AccessStatus } from './AccessStatus';
 import { Reaction } from './Reaction';
-
-export type AccessStatus = 'enter' | 'exit' | 'kicked';
 
 export interface Message {
   chatId: number;

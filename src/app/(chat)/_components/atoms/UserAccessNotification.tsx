@@ -1,4 +1,4 @@
-import { AccessStatus } from '@/app/model/Message';
+import { AccessStatus } from '@/app/model/AccessStatus';
 import React from 'react';
 
 type Props = {
@@ -15,9 +15,10 @@ export default function UserAccessNotification({
   const getAccessString = () => {
     let baseStr = `${nickname} 님이`;
 
-    if (access === 'enter') baseStr += '입장했습니다.';
-    else if (access === 'kicked') baseStr += '강퇴 투표로 퇴장 처리되었습니다.';
-    else if (access === 'exit') baseStr += '나갔습니다.';
+    if (access === AccessStatus.ENTER) baseStr += '입장했습니다.';
+    else if (access === AccessStatus.KICKED)
+      baseStr += '강퇴 투표로 퇴장 처리되었습니다.';
+    else if (access === AccessStatus.EXIT) baseStr += '나갔습니다.';
     return baseStr;
   };
 

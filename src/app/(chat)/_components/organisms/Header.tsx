@@ -34,6 +34,7 @@ import isNull from '@/utils/validation/validateIsNull';
 import { useWebSocketClient } from '@/store/webSocket';
 import { useEnter } from '@/store/enter';
 import { kickedUsers } from '@/store/kickedUser';
+import { AccessStatus } from '@/app/model/AccessStatus';
 import BackButton from '../../../_components/atoms/BackButton';
 import AgoraInfo from '../molecules/AgoraInfo';
 import DiscussionStatus from '../molecules/DiscussionStatus';
@@ -227,11 +228,12 @@ export default function Header() {
       const { socketDisconnectTime, username, memberId } =
         response.data.agoraMemberInfo;
 
-      let accessStatus: 'enter' | 'kicked' | 'exit';
+      let accessStatus: AccessStatus;
 
-      if (isNull(socketDisconnectTime)) accessStatus = 'enter';
-      else if (kickedUsers.hasUserName(username)) accessStatus = 'kicked';
-      else accessStatus = 'exit';
+      if (isNull(socketDisconnectTime)) accessStatus = AccessStatus.ENTER;
+      else if (kickedUsers.hasUserName(username))
+        accessStatus = AccessStatus.KICKED;
+      else accessStatus = AccessStatus.EXIT;
 
       updateUserAccessMessage(
         queryClient,
