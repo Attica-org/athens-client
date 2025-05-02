@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import React, { Suspense, useState } from 'react';
+import React, { KeyboardEventHandler, Suspense, useState } from 'react';
 import { useChatInfo } from '@/store/chatInfo';
 import { useAgora } from '@/store/agora';
 import Loading from '@/app/_components/atoms/loading';
@@ -73,11 +73,20 @@ export default function DiscussionStatus({ meta }: Props) {
     }
   };
 
+  const togglePregressByKeyboard: KeyboardEventHandler<HTMLButtonElement> = (
+    e,
+  ) => {
+    if (e.key === 'Enter') {
+      toggleProgress();
+    }
+  };
+
   return enterAgora.status !== AGORA_STATUS.CLOSED ? (
     <>
       {enterAgora.role !== AGORA_POSITION.OBSERVER && (
         <button
           type="button"
+          onKeyDown={togglePregressByKeyboard}
           onClick={toggleProgress}
           aria-label={`토론 ${start ? '종료하기' : '시작하기'}`}
           className={`text-xs italic 
@@ -89,14 +98,10 @@ export default function DiscussionStatus({ meta }: Props) {
           {start ? 'END' : 'START'}
         </button>
       )}
-      <div
-        role="group"
-        aria-label="아고라 정보"
-        className="flex justify-center items-center"
-      >
+      <output className="flex justify-center items-center">
         <DiscussionTimer duration={meta?.agora.duration || 0} />
         <ObserverStatus meta={meta} />
-      </div>
+      </output>
     </>
   ) : (
     <Suspense
