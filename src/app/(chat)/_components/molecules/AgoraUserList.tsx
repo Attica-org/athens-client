@@ -178,7 +178,7 @@ export default function AgoraUserList({
   }, [webSocketClientConnected]);
 
   return (
-    <div className="pb-0.5rem">
+    <div className="pb-0.5rem" aria-labelledby={position}>
       <h3
         aria-label={
           position === AGORA_POSITION.PROS
@@ -190,10 +190,7 @@ export default function AgoraUserList({
       >
         {position === AGORA_POSITION.PROS ? '찬성측' : '반대측'}
       </h3>
-      <ul
-        aria-labelledby={position}
-        className="flex flex-col justify-center items-start"
-      >
+      <ul className="flex flex-col justify-center items-start">
         {userList.map(
           (user) =>
             user.type !== AGORA_POSITION.OBSERVER &&
@@ -202,7 +199,7 @@ export default function AgoraUserList({
                 className="w-full flex justify-between items-center pb-1rem"
                 key={user.id}
               >
-                <div className="flex items-center">
+                <span className="flex items-center">
                   <UserImage
                     aria-hidden
                     className="w-40 h-40 bg-white"
@@ -215,12 +212,13 @@ export default function AgoraUserList({
                     w={40}
                     h={40}
                   />
-                  <div className="ml-0.5rem text-sm dark:text-white dark:text-opacity-85">
+                  <span className="ml-0.5rem text-sm dark:text-white dark:text-opacity-85">
                     {user.nickname}
-                  </div>
-                </div>
+                  </span>
+                </span>
                 <button
                   type="button"
+                  aria-label={`${position === AGORA_POSITION.PROS ? '찬성측' : '반대측'} 참여자 ${user.nickname} 추방하기`}
                   onClick={() =>
                     handleKick(user.id, enterAgora.id, user.nickname)
                   }
