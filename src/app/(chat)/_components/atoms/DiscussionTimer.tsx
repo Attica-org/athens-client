@@ -60,13 +60,23 @@ export default function DiscussionTimer({ duration }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished, enterAgora.id, router, startTime, resetTimer, endTime]);
 
+  const parseTimeString = (timeStr: string): [number, number] => {
+    const [minutes, seconds] = timeStr.split(':').map(Number);
+    return [minutes, seconds];
+  };
+
+  const [remainingMinutes, remainingSeconds] = parseTimeString(formattedTime);
+
   return (
     <div
+      aria-describedby="chat-timer"
       role="timer"
-      aria-label="토론 제한 시간"
       className="text-xs italic border-1 border-athens-main p-4 pl-15 pr-15 under-mobile:pl-10 under-mobile:pr-10 rounded-lg"
     >
-      {isFinished ? '00:00' : formattedTime}
+      <span aria-hidden="true">{isFinished ? '00:00' : formattedTime}</span>
+      <span id="chat-timer" className="sr-only">
+        토론 종료까지 {remainingMinutes}분 {remainingSeconds}초 남았습니다.
+      </span>
     </div>
   );
 }
