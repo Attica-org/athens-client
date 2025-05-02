@@ -6,6 +6,7 @@ import React, {
   MouseEventHandler,
   Suspense,
   useEffect,
+  useRef,
 } from 'react';
 import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
@@ -19,6 +20,7 @@ import ChatSideModule from '../molecules/ChatSideModule';
 import ModifyAgoraImage from '../molecules/ModifyAgoraImage';
 
 export default function AgoraSideBar() {
+  const mainRef = useRef<HTMLElement>(null);
   const { toggle, isOpen } = useSidebarStore(
     useShallow((state) => ({
       toggle: state.toggle,
@@ -44,7 +46,7 @@ export default function AgoraSideBar() {
   };
 
   useEffect(() => {
-    const element = document.getElementById('agora-side-bar');
+    const element = mainRef.current;
     if (isOpen && element) {
       // 모달이 열릴 때 포커스를 모달로 이동
       element.setAttribute('aria-modal', 'true');
@@ -61,70 +63,76 @@ export default function AgoraSideBar() {
   }, [isOpen]);
 
   return (
-    <div
-      role="dialog"
-      id="agora-side-bar"
-      className={`min-w-300 absolute inset-0 bg-opacity-50 bg-dark-bg-dark duration-500 transition-opacity ${
-        !isOpen && 'pointer-events-none opacity-0'
+    <section
+      className={`fixed inset-0 z-50 bg-opacity-50 bg-dark-bg-dark transition-opacity duration-500 ${
+        !isOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
       }`}
-      aria-modal={isOpen}
-      aria-hidden={!isOpen}
+      role="presentation"
+      // aria-hidden={!isOpen}
       aria-label="사이드 메뉴 모달"
-      tabIndex={-1}
     >
       <div
+        aria-hidden
         onKeyDown={onKeyDownOutSide}
         onClick={onClickOutSide}
         className="w-full h-full"
-        role="button"
-        tabIndex={0}
-        aria-label="아고라 설정 및 참여자 목록"
       >
         <div
           className={`min-w-250 absolute inset-y-0 right-0 flex flex-col max-w-full pl-10 ${
             isOpen ? 'z-15' : 'pointer-events-none'
           }`}
         >
-          <section
-            role="group"
-            className={`relative overflow-y-scroll scrollbar-hide p-1rem right-0 transition duration-500 ease-in-out w-screen inset-y-0 bg-white dark:bg-dark-light-300 flex-1 flex-col h-full border-l-1 border-athens-gray dark:border-dark-light-300 max-w-15rem xl:w-15rem ${
+          <main
+            ref={mainRef}
+            aria-modal="true"
+            role="dialog"
+            className={`relative right-0 top-0 h-full w-full p-1.5rem bg-white dark:bg-dark-light-300 shadow-lg transition-transform duration-500 ease-in-out overflow-y-auto max-w-15rem xl:w-15rem border-l-1 border-athens-gray dark:border-dark-light-300 ${
               isOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
+            tabIndex={-1}
+            aria-labelledby="title"
           >
+            <h2
+              id="title"
+              aria-describedby="sidebar-description"
+              className="sr-only"
+            >
+              아고라 사이드바
+            </h2>
+            <p id="sidebar-description" className="sr-only">
+              토론에 참여한 사용자를 확인할 수 있으며 특정 사용자를 강퇴하도록
+              투표할 수 있습니다.
+            </p>
             <button
               type="button"
               className="absolute top-1rem right-1rem"
-              aria-label="아이콘으로 사이드 메뉴 닫기"
+              aria-label="사이드바 닫기"
               onClick={toggle}
             >
               <RemoveIcon className="w-22 cursor-pointer" />
             </button>
             <ChatSideModule title="아고라 설정">
               {enterAgora.isCreator ? (
-                <div className="flex w-full relative">
-                  <div className="flex-1">
-                    <ModifyAgoraImage />
-                  </div>
+                <div className="flex-1 w-full relative">
+                  <ModifyAgoraImage />
                 </div>
               ) : (
-                <div className="flex w-full relative">
-                  <div className="flex-1">
-                    {isValidImgUrl(enterAgora.thumbnail) ? (
-                      <div className="relative w-60 h-60">
-                        <Image
-                          src={enterAgora.thumbnail ?? ''}
-                          alt="아고라 프로필"
-                          layout="fill"
-                          objectFit="cover"
-                          className="rounded-3xl under-mobile:rounded-2xl"
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        className={`w-60 h-60 rounded-3xl under-mobile:rounded-2xl ${enterAgora.agoraColor}`}
+                <div className="flex-1 w-full relative">
+                  {isValidImgUrl(enterAgora.thumbnail) ? (
+                    <div className="relative w-60 h-60">
+                      <Image
+                        src={enterAgora.thumbnail ?? ''}
+                        alt="아고라 프로필"
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-3xl under-mobile:rounded-2xl"
                       />
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <div
+                      className={`w-60 h-60 rounded-3xl under-mobile:rounded-2xl ${enterAgora.agoraColor}`}
+                    />
+                  )}
                 </div>
               )}
             </ChatSideModule>
@@ -135,9 +143,9 @@ export default function AgoraSideBar() {
                 </Suspense>
               </ChatSideModule>
             )}
-          </section>
+          </main>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

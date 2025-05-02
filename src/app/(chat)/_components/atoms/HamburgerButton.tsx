@@ -1,17 +1,18 @@
 import HamburgerIcon from '@/assets/icons/HamburgerIcon';
+import { useSidebarStore } from '@/store/sidebar';
 import React from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 type Props = {
-  toggleMenu: () => void;
   refetchUserList: () => void;
 };
 
-export default function HamburgerButton({
-  toggleMenu,
-  refetchUserList,
-}: Props) {
+export default function HamburgerButton({ refetchUserList }: Props) {
+  const { toggle, isOpen } = useSidebarStore(
+    useShallow((state) => ({ toggle: state.toggle, isOpen: state.isOpen })),
+  );
   const handleClick = () => {
-    toggleMenu();
+    toggle();
     refetchUserList();
   };
 
@@ -19,6 +20,9 @@ export default function HamburgerButton({
     <button
       className="pl-5"
       aria-label="메뉴 열기"
+      aria-haspopup
+      aria-expanded={isOpen}
+      aria-controls="agora-side-bar"
       onClick={handleClick}
       type="button"
     >
