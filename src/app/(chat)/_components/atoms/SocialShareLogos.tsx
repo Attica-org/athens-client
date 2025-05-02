@@ -113,10 +113,13 @@ export default function SocialShareLogos({ title, url }: Props) {
   };
 
   return (
-    <div className="overflow-hidden text-nowrap w-full pl-16 lg:pl-0 pb-16 pt-20">
+    <section
+      aria-label="sns로 공유하기 모달창"
+      className="overflow-hidden text-nowrap w-full pl-16 lg:pl-0 pb-16 pt-20"
+    >
       <div className="swiper w-full">
-        <div className="swiper-wrapper flex lg:justify-center">
-          <div className="swiper-slide">
+        <ul className="swiper-wrapper flex lg:justify-center">
+          <li className="swiper-slide">
             <FacebookShareButton
               url={sendUrl}
               className="mr-20"
@@ -125,8 +128,8 @@ export default function SocialShareLogos({ title, url }: Props) {
               <FacebookIcon size={45} round />
               <SocialName name="Facebook" />
             </FacebookShareButton>
-          </div>
-          <div className="swiper-slide">
+          </li>
+          <li className="swiper-slide">
             <FacebookMessengerShareButton
               url={sendUrl}
               appId="521270401588372"
@@ -136,8 +139,8 @@ export default function SocialShareLogos({ title, url }: Props) {
               <FacebookMessengerIcon size={45} round />
               <SocialName name="Messanger" />
             </FacebookMessengerShareButton>
-          </div>
-          <div className="swiper-slide">
+          </li>
+          <li className="swiper-slide">
             <TwitterShareButton
               url={sendUrl}
               title={title}
@@ -147,8 +150,8 @@ export default function SocialShareLogos({ title, url }: Props) {
               <XIcon size={45} round />
               <SocialName name="X" />
             </TwitterShareButton>
-          </div>
-          <div className="swiper-slide">
+          </li>
+          <li className="swiper-slide">
             <button
               aria-label="카카오톡으로 공유하기"
               type="button"
@@ -163,8 +166,8 @@ export default function SocialShareLogos({ title, url }: Props) {
               />
               <SocialName name="Kakao Talk" />
             </button>
-          </div>
-          <div className="swiper-slide">
+          </li>
+          <li className="swiper-slide">
             <EmailShareButton
               url={sendUrl}
               subject={`athens-${title}`}
@@ -175,8 +178,8 @@ export default function SocialShareLogos({ title, url }: Props) {
               <EmailIcon size={45} round />
               <SocialName name="Email" />
             </EmailShareButton>
-          </div>
-          <div className="swiper-slide">
+          </li>
+          <li className="swiper-slide">
             <LineShareButton
               url={sendUrl}
               title={title}
@@ -186,9 +189,9 @@ export default function SocialShareLogos({ title, url }: Props) {
               <LineIcon size={45} round />
               <SocialName name="Line" />
             </LineShareButton>
-          </div>
-        </div>
+          </li>
+        </ul>
       </div>
-    </div>
+    </section>
   );
 }

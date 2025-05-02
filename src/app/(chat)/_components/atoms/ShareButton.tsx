@@ -3,7 +3,11 @@
 import CopyContentIcon from '@/assets/icons/CopyContentIcon';
 import ShareIcon from '@/assets/icons/ShareIcon';
 import { useParams, useRouter } from 'next/navigation';
-import React, { MouseEventHandler, useState } from 'react';
+import React, {
+  KeyboardEventHandler,
+  MouseEventHandler,
+  useState,
+} from 'react';
 import { BottomSheet } from 'react-spring-bottom-sheet';
 import SocialShareLogos from './SocialShareLogos';
 
@@ -23,6 +27,14 @@ export default function ShareButton({ title }: Props) {
     await navigator.clipboard.writeText(url);
   };
 
+  const clipboardCopyByKeyboard: KeyboardEventHandler<HTMLButtonElement> = (
+    e,
+  ) => {
+    if (e.key === 'Enter') {
+      clipboardCopy();
+    }
+  };
+
   const shareSNS: MouseEventHandler<HTMLButtonElement> = async () => {
     if (window.innerWidth < 1024) {
       setOpen(true);
@@ -36,34 +48,51 @@ export default function ShareButton({ title }: Props) {
     setOpen(false);
   };
 
+  const handleDismissByKeyboard: KeyboardEventHandler<HTMLButtonElement> = (
+    e,
+  ) => {
+    if (e.key === 'Enter') {
+      handleDismiss();
+    }
+  };
+
   return (
-    <button
-      type="button"
-      aria-label="SNS 공유하기"
-      onClick={shareSNS}
-      className="cursor-pointer"
-    >
-      <ShareIcon className="w-18 lg:w-20 mr-1rem under-mobile:mr-0.5rem" />
-      <BottomSheet onDismiss={handleDismiss} open={open}>
+    <>
+      <button
+        type="button"
+        aria-label="SNS 공유하기"
+        aria-controls="share-menu"
+        aria-expanded={open}
+        aria-haspopup="dialog"
+        onClick={shareSNS}
+        className="cursor-pointer"
+      >
+        <ShareIcon className="w-18 lg:w-20 mr-1rem under-mobile:mr-0.5rem" />
+      </button>
+      <BottomSheet id="share-menu" onDismiss={handleDismiss} open={open}>
         <div className="px-10 pb-22 pl-20 text-sm border-b-1 border-dark-light-500 text-white">
+          <button
+            className="sr-only"
+            type="button"
+            onClick={handleDismiss}
+            onKeyDown={handleDismissByKeyboard}
+          >
+            SNS 공유하기 창 닫기
+          </button>
           <div className="pt-5 text-xs flex justify-between items-center">
-            <div>
-              다양한 사람들과 토론에 함께하세요!
-              <div>{url}</div>
-            </div>
-            <div>
-              <button
-                type="button"
-                aria-label="url 클립보드에 복사하기"
-                onClick={clipboardCopy}
-              >
-                <CopyContentIcon className="w-20 mr-5" />
-              </button>
-            </div>
+            <p className="text-lg font-semibold">공유</p>
+            <button
+              type="button"
+              aria-label="현재 토론방 주소 클립보드에 복사하기"
+              onClick={clipboardCopy}
+              onKeyDown={clipboardCopyByKeyboard}
+            >
+              <CopyContentIcon className="w-20 mr-5" />
+            </button>
           </div>
         </div>
         <SocialShareLogos title={title} url={url} />
       </BottomSheet>
-    </button>
+    </>
   );
 }
