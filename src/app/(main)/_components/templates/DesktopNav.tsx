@@ -17,7 +17,7 @@ function DesktopNav() {
             <Image
               src="/logo.png"
               alt="Athens 로고"
-              aria-label="홈으로 돌아가기"
+              aria-label="로고로 홈 돌아가기"
               className="mr-14"
               width={32}
               height={32}
