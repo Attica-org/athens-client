@@ -10,7 +10,7 @@ import CreateAgoraImageUpload from './_component/CreateAgoraImageUpload';
 
 export async function generateMetadata() {
   return {
-    title: '아고라 생성 - Athens',
+    title: '아고라 생성',
     description: '사람들과 이야기하고 싶은 주제로 아고라를 만들어보세요.',
     openGraph: {
       title: '아고라 생성 - Athens',

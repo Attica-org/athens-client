@@ -22,7 +22,7 @@ export async function generateMetadata({ searchParams }: Props) {
   const title = searchParams.q ? `${searchParams.q} - Athens` : '';
   const category = searchParams.category
     ? `${value?.innerText} - Athens`
-    : 'Athens';
+    : '홈';
 
   return {
     title: title || category,
