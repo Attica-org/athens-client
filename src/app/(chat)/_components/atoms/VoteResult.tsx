@@ -43,11 +43,25 @@ export default function VoteResult({ agoraId }: Props) {
   }, [data, error]);
 
   return (
-    <div className="text-xs lg:text-sm">
+    <div
+      className="text-xs lg:text-sm"
+      aria-label="최종 투표 결과"
+      role="status"
+      aria-describedby="vote-result"
+    >
+      <span className="sr-only" id="vote-result">
+        토론 최종 투표 결과 {result.prosCount || data?.prosCount || 0}명의
+        찬성과
+        {result.consCount || data?.consCount || 0}명의 반대를 받았습니다.
+      </span>
       최종 투표 결과 |
-      <span className="dark:text-dark-pro-color text-blue-400"> 찬성 </span>
+      <span aria-hidden className="dark:text-dark-pro-color text-blue-400">
+        찬성
+      </span>
       {result.prosCount || data?.prosCount || 0}
-      <span className="dark:text-dark-con-color text-red-400 ml-7"> 반대 </span>
+      <span aria-hidden className="dark:text-dark-con-color text-red-400 ml-7">
+        반대
+      </span>
       {result.consCount || data?.consCount || 0}
     </div>
   );
