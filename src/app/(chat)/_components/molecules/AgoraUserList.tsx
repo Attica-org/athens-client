@@ -177,6 +177,14 @@ export default function AgoraUserList({
     subscribeKickVote();
   }, [webSocketClientConnected]);
 
+  const handleKickByKeyboard =
+    (userId: number, agoraId: number, nickname: string) =>
+    (e: React.KeyboardEvent<HTMLButtonElement>) => {
+      if (e.key === 'Enter') {
+        handleKick(userId, agoraId, nickname);
+      }
+    };
+
   return (
     <div className="pb-0.5rem" aria-labelledby={position}>
       <h3
@@ -222,9 +230,11 @@ export default function AgoraUserList({
                   onClick={() =>
                     handleKick(user.id, enterAgora.id, user.nickname)
                   }
-                  onKeyDown={() =>
-                    handleKick(user.id, enterAgora.id, user.nickname)
-                  }
+                  onKeyDown={handleKickByKeyboard(
+                    user.id,
+                    enterAgora.id,
+                    user.nickname,
+                  )}
                   className="w-70 h-24 text-xs bg-red-500 text-white rounded-md"
                 >
                   추방하기
