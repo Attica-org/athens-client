@@ -14,9 +14,9 @@ export default function Layout({ children }: Props) {
       <section className="w-full flex flex-1 h-dvh max-lg:pb-3rem min-w-270 flex-grow max-width-screen absolute top-0">
         <ChatPageLoadConfig>
           <section className="flex flex-1 flex-col w-full relative h-dvh">
-            <section className="sticky w-full top-0 bg-white dark:bg-dark-bg-light pt-10 min-w-270 border-b-1 border-gray-200 dark:border-dark-light-300">
+            <header className="sticky w-full top-0 bg-white dark:bg-dark-bg-light pt-10 min-w-270 border-b-1 border-gray-200 dark:border-dark-light-300">
               <Header />
-            </section>
+            </header>
             {children}
             <MessageInput />
           </section>

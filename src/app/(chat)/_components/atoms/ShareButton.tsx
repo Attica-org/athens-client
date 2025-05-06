@@ -48,14 +48,6 @@ export default function ShareButton({ title }: Props) {
     setOpen(false);
   };
 
-  const handleDismissByKeyboard: KeyboardEventHandler<HTMLButtonElement> = (
-    e,
-  ) => {
-    if (e.key === 'Enter') {
-      handleDismiss();
-    }
-  };
-
   return (
     <>
       <button
@@ -71,14 +63,6 @@ export default function ShareButton({ title }: Props) {
       </button>
       <BottomSheet id="share-menu" onDismiss={handleDismiss} open={open}>
         <div className="px-10 pb-22 pl-20 text-sm border-b-1 border-dark-light-500 text-white">
-          <button
-            className="sr-only"
-            type="button"
-            onClick={handleDismiss}
-            onKeyDown={handleDismissByKeyboard}
-          >
-            SNS 공유하기 창 닫기
-          </button>
           <div className="pt-5 text-xs flex justify-between items-center">
             <p className="text-lg font-semibold">공유</p>
             <button
