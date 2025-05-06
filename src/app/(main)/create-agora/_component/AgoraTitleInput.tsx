@@ -54,11 +54,7 @@ export default function AgoraTitleInput() {
         className="placeholder:text-athens-gray-thick w-full p-0.5rem text-sm border-1 border-gray-300 rounded-md dark:bg-dark-light-300 dark:placeholder:text-white dark:placeholder:text-opacity-85 dark:border-0 dark:text-white"
       />
       {message && (
-        <div
-          aria-live="polite"
-          role="alert"
-          className="text-xs text-red-600 p-5 pl-0 dark:text-dark-con-color"
-        >
+        <div className="text-xs text-red-600 p-5 pl-0 dark:text-dark-con-color">
           {message}
         </div>
       )}
