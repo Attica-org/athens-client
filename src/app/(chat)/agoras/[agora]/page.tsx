@@ -1,7 +1,7 @@
 import React from 'react';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
-import MessageContainer from '../../_components/organisms/MessageContainer';
+import MessageContainer from '../../_components/templates/MessageContainer';
 
 type Props = {
   params: { agora: string };
