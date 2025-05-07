@@ -99,11 +99,9 @@ function SearchBar() {
         type="button"
         aria-label="입력한 검색 텍스트 전체 삭제"
         className="flex justify-center items-center w-1.5rem h-1.5rem"
+        onClick={removeAllInputText}
       >
-        <RemoveIcon
-          className="w-19 cursor-pointer"
-          onClick={removeAllInputText}
-        />
+        <RemoveIcon className="w-19 cursor-pointer" />
       </button>
     </div>
   );
