@@ -37,13 +37,22 @@ export default function Message() {
   const [newMessageView, setNewMessageView] = useState<boolean>(false);
   const [isNavigationMode, setIsNavigationMode] = useState<boolean>(false);
   const [accessibleQueue, setAccessibleQueue] = useState<IMessage[]>([]);
-  const ariaMessage = useAccessibleMessageNotifier(accessibleQueue);
   const adjustScrollRef = useRef<boolean>(false);
   const lastMessageRef = useRef<HTMLButtonElement | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const { shouldGoDown, setGoDown } = useMessageStore();
-  const myRole = useAgora((state) => state.enterAgora.role);
-  const agoraId = useAgora((state) => state.enterAgora.id);
+  const {
+    role: myRole,
+    id: agoraId,
+    status: agoraStatus,
+  } = useAgora(
+    useShallow((state) => ({
+      role: state.enterAgora.role,
+      id: state.enterAgora.id,
+      status: state.enterAgora.status,
+    })),
+  );
+  // const agoraId = useAgora((state) => state.enterAgora.id);
   const { webSocketClient, webSocketClientConnected } = useWebSocketClient(
     useShallow((state) => ({
       webSocketClient: state.webSocketClient,
@@ -52,6 +61,10 @@ export default function Message() {
   );
   const queryClient = useQueryClient();
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const ariaMessage = useAccessibleMessageNotifier(
+    accessibleQueue,
+    agoraStatus,
+  );
   const { data: session } = useSession();
   const { nickname: userNickname, reset } = useEnter(
     useShallow((state) => ({

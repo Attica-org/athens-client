@@ -1,9 +1,13 @@
+import { Status } from '@/app/model/Agora';
 import { Message as IMessage } from '@/app/model/Message';
-import { AGORA_POSITION } from '@/constants/agora';
+import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import isNull from '@/utils/validation/validateIsNull';
 import { useEffect, useRef, useState } from 'react';
 
-export function useAccessibleMessageNotifier(newMessages: IMessage[]) {
+export function useAccessibleMessageNotifier(
+  newMessages: IMessage[],
+  agoraStatus: Status | '',
+) {
   const [ariaMessage, setAriaMessage] = useState<string>('');
   const messageQueue = useRef<IMessage[]>([]);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -14,7 +18,7 @@ export function useAccessibleMessageNotifier(newMessages: IMessage[]) {
   };
 
   useEffect(() => {
-    if (newMessages.length === 0) return;
+    if (newMessages.length === 0 || agoraStatus === AGORA_STATUS.CLOSED) return;
 
     // 새 메시지를 큐에 저장
     messageQueue.current.push(...newMessages);
