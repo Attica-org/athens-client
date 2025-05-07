@@ -96,10 +96,28 @@ function CategoryAgora({ agora, className }: Props) {
     return '입장하기';
   }, []);
 
+  function getAgoraIntroduceString(agoraData: AgoraData) {
+    let baseStr = `${agoraData.agoraTitle},`;
+
+    if (isActiveAgora(agoraData)) {
+      const { pros, cons, observer } = agoraData.participants;
+      baseStr += `현재 찬성자는 ${pros}명, 반대자는 ${cons}명, 관찰자는 ${observer} 명입니다.`;
+
+      return baseStr;
+    }
+    const { prosCount, consCount } = agoraData;
+
+    baseStr += `토론에 참여했던 찬성자는 ${prosCount}명, 반대자는 ${consCount}명 입니다.`;
+    return baseStr;
+  }
+
   return (
     <article
+      /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
+      tabIndex={0}
       id={`${agora.id}`}
       className={`${className} w-165 under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center dark:bg-dark-light-300 dark:border-dark-light-600 border-slate-200 bg-slate-50`}
+      aria-label={getAgoraIntroduceString(agora)}
     >
       <div
         className={`${selectedColor} under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-3xl under-mobile:rounded-2xl relative`}
