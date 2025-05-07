@@ -2,7 +2,7 @@
 
 import { useChatInfo } from '@/store/chatInfo';
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import useTimer from '@/hooks/useTimer';
 import { useMutation } from '@tanstack/react-query';
@@ -17,6 +17,7 @@ type Props = {
 };
 
 export default function DiscussionTimer({ duration }: Props) {
+  const [alertText, setAlertText] = useState<string | null>(null);
   const { start: startTime, end: endTime } = useChatInfo(
     useShallow((state) => ({
       start: state.start,
@@ -67,16 +68,33 @@ export default function DiscussionTimer({ duration }: Props) {
 
   const [remainingMinutes, remainingSeconds] = parseTimeString(formattedTime);
 
+  // 특정 시점에만 알림 텍스트 설정
+  useEffect(() => {
+    // 토론 시작 시점
+    if (startTime) {
+      setAlertText(`총 ${duration}분 동안 진행됩니다.`);
+    }
+  }, [startTime]);
+
+  useEffect(() => {
+    if (remainingMinutes === 5 && remainingSeconds === 0) {
+      setAlertText('토론 종료까지 5분 남았습니다.');
+    } else if (remainingMinutes === 1 && remainingSeconds === 0) {
+      setAlertText('토론 종료까지 1분 남았습니다.');
+    } else {
+      // 이외 시간에는 알림 제거 (읽히지 않게 하기 위해)
+      setAlertText(null);
+    }
+  }, [remainingMinutes, remainingSeconds, isFinished]);
+
   return (
-    <div
-      aria-describedby="chat-timer"
-      role="timer"
-      className="text-xs italic border-1 border-athens-main p-4 pl-15 pr-15 under-mobile:pl-10 under-mobile:pr-10 rounded-lg"
-    >
+    <div className="text-xs italic border-1 border-athens-main p-4 pl-15 pr-15 under-mobile:pl-10 under-mobile:pr-10 rounded-lg">
       <span aria-hidden="true">{isFinished ? '00:00' : formattedTime}</span>
-      <span id="chat-timer" className="sr-only">
-        토론 종료까지 {remainingMinutes}분 {remainingSeconds}초 남았습니다.
-      </span>
+      {alertText && (
+        <span className="sr-only" role="alert" aria-live="assertive">
+          {alertText}
+        </span>
+      )}
     </div>
   );
 }
