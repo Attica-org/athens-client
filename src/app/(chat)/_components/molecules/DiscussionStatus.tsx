@@ -52,7 +52,6 @@ export default function DiscussionStatus({ meta }: Props) {
     onSuccess: async (response) => {
       if (response) {
         setIsEndClicked(true);
-        showToast('토론 종료에 투표하였습니다.', 'success');
         return;
       }
 
@@ -77,6 +76,7 @@ export default function DiscussionStatus({ meta }: Props) {
     e,
   ) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       toggleProgress();
     }
   };
