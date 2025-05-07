@@ -16,6 +16,7 @@ import { homeSegmentKey } from '@/constants/segmentKey';
 import useApiError from '@/hooks/useApiError';
 import { useKickedStore } from '@/store/kick';
 import showToast from '@/utils/showToast';
+import { kickedUsers } from '@/store/kickedUser';
 import { useEnter } from '@/store/enter';
 import UserImage from '../../../_components/atoms/UserImage';
 import { postKickVote } from '../../_lib/postKickVote';
@@ -51,12 +52,6 @@ export default function AgoraUserList({
   const router = useRouter();
   const { handleError } = useApiError();
 
-  const { participants } = useChatInfo(
-    useShallow((state) => ({
-      participants: state.participants,
-    })),
-  );
-
   const { enterAgora } = useAgora(
     useShallow((state) => ({
       enterAgora: state.enterAgora,
@@ -70,8 +65,9 @@ export default function AgoraUserList({
     })),
   );
 
-  const { removeParticipant } = useChatInfo(
+  const { participants, removeParticipant } = useChatInfo(
     useShallow((state) => ({
+      participants: state.participants,
       removeParticipant: state.removeParticipant,
     })),
   );
@@ -143,13 +139,17 @@ export default function AgoraUserList({
 
   const handleKickVoteResponse = useCallback(
     (response: KickVoteResponse) => {
+      const { kickVoteInfo } = response;
+
+      if (isNull(kickVoteInfo)) return;
       if (isKickVoteApproved(response)) {
         if (amIKicked(response)) {
           handleApprovedKickVoteMutation.mutate();
           return;
         }
-        // 내가 강퇴된 것이 아니라면, participants의 숫자를 조정
-        removeParticipant(response.kickVoteInfo.targetMemberId);
+        // 내가 강퇴된 것이 아니라면, 강퇴된 유저를 id에 추가
+        removeParticipant(kickVoteInfo.targetMemberId);
+        kickedUsers.addUserName(kickVoteInfo.nickname);
       }
     },
     [enterAgora.userId],
@@ -169,6 +169,7 @@ export default function AgoraUserList({
         `/topic/agoras/${enterAgora.id}/kick`,
         async (receivedMessage: StompJs.IFrame) => {
           const response = await JSON.parse(receivedMessage.body);
+
           handleKickVoteResponse(response);
         },
       );

@@ -4,7 +4,7 @@ import { useAgora } from '@/store/agora';
 import { useEnter } from '@/store/enter';
 import isNull from '@/utils/validation/validateIsNull';
 import { useSession } from 'next-auth/react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
@@ -37,7 +37,6 @@ export default function ChatPageLoadConfig({ children }: Props) {
   } = useAgora();
   const userProfilReset = useEnter().reset;
   const agoraId = usePathname().split('/').at(-1);
-  const router = useRouter();
   const { handleError } = useApiError();
   const hasMutated = useRef(false);
   const isAccessToAnotherAgora = useRef(false);
@@ -84,22 +83,29 @@ export default function ChatPageLoadConfig({ children }: Props) {
         return;
       }
       showToast('입장 실패했습니다.\n 다시 시도해주세요.', 'error');
-      router.push(homeSegmentKey);
+      window.location.replace(homeSegmentKey);
     },
     onError: async (error) => {
       await handleError(error, activeAgoraEnterMutation.mutate);
     },
   });
 
+  const isRedirect = isNull(selectedAgora.title) && isNull(enterAgora.title);
+
   const {
     data: agoraInfo,
     isLoading: LoadingGetBasicFacts,
-  }: { data: AgoraBasicFacts | undefined; isLoading: boolean } = useQuery({
+    isError,
+  }: {
+    data: AgoraBasicFacts | undefined;
+    isLoading: boolean;
+    isError: boolean;
+  } = useQuery({
     queryKey: getSelectedAgoraTags(agoraId || ''),
     queryFn: (query) => {
       return getAgoraTitle(query);
     },
-    enabled: isAccessToAnotherAgora.current === true,
+    enabled: isAccessToAnotherAgora.current === true || isRedirect,
   });
 
   const isSameAgora = (prevId: number, currentId: string | undefined) => {
@@ -148,12 +154,13 @@ export default function ChatPageLoadConfig({ children }: Props) {
         // storage 데이터 초기화 후 입장하기 페이지 띄우기
         isAccessToAnotherAgora.current = true;
         userProfilReset();
+        window.location.replace(`/flow/enter-agora/${agoraId}`);
       }
     }
   }, [session]);
 
   useEffect(() => {
-    if (!isNull(agoraInfo)) {
+    if (!isNull(agoraInfo) && (isRedirect || isAccessToAnotherAgora.current)) {
       // CLOSED AGORA일 때, 종료된 아고라 showToast 띄우기
       if (agoraInfo.status === AGORA_STATUS.CLOSED) {
         setSelectedAgora({
@@ -185,10 +192,19 @@ export default function ChatPageLoadConfig({ children }: Props) {
         agoraInfoReset();
         selectedAgoraInfoReset();
 
+        useAgora.persist.rehydrate();
+        useEnter.persist.rehydrate();
+
+        isAccessToAnotherAgora.current = true;
         window.location.replace(`/flow/enter-agora/${agoraId}`);
       }
     }
   }, [agoraInfo]);
+
+  if (isError) {
+    window.location.replace(homeSegmentKey);
+    return null;
+  }
 
   const isLoadingInActiveAgora =
     (selectedAgora.status === AGORA_STATUS.QUEUED ||
@@ -198,7 +214,12 @@ export default function ChatPageLoadConfig({ children }: Props) {
   const isLoadingInClosedAgora =
     selectedAgora.status === AGORA_STATUS.CLOSED && LoadingGetBasicFacts;
 
-  if (isNull(session) || isLoadingInActiveAgora || isLoadingInClosedAgora) {
+  if (
+    isNull(session) ||
+    isLoadingInActiveAgora ||
+    isLoadingInClosedAgora ||
+    LoadingGetBasicFacts
+  ) {
     return <ChatPageLoading />;
   }
 

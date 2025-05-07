@@ -45,7 +45,7 @@ export interface AgoraUserProfileType {
 
 export interface AgoraSideBarDataType {
   agoraId: number;
-  imageUrl: string;
+  agoraThumbnailUrl: string | null;
   participants: AgoraUserProfileType[];
 }
 
@@ -100,6 +100,7 @@ export type KickVoteResponse = {
   type: string;
   kickVoteInfo: {
     targetMemberId: number;
+    nickname: string;
     message: string;
   };
 };

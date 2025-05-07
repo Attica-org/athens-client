@@ -112,7 +112,7 @@ export default function AgoraSideBar() {
                     {isValidImgUrl(enterAgora.thumbnail) ? (
                       <div className="relative w-60 h-60">
                         <Image
-                          src={enterAgora.thumbnail}
+                          src={enterAgora.thumbnail ?? ''}
                           alt="아고라 프로필"
                           layout="fill"
                           objectFit="cover"

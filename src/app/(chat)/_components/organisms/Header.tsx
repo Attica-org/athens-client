@@ -10,16 +10,9 @@ import { AgoraMeta } from '@/app/model/AgoraMeta';
 import { useChatInfo } from '@/store/chatInfo';
 import showToast from '@/utils/showToast';
 import { useVoteStore } from '@/store/vote';
-import {
-  InfiniteData,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import getKey from '@/utils/getKey';
-import {
-  getAgoraUserListQueryKey,
-  getChatMessagesQueryKey,
-} from '@/constants/queryKey';
+import { getAgoraUserListQueryKey } from '@/constants/queryKey';
 import {
   STORAGE_PREVIOUSE_URL_KEY,
   homeSegmentKey,
@@ -34,12 +27,14 @@ import {
   DISCUSSION_TOAST_MESSAGE,
 } from '@/constants/chats';
 import { useUnloadDisconnectSocket } from '@/hooks/useUnloadDisconnectSocket';
-import { Message } from '@/app/model/Message';
+
 import { useMessageStore } from '@/store/message';
 import isNull from '@/utils/validation/validateIsNull';
-import accessMessageConfig from '@/lib/accessMessageConfig';
+
 import { useWebSocketClient } from '@/store/webSocket';
 import { useEnter } from '@/store/enter';
+import { kickedUsers } from '@/store/kickedUser';
+import { AccessStatus } from '@/app/model/AccessStatus';
 import BackButton from '../../../_components/atoms/BackButton';
 import AgoraInfo from '../molecules/AgoraInfo';
 import DiscussionStatus from '../molecules/DiscussionStatus';
@@ -47,6 +42,7 @@ import patchChatExit from '../../_lib/patchChatExit';
 import SocketErrorHandler from '../../utils/SocketErrorHandler';
 import { resetStateOnChatExit } from '../../utils/resetStateOnChatExit';
 import MenuItems from '../molecules/MenuItems';
+import { updateUserAccessMessage } from '../../utils/updateUserAccessMessage';
 
 export default function Header() {
   const { toggle } = useSidebarStore(
@@ -187,71 +183,6 @@ export default function Header() {
     );
   };
 
-  const updateUserAccessMessage = (
-    userDisconnectTime: string,
-    enterAgoraId: number,
-    username: string,
-  ) => {
-    const curMessages = queryClient.getQueryData(
-      getChatMessagesQueryKey(enterAgora.id),
-    ) as InfiniteData<{
-      chats: Message[];
-      meta: { key: number; effectiveSize: number };
-    }>;
-
-    if (isNull(username) || isNull(curMessages)) return;
-
-    const newMessages = {
-      pageParams: [...curMessages.pageParams],
-      pages: [...curMessages.pages],
-    };
-
-    const lastPage = newMessages.pages.at(-1);
-
-    const newLastPage =
-      lastPage?.meta.key === -1
-        ? { chats: [...lastPage.chats], meta: { ...lastPage.meta } }
-        : { chats: [], meta: { key: 0, effectiveSize: 20 } };
-
-    // const lastMessageId = lastPage?.chats.at(-1)?.chatId;
-
-    const newMessage = {
-      chatId: accessMessageConfig.getAccessMessageChatId(),
-      user: {
-        id: -1,
-        nickname: username,
-        photoNumber: 0,
-        type: '',
-      },
-      content: '',
-      createdAt: '',
-      reactionCount: {
-        LIKE: 0,
-        DISLIKE: 0,
-        LOVE: 0,
-        HAPPY: 0,
-        SAD: 0,
-      },
-      access: userDisconnectTime === null ? 'enter' : 'exit',
-    };
-
-    newLastPage.chats.push(newMessage);
-
-    newMessages.pages[newMessages.pages.length - 1] = {
-      chats: newLastPage.chats,
-      meta: {
-        key: newLastPage.meta.key || 0,
-        effectiveSize: 20,
-      },
-    };
-
-    queryClient.setQueryData(
-      getChatMessagesQueryKey(enterAgoraId),
-      newMessages,
-    );
-    setGoDown(true);
-  };
-
   const updateParticipantList = (
     userDisconnectTime: string,
     memberId: number,
@@ -297,12 +228,22 @@ export default function Header() {
       const { socketDisconnectTime, username, memberId } =
         response.data.agoraMemberInfo;
 
+      let accessStatus: AccessStatus;
+
+      if (isNull(socketDisconnectTime)) accessStatus = AccessStatus.ENTER;
+      else if (kickedUsers.hasUserName(username))
+        accessStatus = AccessStatus.KICKED;
+      else accessStatus = AccessStatus.EXIT;
+
       updateUserAccessMessage(
-        socketDisconnectTime,
+        queryClient,
         response.data.agora.id,
         username,
+        accessStatus,
       );
+      setGoDown(true);
       updateParticipantList(socketDisconnectTime, memberId, username);
+      kickedUsers.removeUserName(memberId);
     } else if (response.type === DISCUSSION_START) {
       // console.log(data.data);
       showToast('토론이 시작되었습니다.', 'success');

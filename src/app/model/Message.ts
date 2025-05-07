@@ -5,6 +5,7 @@
 //   content: string;
 //   createdAt: string;
 // }
+import { AccessStatus } from './AccessStatus';
 import { Reaction } from './Reaction';
 
 export interface Message {
@@ -18,5 +19,5 @@ export interface Message {
   content: string;
   createdAt: string;
   reactionCount: Reaction;
-  access?: string;
+  access?: AccessStatus;
 }
