@@ -14,6 +14,7 @@ import { useAgora } from '@/store/agora';
 import Image from 'next/image';
 import { AGORA_STATUS } from '@/constants/agora';
 import { isValidImgUrl } from '@/utils/validation/validateImage';
+import isNull from '@/utils/validation/validateIsNull';
 import AgoraUserSuspense from '../organisms/AgoraUserSuspense';
 import AgoraUserSideSkeleton from '../organisms/AgoraUserSideSkeleton';
 import ChatSideModule from '../molecules/ChatSideModule';
@@ -21,10 +22,11 @@ import ModifyAgoraImage from '../molecules/ModifyAgoraImage';
 
 export default function AgoraSideBar() {
   const mainRef = useRef<HTMLElement>(null);
-  const { toggle, isOpen } = useSidebarStore(
+  const { toggle, isOpen, hamburgerButtonRef } = useSidebarStore(
     useShallow((state) => ({
       toggle: state.toggle,
       isOpen: state.isOpen,
+      hamburgerButtonRef: state.hamburgerButtonRef,
     })),
   );
   const { enterAgora } = useAgora(
@@ -40,7 +42,11 @@ export default function AgoraSideBar() {
   };
 
   const onKeyDownOutSide: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    console.log('onKeyDownOutSide', e.key, e.code);
     if (e.key === 'Enter' && e.target === e.currentTarget) {
+      toggle();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
       toggle();
     }
   };
@@ -54,11 +60,15 @@ export default function AgoraSideBar() {
       element.focus();
     }
 
-    if (!isOpen && element) {
+    if (!isOpen && element && !isNull(hamburgerButtonRef)) {
       // 모달이 닫힐 때 포커스를 모달 밖으로 이동
       element.setAttribute('aria-modal', 'false');
       element.setAttribute('aria-hidden', 'true');
       element.blur();
+
+      requestAnimationFrame(() => {
+        hamburgerButtonRef.current?.focus();
+      });
     }
   }, [isOpen]);
 
@@ -67,8 +77,7 @@ export default function AgoraSideBar() {
       className={`fixed inset-0 z-50 bg-opacity-50 bg-dark-bg-dark transition-opacity duration-500 ${
         !isOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
       }`}
-      role="presentation"
-      // aria-hidden={!isOpen}
+      aria-hidden={!isOpen}
       aria-label="사이드 메뉴 모달"
     >
       <div

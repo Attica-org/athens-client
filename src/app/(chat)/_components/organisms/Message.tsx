@@ -1,7 +1,14 @@
 'use client';
 
 import { Message as IMessage } from '@/app/model/Message';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  FocusEventHandler,
+  KeyboardEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   InfiniteData,
   useQueryClient,
@@ -248,32 +255,37 @@ export default function Message() {
     }
   }, [accessibleQueue]);
 
-  useEffect(() => {
+  const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
     const element = listRef.current;
-    if (!element) return () => {};
+    const isFocusedOnParent = document.activeElement === element;
+    if (isFocusedOnParent && e.key === 'Enter') {
+      // 첫 번째 메시지에 포커스
+      e.preventDefault();
+      setIsNavigationMode(true);
+      // 첫 번째 메시지에 포커스
+      lastMessageRef.current?.focus();
+    } else if (e.key === 'Escape') {
+      // 다시 메시지 리스트 컨테이너로 포커스
+      e.preventDefault();
+      setIsNavigationMode(false);
+      listRef.current?.focus();
+    }
+  };
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const isFocusedOnParent = document.activeElement === element;
-      if (isFocusedOnParent && e.key === 'Enter') {
-        // 첫 번째 메시지에 포커스
-        e.preventDefault();
-        setIsNavigationMode(true);
-        // 첫 번째 메시지에 포커스
-        lastMessageRef.current?.focus();
-      } else if (e.key === 'Escape') {
-        // 다시 메시지 리스트 컨테이너로 포커스
-        e.preventDefault();
-        setIsNavigationMode(false);
-        listRef.current?.focus();
-      }
-    };
+  const handleBlur: FocusEventHandler<HTMLDivElement> = (e) => {
+    if (!listRef.current?.contains(e.relatedTarget as Node)) {
+      setIsNavigationMode(false);
+    }
+  };
 
-    element.addEventListener('keydown', handleKeyDown);
-    element.focus();
+  const handleFocusIn: FocusEventHandler<HTMLDivElement> = (e) => {
+    if (e.target === listRef.current) {
+      setIsNavigationMode(false);
+    }
+  };
 
+  useEffect(() => {
     return () => {
-      element.removeEventListener('keydown', handleKeyDown);
-
       queryClient.removeQueries({
         queryKey: getChatMessagesQueryKey(agoraId),
       });
@@ -300,8 +312,11 @@ export default function Message() {
         tabIndex={0}
         key={agoraId}
         ref={listRef}
+        onFocusCapture={handleFocusIn}
+        onBlurCapture={handleBlur}
+        onKeyDown={handleKeyDown}
         aria-label="메시지 리스트입니다. Enter 키를 누르면 메시지를 탐색할 수 있습니다"
-        className="h-full w-full flex overflow-auto flex-col transform-scale-y-inverted"
+        className="cursor-default h-full w-full flex overflow-auto flex-col transform-scale-y-inverted"
       >
         <ChatNotification />
         <ul

@@ -1,13 +1,8 @@
 'use client';
 
-import React, {
-  KeyboardEventHandler,
-  MouseEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { MouseEventHandler, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import CloseButton from '../atoms/CloseButton';
 
 type Props = {
@@ -25,7 +20,9 @@ export default function ModalBase({
 }: Props) {
   const router = useRouter();
   const [opacity, setOpacity] = useState('opacity-0');
-  const modalRef = useRef<HTMLElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(modalRef, closeIcon);
+  // useEscapeClose(modalRef, closeIcon);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -36,14 +33,9 @@ export default function ModalBase({
     };
   }, [animation]);
 
-  const onClickOutSide: MouseEventHandler<HTMLDivElement> = (e) => {
-    if (e.target === e.currentTarget && closeIcon) {
-      router.back();
-    }
-  };
-
-  const onKeyDownOutSide: KeyboardEventHandler<HTMLElement> = (e) => {
-    if (e.key === 'Enter' && e.target === e.currentTarget && closeIcon) {
+  const onClickOutSide: MouseEventHandler<HTMLElement> = (e) => {
+    if (closeIcon && !modalRef.current?.contains(e.target as Node)) {
+      e.preventDefault();
       router.back();
     }
   };
@@ -56,7 +48,6 @@ export default function ModalBase({
     <section
       role="dialog"
       aria-modal="true"
-      ref={modalRef}
       tabIndex={-1}
       aria-labelledby="title"
       className="min-w-300 w-full h-full flex absolute justify-center items-center z-20 top-0 right-0 left-0 bottom-0"
@@ -64,10 +55,11 @@ export default function ModalBase({
       <div
         role="presentation"
         onClick={onClickOutSide}
-        onKeyDown={onKeyDownOutSide}
         className="w-full h-full flex absolute justify-center items-center bg-opacity-50 bg-dark-bg-dark"
       >
         <div
+          ref={modalRef}
+          role="region"
           className={`${
             animation && 'transition duration-500 transform scale-100 '
           } ${opacity} top-60 mx-auto bg-white dark:bg-dark-light-300 dark:text-dark-line-light mobile:w-[80vw] pb-0.5rem under-mobile:pb-1rem min-w-270 lg:w-40rem fixed rounded-2xl h-fit`}

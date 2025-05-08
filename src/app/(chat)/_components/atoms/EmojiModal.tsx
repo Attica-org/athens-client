@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { FocusEventHandler, useEffect, useRef } from 'react';
 import { AgoraEmojis } from '@/app/model/Agora';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgora } from '@/store/agora';
@@ -9,12 +9,14 @@ import Emojis from './Emojis';
 type Props = {
   className: string;
   chatId: number;
+  reactionToggleBtnRef: React.RefObject<HTMLButtonElement> | undefined;
   setShowEmojiModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function EmojiModal({
   className,
   chatId,
+  reactionToggleBtnRef,
   setShowEmojiModal,
 }: Props) {
   const emojiModalContainerRef = useRef<HTMLUListElement>(null);
@@ -37,6 +39,10 @@ export default function EmojiModal({
           reactionType: reaction,
         }),
       });
+
+      (
+        reactionToggleBtnRef as React.RefObject<HTMLButtonElement>
+      ).current?.focus();
       setTimeout(() => {
         setShowEmojiModal(false);
       }, 200);
@@ -66,29 +72,21 @@ export default function EmojiModal({
     }
   }, [emojiModalContainerRef]);
 
-  useEffect(() => {
+  const handleFocusOut: FocusEventHandler<HTMLUListElement> = (e) => {
     // 리액션 모달에서 포커스가 사라지면 모달창 닫기
-    const handleFocusOut = (e: FocusEvent) => {
-      if (
-        emojiModalContainerRef.current &&
-        !emojiModalContainerRef.current.contains(e.relatedTarget as Node)
-      ) {
-        setShowEmojiModal(false);
-      }
-    };
-
-    const container = emojiModalContainerRef.current;
-    container?.addEventListener('focusout', handleFocusOut);
-
-    return () => {
-      container?.removeEventListener('focusout', handleFocusOut);
-    };
-  }, []);
+    if (
+      emojiModalContainerRef.current &&
+      !emojiModalContainerRef.current.contains(e.relatedTarget as Node)
+    ) {
+      setShowEmojiModal(false);
+    }
+  };
 
   const emojis = Emojis({ className });
   return (
     <ul
       ref={emojiModalContainerRef}
+      onBlur={handleFocusOut}
       className="flex justify-center items-center"
       aria-label="메시지에 리액션 달기"
     >

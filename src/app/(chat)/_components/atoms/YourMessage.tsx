@@ -28,6 +28,7 @@ function YourMessage({
 }: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const [showEmojiModal, setShowEmojiModal] = useState(false);
+  const emojiToggleButtonRef = useRef<HTMLButtonElement>(null);
 
   const toggleEmojiModal = () => {
     setShowEmojiModal((prev) => !prev);
@@ -127,6 +128,7 @@ function YourMessage({
               before:content-[''] before:absolute before:top-[-14px] before:left-20  before:-translate-x-1/2 before:border-8 before:border-transparent custom-before before:z-10"
           >
             <EmojiModal
+              reactionToggleBtnRef={innerRef || emojiToggleButtonRef}
               className="w-20 h-20"
               chatId={message.chatId}
               setShowEmojiModal={setShowEmojiModal}
@@ -141,11 +143,12 @@ function YourMessage({
       <button
         type="button"
         tabIndex={isNavigationMode ? 0 : -1}
-        ref={innerRef}
+        ref={innerRef || emojiToggleButtonRef}
         aria-haspopup="listbox"
         aria-label="reaction 추가"
         className="flex justify-center items-center sr-only focus:not-sr-only text-sm dark:text-white rounded-full p-15 bg-dark-light-600"
         onKeyDown={toggleReactionModal}
+        onClick={toggleEmojiModal}
       >
         <MoreVertIcon className="w-17" />
       </button>
