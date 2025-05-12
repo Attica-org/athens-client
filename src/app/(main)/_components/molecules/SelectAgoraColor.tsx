@@ -29,7 +29,7 @@ export default function SelectAgoraColor() {
       {Array.from({ length: COLOR.length }, (_, i) => (
         <button
           type="button"
-          aria-label={`${COLOR[i].label}`}
+          aria-label={`${COLOR[i].label} ${isCheck === i ? '선택됨' : ''}`}
           key={i}
           onClick={() => selectColor(i)}
         >
