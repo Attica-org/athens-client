@@ -15,6 +15,11 @@ import Loading from '@/app/_components/atoms/loading';
 import useApiError from '@/hooks/useApiError';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 import { postEnterClosedAgora } from '../../_lib/postEnterClosedAgora';
+import {
+  getAgoraDetailString,
+  getAgoraIntroduceString,
+} from '../../utils/getScreenReaderString';
+import useScreenReaderClickOutside from '../hooks/useScreenReaderClickOutside';
 
 type Props = {
   agora: AgoraData;
@@ -126,46 +131,7 @@ function CategoryAgora({ agora, className }: Props) {
     buttonRef.current?.focus();
   }
 
-  function getAgoraIntroduceString(agoraData: AgoraData) {
-    return `${agoraData.agoraTitle}. 아고라 세부 정보를 들으시려면 엔터키를 누르세요.`;
-  }
-
-  function getAgoraDetailString(agoraData: AgoraData) {
-    let baseStr = '';
-
-    if (isActiveAgora(agoraData)) {
-      const { pros, cons, observer } = agoraData.participants;
-      baseStr += `현재 찬성자는 ${pros}명, 반대자는 ${cons}명, 관찰자는 ${observer} 명입니다.`;
-    } else {
-      const { prosCount, consCount, totalMember } = agoraData;
-      const prosWidth =
-        prosCount <= 0 ? 0 : Math.floor((prosCount / totalMember) * 100);
-      const consWidth =
-        consCount <= 0 ? 0 : Math.floor((consCount / totalMember) * 100);
-
-      baseStr += `토론에 참여했던 인원은 ${totalMember}명이며, 찬성 ${prosWidth}%, 반대 ${consWidth}% 로 종료되었습니다.`;
-    }
-
-    baseStr += '입장하시겠습니까?';
-
-    return baseStr;
-  }
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (
-        articleRef.current &&
-        !articleRef.current.contains(e.target as Node)
-      ) {
-        setIsActiveScreenReaderDetails(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  useScreenReaderClickOutside(articleRef, setIsActiveScreenReaderDetails);
 
   return (
     <article
