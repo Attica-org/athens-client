@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSidebarStore } from '@/store/sidebar';
 import { useShallow } from 'zustand/react/shallow';
 import { useRouter } from 'next/navigation';
 import { useAgora } from '@/store/agora';
@@ -45,9 +44,6 @@ import MenuItems from '../molecules/MenuItems';
 import { updateUserAccessMessage } from '../../utils/updateUserAccessMessage';
 
 export default function Header() {
-  const { toggle } = useSidebarStore(
-    useShallow((state) => ({ toggle: state.toggle })),
-  );
   const { enterAgora } = useAgora(
     useShallow((state) => ({
       enterAgora: state.enterAgora,
@@ -451,7 +447,6 @@ export default function Header() {
         </div>
         <MenuItems
           memoizedTitle={memoizedTitle}
-          toggle={toggle}
           refetchAgoraUserList={refetchAgoraUserList}
           isClosed={enterAgora.status === AGORA_STATUS.CLOSED}
         />

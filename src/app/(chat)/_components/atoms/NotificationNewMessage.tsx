@@ -7,6 +7,7 @@ import isNull from '@/utils/validation/validateIsNull';
 type Props = {
   message: Message;
   listRef: React.RefObject<HTMLDivElement>;
+  lastMessageRef: React.RefObject<HTMLButtonElement>;
   setView: React.Dispatch<React.SetStateAction<boolean>>;
   view: boolean;
 };
@@ -14,6 +15,7 @@ type Props = {
 export default function NotificationNewMessage({
   message,
   listRef,
+  lastMessageRef,
   setView,
   view,
 }: Props) {
@@ -21,6 +23,10 @@ export default function NotificationNewMessage({
     if (listRef.current) {
       setView(false);
       listRef.current.scrollTo({ top: 0 });
+
+      requestAnimationFrame(() => {
+        lastMessageRef.current?.focus();
+      });
     }
   };
 
@@ -56,7 +62,7 @@ export default function NotificationNewMessage({
     <div className="w-full px-8 absolute bottom-0">
       <button
         type="button"
-        aria-label="새로운 메시지"
+        aria-label="새 메시지 알림. 클릭 시 채팅 하단으로 이동합니다."
         onKeyDown={keyDownMessage}
         onClick={clickMessage}
         className="flex w-full rounded-lg justify-start items-center gap-x-5 py-7 px-10 dark:bg-dark-light-200 dark:opacity-90 bg-white opacity-90"
@@ -73,13 +79,15 @@ export default function NotificationNewMessage({
           h={35}
         />
         <span
+          aria-hidden
           aria-label="닉네임"
           className="dark:text-dark-line text-dark-light-500 text-sm pl-2"
         >
           {message.user.nickname}
         </span>
         <span
-          aria-label="내용"
+          aria-hidden
+          aria-label="메시지 내용"
           className="dark:text-white text-black text-ellipsis text-sm pl-2"
         >
           {message.content}

@@ -6,7 +6,7 @@ import {
 import React from 'react';
 import { getChatMessagesQueryKey } from '@/constants/queryKey';
 import { getChatMessagesServer } from '../../_lib/getChatMessagesServer';
-import ErrorBoundaryMessage from './ErrorBoundaryMessage';
+import ErrorBoundaryMessage from '../organisms/ErrorBoundaryMessage';
 
 type Props = {
   agoraId: number;

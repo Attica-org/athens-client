@@ -5,15 +5,20 @@ import React, { KeyboardEventHandler, useEffect, useState } from 'react';
 
 type Props = {
   listRef: React.RefObject<HTMLDivElement>;
+  lastMessageRef: React.RefObject<HTMLButtonElement>;
 };
 
-export default function ScrollToBottomBtn({ listRef }: Props) {
+export default function ScrollToBottomBtn({ listRef, lastMessageRef }: Props) {
   const [scrollToBottom, setScrollToBottom] = useState(false);
 
   const handleScrollToBottom = () => {
     if (listRef.current) {
       setScrollToBottom(false);
       listRef.current.scrollTo({ top: 0 });
+
+      requestAnimationFrame(() => {
+        lastMessageRef.current?.focus();
+      });
     }
   };
 

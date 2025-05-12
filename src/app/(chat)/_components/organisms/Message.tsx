@@ -1,10 +1,16 @@
 'use client';
 
 import { Message as IMessage } from '@/app/model/Message';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  FocusEventHandler,
+  KeyboardEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   InfiniteData,
-  QueryClient,
   useQueryClient,
   useSuspenseInfiniteQuery,
 } from '@tanstack/react-query';
@@ -22,97 +28,38 @@ import isNull from '@/utils/validation/validateIsNull';
 import { useWebSocketClient } from '@/store/webSocket';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useSession } from 'next-auth/react';
-import MyMessage from '../atoms/MyMessage';
-import YourMessage from '../atoms/YourMessage';
+import { useAccessibleMessageNotifier } from '@/hooks/useAccessibleMessageNotifier';
 import { getChatMessages } from '../../_lib/getChatMessages';
 import ChatNotification from '../atoms/ChatNotification';
 import NotificationNewMessage from '../atoms/NotificationNewMessage';
 import ScrollToBottomBtn from '../atoms/ScrollToBottomBtn';
-import UserAccessNotification from '../atoms/UserAccessNotification';
+import MessageItem from '../molecules/MessageItem';
 
 interface Meta {
   key: number | null;
   effectiveSize: number;
 }
 
-type MessageItemProps = {
-  message: IMessage;
-  isMyType: (type: string) => boolean;
-  getTimeString: (time: string) => string;
-  nextMessage: IMessage | null;
-  prevMessage: IMessage | null;
-  queryClient: QueryClient;
-  agoraId: number;
-};
-
-function MessageItem({
-  message,
-  isMyType,
-  getTimeString,
-  nextMessage,
-  prevMessage,
-  queryClient,
-  agoraId,
-}: MessageItemProps) {
-  if (isNull(message)) return null;
-  if (!isNull(message.access)) {
-    return (
-      <UserAccessNotification
-        className="flex p-0.5rem pl-1rem pr-1rem"
-        nickname={message.user.nickname}
-        access={message.access}
-      />
-    );
-  }
-
-  const isMyMessage = isMyType(message.user.type);
-  const isSameMessage = nextMessage && nextMessage.chatId === message.chatId;
-
-  if (isSameMessage) return null;
-
-  const isPrevSameUser = prevMessage && prevMessage.user.id === message.user.id;
-  const isNextSameUser = nextMessage && nextMessage.user.id === message.user.id;
-
-  const currentMessageTime = getTimeString(message.createdAt);
-  const nextMessageTime = nextMessage && getTimeString(nextMessage.createdAt);
-
-  const isSameTime = nextMessage && currentMessageTime === nextMessageTime;
-  const shouldShowTime = !isNextSameUser || !isSameTime;
-
-  const beforeReactions = queryClient.getQueryData(
-    getUserReactionQueryKey(agoraId, message.chatId),
-  );
-
-  if (isNull(beforeReactions)) {
-    // 캐시에 저장된 값이 없을 때만, 초기 데이터를 set
-    queryClient.setQueryData(
-      getUserReactionQueryKey(agoraId, message.chatId),
-      message.reactionCount,
-    );
-  }
-
-  return isMyMessage ? (
-    <MyMessage
-      isSameUser={isPrevSameUser || false}
-      shouldShowTime={shouldShowTime}
-      message={message}
-    />
-  ) : (
-    <YourMessage
-      isSameUser={isPrevSameUser || false}
-      shouldShowTime={shouldShowTime}
-      message={message}
-    />
-  );
-}
-
 export default function Message() {
-  const [newMessageView, setNewMessageView] = useState(false);
-  const adjustScrollRef = useRef(false);
+  const [newMessageView, setNewMessageView] = useState<boolean>(false);
+  const [isNavigationMode, setIsNavigationMode] = useState<boolean>(false);
+  const [accessibleQueue, setAccessibleQueue] = useState<IMessage[]>([]);
+  const adjustScrollRef = useRef<boolean>(false);
+  const lastMessageRef = useRef<HTMLButtonElement | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const { shouldGoDown, setGoDown } = useMessageStore();
-  const myRole = useAgora((state) => state.enterAgora.role);
-  const agoraId = useAgora((state) => state.enterAgora.id);
+  const {
+    role: myRole,
+    id: agoraId,
+    status: agoraStatus,
+  } = useAgora(
+    useShallow((state) => ({
+      role: state.enterAgora.role,
+      id: state.enterAgora.id,
+      status: state.enterAgora.status,
+    })),
+  );
+  // const agoraId = useAgora((state) => state.enterAgora.id);
   const { webSocketClient, webSocketClientConnected } = useWebSocketClient(
     useShallow((state) => ({
       webSocketClient: state.webSocketClient,
@@ -121,6 +68,10 @@ export default function Message() {
   );
   const queryClient = useQueryClient();
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const ariaMessage = useAccessibleMessageNotifier(
+    accessibleQueue,
+    agoraStatus,
+  );
   const { data: session } = useSession();
   const { nickname: userNickname, reset } = useEnter(
     useShallow((state) => ({
@@ -128,6 +79,8 @@ export default function Message() {
       reset: state.reset,
     })),
   );
+
+  const lastMessageIdx = useRef<number>(0);
 
   const {
     data,
@@ -260,6 +213,9 @@ export default function Message() {
     if (shouldGoDown) {
       const lastPage = data?.pages[data.pages.length - 1];
       const lastMessage = lastPage.chats[lastPage.chats.length - 1];
+
+      if (isNull(lastMessage)) return;
+
       setMessages((prev) => [lastMessage, ...prev]);
 
       // 새로 전달받은 메시지 업데이트 후에 스크롤 조정
@@ -271,7 +227,14 @@ export default function Message() {
             return;
           }
 
+          lastMessageIdx.current = lastMessage.chatId;
+
           const isAtBottom = listRef.current.scrollTop < 100;
+
+          // 접근성 알림 처리
+          if (isAtBottom) {
+            setAccessibleQueue((prev) => [...prev, lastMessage]);
+          }
 
           // 마지막 메시지가 내 메시지거나, 스크롤이 맨 아래에 있을 때만 스크롤 조정
           if (isAtBottom || lastMessage.user.nickname === userNickname) {
@@ -284,6 +247,42 @@ export default function Message() {
       setGoDown(false);
     }
   }, [shouldGoDown, setGoDown, userNickname, data.pages]);
+
+  // 메시지를 훅에 넘긴 후에는 큐 초기화
+  useEffect(() => {
+    if (accessibleQueue.length > 0) {
+      setAccessibleQueue([]);
+    }
+  }, [accessibleQueue]);
+
+  const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    const element = listRef.current;
+    const isFocusedOnParent = document.activeElement === element;
+    if (isFocusedOnParent && e.key === 'Enter') {
+      // 첫 번째 메시지에 포커스
+      e.preventDefault();
+      setIsNavigationMode(true);
+      // 첫 번째 메시지에 포커스
+      lastMessageRef.current?.focus();
+    } else if (e.key === 'Escape') {
+      // 다시 메시지 리스트 컨테이너로 포커스
+      e.preventDefault();
+      setIsNavigationMode(false);
+      listRef.current?.focus();
+    }
+  };
+
+  const handleBlur: FocusEventHandler<HTMLDivElement> = (e) => {
+    if (!listRef.current?.contains(e.relatedTarget as Node)) {
+      setIsNavigationMode(false);
+    }
+  };
+
+  const handleFocusIn: FocusEventHandler<HTMLDivElement> = (e) => {
+    if (e.target === listRef.current) {
+      setIsNavigationMode(false);
+    }
+  };
 
   useEffect(() => {
     return () => {
@@ -309,20 +308,32 @@ export default function Message() {
   return (
     <>
       <div
+        role="button"
+        tabIndex={0}
         key={agoraId}
         ref={listRef}
-        className="h-full w-full flex overflow-auto flex-col transform-scale-y-inverted"
+        onFocusCapture={handleFocusIn}
+        onBlurCapture={handleBlur}
+        onKeyDown={handleKeyDown}
+        aria-label="메시지 리스트입니다. Enter 키를 누르면 메시지를 탐색할 수 있습니다"
+        className="cursor-default h-full w-full flex overflow-auto flex-col transform-scale-y-inverted"
       >
         <ChatNotification />
-        <div
+        <ul
           className="relative w-full flex flex-col"
+          aria-hidden
           style={{
             height: `${virtualizer.getTotalSize()}px`,
           }}
         >
           {virtualizer.getVirtualItems().map((item) => {
+            const message = messages[item.index];
+            const isLast =
+              !isNull(message) &&
+              messages[item.index].chatId === lastMessageIdx.current;
+
             return (
-              <div
+              <li
                 ref={virtualizer.measureElement}
                 key={item.key}
                 data-index={item.index}
@@ -333,6 +344,8 @@ export default function Message() {
               >
                 <MessageItem
                   message={messages[item.index]}
+                  isNavigationMode={isNavigationMode}
+                  innerRef={isLast ? lastMessageRef : undefined}
                   isMyType={isMyType}
                   getTimeString={getTimeString}
                   nextMessage={messages[item.index - 1] || null}
@@ -340,20 +353,31 @@ export default function Message() {
                   queryClient={queryClient}
                   agoraId={agoraId}
                 />
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
-      <ScrollToBottomBtn listRef={listRef} />
+      <ScrollToBottomBtn lastMessageRef={lastMessageRef} listRef={listRef} />
       {newMessageView && (
         <NotificationNewMessage
           message={messages[0]}
           listRef={listRef}
+          lastMessageRef={lastMessageRef}
           setView={setNewMessageView}
           view={newMessageView}
         />
       )}
+
+      {/* 접근성 알림 */}
+      <div
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {ariaMessage || '\u00A0'}
+      </div>
     </>
   );
 }
