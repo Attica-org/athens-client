@@ -5,7 +5,7 @@ import ErrorFallback from '@/app/_components/templates/ErrorFallback';
 import React, { useEffect } from 'react';
 import { useChatInfo } from '@/store/chatInfo';
 import { useShallow } from 'zustand/react/shallow';
-import Message from '../molecules/Message';
+import Message from './Message';
 
 const errorFallbackProps = {
   headerLabel: '채팅 불러오기 오류',

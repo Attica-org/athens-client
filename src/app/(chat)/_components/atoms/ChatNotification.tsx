@@ -32,7 +32,6 @@ export default function ChatNotification() {
           className="rounded-lg text-center flex flex-col justify-center items-center text-xxs lg:text-sm under-mobile:text-xs text-athens-gray-thick p-11 bg-athens-gray dark:bg-dark-light-200 dark:text-dark-line w-full break-keep"
         >
           사용자들간의 쾌적한 토론 환경을 위해 바른말을 사용해주세요.
-          <div>토론을 시작하려면 상단의 START 버튼을 눌러주세요.</div>
         </div>
       </div>
     )

@@ -40,7 +40,11 @@ export default function ResultAgora() {
           >
             {title}
           </h2>
-          <div className="flex justify-center items-center">
+          <p className="flex justify-center items-center">
+            <span id="description" className="sr-only">
+              찬성에 {voteResult.prosCount}명, 반대에 {voteResult.consCount}명이
+              투표하였습니다.
+            </span>
             <div
               aria-label="찬성 표 수"
               className={`${prosColor} mt-1.5rem text-white p-5 pl-1.5rem pr-1.5rem text-sm rounded-lg mr-16`}
@@ -53,7 +57,7 @@ export default function ResultAgora() {
             >
               반대 {voteResult.consCount || 0}
             </div>
-          </div>
+          </p>
           <Link
             prefetch
             aria-label="홈으로 가기"

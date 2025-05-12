@@ -3,6 +3,14 @@
 import Swal from 'sweetalert2';
 import isNull from './validation/validateIsNull';
 
+const focusToTitle = () => {
+  const titleEl = Swal.getTitle();
+  if (titleEl) {
+    titleEl.setAttribute('tabIndex', '-1');
+    titleEl.focus();
+  }
+};
+
 const swalConfirmCancelCustomClass = Swal.mixin({
   customClass: {
     popup:
@@ -14,6 +22,7 @@ const swalConfirmCancelCustomClass = Swal.mixin({
     cancelButton:
       'bg-backbutton-cancel ml-7 w-100 h-27 text-xs text-black rounded-md',
   },
+  didOpen: focusToTitle,
 });
 
 const swalConfirmAlertCustomClass = Swal.mixin({
@@ -26,12 +35,13 @@ const swalConfirmAlertCustomClass = Swal.mixin({
       'bg-backbutton-confirm text-white w-100 h-27 text-xs rounded-md mt-[0.6rem] mx-auto mb-0',
     cancelButton: 'bg-[#F2F4F3] dark:bg-white text-black',
   },
+  didOpen: focusToTitle,
 });
 
 const swalDeleteAccountClass = Swal.mixin({
   customClass: {
     popup: 'bg-white dark:bg-dark-light-300',
-    title: 'text-black dark:text-white',
+    title: 'text-black dark:text-white text-lg',
     confirmButton: 'text-sm',
     cancelButton: 'text-sm',
     validationMessage: 'bg-white dark:bg-dark-light-300 text-xs',
@@ -44,6 +54,7 @@ const swalDeleteAccountSuccessAlertClass = Swal.mixin({
     popup: 'bg-white dark:bg-dark-light-300',
     title: 'text-black dark:text-white text-base',
   },
+  didOpen: focusToTitle,
 });
 
 export const swalBackButtonAlert = async (text: string) => {
@@ -54,6 +65,10 @@ export const swalBackButtonAlert = async (text: string) => {
     showCancelButton: true,
     confirmButtonText: '확인',
     cancelButtonText: '취소',
+    showCloseButton: false,
+    allowEscapeKey: true,
+    focusCancel: false,
+    focusConfirm: false,
     width: '250px',
     confirmButtonColor: '#10AE5D',
     cancelButtonColor: '#F2F4F3',
@@ -63,9 +78,10 @@ export const swalBackButtonAlert = async (text: string) => {
 export const swalKickedUserAlert = async () => {
   return swalConfirmAlertCustomClass.fire({
     icon: 'warning',
-    title: '추방당하셨습니다.',
+    title: '추방당하셨습니다',
     text: '과반수 이상의 참여자가 추방에 동의했습니다.',
     confirmButtonText: '확인',
+    focusConfirm: false,
     width: '250px',
     confirmButtonColor: '#10AE5D',
   });
@@ -74,7 +90,7 @@ export const swalKickedUserAlert = async () => {
 export const swalDeleteAccountConfirm = async () => {
   return swalDeleteAccountClass.fire({
     width: '300px',
-    title: '<p class="text-lg">Athens 탈퇴</p>',
+    title: 'Athens 탈퇴',
     input: 'checkbox',
     inputPlaceholder: `
       Athens 탈퇴에 동의합니다.
@@ -83,6 +99,7 @@ export const swalDeleteAccountConfirm = async () => {
     confirmButtonColor: '#10AE5D',
     cancelButtonText: '취소',
     showCancelButton: true,
+    focusCancel: true,
     inputValidator: (result) => {
       if (!result) {
         return '탈퇴에 동의해야 합니다.';

@@ -13,20 +13,21 @@ export default function UserAccessNotification({
   access,
 }: Props) {
   const getAccessString = () => {
-    let baseStr = `${nickname} 님이`;
-
-    if (access === AccessStatus.ENTER) baseStr += '입장했습니다.';
-    else if (access === AccessStatus.KICKED)
-      baseStr += '강퇴 투표로 퇴장 처리되었습니다.';
-    else if (access === AccessStatus.EXIT) baseStr += '나갔습니다.';
-    return baseStr;
+    if (access === AccessStatus.ENTER) return `${nickname} 님이 입장했습니다.`;
+    if (access === AccessStatus.KICKED)
+      return `${nickname} 님이 강퇴 투표로 퇴장 처리되었습니다.`;
+    if (access === AccessStatus.EXIT) return `${nickname} 님이 나갔습니다.`;
+    return '';
   };
 
+  const message = getAccessString();
+
   return (
-    <div className={className}>
+    <div key={`${nickname}-${access}`} className={className} aria-live="polite">
       <div className="w-full flex flex-col justify-center items-center">
+        <span className="sr-only">{message}</span>
         <span
-          aria-live="polite"
+          aria-hidden
           className="rounded-3xl p-8 px-16 text-center foldable:text-xs text-xxs text-black bg-athens-gray dark:bg-dark-light-200 dark:text-dark-line w-fit  break-keep"
         >
           {getAccessString()}

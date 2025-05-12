@@ -10,7 +10,7 @@ export default function VoteResultLoader({ isFinished, isVoteEnd }: Props) {
   return (
     isFinished &&
     !isVoteEnd && (
-      <div className="flex p-10 text-sm">
+      <div className="flex p-10 text-sm" role="status">
         투표 결과 집계 중...
         <Loading
           w="16"

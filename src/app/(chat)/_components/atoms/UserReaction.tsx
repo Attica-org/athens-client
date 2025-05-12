@@ -33,19 +33,24 @@ export default function UserReaction({ className, chatId }: Props) {
     });
 
   return (
-    <div className="flex">
+    <div className="flex" aria-labelledby="reaction">
       {Object.keys(reactionCount).map((reactionType) => {
         const count = reactionCount[reactionType as keyof Reaction];
         return count > 0 ? (
-          <div
-            className={`mb-5 flex justify-center items-center border-1 py-4 px-4 rounded-md bg-white ${reactionType === 'LIKE' ? '' : 'ml-4'}`}
-            key={reactionType}
-          >
-            <span className="mr-2">
-              {emojis[reactionType as keyof Reaction].icon}
+          <React.Fragment key={reactionType}>
+            <span id="reaction" className="sr-only">
+              {reactionType} 리액션 {count}개
             </span>
-            <span className="text-xs">{count}</span>
-          </div>
+            <div
+              className={`mb-5 flex justify-center items-center border-1 py-4 px-4 rounded-md bg-white ${reactionType === 'LIKE' ? '' : 'ml-4'}`}
+              key={reactionType}
+            >
+              <span className="mr-2">
+                {emojis[reactionType as keyof Reaction].icon}
+              </span>
+              <span className="text-xs">{count}</span>
+            </div>
+          </React.Fragment>
         ) : null;
       })}
     </div>
