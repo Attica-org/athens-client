@@ -45,7 +45,10 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
   const [viewPopup, setViewPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState('top');
   const imageRef = useRef<HTMLInputElement>(null);
-  const popupRef = useRef<HTMLDivElement>(null);
+  const imageBtnRef = useRef<HTMLDivElement>(null);
+  const popupRef = useRef<HTMLButtonElement>(null);
+  const imageChoiceRef = useRef<HTMLButtonElement>(null);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -79,22 +82,31 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
     }
   };
 
+  const handleViewPopup = (status: boolean) => {
+    if (status) {
+      setViewPopup(true);
+      imageChoiceRef.current?.focus();
+    } else {
+      setViewPopup(false);
+    }
+  };
+
   const clickFileInput = () => {
     imageRef.current?.click();
-    setViewPopup(false);
+    handleViewPopup(false);
   };
 
   const removeImage = () => {
     setUploadImage(initialCropedPreview);
     setCropedPreview(initialCropedPreview);
-    setViewPopup(false);
+    handleViewPopup(false);
   };
 
   const calculatePopupPosition = () => {
-    if (popupRef.current) {
-      const popupTop = popupRef.current.getBoundingClientRect().top;
+    if (imageBtnRef.current) {
+      const popupTop = imageBtnRef.current.getBoundingClientRect().top;
       const popupBottom =
-        window.innerHeight - popupRef.current.getBoundingClientRect().bottom;
+        window.innerHeight - imageBtnRef.current.getBoundingClientRect().bottom;
 
       if (popupTop < popupBottom) {
         setPopupPosition('bottom');
@@ -106,33 +118,35 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
 
   const viewPopupHandler = () => {
     calculatePopupPosition();
-    setViewPopup(true);
+    handleViewPopup(true);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-      setViewPopup(false);
+      handleViewPopup(false);
     }
   };
 
-  const handlleKeyDown = (e: KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
-      setViewPopup(false);
+      handleViewPopup(false);
+    } else if (e.key === 'Escape') {
+      handleViewPopup(false);
     }
   };
 
   useEffect(() => {
     if (viewPopup) {
       document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('keydown', handlleKeyDown);
+      document.addEventListener('keydown', handleKeyDown);
     } else {
       document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handlleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handlleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [viewPopup]);
 
@@ -140,6 +154,7 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
     e,
   ) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       viewPopupHandler();
     }
   };
@@ -175,8 +190,8 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
       <div
         role="button"
         tabIndex={0}
-        aria-label="클릭하여 아고라 프로필 설정"
-        ref={popupRef}
+        aria-label="아고라 프로필 설정"
+        ref={imageBtnRef}
         className="relative w-60 h-60 rounded-3xl under-mobile:rounded-2xl cursor-pointer"
         onClick={viewPopupHandler}
         onKeyDown={handleKeyDownPopupHandler}
@@ -205,29 +220,33 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
           <CameraIcon className="w-14 h-14" fill="#fffff" />
         </div>
       </div>
-      <div
+      <button
+        type="button"
         role="menu"
-        aria-label="이미지 선택 및 제거 선택 팝업메뉴"
-        ref={popupRef}
         className={`transform transition-opacity duration-300 ease-out ${viewPopup ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none'} cursor-pointer rounded-md gap-20 flex flex-col absolute ${popupPosition === 'top' ? 'bottom-10' : 'top-1/2'} left-50 p-10 dark:bg-dark-light-200 bg-dark-light-500 text-white text-xs`}
+        ref={popupRef}
+        tabIndex={-1}
       >
         <button
           role="menuitem"
           type="button"
-          className="break-keep"
+          className="break-keep focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-75 rounded px-2 py-1"
           onClick={clickFileInput}
+          ref={imageChoiceRef}
+          tabIndex={viewPopup ? 0 : -1}
         >
           이미지 선택
         </button>
         <button
           role="menuitem"
           type="button"
-          className="break-keep"
+          className="break-keep focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-75 rounded px-2 py-1"
           onClick={removeImage}
+          tabIndex={viewPopup ? 0 : -1}
         >
           이미지 제거
         </button>
-      </div>
+      </button>
     </div>
   );
 }
