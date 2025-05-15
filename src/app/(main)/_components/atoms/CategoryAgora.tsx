@@ -19,7 +19,6 @@ import {
   getAgoraDetailString,
   getAgoraIntroduceString,
 } from '../../utils/getScreenReaderString';
-import useScreenReaderClickOutside from '../hooks/useScreenReaderClickOutside';
 
 type Props = {
   agora: AgoraData;
@@ -129,11 +128,9 @@ function CategoryAgora({ agora, className }: Props) {
   }
 
   function onClickAgoraDetail() {
-    setIsActiveScreenReaderDetails((prev) => !prev);
+    setIsActiveScreenReaderDetails(true);
     buttonRef.current?.focus();
   }
-
-  useScreenReaderClickOutside(articleRef, setIsActiveScreenReaderDetails);
 
   return (
     <article
@@ -144,6 +141,7 @@ function CategoryAgora({ agora, className }: Props) {
       ref={articleRef}
       onKeyDown={onKeyDownAgoraScreenReaderDetail}
       onClick={onClickAgoraDetail}
+      onBlur={() => setIsActiveScreenReaderDetails(false)}
       id={`${agora.id}`}
       className={`${className} w-165 under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center dark:bg-dark-light-300 dark:border-dark-light-600 border-slate-200 bg-slate-50 cursor-default`}
       aria-label={getAgoraIntroduceString(agora)}
