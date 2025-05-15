@@ -6,11 +6,13 @@ import { PROFLELIST } from '@/constants/consts';
 import { useShallow } from 'zustand/react/shallow';
 import { useEnter } from '@/store/enter';
 import { ProfileImage } from '@/app/model/Agora';
+import { AGORA_POSITION } from '@/constants/agora';
 
 export default function SelectProfile() {
-  const { setProfileImage } = useEnter(
+  const { setProfileImage, selectedPosition } = useEnter(
     useShallow((state) => ({
       setProfileImage: state.setProfileImage,
+      selectedPosition: state.selectedPosition,
     })),
   );
 
@@ -32,28 +34,32 @@ export default function SelectProfile() {
       aria-label="사용할 프로필 이미지 선택"
       className="grid grid-cols-5 under-mobile:grid-cols-4 mobile:grid-cols-4 foldable:grid-cols-5 tablet:flex gap-y-5  pl-1rem"
     >
-      {PROFLELIST.map((profileImageName) => (
-        <li
-          key={profileImageName.id}
-          className="cursor-pointer mr-5 w-fit flex justify-center items-center rounded-full"
-        >
-          <div
-            role="button"
-            tabIndex={0}
-            aria-label={profileImageName.name}
-            onClick={() => selectProfile(profileImageName)}
-            onKeyDown={(e) => handleKeyDownSetProfile(e, profileImageName)}
+      {PROFLELIST.map((profileImageName) => {
+        const isDisabled = selectedPosition === AGORA_POSITION.OBSERVER;
+
+        return (
+          <li
+            key={profileImageName.id}
+            className="cursor-pointer mr-5 w-fit flex justify-center items-center rounded-full"
           >
-            <UserImage
-              className="rounded-full w-45 h-45 bg-white"
-              file={profileImageName.file}
-              name={profileImageName.name}
-              w={45}
-              h={45}
-            />
-          </div>
-        </li>
-      ))}
+            <button
+              type="button"
+              disabled={isDisabled}
+              aria-label={profileImageName.name}
+              onClick={() => selectProfile(profileImageName)}
+              onKeyDown={(e) => handleKeyDownSetProfile(e, profileImageName)}
+            >
+              <UserImage
+                className="rounded-full w-45 h-45 bg-white"
+                file={profileImageName.file}
+                name={profileImageName.name}
+                w={45}
+                h={45}
+              />
+            </button>
+          </li>
+        );
+      })}
     </ul>
   );
 }

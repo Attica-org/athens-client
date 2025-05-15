@@ -34,7 +34,9 @@ export default function DiscussionDurationSetter() {
       <div className="flex justify-start items-center">
         <input
           aria-label="토론 제한시간 입력창"
-          type="number"
+          min={AGORA_CREATE.MIN_DISCUSSION_TIME}
+          max={AGORA_CREATE.MAX_DISCUSSION_TIME}
+          type="text"
           value={duration || ''}
           onChange={validateAgoraDuration}
           className="input-number-hide focus-visible:outline-none text-sm mr-0.5rem text-center p-5 w-4rem lg:w-5rem border-1 border-athens-gray rounded-md dark:bg-dark-bg-light dark:border-gray-500"

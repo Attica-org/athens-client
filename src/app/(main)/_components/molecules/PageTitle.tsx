@@ -14,10 +14,7 @@ async function PageTitle({ title, desc, children = null }: Props) {
   return (
     <>
       <div className="flex justify-between items-center">
-        <h1
-          aria-label="페이지 제목"
-          className="text-lg lg:text-xl font-bold w-full flex justify-start items-center dark:text-white"
-        >
+        <h1 className="text-lg lg:text-xl font-bold w-full flex justify-start items-center dark:text-white">
           {title}
         </h1>
         <ThemeSwitcher theme={theme || THEME.LIGHT} />

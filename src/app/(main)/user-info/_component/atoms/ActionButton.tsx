@@ -6,13 +6,19 @@ type Props = {
   className?: string;
 };
 export default function ActionButton({ label, onClick, className }: Props) {
+  function handleOnKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
+    if (e.key === 'Enter') {
+      onClick?.();
+    }
+  }
+
   return (
     <button
       type="button"
       className={className}
       onClick={onClick}
-      onKeyDown={onClick}
-      aria-label={`${label} 버튼`}
+      onKeyDown={handleOnKeyDown}
+      aria-label={`${label}`}
     >
       {label}
     </button>

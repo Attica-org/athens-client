@@ -16,6 +16,7 @@ import { useMutation } from '@tanstack/react-query';
 import useApiError from '@/hooks/useApiError';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 import { postEnterClosedAgora } from '../../_lib/postEnterClosedAgora';
+import { getAgoraDetailString } from '../../utils/getScreenReaderString';
 
 type Props = {
   agora: AgoraData;
@@ -89,7 +90,7 @@ export default function KeywordAgora({ agora }: Props) {
       <div
         role="button"
         tabIndex={0}
-        aria-label="아고라"
+        aria-label={`${agora.agoraTitle}, ${getAgoraDetailString(agora)}`}
         onKeyDown={handleKeyDownEnterAgora}
         onClick={handleEnterAgora}
         className="w-full flex mb-15 pb-15 pl-1rem pr-1rem justify-center items-center cursor-pointer border-b-1 border-gray-100 dark:border-0"

@@ -1,16 +1,17 @@
 import { AGORA_STATUS } from '@/constants/agora';
 
 export type Status = (typeof AGORA_STATUS)[keyof typeof AGORA_STATUS];
+export type Participants = {
+  pros: number;
+  cons: number;
+  observer: number;
+};
 
 export interface Agora {
   id: number;
   agoraTitle: string;
   agoraColor: string;
-  participants: {
-    pros: number;
-    cons: number;
-    observer: number;
-  };
+  participants: Participants;
   imageUrl: string;
   createdAt?: string;
   status: Status;

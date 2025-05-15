@@ -12,7 +12,6 @@ export default function AgoraPointColor({ isCheck, color }: Props) {
     >
       {isCheck && (
         <svg
-          aria-label="선택한 색상"
           xmlns="http://www.w3.org/2000/svg"
           height="25"
           viewBox="0 -960 960 960"

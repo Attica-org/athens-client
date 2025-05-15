@@ -63,6 +63,8 @@ function ParticipantCapacitySetter() {
           increaseLabel="참여 인원 증가"
           decreaseLabel="참여 인원 감소"
           inputLabel="설정한 최대 참여 인원"
+          max={AGORA_CREATE.MAX_PARTICIPANTS_CNT}
+          min={AGORA_CREATE.MIN_PARTICIPANTS_CNT}
         />
       </div>
       <div>

@@ -13,6 +13,7 @@ type Props = {
 
 export default function ThemeSwitcher({ theme }: Props) {
   const [isDarkMode, setIsDarkMode] = useState(theme === THEME.DARK);
+  const [statusMessage, setStatusMessage] = useState('');
 
   const handleToggleTheme = async () => {
     const currentTheme = await toggleThemeValue();
@@ -30,20 +31,25 @@ export default function ThemeSwitcher({ theme }: Props) {
       metaThemeColor.setAttribute('content', THEME_CONTENT.LIGHT);
 
       setIsDarkMode(false);
+      setStatusMessage('라이트 모드로 바뀌었습니다.');
     } else if (currentTheme === THEME.DARK) {
       document.documentElement.classList.add(THEME.DARK);
       document.documentElement.setAttribute('data-theme', THEME.DARK);
       metaThemeColor.setAttribute('content', THEME_CONTENT.DARK);
 
       setIsDarkMode(true);
+      setStatusMessage('다크 모드로 바뀌었습니다.');
     }
   };
 
   return (
     <div>
+      <div aria-live="polite" className="sr-only">
+        {statusMessage}
+      </div>
       {!isDarkMode ? (
         <button
-          aria-label="다크모드로 바꾸기"
+          aria-label="다크모드로 전환"
           type="button"
           onClick={handleToggleTheme}
         >
@@ -51,7 +57,7 @@ export default function ThemeSwitcher({ theme }: Props) {
         </button>
       ) : (
         <button
-          aria-label="라이트모드로 바꾸기"
+          aria-label="라이트모드로 전환"
           type="button"
           onClick={handleToggleTheme}
         >
