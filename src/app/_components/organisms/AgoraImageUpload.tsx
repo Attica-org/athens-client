@@ -230,7 +230,7 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
         <button
           role="menuitem"
           type="button"
-          className="break-keep focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-75 rounded px-2 py-1"
+          className="break-keep focus:focus-sr rounded px-2 py-1"
           onClick={clickFileInput}
           ref={imageChoiceRef}
           tabIndex={viewPopup ? 0 : -1}
@@ -240,7 +240,7 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
         <button
           role="menuitem"
           type="button"
-          className="break-keep focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-75 rounded px-2 py-1"
+          className="break-keep focus:focus-sr rounded px-2 py-1"
           onClick={removeImage}
           tabIndex={viewPopup ? 0 : -1}
         >
