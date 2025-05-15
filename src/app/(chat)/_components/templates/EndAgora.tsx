@@ -92,10 +92,14 @@ export default function EndAgora() {
   ]);
 
   return (
-    <ModalBase title="토론 종료" closeIcon animation={false}>
+    <ModalBase title="토론 종료" closeIcon={false} animation={false}>
       <div className="flex justify-center items-center flex-col">
-        <p className="text-xs text-athens-gray-thick dark:text-dark-line-light">
+        <p
+          id="description"
+          className="text-xs text-athens-gray-thick dark:text-dark-line-light"
+        >
           최종 투표를 진행해주세요.
+          <span className="sr-only">총 15초 동안 진행됩니다.</span>
         </p>
         <VoteTimer baseUrl={URL.BASE_URL} />
         <h2

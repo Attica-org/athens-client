@@ -7,6 +7,7 @@ import { useShallow } from 'zustand/react/shallow';
 import isNull from '@/utils/validation/validateIsNull';
 import { usePathname } from 'next/navigation';
 import { resetStateOnChatExit } from '@/app/(chat)/utils/resetStateOnChatExit';
+import { STORAGE_PREVIOUSE_URL_KEY } from '@/constants/segmentKey';
 
 export default function SetChatInfoReset() {
   const {
@@ -31,7 +32,15 @@ export default function SetChatInfoReset() {
         'navigation',
       )[0] as PerformanceNavigationTiming;
 
-      if (entries?.type === 'navigate' && !isNull(selectedAgora.id)) {
+      const sessionNavigatorPrevious = sessionStorage.getItem(
+        STORAGE_PREVIOUSE_URL_KEY,
+      );
+
+      if (
+        entries?.type === 'navigate' &&
+        !isNull(selectedAgora.id) &&
+        sessionNavigatorPrevious?.startsWith('/agoras')
+      ) {
         // 채팅방에서 다른 채팅방으로 이동, storage 데이터 초기화 후 입장하기 페이지 띄우기
         agoraInfoReset();
         userProfileReset();

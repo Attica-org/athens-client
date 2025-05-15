@@ -1,13 +1,8 @@
 'use client';
 
-import React, {
-  KeyboardEventHandler,
-  MouseEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { MouseEventHandler, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import CloseButton from '../atoms/CloseButton';
 
 type Props = {
@@ -26,6 +21,8 @@ export default function ModalBase({
   const router = useRouter();
   const [opacity, setOpacity] = useState('opacity-0');
   const modalRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(modalRef, closeIcon);
+  // useEscapeClose(modalRef, closeIcon);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -36,52 +33,48 @@ export default function ModalBase({
     };
   }, [animation]);
 
+  const onClickOutSide: MouseEventHandler<HTMLElement> = (e) => {
+    if (closeIcon && !modalRef.current?.contains(e.target as Node)) {
+      e.preventDefault();
+      router.back();
+    }
+  };
+
   useEffect(() => {
-    // 모달창이 열릴 때 첫 번째 포커스 가능한 요소에 초점 설정
-    const focusableElements = modalRef.current?.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    );
-
-    if (focusableElements) {
-      const firstFocusableElement = focusableElements[0] as HTMLElement;
-      firstFocusableElement?.focus();
-    }
-  }, [modalRef]);
-
-  const onClickOutSide: MouseEventHandler<HTMLDivElement> = (e) => {
-    if (e.target === e.currentTarget && closeIcon) {
-      router.back();
-    }
-  };
-
-  const onKeyDownOutSide: KeyboardEventHandler<HTMLElement> = (e) => {
-    if (e.key === 'Enter' && e.target === e.currentTarget && closeIcon) {
-      router.back();
-    }
-  };
+    modalRef.current?.focus();
+  }, []);
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      ref={modalRef}
-      onClick={onClickOutSide}
-      onKeyDown={onKeyDownOutSide}
-      className="min-w-300 w-full h-full flex absolute justify-center items-center z-20 top-0 right-0 left-0 bottom-0 bg-opacity-50 bg-dark-bg-dark"
+    <section
+      role="dialog"
+      aria-modal="true"
+      tabIndex={-1}
+      aria-labelledby="title"
+      className="min-w-300 w-full h-full flex absolute justify-center items-center z-20 top-0 right-0 left-0 bottom-0"
     >
       <div
-        role="dialog"
-        aria-modal="true"
-        className={`${
-          animation && 'transition duration-500 transform scale-100 '
-        } ${opacity} top-60 mx-auto bg-white dark:bg-dark-light-300 dark:text-dark-line-light mobile:w-[80vw] pb-0.5rem under-mobile:pb-1rem min-w-270 lg:w-40rem fixed rounded-2xl h-fit`}
+        role="presentation"
+        onClick={onClickOutSide}
+        className="w-full h-full flex absolute justify-center items-center bg-opacity-50 bg-dark-bg-dark"
       >
-        <h1 className="font-semibold flex justify-center items-center mt-2rem text-sm lg:text-md">
-          {title}
-        </h1>
-        {closeIcon && <CloseButton className="absolute right-20 top-20" />}
-        <div className="p-14">{children}</div>
+        <div
+          ref={modalRef}
+          role="region"
+          className={`${
+            animation && 'transition duration-500 transform scale-100 '
+          } ${opacity} top-60 mx-auto bg-white dark:bg-dark-light-300 dark:text-dark-line-light mobile:w-[80vw] pb-0.5rem under-mobile:pb-1rem min-w-270 lg:w-40rem fixed rounded-2xl h-fit`}
+        >
+          <h1
+            id="title"
+            aria-describedby="description"
+            className="font-semibold flex justify-center items-center mt-2rem text-sm lg:text-md"
+          >
+            {title}
+          </h1>
+          {closeIcon && <CloseButton className="absolute right-20 top-20" />}
+          <main className="p-14">{children}</main>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
