@@ -31,13 +31,22 @@ export default function VoteActionButtons({ disabled }: Props) {
     updateVoteState();
   }, [vote, updateVoteState]);
 
+  const selectResultPositionByKeyboard =
+    (type: VotePosition) => (e: React.KeyboardEvent<HTMLButtonElement>) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        selectResultPosition(type);
+      }
+    };
+
   return (
     <div className="pt-0.5rem pb-0.5rem">
       <button
         type="button"
-        aria-label="찬성하기"
+        aria-label="찬성"
         disabled={disabled}
         onClick={() => selectResultPosition(AGORA_POSITION.PROS)}
+        onKeyDown={selectResultPositionByKeyboard(AGORA_POSITION.PROS)}
         className={`${
           selectedResultPosition === AGORA_POSITION.PROS
             ? 'bg-blue-400 text-white'
@@ -48,9 +57,10 @@ export default function VoteActionButtons({ disabled }: Props) {
       </button>
       <button
         type="button"
-        aria-label="반대하기"
+        aria-label="반대"
         disabled={disabled}
         onClick={() => selectResultPosition(AGORA_POSITION.CONS)}
+        onKeyDown={selectResultPositionByKeyboard(AGORA_POSITION.CONS)}
         className={`${
           selectedResultPosition === AGORA_POSITION.CONS
             ? 'bg-red-400 text-white '

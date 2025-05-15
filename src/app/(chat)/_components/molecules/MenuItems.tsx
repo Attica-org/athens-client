@@ -4,26 +4,15 @@ import HamburgerButton from '../atoms/HamburgerButton';
 
 type Props = {
   memoizedTitle: string;
-  toggle: () => void;
   refetchAgoraUserList: () => void;
   isClosed: boolean;
 };
 
-function MenuItems({
-  memoizedTitle,
-  toggle,
-  refetchAgoraUserList,
-  isClosed,
-}: Props) {
+function MenuItems({ memoizedTitle, refetchAgoraUserList, isClosed }: Props) {
   return (
     <div className="flex justify-end items-center mr-0.5rem">
       <ShareButton title={memoizedTitle} />
-      {!isClosed && (
-        <HamburgerButton
-          toggleMenu={toggle}
-          refetchUserList={refetchAgoraUserList}
-        />
-      )}
+      {!isClosed && <HamburgerButton refetchUserList={refetchAgoraUserList} />}
     </div>
   );
 }

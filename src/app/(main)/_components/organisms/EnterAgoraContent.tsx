@@ -59,7 +59,10 @@ export default function EnterAgoraContent() {
   return (
     <>
       {selectedAgora.title ? (
-        <p className="text-base p-1rem pt-5 flex justify-center items-center text-center break-keep font-medium">
+        <p
+          id="description"
+          className="text-base p-1rem pt-5 flex justify-center items-center text-center break-keep font-medium"
+        >
           {selectedAgora.title}
         </p>
       ) : (
