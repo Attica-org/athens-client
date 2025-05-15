@@ -14,6 +14,7 @@ import { useUploadImage } from '@/store/uploadImage';
 import { useShallow } from 'zustand/react/shallow';
 import { useRouter } from 'next/navigation';
 import { uploadImageSegmentKey } from '@/constants/segmentKey';
+import showToast from '@/utils/showToast';
 
 type Props = {
   image?: string;
@@ -62,13 +63,25 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
 
     if (e.target.files) {
       Array.from(e.target.files).forEach((file) => {
+        const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+        const fileName = file.name.toLowerCase();
+        const fileExtension = fileName.split('.').pop();
+
+        if (
+          isNull(fileExtension) ||
+          !allowedExtensions.includes(fileExtension)
+        ) {
+          showToast('지원하지 않는 이미지 형식입니다.', 'error');
+          return;
+        }
+
         const reader = new FileReader();
         reader.onloadend = () => {
           setUploadImage({
             dataUrl: reader.result as string,
             file,
           });
-          if (file.type !== 'image/gif') {
+          if (fileExtension !== 'gif') {
             if (page) {
               router.push(`${page}${uploadImageSegmentKey}`);
               return;
