@@ -108,7 +108,7 @@ function CategoryAgora({ agora, className }: Props) {
   function handleAgoraKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
     if (e.key === 'Enter') {
       e.preventDefault();
-      setIsActiveScreenReaderDetails((prev) => !prev);
+      setIsActiveScreenReaderDetails(true);
       buttonRef.current?.focus();
     } else if (e.key === 'Tab' && e.shiftKey) {
       setIsActiveScreenReaderDetails(false);
