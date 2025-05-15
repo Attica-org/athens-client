@@ -47,7 +47,7 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
   const [popupPosition, setPopupPosition] = useState('top');
   const imageRef = useRef<HTMLInputElement>(null);
   const imageBtnRef = useRef<HTMLDivElement>(null);
-  const popupRef = useRef<HTMLButtonElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
   const imageChoiceRef = useRef<HTMLButtonElement>(null);
 
   const router = useRouter();
@@ -233,12 +233,10 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
           <CameraIcon className="w-14 h-14" fill="#fffff" />
         </div>
       </div>
-      <button
-        type="button"
+      <div
         role="menu"
         className={`transform transition-opacity duration-300 ease-out ${viewPopup ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none'} cursor-pointer rounded-md gap-20 flex flex-col absolute ${popupPosition === 'top' ? 'bottom-10' : 'top-1/2'} left-50 p-10 dark:bg-dark-light-200 bg-dark-light-500 text-white text-xs`}
         ref={popupRef}
-        tabIndex={-1}
       >
         <button
           role="menuitem"
@@ -259,7 +257,7 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
         >
           이미지 제거
         </button>
-      </button>
+      </div>
     </div>
   );
 }
