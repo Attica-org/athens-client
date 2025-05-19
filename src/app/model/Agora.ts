@@ -17,7 +17,7 @@ export interface Agora {
   status: Status;
 }
 
-export interface ClosedAgora {
+interface ClosedAgora {
   id: number;
   agoraTitle: string;
   agoraColor: string;
@@ -26,7 +26,7 @@ export interface ClosedAgora {
   consCount: number;
   totalMember: number;
   createdAt: string;
-  status: Status | '';
+  status: Status;
 }
 
 export type AgoraData = Agora | ClosedAgora;
