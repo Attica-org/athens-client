@@ -3,7 +3,7 @@
 import Loading from '@/app/_components/atoms/loading';
 import DeferredComponent from '@/app/_components/utils/DefferedComponent';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Agora } from '@/app/model/Agora';
+import { ActiveAgora } from '@/app/model/Agora';
 import RefreshIcon from '@/assets/icons/RefreshIcon';
 import Swiper from 'swiper';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -29,7 +29,7 @@ export default function LivelyAgoraList() {
     refetch,
     isFetching,
     isPending,
-  } = useQuery<Agora[], Object, Agora[], [string, string]>({
+  } = useQuery<ActiveAgora[], Object, ActiveAgora[], [string, string]>({
     queryKey: ['agoras', 'lively'],
     queryFn: getLivelyAgora,
     initialData: () => {

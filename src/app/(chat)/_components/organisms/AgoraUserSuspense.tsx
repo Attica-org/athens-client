@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { AgoraSideBarDataType } from '@/app/model/Agora';
+import { AgoraSideBarDataType, ImageURL } from '@/app/model/Agora';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import ErrorFallback from '@/app/_components/templates/ErrorFallback';
 import { useChatInfo } from '@/store/chatInfo';
@@ -57,15 +57,15 @@ export default function AgoraUserSuspense({ agoraId }: Props) {
     subscribeCount.current -= 1;
   };
 
-  const updateAgoraThumnail = (thumbnail: string) => {
+  const updateAgoraThumnail = (imageUrl: ImageURL) => {
     setEnterAgora({
       ...enterAgora,
-      thumbnail,
+      imageUrl,
     });
 
     setSelectedAgora({
       ...selectedAgora,
-      thumbnail,
+      imageUrl,
     });
   };
 

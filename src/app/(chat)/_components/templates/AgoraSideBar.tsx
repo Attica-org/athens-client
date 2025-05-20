@@ -127,10 +127,10 @@ export default function AgoraSideBar() {
                 </div>
               ) : (
                 <div className="flex-1 w-full relative">
-                  {isValidImgUrl(enterAgora.thumbnail) ? (
+                  {isValidImgUrl(enterAgora.imageUrl) ? (
                     <div className="relative w-60 h-60">
                       <Image
-                        src={enterAgora.thumbnail ?? ''}
+                        src={enterAgora.imageUrl ?? ''}
                         alt="아고라 프로필"
                         layout="fill"
                         objectFit="cover"

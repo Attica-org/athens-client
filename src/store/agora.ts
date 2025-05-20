@@ -1,11 +1,11 @@
-import { Status } from '@/app/model/Agora';
+import { ImageURL, Status } from '@/app/model/Agora';
 import { COLOR } from '@/constants/consts';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 type Agora = {
   id: number;
-  thumbnail: string | null;
+  imageUrl: ImageURL;
   title: string;
   status: Status | '';
   agoraColor: string;
@@ -14,7 +14,7 @@ type Agora = {
 type EnterAgora = {
   id: number;
   userId?: number;
-  thumbnail: string | null;
+  imageUrl: ImageURL;
   title: string;
   status: Status | '';
   role: string;
@@ -35,7 +35,7 @@ const storageKey = 'athens-chat-info';
 
 const selectedAgoraInitialState: Agora = {
   id: 0,
-  thumbnail: '',
+  imageUrl: '',
   title: '',
   status: '',
   agoraColor: COLOR[0].value,
@@ -44,7 +44,7 @@ const selectedAgoraInitialState: Agora = {
 const enterAgoraInitialState: EnterAgora = {
   id: 0,
   userId: 0,
-  thumbnail: '',
+  imageUrl: '',
   title: '',
   status: '',
   role: '',

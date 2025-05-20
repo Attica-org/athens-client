@@ -1,6 +1,4 @@
-import { CategoryItems } from '@/app/model/Category';
-
-export const AGORACATEGORY: CategoryItems = {
+export const AGORACATEGORY = {
   '1': { innerText: '전체', value: '1' },
   '2': { innerText: '사회/복지', value: '2' },
   '3': { innerText: '지식/공부', value: '3' },
@@ -17,7 +15,9 @@ export const PROFLELIST = [
   { id: 5, name: '총 든 토끼', file: 'rabbit.png' },
   { id: 6, name: '선글라스 쓴 고양이', file: 'cat.png' },
   { id: 7, name: '조개 든 수달', file: 'otter.png' },
-];
+] as const;
+
+export type ColorValue = (typeof COLOR)[number]['value'];
 
 export const COLOR = [
   { value: 'bg-agora-point-color1', label: '청록색' },
@@ -26,4 +26,4 @@ export const COLOR = [
   { value: 'bg-agora-point-color4', label: '연한 주황색' },
   { value: 'bg-agora-point-color5', label: '연한 핑크색' },
   { value: 'bg-agora-point-color6', label: '남색' },
-];
+] as const;

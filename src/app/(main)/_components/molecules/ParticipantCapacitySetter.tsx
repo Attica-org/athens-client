@@ -7,9 +7,6 @@ import { ParticipantCountAction } from '@/app/model/Agora';
 import { AGORA_CREATE } from '@/constants/agora';
 import ControlNumberInput from '../atoms/ControlNumberInput';
 
-const INCREASE = 'INCREASE';
-const DECREASE = 'DECREASE';
-
 function ParticipantCapacitySetter() {
   const [message, setMessage] = useState<string | null>('');
   const { capacity, setCapacity } = useCreateAgora(
@@ -20,11 +17,17 @@ function ParticipantCapacitySetter() {
   );
 
   const validateCapacity = (value: number, state?: ParticipantCountAction) => {
-    if (state === INCREASE || value < AGORA_CREATE.MIN_PARTICIPANTS_CNT) {
+    if (
+      state === ParticipantCountAction.INCREASE ||
+      value < AGORA_CREATE.MIN_PARTICIPANTS_CNT
+    ) {
       setMessage(AGORA_CREATE.MIN_PARTICIPANTS_CNT_MESSAGE);
       return;
     }
-    if (state === DECREASE || value > AGORA_CREATE.MAX_PARTICIPANTS_CNT) {
+    if (
+      state === ParticipantCountAction.DECREASE ||
+      value > AGORA_CREATE.MAX_PARTICIPANTS_CNT
+    ) {
       setMessage(AGORA_CREATE.MAX_PARTICIPANTS_CNT_MESSAGE);
       return;
     }
@@ -41,10 +44,10 @@ function ParticipantCapacitySetter() {
 
   const handleParticipantsBtn = (action: ParticipantCountAction) => {
     switch (action) {
-      case DECREASE:
+      case ParticipantCountAction.DECREASE:
         validateCapacity(capacity - 1);
         break;
-      case INCREASE:
+      case ParticipantCountAction.INCREASE:
         validateCapacity(capacity + 1);
         break;
       default:

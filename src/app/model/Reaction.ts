@@ -1,7 +1,3 @@
-export interface Reaction {
-  LIKE: number;
-  DISLIKE: number;
-  LOVE: number;
-  HAPPY: number;
-  SAD: number;
-}
+type EmojiType = 'LIKE' | 'DISLIKE' | 'LOVE' | 'HAPPY' | 'SAD';
+
+export type Reaction = Record<EmojiType, number>;

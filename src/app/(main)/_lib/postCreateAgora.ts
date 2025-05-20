@@ -32,15 +32,11 @@ export const postCreateAgora = async (info: AgoraConfig) => {
     type: 'application/json',
   });
 
-  // base64로 인코딩된 이미지를 디코딩하여 파일로 변환
-  // const file = info.thumbnail
-  //   ? base64ToFile(info.thumbnail, `${info.title}.jpg`)
-  //   : '';
   formData.append('request', blob);
 
-  if (!isNull(info.thumbnail)) {
+  if (!isNull(info.imageUrl)) {
     try {
-      const response = await fetch(info.thumbnail);
+      const response = await fetch(info.imageUrl);
       const blobData = await response.blob();
       const file = new File([blobData], `${info.title}.jpg`, {
         type: blobData.type || 'image/jpeg',
@@ -50,7 +46,7 @@ export const postCreateAgora = async (info: AgoraConfig) => {
     } catch (error) {
       throw new Error('이미지 업로드 중 오류가 발생했습니다.');
     }
-  } else if (isNull(info.thumbnail)) {
+  } else if (isNull(info.imageUrl)) {
     formData.append('file', new File([''], 'no-img'));
   }
 

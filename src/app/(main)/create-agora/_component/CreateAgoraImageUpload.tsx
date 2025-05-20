@@ -15,26 +15,26 @@ export default function CreateAgoraImageUpload() {
       setCropedPreview: state.setCropedPreview,
     })),
   );
-  const { setThumbnail, thumbnail } = useCreateAgora(
+  const { setImageUrl, imageUrl } = useCreateAgora(
     useShallow((state) => ({
-      setThumbnail: state.setThumbnail,
-      thumbnail: state.thumbnail,
+      setImageUrl: state.setImageUrl,
+      imageUrl: state.imageUrl,
     })),
   );
 
   useEffect(() => {
     if (isNull(cropedPreview.dataUrl)) {
-      setThumbnail('');
+      setImageUrl('');
     } else {
-      setThumbnail(convertBase64ToBlobUrl(cropedPreview.dataUrl));
+      setImageUrl(convertBase64ToBlobUrl(cropedPreview.dataUrl));
     }
-  }, [cropedPreview.dataUrl, setThumbnail]);
+  }, [cropedPreview.dataUrl, setImageUrl]);
 
   useEffect(() => {
-    if (thumbnail === '') {
+    if (isNull(imageUrl)) {
       setCropedPreview(initialImage);
     }
-  }, [thumbnail]);
+  }, [imageUrl]);
 
   return <AgoraImageUpload />;
 }

@@ -1,13 +1,13 @@
 import React from 'react';
-import { ParticipationPosition } from '@/app/model/Agora';
+import { ParticipantPosition } from '@/app/model/Agora';
 import { AGORA_POSITION } from '@/constants/agora';
 
 type Props = {
   selectedPosition: string;
-  position: ParticipationPosition;
+  position: ParticipantPosition;
   color: string;
   children: React.ReactNode;
-  selectPosition: (position: ParticipationPosition) => void;
+  selectPosition: (position: ParticipantPosition) => void;
 };
 
 export default function ModalPositionSelectBtn({
