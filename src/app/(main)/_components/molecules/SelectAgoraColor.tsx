@@ -25,21 +25,23 @@ export default function SelectAgoraColor() {
   }, [color.idx]);
 
   return (
-    <div className="flex justify-start items-center">
+    <ul className="flex justify-start items-center">
       {Array.from({ length: COLOR.length }, (_, i) => (
-        <button
-          type="button"
-          aria-label={`${COLOR[i].label} ${isCheck === i ? '선택됨' : ''}`}
-          key={i}
-          onClick={() => selectColor(i)}
-        >
-          <AgoraPointColor
+        <li>
+          <button
+            type="button"
+            aria-label={`${COLOR[i].label} ${isCheck === i ? '선택됨' : ''}`}
             key={i}
-            isCheck={isCheck === i}
-            color={COLOR[i].value}
-          />
-        </button>
+            onClick={() => selectColor(i)}
+          >
+            <AgoraPointColor
+              key={i}
+              isCheck={isCheck === i}
+              color={COLOR[i].value}
+            />
+          </button>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
