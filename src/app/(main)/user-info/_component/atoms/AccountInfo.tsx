@@ -8,11 +8,14 @@ type Props = {
 
 export default function AccountInfo({ label, content, className }: Props) {
   return (
-    <div
+    <dl
       className={`flex flex-wrap justify-between items-center p-2 space-y-6 ${className}`}
+      /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
+      tabIndex={0}
+      aria-readonly
     >
-      <span className="text-sm dark:text-white">{label}</span>
-      <span className="text-sm dark:text-white">{content}</span>
-    </div>
+      <dt className="text-sm dark:text-white">{label}</dt>
+      <dd className="text-sm dark:text-white">{content}</dd>
+    </dl>
   );
 }

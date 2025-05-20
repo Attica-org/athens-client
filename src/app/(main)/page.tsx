@@ -13,7 +13,6 @@ type Props = {
 
 export async function generateMetadata() {
   return {
-    title: 'Athens',
     description: '실시간 익명 채팅으로 광장에서 자유롭게 이야기하세요.',
     openGraph: {
       title: 'Athens',

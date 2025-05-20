@@ -82,7 +82,7 @@ function CategoryAgoraNowTitle({ searchParams }: Props) {
         NOW
         <button
           type="button"
-          aria-label="활성화 아고라 다시 불러오기"
+          aria-label="활성화 아고라 새로고침"
           onClick={handleClickRefresh}
           onKeyDown={handleKeyDownRefresh}
           className="cursor-pointer flex font-normal mr-5"

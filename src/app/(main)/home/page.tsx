@@ -19,10 +19,8 @@ export async function generateMetadata({ searchParams }: Props) {
     value = AGORACATEGORY[categoryKey];
   }
 
-  const title = searchParams.q ? `${searchParams.q} - Athens` : '';
-  const category = searchParams.category
-    ? `${value?.innerText} - Athens`
-    : 'Athens';
+  const title = searchParams.q ? `${searchParams.q}` : '';
+  const category = searchParams.category ? `${value?.innerText}` : '홈';
 
   return {
     title: title || category,

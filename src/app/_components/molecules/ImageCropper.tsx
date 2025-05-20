@@ -1,7 +1,5 @@
 'use client';
 
-import BackIcon from '@/assets/icons/BackIcon';
-import CheckIcon from '@/assets/icons/CheckIcon';
 import React, {
   KeyboardEvent,
   useCallback,
@@ -24,50 +22,7 @@ import showToast from '@/utils/showToast';
 import isNull from '@/utils/validation/validateIsNull';
 import Loading from '../atoms/loading';
 import ImageRenderer from '../atoms/ImageRenderer';
-
-type CropImgHeaderProps = {
-  handleCancelCrop: () => void;
-  handleKeyDownCancelCrop: (e: KeyboardEvent<HTMLButtonElement>) => void;
-  handleImgCrop: () => void;
-  handleKeyDownImgCrop: (e: KeyboardEvent<HTMLButtonElement>) => void;
-};
-
-const Header = React.memo(
-  ({
-    handleCancelCrop,
-    handleKeyDownCancelCrop,
-    handleImgCrop,
-    handleKeyDownImgCrop,
-  }: CropImgHeaderProps) => (
-    <header
-      aria-label="이미지 자르기 작업 메뉴"
-      className="dark:text-dark-line-light text-dark-bg-dark font-semibold flex flex-row justify-between items-center p-10"
-    >
-      <button
-        type="button"
-        aria-label="이미지 변경 취소하기"
-        className="font-normal flex items-center gap-x-5 flex-grow basis-1/3"
-        onClick={handleCancelCrop}
-        onKeyDown={handleKeyDownCancelCrop}
-      >
-        <BackIcon className="w-20 h-20" />
-        취소
-      </button>
-      <h1 className="flex flex-grow basis-1/3 justify-center items-center">
-        자르기
-      </h1>
-      <button
-        className="flex flex-grow basis-1/3 justify-end items-center"
-        aria-label="이미지 변경 완료"
-        onClick={handleImgCrop}
-        onKeyDown={handleKeyDownImgCrop}
-        type="button"
-      >
-        <CheckIcon className="w-25 h-25" />
-      </button>
-    </header>
-  ),
-);
+import ImageCropperHeader from '../atoms/ImageCropperHeader';
 
 export default function ImageCropper() {
   const [crop, setCrop] = useState<Crop>();
@@ -91,6 +46,7 @@ export default function ImageCropper() {
     })),
   );
   const router = useRouter();
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
   const onImageLoaded = (e: HTMLImageElement) => {
     const { width, height } = e;
@@ -182,11 +138,13 @@ export default function ImageCropper() {
     [handleCancelCrop],
   );
 
+  function setInitialFocus() {
+    cancelButtonRef.current?.focus();
+  }
+
   useEffect(() => {
     setOpacity('opacity-100');
-    if (dialogRef.current) {
-      dialogRef.current?.focus();
-    }
+    setInitialFocus();
   }, []);
 
   const renderMedia = (file: { dataUrl: string; file: File }) => {
@@ -223,7 +181,8 @@ export default function ImageCropper() {
         <main
           className={`${opacity} transition duration-300 transform scale-100 h-full w-full`}
         >
-          <Header
+          <ImageCropperHeader
+            ref={cancelButtonRef}
             handleCancelCrop={handleCancelCrop}
             handleImgCrop={handleImgCrop}
             handleKeyDownCancelCrop={handleKeyDownCancelCrop}

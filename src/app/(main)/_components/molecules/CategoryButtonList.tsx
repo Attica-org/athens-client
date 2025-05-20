@@ -96,7 +96,7 @@ export default function CategoryButtonList() {
           {Object.values(AGORACATEGORY).map((category) => (
             <button
               type="button"
-              aria-label="카테고리"
+              aria-label={`${category.innerText} 카테고리`}
               onClick={() => setCategory(category.value)}
               className="swiper-slide"
               key={category.innerText}
