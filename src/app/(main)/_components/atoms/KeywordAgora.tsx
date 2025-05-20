@@ -2,11 +2,10 @@
 
 import React, { KeyboardEventHandler, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { AgoraData } from '@/app/model/Agora';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useAgora } from '@/store/agora';
-import isActiveAgora from '@/utils/validation/validateIsActiveAgora';
+
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import Image from 'next/image';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
@@ -14,12 +13,17 @@ import { isValidImgUrl } from '@/utils/validation/validateImage';
 import { COLOR } from '@/constants/consts';
 import { useMutation } from '@tanstack/react-query';
 import useApiError from '@/hooks/useApiError';
+import { UnionAgora, KeywordAgora as IKeywordAgora } from '@/app/model/Agora';
+import {
+  isActiveAgora,
+  isKeywordAgora,
+} from '@/utils/validation/validateAgora';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 import { postEnterClosedAgora } from '../../_lib/postEnterClosedAgora';
 import { getAgoraDetailString } from '../../utils/getScreenReaderString';
 
 type Props = {
-  agora: AgoraData;
+  agora: UnionAgora;
 };
 
 export default function KeywordAgora({ agora }: Props) {
@@ -30,7 +34,7 @@ export default function KeywordAgora({ agora }: Props) {
   const setAgoraData = useCallback(() => {
     setEnterAgora({
       id: agora.id,
-      thumbnail: agora.imageUrl,
+      imageUrl: agora.imageUrl,
       title: agora.agoraTitle,
       status: agora.status,
       role: AGORA_POSITION.OBSERVER,
@@ -55,7 +59,7 @@ export default function KeywordAgora({ agora }: Props) {
     // TODO: 아고라 id를 받아서 해당 아고라로 이동
     setSelectedAgora({
       id: agora.id,
-      thumbnail: agora.imageUrl,
+      imageUrl: agora.imageUrl,
       title: agora.agoraTitle,
       status: agora.status,
       agoraColor: agora.agoraColor,
@@ -77,11 +81,12 @@ export default function KeywordAgora({ agora }: Props) {
     }
   };
 
-  const getRelativeTime = () => {
-    const relativeDate = formatDistanceToNow(agora.createdAt as string, {
+  const getRelativeTime = (time: IKeywordAgora['createdAt']) => {
+    const relativeDate = formatDistanceToNow(time, {
       addSuffix: true,
       locale: ko,
     });
+
     return relativeDate;
   };
 
@@ -104,7 +109,7 @@ export default function KeywordAgora({ agora }: Props) {
               aria-label="아고라 생성 날짜"
               className="text-xs pl-10 pr-3 text-nowrap dark:text-dark-line"
             >
-              {getRelativeTime()}
+              {isKeywordAgora(agora) && getRelativeTime(agora.createdAt)}
             </time>
           </div>
           <div className="flex justify-between items-center">
@@ -141,7 +146,7 @@ export default function KeywordAgora({ agora }: Props) {
         <div className="relative w-67 h-67">
           {isValidImgUrl(agora.imageUrl) ? (
             <Image
-              src={agora.imageUrl}
+              src={agora.imageUrl ?? ''}
               alt="아고라 이미지"
               objectFit="cover"
               layout="fill"

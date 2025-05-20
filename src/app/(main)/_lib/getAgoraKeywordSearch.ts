@@ -1,4 +1,4 @@
-import { Agora } from '@/app/model/Agora';
+import { ActiveAgora } from '@/app/model/Agora';
 import {
   AGORA_KEYWORD_SEARCH,
   NETWORK_ERROR_MESSAGE,
@@ -13,7 +13,7 @@ type SearchParams = {
 };
 
 export const getAgoraKeywordSearch: QueryFunction<
-  { agoras: Agora[]; nextCursor: number | null },
+  { agoras: ActiveAgora[]; nextCursor: number | null },
   [_1: string, _2: string, _3: string, searchParams: SearchParams],
   { nextCursor: number | null }
 > = async ({ queryKey, pageParam = { nextCursor: null } }) => {

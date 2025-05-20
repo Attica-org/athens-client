@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import ModalPosSelectBtn from '@/app/(main)/_components/atoms/ModalPositionSelectBtn';
 import { useEnter } from '@/store/enter';
 import { useShallow } from 'zustand/react/shallow';
-import { ParticipationPosition } from '@/app/model/Agora';
+import { ParticipantPosition } from '@/app/model/Agora';
 import { AGORA_POSITION } from '@/constants/agora';
 
 export default function ModalPosSelectContainer() {
@@ -27,7 +27,7 @@ export default function ModalPosSelectContainer() {
     }
   }, [selectedPosition, setMessage]);
 
-  const selectPosition = (position: ParticipationPosition) => {
+  const selectPosition = (position: ParticipantPosition) => {
     setSelectedPosition(position);
   };
 

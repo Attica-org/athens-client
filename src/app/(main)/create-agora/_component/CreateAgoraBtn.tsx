@@ -25,7 +25,7 @@ import { postCreateAgora } from '../../_lib/postCreateAgora';
 function CreateAgoraBtn() {
   const [createAgora, setCreateAgora] = useState<AgoraConfig>({
     title: '',
-    thumbnail: '',
+    imageUrl: '',
     category: '1',
     color: { idx: 0, value: COLOR[0].value },
     capacity: 5,
@@ -77,7 +77,7 @@ function CreateAgoraBtn() {
       if (response.id) {
         setSelectedAgora({
           id: response.id,
-          thumbnail: createAgora.thumbnail,
+          imageUrl: createAgora.imageUrl,
           title: createAgora.title,
           status: AGORA_STATUS.QUEUED,
           agoraColor: createAgora.color.value,
@@ -100,7 +100,7 @@ function CreateAgoraBtn() {
   });
 
   const handleClick = () => {
-    const { title, thumbnail, category, color, capacity, duration } =
+    const { title, imageUrl, category, color, capacity, duration } =
       useCreateAgora.getState();
 
     if (
@@ -118,7 +118,7 @@ function CreateAgoraBtn() {
 
     setCreateAgora({
       title,
-      thumbnail,
+      imageUrl,
       category,
       color,
       capacity,

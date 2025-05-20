@@ -1,4 +1,4 @@
-import { ParticipationPosition } from '@/app/model/Agora';
+import { ParticipantPosition } from '@/app/model/Agora';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
@@ -14,7 +14,7 @@ type Props = {
     name?: string;
     id?: number;
     file?: string;
-    role: ParticipationPosition;
+    role: ParticipantPosition;
     nickname?: string;
   };
   agoraId: number;

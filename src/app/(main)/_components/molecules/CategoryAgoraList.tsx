@@ -6,7 +6,7 @@ import {
   useQueryClient,
   useSuspenseInfiniteQuery,
 } from '@tanstack/react-query';
-import { AgoraData, SearchParams } from '@/app/model/Agora';
+import { SearchParams, UnionAgora } from '@/app/model/Agora';
 import DeferredComponent from '@/app/_components/utils/DefferedComponent';
 import Loading from '@/app/_components/atoms/loading';
 import { useCreateAgora } from '@/store/create';
@@ -55,9 +55,9 @@ export default function CategoryAgoraList({ searchParams }: Props) {
     isPending,
     isFetchingNextPage,
   } = useSuspenseInfiniteQuery<
-    { agoras: AgoraData[]; nextCursor: number | null },
+    { agoras: UnionAgora[]; nextCursor: number | null },
     Object,
-    InfiniteData<{ agoras: AgoraData[]; nextCursor: number | null }>,
+    InfiniteData<{ agoras: UnionAgora[]; nextCursor: number | null }>,
     [_1: string, _2: string, _3: string, Props['searchParams']],
     { nextCursor: number | null }
   >({
