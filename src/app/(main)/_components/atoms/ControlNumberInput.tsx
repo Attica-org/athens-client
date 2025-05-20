@@ -9,6 +9,8 @@ type Props = {
   increaseLabel: string;
   decreaseLabel: string;
   inputLabel: string;
+  max: number;
+  min: number;
 };
 
 export default function ControlNumberInput({
@@ -19,6 +21,8 @@ export default function ControlNumberInput({
   increaseLabel,
   decreaseLabel,
   inputLabel,
+  max,
+  min,
 }: Props) {
   return (
     <label
@@ -38,6 +42,8 @@ export default function ControlNumberInput({
         <input
           id="modify-number-input"
           aria-label={inputLabel}
+          min={min}
+          max={max}
           value={value}
           onChange={handleChange}
           type="number"

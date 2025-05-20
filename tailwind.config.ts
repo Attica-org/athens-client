@@ -103,41 +103,50 @@ const config: Config = {
   },
   plugins: [
     ({ addUtilities }: any) => {
-      addUtilities({
-        '.scrollbar-hide': {
-          scrollbarWidth: 'none',
-          '-ms-overflow-style': 'none',
-          '&::-webkit-scrollbar': {
-            display: 'none',
+      addUtilities(
+        {
+          '.scrollbar-hide': {
+            scrollbarWidth: 'none',
+            '-ms-overflow-style': 'none',
+            '&::-webkit-scrollbar': {
+              display: 'none',
+            },
           },
-        },
-        '.text-xxs': {
-          fontSize: '0.625rem',
-        },
-        '.text-xxxs': {
-          fontSize: '0.5rem',
-        },
-        '.max-width-screen': {
-          maxWidth: '1580px',
-        },
-        '.input-number-hide': {
-          '&::-webkit-outer-spin-button': {
-            '-webkit-appearance': 'none',
-            margin: 0,
+          '.text-xxs': {
+            fontSize: '0.625rem',
           },
-          '&::-webkit-inner-spin-button': {
-            '-webkit-appearance': 'none',
-            margin: 0,
+          '.text-xxxs': {
+            fontSize: '0.5rem',
           },
-          '-moz-appearance': {
+          '.max-width-screen': {
+            maxWidth: '1580px',
+          },
+          '.input-number-hide': {
+            '&::-webkit-outer-spin-button': {
+              '-webkit-appearance': 'none',
+              margin: 0,
+            },
+            '&::-webkit-inner-spin-button': {
+              '-webkit-appearance': 'none',
+              margin: 0,
+            },
+            '-moz-appearance': {
+              appearance: 'textfield',
+            },
             appearance: 'textfield',
           },
-          appearance: 'textfield',
+          '.transform-scale-y-inverted': {
+            transform: 'scaleY(-1)',
+          },
+          '.focus-sr': {
+            outline: 'none',
+            '--tw-ring-opacity': '0.75',
+            '--tw-ring-color': 'rgb(255 255 255 / var(--tw-ring-opacity))',
+            'box-shadow': '0 0 0 2px var(--tw-ring-color)',
+          },
         },
-        '.transform-scale-y-inverted': {
-          transform: 'scaleY(-1)',
-        },
-      });
+        ['focus'],
+      );
     },
   ],
 };

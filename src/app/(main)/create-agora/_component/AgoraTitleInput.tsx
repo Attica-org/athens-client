@@ -46,7 +46,8 @@ export default function AgoraTitleInput() {
   return (
     <>
       <input
-        aria-label="생성할 아고라 주제 입력창"
+        id="agora-title"
+        aria-label="아고라 주제 입력창"
         type="text"
         value={title}
         onChange={changeInput}

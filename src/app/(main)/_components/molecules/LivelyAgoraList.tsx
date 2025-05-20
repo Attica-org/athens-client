@@ -158,7 +158,7 @@ export default function LivelyAgoraList() {
         🔥 실시간 HOT 아고라
         <button
           type="button"
-          aria-label="활발한 아고라 다시 불러오기"
+          aria-label="인기 아고라 새로고침"
           onClick={handleClickRefresh}
           onKeyDown={handleKeyDownRefresh}
           className="cursor-pointer flex font-normal mr-5"

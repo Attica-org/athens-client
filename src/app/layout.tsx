@@ -23,7 +23,10 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Athens',
+  title: {
+    default: 'Athens',
+    template: '%s - Athens',
+  },
   description: 'Athens | 실시간 익명 채팅으로 광장에서 자유롭게 토론하세요.',
   manifest: '/manifest.json',
   icons: [

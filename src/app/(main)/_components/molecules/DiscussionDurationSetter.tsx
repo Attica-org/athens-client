@@ -4,6 +4,7 @@ import React, { ChangeEventHandler, useState } from 'react';
 import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 import { AGORA_CREATE } from '@/constants/agora';
+import isNull from '@/utils/validation/validateIsNull';
 
 export default function DiscussionDurationSetter() {
   const [message, setMessage] = useState<string | null>(null);
@@ -21,11 +22,12 @@ export default function DiscussionDurationSetter() {
       setMessage(AGORA_CREATE.MIN_TIME_MESSAGE);
     } else if (value > AGORA_CREATE.MAX_DISCUSSION_TIME) {
       setMessage(AGORA_CREATE.MAX_TIME_MESSAGE);
-    } else if (!value) {
+    } else if (isNull(value) || Number.isNaN(value)) {
       setMessage('시간을 입력해주세요.');
     } else {
       setMessage(null);
     }
+
     setDuration(value);
   };
 
@@ -34,7 +36,10 @@ export default function DiscussionDurationSetter() {
       <div className="flex justify-start items-center">
         <input
           aria-label="토론 제한시간 입력창"
-          type="number"
+          min={AGORA_CREATE.MIN_DISCUSSION_TIME}
+          max={AGORA_CREATE.MAX_DISCUSSION_TIME}
+          type="text"
+          inputMode="numeric"
           value={duration || ''}
           onChange={validateAgoraDuration}
           className="input-number-hide focus-visible:outline-none text-sm mr-0.5rem text-center p-5 w-4rem lg:w-5rem border-1 border-athens-gray rounded-md dark:bg-dark-bg-light dark:border-gray-500"

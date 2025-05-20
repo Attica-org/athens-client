@@ -3,7 +3,7 @@
 import { AgoraData } from '@/app/model/Agora';
 import { useAgora } from '@/store/agora';
 import { useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import isActiveAgora from '@/utils/validation/validateIsActiveAgora';
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import Image from 'next/image';
@@ -15,6 +15,10 @@ import Loading from '@/app/_components/atoms/loading';
 import useApiError from '@/hooks/useApiError';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 import { postEnterClosedAgora } from '../../_lib/postEnterClosedAgora';
+import {
+  getAgoraDetailString,
+  getAgoraIntroduceString,
+} from '../../utils/getScreenReaderString';
 
 type Props = {
   agora: AgoraData;
@@ -27,6 +31,10 @@ function CategoryAgora({ agora, className }: Props) {
   const [selectedColor, setSelectedColor] = useState(COLOR[0].value);
   const { handleError } = useApiError();
   const [isLoading, setIsLoading] = useState(false);
+  const [isActiveScreenReaderDetails, setIsActiveScreenReaderDetails] =
+    useState(false);
+  const articleRef = useRef<HTMLButtonElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const routeAgoraPage = useCallback(() => {
     router.push(`/agoras/${agora.id}`);
@@ -96,10 +104,45 @@ function CategoryAgora({ agora, className }: Props) {
     return '입장하기';
   }, []);
 
+  function onKeyDownAgoraSRDetail(e: React.KeyboardEvent<HTMLButtonElement>) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      setIsActiveScreenReaderDetails(true);
+      buttonRef.current?.focus();
+    } else if (e.key === 'Tab' && e.shiftKey) {
+      setIsActiveScreenReaderDetails(false);
+    }
+  }
+
+  function handleEnterAgoraPress(e: React.KeyboardEvent<HTMLButtonElement>) {
+    if (e.key === 'Tab') {
+      setIsActiveScreenReaderDetails(false);
+    } else if (e.key === 'Escape') {
+      setIsActiveScreenReaderDetails(false);
+      articleRef.current?.focus();
+    } else if (e.key === 'Enter') {
+      handleEnterAgora();
+    }
+  }
+
+  function onClickAgoraDetail() {
+    setIsActiveScreenReaderDetails(true);
+    buttonRef.current?.focus();
+  }
+
   return (
     <article
+      /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
+      tabIndex={0}
+      /* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
+      role="button"
+      ref={articleRef}
+      onKeyDown={onKeyDownAgoraSRDetail}
+      onClick={onClickAgoraDetail}
+      onBlur={() => setIsActiveScreenReaderDetails(false)}
       id={`${agora.id}`}
-      className={`${className} w-165 under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center dark:bg-dark-light-300 dark:border-dark-light-600 border-slate-200 bg-slate-50`}
+      className={`${className} w-165 under-mobile:w-130 p-10 border-1 rounded-lg flex flex-col justify-center items-center dark:bg-dark-light-300 dark:border-dark-light-600 border-slate-200 bg-slate-50 cursor-default`}
+      aria-label={getAgoraIntroduceString(agora)}
     >
       <div
         className={`${selectedColor} under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-3xl under-mobile:rounded-2xl relative`}
@@ -163,8 +206,11 @@ function CategoryAgora({ agora, className }: Props) {
         )}
       </div>
       <button
-        aria-label="아고라 입장하기"
+        aria-label={getAgoraDetailString(agora)}
+        ref={buttonRef}
         onClick={handleEnterAgora}
+        onKeyDown={handleEnterAgoraPress}
+        tabIndex={isActiveScreenReaderDetails ? 0 : -1}
         type="button"
         className="flex justify-center items-center text-sm under-mobile:text-xs text-white bg-athens-main p-4 pt-5 pb-5 mt-10 w-9rem under-mobile:w-110 rounded-md"
       >
