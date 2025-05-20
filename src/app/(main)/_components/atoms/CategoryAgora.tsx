@@ -104,9 +104,7 @@ function CategoryAgora({ agora, className }: Props) {
     return '입장하기';
   }, []);
 
-  function onKeyDownAgoraScreenReaderDetail(
-    e: React.KeyboardEvent<HTMLButtonElement>,
-  ) {
+  function onKeyDownAgoraSRDetail(e: React.KeyboardEvent<HTMLButtonElement>) {
     if (e.key === 'Enter') {
       e.preventDefault();
       setIsActiveScreenReaderDetails(true);
@@ -139,7 +137,7 @@ function CategoryAgora({ agora, className }: Props) {
       /* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
       role="button"
       ref={articleRef}
-      onKeyDown={onKeyDownAgoraScreenReaderDetail}
+      onKeyDown={onKeyDownAgoraSRDetail}
       onClick={onClickAgoraDetail}
       onBlur={() => setIsActiveScreenReaderDetails(false)}
       id={`${agora.id}`}
