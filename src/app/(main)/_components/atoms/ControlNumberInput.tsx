@@ -35,7 +35,7 @@ export default function ControlNumberInput({
           type="button"
           aria-label={decreaseLabel}
           className="text-xl cursor-pointer"
-          onClick={() => handleButtonClick('DECREASE')}
+          onClick={() => handleButtonClick(ParticipantCountAction.DECREASE)}
         >
           -
         </button>
@@ -53,7 +53,7 @@ export default function ControlNumberInput({
           type="button"
           aria-label={increaseLabel}
           className="text-xl cursor-pointer"
-          onClick={() => handleButtonClick('INCREASE')}
+          onClick={() => handleButtonClick(ParticipantCountAction.INCREASE)}
         >
           +
         </button>

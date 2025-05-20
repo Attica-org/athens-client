@@ -165,7 +165,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
       if (agoraInfo.status === AGORA_STATUS.CLOSED) {
         setSelectedAgora({
           id: Number(agoraId),
-          thumbnail: '',
+          imageUrl: '',
           title: agoraInfo.title,
           status: agoraInfo.status,
           agoraColor: COLOR[0].value,
@@ -173,7 +173,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
         setEnterAgora({
           ...selectedAgora,
           id: Number(agoraId),
-          thumbnail: '',
+          imageUrl: '',
           title: agoraInfo.title,
           status: agoraInfo.status,
           userId: enterAgora.userId,

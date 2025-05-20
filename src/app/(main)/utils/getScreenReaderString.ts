@@ -1,18 +1,18 @@
-import { AgoraData } from '@/app/model/Agora';
-import isActiveAgora from '@/utils/validation/validateIsActiveAgora';
+import { UnionAgora } from '@/app/model/Agora';
+import { isActiveAgora } from '@/utils/validation/validateAgora';
 
-export function getAgoraIntroduceString(agoraData: AgoraData) {
-  return `${agoraData.agoraTitle}. 아고라 세부 정보를 들으시려면 엔터키를 누르세요.`;
+export function getAgoraIntroduceString(agora: UnionAgora) {
+  return `${agora.agoraTitle}. 아고라 세부 정보를 들으시려면 엔터키를 누르세요.`;
 }
 
-export function getAgoraDetailString(agoraData: AgoraData) {
+export function getAgoraDetailString(agora: UnionAgora) {
   let baseStr = '';
 
-  if (isActiveAgora(agoraData)) {
-    const { pros, cons, observer } = agoraData.participants;
+  if (isActiveAgora(agora)) {
+    const { pros, cons, observer } = agora.participants;
     baseStr += `현재 찬성자는 ${pros}명, 반대자는 ${cons}명, 관찰자는 ${observer} 명입니다.`;
   } else {
-    const { prosCount, consCount, totalMember } = agoraData;
+    const { prosCount, consCount, totalMember } = agora;
     const prosWidth =
       prosCount <= 0 ? 0 : Math.floor((prosCount / totalMember) * 100);
     const consWidth =

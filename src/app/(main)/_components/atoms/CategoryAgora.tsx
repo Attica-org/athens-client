@@ -1,18 +1,21 @@
 'use client';
 
-import { AgoraData } from '@/app/model/Agora';
+import {
+  ClosedAgora,
+  CategoryAgora as ICategoryAgora,
+} from '@/app/model/Agora';
 import { useAgora } from '@/store/agora';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import isActiveAgora from '@/utils/validation/validateIsActiveAgora';
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import Image from 'next/image';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { isValidImgUrl } from '@/utils/validation/validateImage';
-import { COLOR } from '@/constants/consts';
+import { COLOR, ColorValue } from '@/constants/consts';
 import { useMutation } from '@tanstack/react-query';
 import Loading from '@/app/_components/atoms/loading';
 import useApiError from '@/hooks/useApiError';
+import { isActiveAgora } from '@/utils/validation/validateAgora';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
 import { postEnterClosedAgora } from '../../_lib/postEnterClosedAgora';
 import {
@@ -22,14 +25,16 @@ import {
 import useScreenReaderClickOutside from '../hooks/useScreenReaderClickOutside';
 
 type Props = {
-  agora: AgoraData;
+  agora: ICategoryAgora | ClosedAgora;
   className?: string;
 };
 
 function CategoryAgora({ agora, className }: Props) {
   const router = useRouter();
   const { setSelectedAgora, setEnterAgora } = useAgora();
-  const [selectedColor, setSelectedColor] = useState(COLOR[0].value);
+  const [selectedColor, setSelectedColor] = useState<ColorValue>(
+    COLOR[0].value,
+  );
   const { handleError } = useApiError();
   const [isLoading, setIsLoading] = useState(false);
   const [isActiveScreenReaderDetails, setIsActiveScreenReaderDetails] =
@@ -44,7 +49,7 @@ function CategoryAgora({ agora, className }: Props) {
   const setSelectAgoraData = useCallback(() => {
     setSelectedAgora({
       id: agora.id,
-      thumbnail: agora.imageUrl,
+      imageUrl: agora.imageUrl,
       title: agora.agoraTitle,
       status: agora.status,
       agoraColor: agora.agoraColor,
@@ -59,7 +64,7 @@ function CategoryAgora({ agora, className }: Props) {
       setEnterAgora({
         id: agora.id,
         userId: 0,
-        thumbnail: agora.imageUrl,
+        imageUrl: agora.imageUrl,
         title: agora.agoraTitle,
         status: agora.status,
         role: AGORA_POSITION.OBSERVER,
@@ -151,7 +156,7 @@ function CategoryAgora({ agora, className }: Props) {
       >
         {isValidImgUrl(agora.imageUrl) && (
           <Image
-            src={agora.imageUrl}
+            src={agora.imageUrl ?? ''}
             alt="아고라 이미지"
             layout="fill"
             objectFit="cover"

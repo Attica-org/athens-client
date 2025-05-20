@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect } from 'react';
-import { KickVoteResponse, ParticipationPosition } from '@/app/model/Agora';
+import { KickVoteResponse, ParticipantPosition } from '@/app/model/Agora';
 import { AGORA_POSITION } from '@/constants/agora';
 import { PROFLELIST } from '@/constants/consts';
 import { useMutation } from '@tanstack/react-query';
@@ -27,11 +27,11 @@ type UserList = {
   id: number;
   nickname: string;
   photoNumber: number;
-  type: ParticipationPosition;
+  type: ParticipantPosition;
 };
 
 type Props = {
-  position: ParticipationPosition;
+  position: ParticipantPosition;
   userList: UserList[];
   subscribeCount: React.MutableRefObject<number>;
   decrementSubscribeCount: () => void;

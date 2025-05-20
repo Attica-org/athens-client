@@ -4,14 +4,14 @@ import DislikeIcon from '@/assets/icons/DislikeIcon';
 import LikeIcon from '@/assets/icons/LikeIcon';
 import SadIcon from '@/assets/icons/SadIcon';
 import HappyIcon from '@/assets/icons/HappyIcon';
-import { AgoraEmojis } from '@/app/model/Agora';
+import { Reaction } from '@/app/model/Reaction';
 
 type Props = {
   className: string;
 };
 
 type EmojiMap = {
-  [key in keyof AgoraEmojis]: {
+  [key in keyof Reaction]: {
     icon: JSX.Element;
   };
 };

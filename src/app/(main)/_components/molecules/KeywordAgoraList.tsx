@@ -6,7 +6,7 @@ import {
   useQueryClient,
   useSuspenseInfiniteQuery,
 } from '@tanstack/react-query';
-import { Agora as IAgora, SearchParams } from '@/app/model/Agora';
+import { ActiveAgora, SearchParams } from '@/app/model/Agora';
 import { useInView } from 'react-intersection-observer';
 import { useSearchStore } from '@/store/search';
 import { useShallow } from 'zustand/react/shallow';
@@ -38,9 +38,9 @@ export default function KeywordAgoraList({ searchParams }: Props) {
     isPending,
     isFetchingNextPage,
   } = useSuspenseInfiniteQuery<
-    { agoras: IAgora[]; nextCursor: number | null },
+    { agoras: ActiveAgora[]; nextCursor: number | null },
     Object,
-    InfiniteData<{ agoras: IAgora[]; nextCursor: number | null }>,
+    InfiniteData<{ agoras: ActiveAgora[]; nextCursor: number | null }>,
     [_1: string, _2: string, _3: string, Props['searchParams']],
     { nextCursor: number | null }
   >({

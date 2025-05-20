@@ -1,35 +1,44 @@
 import { AGORA_STATUS } from '@/constants/agora';
 
+export type ParticipantPosition = 'PROS' | 'CONS' | 'OBSERVER';
+export type VotePosition = 'PROS' | 'CONS' | 'DEFAULT';
+export type ObserverPos = 'OBSERVER';
+export type ActiveAgora = CategoryAgora | KeywordAgora;
+export type UnionAgora = ActiveAgora | ClosedAgora;
 export type Status = (typeof AGORA_STATUS)[keyof typeof AGORA_STATUS];
+export type ImageURL = string | null;
+export type AgoraId = number;
+export type AgoraTitle = string;
+
 export type Participants = {
   pros: number;
   cons: number;
   observer: number;
 };
 
-export interface Agora {
-  id: number;
-  agoraTitle: string;
+interface Agora {
+  id: AgoraId;
+  agoraTitle: AgoraTitle;
   agoraColor: string;
-  participants: Participants;
-  imageUrl: string;
-  createdAt?: string;
+  imageUrl: ImageURL;
   status: Status;
 }
 
-interface ClosedAgora {
-  id: number;
-  agoraTitle: string;
-  agoraColor: string;
-  imageUrl: string;
+export interface CategoryAgora extends Agora {
+  participants: Participants;
+}
+
+export interface KeywordAgora extends Agora {
+  participants: Participants;
+  createdAt: string;
+}
+
+export interface ClosedAgora extends Agora {
   prosCount: number;
   consCount: number;
   totalMember: number;
   createdAt: string;
-  status: Status;
 }
-
-export type AgoraData = Agora | ClosedAgora;
 
 export interface AgoraBasicFacts {
   title: string;
@@ -40,16 +49,19 @@ export interface AgoraUserProfileType {
   id: number;
   nickname: string;
   photoNumber: number;
-  type: ParticipationPosition;
+  type: ParticipantPosition;
 }
 
 export interface AgoraSideBarDataType {
-  agoraId: number;
-  agoraThumbnailUrl: string | null;
+  agoraId: AgoraId;
+  agoraThumbnailUrl: string | null; // server
   participants: AgoraUserProfileType[];
 }
 
-export type ParticipantCountAction = 'DECREASE' | 'INCREASE';
+export enum ParticipantCountAction {
+  DECREASE = 'DECREASE',
+  INCREASE = 'INCREASE',
+}
 
 export interface SearchParams {
   status?: string;
@@ -57,30 +69,24 @@ export interface SearchParams {
   q?: string;
 }
 
-interface ColorType {
-  idx: number;
-  value: string;
-}
-
 export interface ImageData {
   dataUrl: string;
   file: File;
 }
 
+interface ColorType {
+  idx: number;
+  value: string;
+}
+
 export type AgoraConfig = {
-  title: string;
-  thumbnail: string;
+  title: AgoraTitle;
+  imageUrl: ImageURL;
   category: string;
   color: ColorType;
   capacity: number;
   duration: number | null;
 };
-
-export type ParticipationPosition = 'PROS' | 'CONS' | 'OBSERVER';
-export type VotePosition = 'PROS' | 'CONS' | 'DEFAULT';
-export type ProsPos = 'PROS';
-export type ConsPos = 'CONS';
-export type ObserverPos = 'OBSERVER';
 
 export type ProfileImage = {
   id: number;

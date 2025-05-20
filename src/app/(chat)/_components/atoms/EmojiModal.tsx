@@ -1,9 +1,9 @@
 import React, { FocusEventHandler, useEffect, useRef } from 'react';
-import { AgoraEmojis } from '@/app/model/Agora';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgora } from '@/store/agora';
 import { useWebSocketClient } from '@/store/webSocket';
 import isNull from '@/utils/validation/validateIsNull';
+import { Reaction } from '@/app/model/Reaction';
 import Emojis from './Emojis';
 
 type Props = {
@@ -99,7 +99,7 @@ export default function EmojiModal({
             onKeyDown={handleEmojiKeyDown(reactionType)}
             aria-label={`${reactionType} 이모티콘`}
           >
-            {emojis[reactionType as keyof AgoraEmojis].icon}
+            {emojis[reactionType as keyof Reaction].icon}
           </button>
         </li>
       ))}

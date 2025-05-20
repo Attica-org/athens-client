@@ -28,13 +28,13 @@ export default function ModifyAgoraImage() {
     onSuccess: async (response) => {
       if (response) {
         showToast('이미지가 변경되었습니다.', 'success');
-        // useAgora의 enterAgora와 selectedAgora의 thumbnail 변경
+        // useAgora의 enterAgora와 selectedAgora의 imageUrl 변경
         const { setEnterAgora, setSelectedAgora, selectedAgora } =
           useAgora.getState();
-        setEnterAgora({ ...enterAgora, thumbnail: cropedPreview.dataUrl });
+        setEnterAgora({ ...enterAgora, imageUrl: cropedPreview.dataUrl });
         setSelectedAgora({
           ...selectedAgora,
-          thumbnail: cropedPreview.dataUrl,
+          imageUrl: cropedPreview.dataUrl,
         });
       }
     },
@@ -52,7 +52,7 @@ export default function ModifyAgoraImage() {
     <div className="relative">
       <AgoraImageUpload
         page={`/agoras/${enterAgora.id}`}
-        image={enterAgora.thumbnail ?? ''}
+        image={enterAgora.imageUrl ?? ''}
         color={enterAgora.agoraColor}
       />
       {/* TODO: 이미지 수정 했을 때만 저장 버튼 출력하도록 수정 */}
