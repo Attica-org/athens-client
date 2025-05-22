@@ -9,13 +9,14 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { updateSession } from '@/serverActions/auth';
+import { ServiceWorkerMessage } from '@/app/model/ServiceWorker';
 import VoteTimer from '../atoms/VoteTimer';
 import VoteActionButtons from '../atoms/VoteActionButtons';
 import ServiceWorkerErrorHandler from '../../utils/ServiceWorkerErrorHandler';
 import VoteResultLoader from '../atoms/VoteResultLoader';
 
 export default function EndAgora() {
-  const [isFinished, setIsFinished] = useState(false);
+  const [isFinished, setIsFinished] = useState<boolean>(false);
   const { title } = useChatInfo(
     useShallow((state) => ({
       title: state.title,
@@ -50,25 +51,53 @@ export default function EndAgora() {
   useEffect(() => {
     if (!URL.BASE_URL) return () => {};
 
-    const handleServiceWorkerMessage = (event: MessageEvent) => {
-      if (event.data.action === 'voteSent') {
-        setIsFinished(true);
+    const handleServiceWorkerMessage = (
+      event: MessageEvent<ServiceWorkerMessage>,
+    ) => {
+      switch (event.data.action) {
+        case 'voteSent':
+          setIsFinished(true);
+          if (event.data.newAccessToken.length > 0) {
+            updateSession(event.data.newAccessToken);
+          }
+          break;
 
-        if (event.data.newAccessToken.length > 0) {
-          updateSession(event.data.newAccessToken);
-        }
-      } else if (event.data.action === 'voteResult') {
-        setVoteResult(event.data.result);
-        setVoteEnd(true);
+        case 'voteResult':
+          setVoteResult(event.data.result);
+          setVoteEnd(true);
 
-        if (event.data.newAccessToken.length > 0) {
-          updateSession(event.data.newAccessToken);
-        }
+          if (event.data.newAccessToken.length > 0) {
+            updateSession(event.data.newAccessToken);
+          }
 
-        router.replace(`/agoras/${agoraId}/flow/result-agora`);
-      } else if (event.data.action === 'fetchError') {
-        voteErrorHandler(event);
+          router.replace(`/agoras/${agoraId}/flow/result-agora`);
+          break;
+
+        case 'fetchError':
+          voteErrorHandler(event);
+          break;
+
+        default:
+          break;
       }
+      //   if (event.data.action === 'voteSent') {
+      //     setIsFinished(true);
+
+      //     if (event.data.newAccessToken.length > 0) {
+      //       updateSession(event.data.newAccessToken);
+      //     }
+      //   } else if (event.data.action === 'voteResult') {
+      //     setVoteResult(event.data.result);
+      //     setVoteEnd(true);
+
+      //     if (event.data.newAccessToken.length > 0) {
+      //       updateSession(event.data.newAccessToken);
+      //     }
+
+      //     router.replace(`/agoras/${agoraId}/flow/result-agora`);
+      //   } else if (event.data.action === 'fetchError') {
+      //     voteErrorHandler(event);
+      //   }
     };
 
     navigator.serviceWorker.addEventListener(
