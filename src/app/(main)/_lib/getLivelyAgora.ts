@@ -3,6 +3,7 @@ import {
   NETWORK_ERROR_MESSAGE,
 } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
+import isNull from '@/utils/validation/validateIsNull';
 
 export const getLivelyAgora = async () => {
   const res = await callFetchWrapper<any>('/api/v1/open/agoras/active', {
@@ -30,7 +31,7 @@ export const getLivelyAgora = async () => {
 
   const result = res.response;
 
-  if (result.agoras.length > 0) {
+  if (!isNull(result.agoras)) {
     return result.agoras;
   }
 
