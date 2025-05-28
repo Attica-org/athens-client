@@ -7,13 +7,14 @@ import {
   NETWORK_ERROR_MESSAGE,
 } from '@/constants/responseErrorMessage';
 import isNull from '@/utils/validation/validateIsNull';
+import { AgoraId, ImageURL } from '@/app/model/Agora';
 
-type Props = {
-  agoraId: number;
-  fileUrl: string;
+type PatchAgoraImgArg = {
+  agoraId: AgoraId;
+  fileUrl: ImageURL;
 };
 
-export const patchAgoraImg = async ({ agoraId, fileUrl }: Props) => {
+export const patchAgoraImg = async ({ agoraId, fileUrl }: PatchAgoraImgArg) => {
   const session = await getSession();
   if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
@@ -41,14 +42,17 @@ export const patchAgoraImg = async ({ agoraId, fileUrl }: Props) => {
       throw new Error(AGORA_IMAGE_UPDATE.UNKNOWN_ERROR);
     }
 
+    const errorMessage =
+      typeof res.error.message === 'string' ? res.error.message : 'ERROR';
+
     if (res.error.code === 1202) {
       throw new Error(AGORA_IMAGE_UPDATE.ONLY_HOST_CAN_UPDATE);
     } else if (res.error.code === 1301) {
       throw new Error(AGORA_IMAGE_UPDATE.NOT_FOUND_AGORA_OR_USER);
     } else if (res.error.code === 503) {
       throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
-    } else if (AUTH_MESSAGE.includes(res.error.message)) {
-      throw new Error(res.error.message);
+    } else if (AUTH_MESSAGE.includes(errorMessage)) {
+      throw new Error(errorMessage);
     }
 
     throw new Error(AGORA_IMAGE_UPDATE.FAILED_TO_UPDATE_IMAGE);

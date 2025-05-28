@@ -31,7 +31,7 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper(
+  const res = await callFetchWrapper<any>(
     `/api/v1/auth/agoras/${agoraId}/participants`,
     {
       method: 'post',
@@ -54,8 +54,11 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
       throw new Error(AGORA_ENTER.UNKNOWN_ERROR);
     }
 
-    if (AUTH_MESSAGE.includes(res.error.message)) {
-      throw new Error(res.error.message);
+    const errorMessage =
+      typeof res.error.message === 'string' ? res.error.message : 'ERROR';
+
+    if (AUTH_MESSAGE.includes(errorMessage)) {
+      throw new Error(errorMessage);
     }
 
     if (res.error.code === 1001) {
@@ -71,17 +74,17 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
         throw new Error(AGORA_ENTER.NOT_ALLOWED_POSITION);
       }
     } else if (res.error.code === 1002) {
-      if (res.error.message === AGORA_ENTER.SERVER_RESPONSE_CLOSED_AGORA) {
+      if (errorMessage === AGORA_ENTER.SERVER_RESPONSE_CLOSED_AGORA) {
         return AGORA_STATUS.CLOSED;
       }
     } else if (res.error.code === 1004) {
       if (
-        splitMessage(res.error.message) ===
+        splitMessage(errorMessage) ===
         AGORA_ENTER.SERVER_RESPONSE_ALREADY_PARTICIPATED
       ) {
         throw new Error(AGORA_ENTER.ALREADY_PARTICIPATED);
       } else if (
-        splitMessage(res.error.message) ===
+        splitMessage(errorMessage) ===
         AGORA_ENTER.SERVER_RESPONSE_NICKNAME_DUPLICATED
       ) {
         throw new Error(AGORA_ENTER.NICKNAME_DUPLICATED);

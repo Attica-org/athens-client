@@ -1,15 +1,22 @@
 import { callFetchWrapper } from './fetchWrapper';
 
+type ReissuanceTokenResponse = {
+  accessToken: string;
+};
+
 export const getReissuanceToken = async (token: string) => {
-  const res = await callFetchWrapper('/api/v1/auth/reissue', {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+  const res = await callFetchWrapper<ReissuanceTokenResponse>(
+    '/api/v1/auth/reissue',
+    {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
+      },
     },
-    'Cache-Control': 'no-cache',
-  });
+  );
 
   if (!res.ok && !res.success) {
     // 토큰 재발급 실패

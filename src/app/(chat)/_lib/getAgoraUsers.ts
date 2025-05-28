@@ -23,33 +23,43 @@ export const getAgoraUsers: QueryFunction<
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper(`/api/v1/open/agoras/${agoraId}/users`, {
-    next: {
-      tags: getAgoraUserListTags(Number(agoraId)),
+  const res = await callFetchWrapper<AgoraSideBarDataType>(
+    `/api/v1/open/agoras/${agoraId}/users`,
+    {
+      next: {
+        tags: getAgoraUserListTags(Number(agoraId)),
+      },
+      credentials: 'include',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     },
-    credentials: 'include',
-    cache: 'no-cache',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  );
 
   if (!res.ok && !res.success) {
     if (!res.error) {
       throw new Error(AGORA_USER.UNKNOWN_ERROR);
     }
 
+    const errorMessage =
+      typeof res.error.message === 'string' ? res.error.message : 'ERROR';
+
     if (res.error.code === 1301) {
       throw new Error(AGORA_USER.NOT_FOUND_AGORA);
     } else if (res.error.code === -1) {
-      throw new Error(res.error.message);
+      throw new Error(errorMessage);
     } else if (res.error.code === 503) {
       throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
-    } else if (AUTH_MESSAGE.includes(res.error.message)) {
-      throw new Error(res.error.message);
+    } else if (AUTH_MESSAGE.includes(errorMessage)) {
+      throw new Error(errorMessage);
     }
 
     throw new Error(AGORA_USER.FAILED_TO_GET_AGORA_USER);
+  }
+
+  if (isNull(res.response)) {
+    throw new Error(AGORA_USER.UNKNOWN_ERROR);
   }
 
   const result = res.response;

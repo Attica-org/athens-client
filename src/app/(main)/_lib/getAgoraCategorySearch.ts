@@ -22,7 +22,7 @@ export const getAgoraCategorySearch: QueryFunction<
 
   const urlSearchParams = new URLSearchParams(searchParams);
 
-  const res = await callFetchWrapper(
+  const res = await callFetchWrapper<any>(
     `/api/v1/open/agoras?${urlSearchParams.toString()}&next=${pageParam.nextCursor ?? ''}`,
     {
       next: {
@@ -47,25 +47,26 @@ export const getAgoraCategorySearch: QueryFunction<
       throw new Error(AGORA_CATEGORY_SEARCH.UNKNOWN_ERROR);
     }
 
+    const errorMessage =
+      typeof res.error.message === 'string' ? res.error.message : 'ERROR';
+
     if (res.error.code === 1001) {
       throw new Error(AGORA_CATEGORY_SEARCH.NOT_ALLOWED_STATUS);
     } else if (res.error.code === 1301) {
       throw new Error(AGORA_CATEGORY_SEARCH.NOT_ALLOWED_CATEGORY);
     } else if (res.error.code === -1) {
-      throw new Error(res.error.message);
+      throw new Error(errorMessage);
     } else if (res.error.code === 503) {
       throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
 
     throw new Error(AGORA_CATEGORY_SEARCH.FAILED_TO_GET_AGORA_LIST);
-    // return {
-    //   agoras: [],
-    //   nextCursor: null,
-    // };
   }
 
+  const result = res.response;
+
   return {
-    agoras: res.response.agoras,
-    nextCursor: res.response.hasNext ? res.response.next : null,
+    agoras: result.agoras,
+    nextCursor: result.hasNext ? result.next : null,
   };
 };

@@ -5,7 +5,7 @@ import {
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 
 export const getLivelyAgora = async () => {
-  const res = await callFetchWrapper('/api/v1/open/agoras/active', {
+  const res = await callFetchWrapper<any>('/api/v1/open/agoras/active', {
     next: {
       tags: ['agoras', 'lively'],
     },
@@ -28,8 +28,10 @@ export const getLivelyAgora = async () => {
     }
   }
 
-  if (res.response.agoras) {
-    return res.response.agoras;
+  const result = res.response;
+
+  if (result.agoras.length > 0) {
+    return result.agoras;
   }
 
   // 인기 아고라가 없을 땐 빈 배열 반환

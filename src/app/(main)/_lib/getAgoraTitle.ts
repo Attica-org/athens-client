@@ -7,24 +7,27 @@ import {
   AGORA_INFO,
   NETWORK_ERROR_MESSAGE,
 } from '@/constants/responseErrorMessage';
-import { Status } from '@/app/model/Agora';
+import { AgoraTitleResponse } from '@/app/model/Agora';
 
 export const getAgoraTitle: QueryFunction<
-  { title: string; status: Status | ''; imageUrl: string; agoraColor: string },
+  AgoraTitleResponse,
   [_1: string, _2: string]
 > = async ({ queryKey }) => {
   const [_, agoraId] = queryKey;
 
-  const res = await callFetchWrapper(`/api/v1/open/agoras/${agoraId}/title`, {
-    next: {
-      tags: getSelectedAgoraTags(agoraId),
+  const res = await callFetchWrapper<any>(
+    `/api/v1/open/agoras/${agoraId}/title`,
+    {
+      next: {
+        tags: getSelectedAgoraTags(agoraId),
+      },
+      credentials: 'include',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     },
-    credentials: 'include',
-    cache: 'no-cache',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  );
 
   if (!res.ok && !res.success) {
     if (!res.error) {
@@ -38,7 +41,6 @@ export const getAgoraTitle: QueryFunction<
     }
 
     throw new Error(AGORA_INFO.FAILED_TO_GET_AGORA_INFO);
-    // redirect(`${homeSegmentKey}?status=active`);
   }
 
   const result = res.response;
