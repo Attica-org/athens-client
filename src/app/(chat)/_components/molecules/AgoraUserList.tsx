@@ -78,9 +78,9 @@ export default function AgoraUserList({
       currentMemberCount,
       agoraId,
     }: KickMutationProps) =>
-      postKickVote(targetMemberId, currentMemberCount, agoraId),
+      postKickVote({ targetMemberId, currentMemberCount, agoraId }),
     onSuccess: (response) => {
-      if (response.success) {
+      if (response) {
         showToast('강퇴 투표에 성공하였습니다.', 'success');
         return;
       }

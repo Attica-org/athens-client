@@ -190,7 +190,7 @@ export default function MessageInput() {
 
   const filterBadWordsMutation = useMutation({
     mutationFn: callFilterBadWordsAPI,
-    onSuccess: async ({ response }) => {
+    onSuccess: async (response) => {
       if (response.hasBadWord) {
         highlightBadWords(response.badword);
         showToast('부적절한 단어가 포함되어 있습니다.', 'error');
