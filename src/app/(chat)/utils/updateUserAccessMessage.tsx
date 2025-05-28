@@ -4,11 +4,12 @@ import { Message } from '@/app/model/Message';
 import accessMessageConfig from '@/lib/accessMessageConfig';
 import isNull from '@/utils/validation/validateIsNull';
 import { AccessStatus } from '@/app/model/AccessStatus';
+import { AgoraId, AgoraUserProfileType } from '@/app/model/Agora';
 
 export const updateUserAccessMessage = (
   queryClient: QueryClient,
-  enterAgoraId: number,
-  username: string,
+  enterAgoraId: AgoraId,
+  username: AgoraUserProfileType['nickname'],
   accessStatus: AccessStatus,
 ) => {
   const curMessages = queryClient.getQueryData(
@@ -34,13 +35,13 @@ export const updateUserAccessMessage = (
 
   // const lastMessageId = lastPage?.chats.at(-1)?.chatId;
 
-  const newMessage = {
+  const newMessage: Message = {
     chatId: accessMessageConfig.getAccessMessageChatId(),
     user: {
       id: -1,
       nickname: username,
       photoNumber: 0,
-      type: '',
+      type: 'ACCESS',
     },
     content: '',
     createdAt: '',

@@ -1,6 +1,6 @@
 export type ApiError = {
   code: number;
-  message: string;
+  message: string | Record<string, string>;
 };
 
 export type ApiErrorResponse = {

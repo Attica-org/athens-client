@@ -9,6 +9,7 @@ export type Status = (typeof AGORA_STATUS)[keyof typeof AGORA_STATUS];
 export type ImageURL = string | null;
 export type AgoraId = number;
 export type AgoraTitle = string;
+export type UserName = string;
 
 export type Participants = {
   pros: number;
@@ -47,7 +48,7 @@ export interface AgoraBasicFacts {
 
 export interface AgoraUserProfileType {
   id: number;
-  nickname: string;
+  nickname: UserName;
   photoNumber: number;
   type: ParticipantPosition;
 }
@@ -106,7 +107,35 @@ export type KickVoteResponse = {
   type: string;
   kickVoteInfo: {
     targetMemberId: number;
-    nickname: string;
+    nickname: UserName;
     message: string;
   };
 };
+
+export type VoteResults = Pick<ClosedAgora, 'id' | 'prosCount' | 'consCount'>;
+export type Vote = {
+  id: number;
+  voteType: ParticipantPosition;
+};
+
+export type ErrorResponse = {
+  code: number;
+  message: string;
+};
+
+export interface AgoraStartResponse {
+  agoraId: AgoraId;
+  startTime: string;
+}
+
+export interface AgoraSearchResponse {
+  next: number | null;
+  hasNext: boolean;
+}
+
+export interface AgoraTitleResponse {
+  title: string;
+  status: Status;
+  imageUrl: ImageURL;
+  agoraColor: string;
+}
