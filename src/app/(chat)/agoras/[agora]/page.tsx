@@ -1,6 +1,7 @@
 import React from 'react';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
+import { AgoraTitleResponse } from '@/app/model/Agora';
 import MessageContainer from '../../_components/templates/MessageContainer';
 
 type Props = {
@@ -11,16 +12,19 @@ export async function generateMetadata({ params }: Props) {
   const agoraId = params.agora;
   let agoraTitle = '';
 
-  const res = await callFetchWrapper(`/api/v1/open/agoras/${agoraId}/title`, {
-    next: {
-      tags: getSelectedAgoraTags(agoraId as string),
+  const res = await callFetchWrapper<AgoraTitleResponse>(
+    `/api/v1/open/agoras/${agoraId}/title`,
+    {
+      next: {
+        tags: getSelectedAgoraTags(agoraId as string),
+      },
+      credentials: 'include',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     },
-    credentials: 'include',
-    cache: 'no-cache',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  );
 
   if (!res.ok && !res.success) {
     agoraTitle = '아고라 - Athens';
