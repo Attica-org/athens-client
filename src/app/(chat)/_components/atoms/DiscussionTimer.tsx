@@ -33,7 +33,7 @@ export default function DiscussionTimer({ duration }: Props) {
   const router = useRouter();
 
   const agoraEndMutation = useMutation({
-    mutationFn: async () => patchAgoraTimeOut(enterAgora.id),
+    mutationFn: async () => patchAgoraTimeOut({ agoraId: enterAgora.id }),
     onSuccess: async (response) => {
       if (response) {
         router.push(`/agoras/${enterAgora.id}/flow/end-agora`);

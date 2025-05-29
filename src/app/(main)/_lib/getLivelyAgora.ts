@@ -3,9 +3,10 @@ import {
   NETWORK_ERROR_MESSAGE,
 } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
+import isNull from '@/utils/validation/validateIsNull';
 
 export const getLivelyAgora = async () => {
-  const res = await callFetchWrapper('/api/v1/open/agoras/active', {
+  const res = await callFetchWrapper<any>('/api/v1/open/agoras/active', {
     next: {
       tags: ['agoras', 'lively'],
     },
@@ -28,8 +29,10 @@ export const getLivelyAgora = async () => {
     }
   }
 
-  if (res.response.agoras) {
-    return res.response.agoras;
+  const result = res.response;
+
+  if (!isNull(result.agoras)) {
+    return result.agoras;
   }
 
   // 인기 아고라가 없을 땐 빈 배열 반환

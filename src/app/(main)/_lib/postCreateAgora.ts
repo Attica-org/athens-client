@@ -55,7 +55,7 @@ export const postCreateAgora = async (info: AgoraConfig) => {
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper('/api/v1/auth/agoras', {
+  const res = await callFetchWrapper<any>('/api/v1/auth/agoras', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${session.user?.accessToken}`,
@@ -101,12 +101,14 @@ export const postCreateAgora = async (info: AgoraConfig) => {
       }
     } else if (res.error.code === 503) {
       throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
-    } else if (AUTH_MESSAGE.includes(res.error.message)) {
+    } else if (
+      typeof res.error.message === 'string' &&
+      AUTH_MESSAGE.includes(res.error.message)
+    ) {
       throw new Error(res.error.message);
     }
 
     throw new Error(AGORA_CREATE.FAIED_TO_CREATE_AGORA);
-    // return null;
   }
 
   const result = res.response;

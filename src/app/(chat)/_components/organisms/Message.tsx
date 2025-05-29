@@ -1,6 +1,6 @@
 'use client';
 
-import { Message as IMessage } from '@/app/model/Message';
+import { Message as IMessage, MessageMetaResponse } from '@/app/model/Message';
 import React, {
   FocusEventHandler,
   KeyboardEventHandler,
@@ -34,11 +34,6 @@ import ChatNotification from '../atoms/ChatNotification';
 import NotificationNewMessage from '../atoms/NotificationNewMessage';
 import ScrollToBottomBtn from '../atoms/ScrollToBottomBtn';
 import MessageItem from '../molecules/MessageItem';
-
-interface Meta {
-  key: number | null;
-  effectiveSize: number;
-}
 
 export default function Message() {
   const [newMessageView, setNewMessageView] = useState<boolean>(false);
@@ -89,11 +84,11 @@ export default function Message() {
     isFetchingPreviousPage,
     fetchPreviousPage,
   } = useSuspenseInfiniteQuery<
-    { chats: IMessage[]; meta: Meta },
+    { chats: IMessage[]; meta: MessageMetaResponse },
     Object,
-    InfiniteData<{ chats: IMessage[]; meta: Meta }>,
+    InfiniteData<{ chats: IMessage[]; meta: MessageMetaResponse }>,
     [_1: string, _2: string, _3: string],
-    { meta: Meta }
+    { meta: MessageMetaResponse }
   >({
     queryKey: getChatMessagesQueryKey(agoraId),
     queryFn: isNull(session)

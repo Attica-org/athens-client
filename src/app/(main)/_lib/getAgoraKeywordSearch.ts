@@ -4,6 +4,7 @@ import {
   NETWORK_ERROR_MESSAGE,
 } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
+import isNull from '@/utils/validation/validateIsNull';
 import { QueryFunction } from '@tanstack/react-query';
 
 type SearchParams = {
@@ -20,7 +21,7 @@ export const getAgoraKeywordSearch: QueryFunction<
   const [, , , { status = 'active', q = '' }] = queryKey;
   const searchParams = { status, agora_name: q };
 
-  const res = await callFetchWrapper(
+  const res = await callFetchWrapper<any>(
     `/api/v1/open/agoras?agora-name=${q}&status=${status}&next=${pageParam.nextCursor ?? ''}`,
     {
       next: {
@@ -45,21 +46,24 @@ export const getAgoraKeywordSearch: QueryFunction<
       throw new Error(AGORA_KEYWORD_SEARCH.UNKNOWN_ERROR);
     }
 
+    const errorMessage =
+      typeof res.error.message === 'string' ? res.error.message : 'ERROR';
+
     if (res.error.code === 1001) {
       throw new Error(AGORA_KEYWORD_SEARCH.NOT_ALLOWED_STATUS);
     } else if (res.error.code === -1) {
-      throw new Error(res.error.message);
+      throw new Error(errorMessage);
     } else if (res.error.code === 503) {
       throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
     }
 
     throw new Error(AGORA_KEYWORD_SEARCH.FAILED_TO_GET_AGORA_LIST);
-    // return {
-    //   agoras: [],
-    //   nextCursor: null,
-    // };
   }
-  //
+
+  if (isNull(res.response)) {
+    throw new Error(AGORA_KEYWORD_SEARCH.UNKNOWN_ERROR);
+  }
+
   const result = res.response;
 
   return {

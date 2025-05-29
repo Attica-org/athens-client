@@ -6,13 +6,31 @@ import {
   NETWORK_ERROR_MESSAGE,
 } from '@/constants/responseErrorMessage';
 import isNull from '@/utils/validation/validateIsNull';
+import {
+  Message,
+  MessageMetaResponse,
+  MessagePageParams,
+} from '@/app/model/Message';
 
-type Search = {
-  size: string;
-  key?: string;
+type MessageResponse = {
+  chats: Message[];
+  meta: MessageMetaResponse;
 };
 
-export const getChatMessages = (session: any) => {
+export const getChatMessages = (
+  session: any,
+): (({
+  queryKey,
+  pageParam,
+}: {
+  queryKey: [string, string, string];
+  pageParam: {
+    meta: MessageMetaResponse;
+  };
+}) => Promise<{
+  chats: Message[];
+  meta: MessageMetaResponse;
+}>) => {
   return async ({ queryKey, pageParam }: any) => {
     const [, agoraId] = queryKey;
 
@@ -20,7 +38,7 @@ export const getChatMessages = (session: any) => {
       throw new Error(SIGNIN_REQUIRED);
     }
 
-    const searchParams: Search = {
+    const searchParams: MessagePageParams = {
       size: pageParam.meta.effectiveSize.toString(),
     };
 
@@ -30,7 +48,7 @@ export const getChatMessages = (session: any) => {
 
     const urlSearchParams = new URLSearchParams(Object.entries(searchParams));
 
-    const res = await callFetchWrapper(
+    const res = await callFetchWrapper<MessageResponse>(
       `/api/v1/open/agoras/${agoraId}/chats?${urlSearchParams.toString()}`,
       {
         next: {
@@ -50,17 +68,24 @@ export const getChatMessages = (session: any) => {
         throw new Error(CHAT_MESSAGE.UNKNOWN_ERROR);
       }
 
+      const errorMessage =
+        typeof res.error.message === 'string' ? res.error.message : 'ERROR';
+
       if (res.error.code === 1301) {
         throw new Error(CHAT_MESSAGE.NOT_FOUND_AGORA);
       } else if (res.error.code === -1) {
-        throw new Error(res.error.message);
+        throw new Error(errorMessage);
       } else if (res.error.code === 503) {
         throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
-      } else if (AUTH_MESSAGE.includes(res.error.message)) {
-        throw new Error(res.error.message);
+      } else if (AUTH_MESSAGE.includes(errorMessage)) {
+        throw new Error(errorMessage);
       }
 
       throw new Error(CHAT_MESSAGE.FAILED_TO_GET_CHAT);
+    }
+
+    if (isNull(res.response)) {
+      throw new Error(CHAT_MESSAGE.UNKNOWN_ERROR);
     }
 
     const result = res.response;

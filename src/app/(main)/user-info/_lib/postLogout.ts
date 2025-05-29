@@ -10,7 +10,7 @@ const postLogout = async () => {
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper('/api/v1/auth/member/logout', {
+  const res = await callFetchWrapper<any>('/api/v1/auth/member/logout', {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -19,15 +19,17 @@ const postLogout = async () => {
     credentials: 'include',
   });
 
-  if (!res.ok && res.error?.message) {
-    if (res.error.code === 1201) {
-      throw new Error(LOGOUT_ERROR_MESSAGE.EXPIRED_TOKEN);
-    } else if (AUTH_MESSAGE.includes(res.error.message)) {
-      throw new Error(res.error.message);
-    }
-
+  if (!res.ok && !res.success) {
     if (!res.error) {
       throw new Error(LOGOUT_ERROR_MESSAGE.UNKNOWN_ERROR);
+    }
+    const errorMessage =
+      typeof res.error.message === 'string' ? res.error.message : 'ERROR';
+
+    if (res.error.code === 1201) {
+      throw new Error(LOGOUT_ERROR_MESSAGE.EXPIRED_TOKEN);
+    } else if (AUTH_MESSAGE.includes(errorMessage)) {
+      throw new Error(errorMessage);
     }
 
     throw new Error(LOGOUT_ERROR_MESSAGE.FAILED_TO_LOGOUT);

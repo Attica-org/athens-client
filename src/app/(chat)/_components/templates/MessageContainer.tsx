@@ -5,15 +5,18 @@ import {
 } from '@tanstack/react-query';
 import React from 'react';
 import { getChatMessagesQueryKey } from '@/constants/queryKey';
+import { AgoraId } from '@/app/model/Agora';
 import { getChatMessagesServer } from '../../_lib/getChatMessagesServer';
 import ErrorBoundaryMessage from '../organisms/ErrorBoundaryMessage';
 
-type Props = {
-  agoraId: number;
+type MessageContainerProps = {
+  agoraId: AgoraId;
 };
 
 // 서버 컴포넌트
-export default async function MessageContainer({ agoraId }: Props) {
+export default async function MessageContainer({
+  agoraId,
+}: MessageContainerProps) {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchInfiniteQuery({

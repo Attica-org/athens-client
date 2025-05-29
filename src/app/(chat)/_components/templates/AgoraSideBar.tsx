@@ -42,7 +42,6 @@ export default function AgoraSideBar() {
   };
 
   const onKeyDownOutSide: KeyboardEventHandler<HTMLDivElement> = (e) => {
-    console.log('onKeyDownOutSide', e.key, e.code);
     if (e.key === 'Enter' && e.target === e.currentTarget) {
       toggle();
     } else if (e.key === 'Escape') {
