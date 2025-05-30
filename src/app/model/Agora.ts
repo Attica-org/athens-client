@@ -41,11 +41,6 @@ export interface ClosedAgora extends Agora {
   createdAt: string;
 }
 
-export interface AgoraSummary {
-  title: string;
-  status: Status;
-}
-
 export interface AgoraUserProfileType {
   id: number;
   nickname: UserName;
