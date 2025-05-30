@@ -18,7 +18,7 @@ import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/qu
 import { COLOR } from '@/constants/consts';
 import { postEnterAgoraInfo } from '../(main)/_lib/postEnterAgoraInfo';
 import ChatPageLoading from '../(chat)/_components/atoms/ChatPageLoading';
-import { AgoraBasicFacts } from '../model/Agora';
+import { AgoraSummary } from '../model/Agora';
 import { getAgoraTitle } from '../(main)/_lib/getAgoraTitle';
 
 type Props = {
@@ -97,7 +97,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
     isLoading: LoadingGetBasicFacts,
     isError,
   }: {
-    data: AgoraBasicFacts | undefined;
+    data: AgoraSummary | undefined;
     isLoading: boolean;
     isError: boolean;
   } = useQuery({

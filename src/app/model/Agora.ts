@@ -41,7 +41,7 @@ export interface ClosedAgora extends Agora {
   createdAt: string;
 }
 
-export interface AgoraBasicFacts {
+export interface AgoraSummary {
   title: string;
   status: Status;
 }
