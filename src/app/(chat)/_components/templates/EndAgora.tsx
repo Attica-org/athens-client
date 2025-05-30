@@ -80,24 +80,6 @@ export default function EndAgora() {
         default:
           break;
       }
-      //   if (event.data.action === 'voteSent') {
-      //     setIsFinished(true);
-
-      //     if (event.data.newAccessToken.length > 0) {
-      //       updateSession(event.data.newAccessToken);
-      //     }
-      //   } else if (event.data.action === 'voteResult') {
-      //     setVoteResult(event.data.result);
-      //     setVoteEnd(true);
-
-      //     if (event.data.newAccessToken.length > 0) {
-      //       updateSession(event.data.newAccessToken);
-      //     }
-
-      //     router.replace(`/agoras/${agoraId}/flow/result-agora`);
-      //   } else if (event.data.action === 'fetchError') {
-      //     voteErrorHandler(event);
-      //   }
     };
 
     navigator.serviceWorker.addEventListener(
