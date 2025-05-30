@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { AgoraSideBarDataType, ImageURL } from '@/app/model/Agora';
+import { AgoraId, AgoraSideBarDataType, ImageURL } from '@/app/model/Agora';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import ErrorFallback from '@/app/_components/templates/ErrorFallback';
 import { useChatInfo } from '@/store/chatInfo';
@@ -20,7 +20,7 @@ const errorFallbackProps = {
 };
 
 type Props = {
-  agoraId: number;
+  agoraId: AgoraId;
 };
 
 function FallbackComponent(props: FallbackProps) {

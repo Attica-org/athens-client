@@ -5,7 +5,11 @@ import { useShallow } from 'zustand/react/shallow';
 import { useRouter } from 'next/navigation';
 import { useAgora } from '@/store/agora';
 import * as StompJs from '@stomp/stompjs';
-import { AgoraMeta } from '@/app/model/AgoraMeta';
+import {
+  AgoraMemberInfo,
+  AgoraMeta,
+  Participants,
+} from '@/app/model/AgoraMeta';
 import { useChatInfo } from '@/store/chatInfo';
 import showToast from '@/utils/showToast';
 import { useVoteStore } from '@/store/vote';
@@ -20,11 +24,7 @@ import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import { swalBackButtonAlert } from '@/utils/swalAlert';
 import useApiError from '@/hooks/useApiError';
 import { signOut, useSession } from 'next-auth/react';
-import {
-  DISCUSSION_END,
-  DISCUSSION_START,
-  DISCUSSION_TOAST_MESSAGE,
-} from '@/constants/chats';
+import { DISCUSSION_TOAST_MESSAGE } from '@/constants/chats';
 import { useUnloadDisconnectSocket } from '@/hooks/useUnloadDisconnectSocket';
 
 import { useMessageStore } from '@/store/message';
@@ -34,6 +34,12 @@ import { useWebSocketClient } from '@/store/webSocket';
 import { useEnter } from '@/store/enter';
 import { kickedUsers } from '@/store/kickedUser';
 import { AccessStatus } from '@/app/model/AccessStatus';
+import { AgoraId } from '@/app/model/Agora';
+import {
+  ChatExitResponse,
+  WebSocketErrorResponse,
+  WebSocketResponse,
+} from '@/app/model/Chat';
 import BackButton from '../../../_components/atoms/BackButton';
 import AgoraInfo from '../molecules/AgoraInfo';
 import DiscussionStatus from '../molecules/DiscussionStatus';
@@ -77,10 +83,7 @@ export default function Header() {
 
   const voteResultReset = useVoteStore(useShallow((state) => state.reset));
   const [metaData, setMetaData] = useState<AgoraMeta>();
-  const [participants, setParticipants] = useState<{
-    pros: number;
-    cons: number;
-  }>({
+  const [participants, setParticipants] = useState({
     pros: 0,
     cons: 0,
   });
@@ -93,7 +96,7 @@ export default function Header() {
   const { handleError } = useApiError();
   const { data: session } = useSession();
   const { chatSocketErrorHandler } = SocketErrorHandler();
-  const [agoraId, setAgoraId] = useState(enterAgora.id);
+  const [agoraId, setAgoraId] = useState<AgoraId>(enterAgora.id);
 
   const queryClient = useQueryClient();
   const [URL, setURL] = useState({
@@ -124,12 +127,16 @@ export default function Header() {
     if (enterAgora.status !== AGORA_STATUS.CLOSED) {
       return patchChatExit({ agoraId });
     }
-    return () => {};
+    return false;
   };
 
-  const onSuccessChatExit = (response: any) => {
+  const onSuccessChatExit = (response: ChatExitResponse | boolean) => {
     // 채팅방 정보 및 유저 채팅 프로필 정보 초기화
-    if (!isNull(response)) {
+    const isSuccess =
+      (typeof response !== 'boolean' && !isNull(response)) ||
+      (typeof response === 'boolean' && response);
+
+    if (isSuccess) {
       resetStateOnChatExit();
 
       useEnter.persist.rehydrate();
@@ -173,86 +180,93 @@ export default function Header() {
   const isPossibleConnect = () => {
     return (
       (navigator.onLine &&
-        URL.SOCKET_URL !== '' &&
+        !isNull(URL.SOCKET_URL) &&
         enterAgora.status === AGORA_STATUS.QUEUED) ||
       enterAgora.status === AGORA_STATUS.RUNNING
     );
   };
-
-  const updateParticipantList = (
-    userDisconnectTime: string,
-    memberId: number,
-    username: string,
-  ) => {
+  const updateParticipantList = ({
+    socketDisconnectTime,
+    memberId,
+    username,
+  }: Omit<AgoraMemberInfo, 'agoraId'>) => {
     if (isNull(username)) return;
 
-    if (isNull(userDisconnectTime)) {
+    if (isNull(socketDisconnectTime)) {
       addParticipant(memberId, username);
       return;
     }
     removeParticipant(memberId);
   };
 
-  const handleWebSocketResponse = (response: any) => {
-    if (response.type === 'META') {
-      // console.log('META', response.data);
-      setTitle(response.data.agora.title);
-      setAgoraId(response.data.agora.id);
-      setMetaData(response.data);
-      // refetchAgoraUserList();
+  const handleWebSocketResponse = (response: WebSocketResponse) => {
+    switch (response.type) {
+      case 'META': {
+        const {
+          agora,
+          participants: chatParticipants,
+          agoraMemberInfo,
+        } = response.data;
 
-      if (response.data.agora.startAt) {
-        setDiscussionStart(response.data.agora.startAt);
-      }
+        setTitle(agora.title);
+        setAgoraId(agora.id);
+        setMetaData(response.data);
 
-      const partcipantsCnt = {
-        pros: 0,
-        cons: 0,
-      };
-      response.data.participants.forEach(
-        (participant: { type: string; count: number }) => {
+        if (agora.startAt) {
+          setDiscussionStart(agora.startAt);
+        }
+
+        const partcipantsCnt = {
+          pros: 0,
+          cons: 0,
+        };
+
+        chatParticipants.forEach((participant: Participants) => {
           if (participant.type === AGORA_POSITION.PROS) {
             partcipantsCnt.pros = participant.count;
           } else if (participant.type === AGORA_POSITION.CONS) {
             partcipantsCnt.cons = participant.count;
           }
-        },
-      );
+        });
 
-      setParticipants(partcipantsCnt);
+        setParticipants(partcipantsCnt);
 
-      const { socketDisconnectTime, username, memberId } =
-        response.data.agoraMemberInfo;
+        const { socketDisconnectTime, username, memberId } = agoraMemberInfo;
+        let accessStatus: AccessStatus;
 
-      let accessStatus: AccessStatus;
+        if (isNull(socketDisconnectTime)) {
+          accessStatus = AccessStatus.ENTER;
+        } else if (kickedUsers.hasUserName(username)) {
+          accessStatus = AccessStatus.KICKED;
+        } else accessStatus = AccessStatus.EXIT;
 
-      if (isNull(socketDisconnectTime)) accessStatus = AccessStatus.ENTER;
-      else if (kickedUsers.hasUserName(username))
-        accessStatus = AccessStatus.KICKED;
-      else accessStatus = AccessStatus.EXIT;
+        updateUserAccessMessage(queryClient, agora.id, username, accessStatus);
+        setGoDown(true);
+        updateParticipantList({ socketDisconnectTime, memberId, username });
+        kickedUsers.removeUserName(memberId.toString());
 
-      updateUserAccessMessage(
-        queryClient,
-        response.data.agora.id,
-        username,
-        accessStatus,
-      );
-      setGoDown(true);
-      updateParticipantList(socketDisconnectTime, memberId, username);
-      kickedUsers.removeUserName(memberId);
-    } else if (response.type === DISCUSSION_START) {
-      // console.log(data.data);
-      showToast('토론이 시작되었습니다.', 'success');
-      setDiscussionStart(response.data.startTime);
-    } else if (response.type === DISCUSSION_END) {
-      setDiscurreionEnd(response.data.endTime);
-      showToast(DISCUSSION_TOAST_MESSAGE.VOTE_THRESHOLD_REACHED, 'success');
-      router.push(`/agoras/${response.data.agoraId}/flow/end-agora`);
+        break;
+      }
+      case 'DISCUSSION_START':
+        showToast('토론이 시작되었습니다.', 'success');
+        setDiscussionStart(response.data.startTime);
+
+        break;
+
+      case 'DISCUSSION_END':
+        setDiscurreionEnd(response.data.endTime);
+        showToast(DISCUSSION_TOAST_MESSAGE.VOTE_THRESHOLD_REACHED, 'success');
+        router.push(`/agoras/${response.data.agoraId}/flow/end-agora`);
+
+        break;
+
+      default:
+        break;
     }
   };
 
   const subscribeErrorControl = useCallback(
-    async (err: any) => {
+    async (err: WebSocketErrorResponse) => {
       await chatSocketErrorHandler(err, session);
 
       setSocketError({
@@ -346,14 +360,12 @@ export default function Header() {
 
   useEffect(() => {
     const subscribeMeta = () => {
-      // getMetadata();
       if (isNull(webSocketClient) || !webSocketClientConnected) return;
 
       webSocketClient.subscribe(
         `/topic/agoras/${agoraId}`,
         async (received_message: StompJs.IFrame) => {
           const data = await JSON.parse(received_message.body);
-          // console.log('received_message', received_message);
           handleWebSocketResponse(data);
         },
       );
@@ -367,7 +379,6 @@ export default function Header() {
     };
 
     function subscribeError() {
-      // console.log('Subscribing Error...');
       if (isNull(webSocketClient) || !webSocketClientConnected) return;
       webSocketClient.subscribe(
         '/user/queue/errors',
@@ -391,11 +402,11 @@ export default function Header() {
 
   // 브라우저 뒤로가기 버튼 클릭 시 페이지 이탈 방지 모달 띄우기
   useEffect(() => {
-    const isChatModalPath = (url: string, pathname: string) => {
+    const isChatModalPath = (previousPath: string, pathname: string) => {
       if (
-        url === `${pathname}/flow/social-share` ||
-        url === `${pathname}/flow/end-agora` ||
-        url === `${pathname}/flow/result-agora`
+        previousPath === `${pathname}/flow/social-share` ||
+        previousPath === `${pathname}/flow/end-agora` ||
+        previousPath === `${pathname}/flow/result-agora`
       ) {
         return true;
       }
@@ -409,8 +420,10 @@ export default function Header() {
 
       const previousPath =
         sessionStorage.getItem(STORAGE_PREVIOUSE_URL_KEY) ?? '';
+
       if (isChatModalPath(previousPath, pathname)) {
         sessionStorage.setItem(STORAGE_PREVIOUSE_URL_KEY, pathname);
+
         return;
       }
 

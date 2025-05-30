@@ -1,5 +1,5 @@
 import { getUserReactionQueryKey } from '@/constants/queryKey';
-import { Message as IMessage } from '@/app/model/Message';
+import { Message as IMessage, Message } from '@/app/model/Message';
 import { QueryClient } from '@tanstack/query-core';
 import React from 'react';
 import isNull from '@/utils/validation/validateIsNull';
@@ -9,7 +9,7 @@ import UserAccessNotification from '../atoms/UserAccessNotification';
 
 type MessageItemProps = {
   message: IMessage;
-  isMyType: (type: string) => boolean;
+  isMyType: (type: Message['user']['type']) => boolean;
   innerRef: React.RefObject<HTMLButtonElement> | undefined;
   isNavigationMode: boolean;
   getTimeString: (time: string) => string;
