@@ -26,7 +26,7 @@ export interface MessageMetaResponse {
   effectiveSize: number;
 }
 
-type BadWord = {
+export type BadWord = {
   start: number;
   end: number;
   keyword: string;

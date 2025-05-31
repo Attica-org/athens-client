@@ -4,6 +4,7 @@ import {
   AgoraId,
   AgoraStartResponse,
   ParticipantPosition,
+  UserName,
 } from './Agora';
 import { AgoraMemberInfo, AgoraMeta } from './AgoraMeta';
 import { Message } from './Message';
@@ -21,9 +22,9 @@ interface WebSocketChatMeta {
   data: AgoraMeta;
 }
 
-interface WebSocketChatSend {
+export interface WebSocketChatSend {
   type: 'CHAT';
-  data: Omit<Message, 'reactionCount'>;
+  data: Message;
 }
 
 interface WebSocketChatReaction {
@@ -39,11 +40,12 @@ interface WebSocketChatStart {
   data: AgoraStartResponse;
 }
 
-interface WebSocketChatUserKick {
+export interface WebSocketChatUserKick {
   type: 'KICK';
   kickVoteInfo: {
     targetMemberId: MemberId;
     message: string;
+    nickname: UserName;
   };
 }
 
