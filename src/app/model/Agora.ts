@@ -112,6 +112,12 @@ export type KickVoteResponse = {
   };
 };
 
+export type PostKickVoteArg = {
+  targetMemberId: number;
+  currentMemberCount: number;
+  agoraId: AgoraId;
+};
+
 export type VoteResults = Pick<ClosedAgora, 'id' | 'prosCount' | 'consCount'>;
 export type Vote = {
   id: number;
