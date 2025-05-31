@@ -3,6 +3,7 @@ import { Message as IMessage, Message } from '@/app/model/Message';
 import { QueryClient } from '@tanstack/query-core';
 import React from 'react';
 import isNull from '@/utils/validation/validateIsNull';
+import { AgoraId } from '@/app/model/Agora';
 import MyMessage from '../atoms/MyMessage';
 import YourMessage from '../atoms/YourMessage';
 import UserAccessNotification from '../atoms/UserAccessNotification';
@@ -16,7 +17,7 @@ type MessageItemProps = {
   nextMessage: IMessage | null;
   prevMessage: IMessage | null;
   queryClient: QueryClient;
-  agoraId: number;
+  agoraId: AgoraId;
 };
 
 function MessageItem({

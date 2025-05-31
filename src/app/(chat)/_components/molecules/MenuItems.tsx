@@ -1,9 +1,10 @@
 import React from 'react';
+import { AgoraTitle } from '@/app/model/Agora';
 import ShareButton from '../atoms/ShareButton';
 import HamburgerButton from '../atoms/HamburgerButton';
 
 type Props = {
-  memoizedTitle: string;
+  memoizedTitle: AgoraTitle;
   refetchAgoraUserList: () => void;
   isClosed: boolean;
 };
