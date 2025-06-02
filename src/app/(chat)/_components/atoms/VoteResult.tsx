@@ -7,10 +7,11 @@ import { useVoteStore } from '@/store/vote';
 import showToast from '@/utils/showToast';
 import { getVoteResultQueryKey } from '@/constants/queryKey';
 import { AGORA_STATUS } from '@/constants/agora';
+import { AgoraId } from '@/app/model/Agora';
 import { getVoteResult } from '../../_lib/getVoteResult';
 
 type Props = {
-  agoraId: number;
+  agoraId: AgoraId;
 };
 
 export default function VoteResult({ agoraId }: Props) {
@@ -25,13 +26,6 @@ export default function VoteResult({ agoraId }: Props) {
       enterAgora.status === AGORA_STATUS.CLOSED &&
       selectedAgora.status === AGORA_STATUS.CLOSED,
   });
-
-  // useEffect(() => {
-  //   if (enterAgora.status === AGORA_STATUS.CLOSED) {
-  //     console.log('refetch');
-  //     refetch();
-  //   }
-  // }, [enterAgora.status, refetch]);
 
   useEffect(() => {
     if (!data && error) {

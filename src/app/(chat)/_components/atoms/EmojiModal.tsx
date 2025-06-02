@@ -3,12 +3,13 @@ import { useShallow } from 'zustand/react/shallow';
 import { useAgora } from '@/store/agora';
 import { useWebSocketClient } from '@/store/webSocket';
 import isNull from '@/utils/validation/validateIsNull';
-import { Reaction } from '@/app/model/Reaction';
+import { EMOJI_TYPES, EmojiType } from '@/app/model/Reaction';
+import { Message } from '@/app/model/Message';
 import Emojis from './Emojis';
 
 type Props = {
   className: string;
-  chatId: number;
+  chatId: Message['chatId'];
   reactionToggleBtnRef: React.RefObject<HTMLButtonElement> | undefined;
   setShowEmojiModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -30,7 +31,7 @@ export default function EmojiModal({
     })),
   );
 
-  const handleEmojiClick = (reaction: string) => {
+  const handleEmojiClick = (reaction: EmojiType) => {
     if (webSocketClientConnected && !isNull(webSocketClient)) {
       webSocketClient.publish({
         destination: `/app/agoras/${enterAgora.id}/chats/${chatId}/reactions`,
@@ -50,9 +51,9 @@ export default function EmojiModal({
   };
 
   const handleEmojiKeyDown =
-    (reactionType: string) => (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    (reaction: EmojiType) => (e: React.KeyboardEvent<HTMLButtonElement>) => {
       if (e.code === 'Enter') {
-        handleEmojiClick(reactionType);
+        handleEmojiClick(reaction);
       }
     };
 
@@ -90,16 +91,16 @@ export default function EmojiModal({
       className="flex justify-center items-center"
       aria-label="메시지에 리액션 달기"
     >
-      {Object.keys(emojis).map((reactionType) => (
-        <li key={reactionType}>
+      {EMOJI_TYPES.map((reaction) => (
+        <li key={reaction}>
           <button
             type="button"
             className="py-4 px-6 hover:bg-gray-200 hover:rounded-full"
-            onClick={() => handleEmojiClick(reactionType)}
-            onKeyDown={handleEmojiKeyDown(reactionType)}
-            aria-label={`${reactionType} 이모티콘`}
+            onClick={() => handleEmojiClick(reaction)}
+            onKeyDown={handleEmojiKeyDown(reaction)}
+            aria-label={`${reaction} 이모티콘`}
           >
-            {emojis[reactionType as keyof Reaction].icon}
+            {emojis[reaction].icon}
           </button>
         </li>
       ))}

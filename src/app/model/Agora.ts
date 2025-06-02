@@ -86,7 +86,7 @@ export type AgoraConfig = {
   category: string;
   color: ColorType;
   capacity: number;
-  duration: number | null;
+  duration: number;
 };
 
 export type ProfileImage = {

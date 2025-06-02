@@ -9,17 +9,18 @@ import React, {
   useState,
 } from 'react';
 import { BottomSheet } from 'react-spring-bottom-sheet';
+import { AgoraTitle } from '@/app/model/Agora';
 import SocialShareLogos from './SocialShareLogos';
 
 import 'react-spring-bottom-sheet/dist/style.css';
 
 type Props = {
-  title: string;
+  title: AgoraTitle;
 };
 
 export default function ShareButton({ title }: Props) {
   const pathname = useParams();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
   const url = `${process.env.NEXT_PUBLIC_CLIENT_URL}/agoras/${pathname.agora}`;
 
