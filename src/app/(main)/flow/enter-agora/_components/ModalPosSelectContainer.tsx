@@ -36,7 +36,7 @@ export default function ModalPosSelectContainer() {
       <ModalPosSelectBtn
         selectedPosition={selectedPosition}
         selectPosition={selectPosition}
-        position={AGORA_POSITION.PROS}
+        position={ParticipantPosition.PROS}
         color="blue"
       >
         찬성
@@ -44,7 +44,7 @@ export default function ModalPosSelectContainer() {
       <ModalPosSelectBtn
         selectedPosition={selectedPosition}
         selectPosition={selectPosition}
-        position={AGORA_POSITION.CONS}
+        position={ParticipantPosition.CONS}
         color="red"
       >
         반대
@@ -52,7 +52,7 @@ export default function ModalPosSelectContainer() {
       <ModalPosSelectBtn
         selectedPosition={selectedPosition}
         selectPosition={selectPosition}
-        position={AGORA_POSITION.OBSERVER}
+        position={ParticipantPosition.OBSERVER}
         color="athens-main"
       >
         관찰자
