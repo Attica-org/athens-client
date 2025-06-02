@@ -16,6 +16,11 @@ export enum ParticipantPosition {
   OBSERVER = 'OBSERVER',
 }
 
+export enum AgoraTabStatus {
+  ACTIVE = 'active',
+  CLOSED = 'closed',
+}
+
 export type Participants = {
   pros: number;
   cons: number;
