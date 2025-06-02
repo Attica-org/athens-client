@@ -1,6 +1,5 @@
 import { AGORA_STATUS } from '@/constants/agora';
 
-export type ParticipantPosition = 'PROS' | 'CONS' | 'OBSERVER';
 export type VotePosition = 'PROS' | 'CONS' | 'DEFAULT';
 export type ObserverPos = 'OBSERVER';
 export type ActiveAgora = CategoryAgora | KeywordAgora;
@@ -10,6 +9,12 @@ export type ImageURL = string | null;
 export type AgoraId = number;
 export type AgoraTitle = string;
 export type UserName = string;
+
+export enum ParticipantPosition {
+  PROS = 'PROS',
+  CONS = 'CONS',
+  OBSERVER = 'OBSERVER',
+}
 
 export type Participants = {
   pros: number;
