@@ -9,6 +9,8 @@ export type ImageURL = string | null;
 export type AgoraId = number;
 export type AgoraTitle = string;
 export type UserName = string;
+export type VoteCount = number;
+export type Duration = number;
 
 export enum ParticipantPosition {
   PROS = 'PROS',
@@ -45,8 +47,8 @@ export interface KeywordAgora extends Agora {
 }
 
 export interface ClosedAgora extends Agora {
-  prosCount: number;
-  consCount: number;
+  prosCount: VoteCount;
+  consCount: VoteCount;
   totalMember: number;
   createdAt: string;
 }
@@ -96,7 +98,7 @@ export type AgoraConfig = {
   category: string;
   color: ColorType;
   capacity: number;
-  duration: number;
+  duration: Duration;
 };
 
 export type ProfileImage = {

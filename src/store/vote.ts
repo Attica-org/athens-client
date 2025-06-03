@@ -1,18 +1,17 @@
+import { AgoraId, VoteCount } from '@/app/model/Agora';
 import { create } from 'zustand';
 
+type VoteResult = {
+  id: AgoraId;
+  prosCount: VoteCount;
+  consCount: VoteCount;
+};
+
 interface VoteState {
-  voteResult: {
-    id: number;
-    prosCount: number;
-    consCount: number;
-  };
+  voteResult: VoteResult;
   voteEnd: boolean;
   setVoteEnd: (voteEnd: boolean) => void;
-  setVoteResult: (voteResult: {
-    id: number;
-    prosCount: number;
-    consCount: number;
-  }) => void;
+  setVoteResult: (voteResult: VoteResult) => void;
   reset: () => void;
 }
 
@@ -24,14 +23,10 @@ export const useVoteStore = create<VoteState>((set) => ({
     consCount: 0,
   },
   voteEnd: false,
-  setVoteEnd(voteEnd: boolean) {
+  setVoteEnd(voteEnd) {
     set({ voteEnd });
   },
-  setVoteResult(voteResult: {
-    id: number;
-    prosCount: number;
-    consCount: number;
-  }) {
+  setVoteResult(voteResult) {
     set({ voteResult });
   },
   reset() {

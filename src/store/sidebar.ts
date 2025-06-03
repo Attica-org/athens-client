@@ -13,7 +13,7 @@ interface SidebarState {
 export const useSidebarStore = create<SidebarState>((set) => ({
   isOpen: false,
   hamburgerButtonRef: null,
-  setHanburgerButtonRef: (target: React.RefObject<HTMLButtonElement>) => {
+  setHanburgerButtonRef: (target) => {
     set({ hamburgerButtonRef: target });
   },
   toggle: () =>

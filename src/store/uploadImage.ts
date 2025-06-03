@@ -26,8 +26,8 @@ const initialState: UploadImageState = {
 export const useUploadImage = create(
   immer<UploadImageState>((set) => ({
     ...initialState,
-    setCropedPreview: (cropedPreview: ImageData) => set({ cropedPreview }),
-    setUploadImage: (uploadImage: ImageData) => set({ uploadImage }),
+    setCropedPreview: (cropedPreview) => set({ cropedPreview }),
+    setUploadImage: (uploadImage) => set({ uploadImage }),
     resetUploadImageState: () =>
       set({
         cropedPreview: initialImage,

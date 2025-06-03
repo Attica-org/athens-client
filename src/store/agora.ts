@@ -1,24 +1,14 @@
-import {
-  Agora,
-  ImageURL,
-  ParticipantPosition,
-  Status,
-} from '@/app/model/Agora';
+import { Agora, ParticipantPosition } from '@/app/model/Agora';
 import { AGORA_STATUS } from '@/constants/agora';
 import { COLOR } from '@/constants/consts';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-type EnterAgora = {
-  id: number;
+interface EnterAgora extends Agora {
   userId?: number;
-  imageUrl: ImageURL;
-  agoraTitle: string;
-  status: Status | '';
   role: ParticipantPosition;
   isCreator: boolean;
-  agoraColor: string;
-};
+}
 
 interface AgoraState {
   selectedAgora: Agora;
@@ -44,13 +34,12 @@ const enterAgoraInitialState: EnterAgora = {
   userId: 0,
   imageUrl: '',
   agoraTitle: '',
-  status: '',
+  status: AGORA_STATUS.CLOSED,
   role: ParticipantPosition.OBSERVER,
   isCreator: false,
   agoraColor: COLOR[0].value,
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const useAgora = create(
   persist<AgoraState>(
     (set) => ({

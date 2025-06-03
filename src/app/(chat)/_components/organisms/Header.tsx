@@ -446,10 +446,10 @@ export default function Header() {
   const memoizedTitle = useMemo(() => {
     return (
       metaData?.agora.title ||
-      enterAgora.title ||
+      enterAgora.agoraTitle ||
       '다양한 사람들과 토론에 함께하세요!'
     );
-  }, [metaData?.agora.title, enterAgora.title]);
+  }, [metaData?.agora.title, enterAgora.agoraTitle]);
 
   return (
     <div className="flex flex-col w-full h-full justify-center dark:text-white dark:text-opacity-85">

@@ -1,16 +1,15 @@
 import { create } from 'zustand';
-import { immer } from 'zustand/middleware/immer';
-import { AgoraConfig } from '@/app/model/Agora';
+import { AgoraConfig, AgoraTitle, Duration } from '@/app/model/Agora';
 import { AGORA_CREATE } from '@/constants/agora';
-import { COLOR } from '@/constants/consts';
+import { COLOR, AGORACATEGORY, ColorValue } from '@/constants/consts';
 
 interface AgoraState extends AgoraConfig {
-  setTitle: (title: string) => void;
+  setTitle: (title: AgoraTitle) => void;
   setImageUrl: (imageUrl: string) => void;
-  setCategory: (category: string) => void;
-  setColor: (color: string, idx: number) => void;
-  setCapacity: (capacity: number) => void;
-  setDuration: (duration: number | null) => void;
+  setCategory: (category: keyof typeof AGORACATEGORY) => void;
+  setColor: (color: ColorValue, idx: number) => void;
+  setCapacity: (capacity: AgoraConfig['capacity']) => void;
+  setDuration: (duration: Duration) => void;
   reset: () => void;
 }
 
@@ -30,30 +29,27 @@ const initialState: AgoraState = {
   reset: () => {},
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export const useCreateAgora = create(
-  immer<AgoraState>((set) => ({
-    ...initialState,
-    setTitle: (title: string) => set({ title }),
-    setImageUrl: (imageUrl: string) => set({ imageUrl }),
-    setCategory: (category: string) => set({ category }),
-    setColor: (color: string, idx: number) =>
-      set({
-        color: {
-          idx,
-          value: color,
-        },
-      }),
-    setCapacity: (capacity: number) => set({ capacity }),
-    setDuration: (duration: number | null) => set({ duration }),
-    reset: () =>
-      set({
-        title: '',
-        imageUrl: '',
-        category: '1',
-        color: { idx: 0, value: COLOR[0].value },
-        capacity: AGORA_CREATE.DEFAULT_PARTICIPANTS_CNT,
-        duration: AGORA_CREATE.DEFAULT_TIME,
-      }),
-  })),
-);
+export const useCreateAgora = create<AgoraState>((set) => ({
+  ...initialState,
+  setTitle: (title) => set({ title }),
+  setImageUrl: (imageUrl) => set({ imageUrl }),
+  setCategory: (category) => set({ category }),
+  setColor: (color, idx) =>
+    set({
+      color: {
+        idx,
+        value: color,
+      },
+    }),
+  setCapacity: (capacity) => set({ capacity }),
+  setDuration: (duration) => set({ duration }),
+  reset: () =>
+    set({
+      title: '',
+      imageUrl: '',
+      category: '1',
+      color: { idx: 0, value: COLOR[0].value },
+      capacity: AGORA_CREATE.DEFAULT_PARTICIPANTS_CNT,
+      duration: AGORA_CREATE.DEFAULT_TIME,
+    }),
+}));

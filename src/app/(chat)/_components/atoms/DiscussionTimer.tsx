@@ -10,11 +10,11 @@ import { useAgora } from '@/store/agora';
 import showToast from '@/utils/showToast';
 import { AGORA_STATUS } from '@/constants/agora';
 import useApiError from '@/hooks/useApiError';
-import { AgoraConfig } from '@/app/model/Agora';
+import { Duration } from '@/app/model/Agora';
 import { patchAgoraTimeOut } from '../../_lib/patchAgoraTimeOut';
 
 type Props = {
-  duration: AgoraConfig['duration'];
+  duration: Duration;
 };
 
 export default function DiscussionTimer({ duration }: Props) {

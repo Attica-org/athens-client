@@ -1,15 +1,15 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import { ParticipantPosition, ProfileImage } from '@/app/model/Agora';
+import { ParticipantPosition, ProfileImage, UserName } from '@/app/model/Agora';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface EnterState {
-  nickname: string;
+  nickname: UserName;
   message: string;
   selectedProfileImage: ProfileImage;
   selectedPosition: ParticipantPosition;
   setMessage: (message: string) => void;
-  setNickname: (nickname: string) => void;
+  setNickname: (nickname: UserName) => void;
   setProfileImage: (profileImage: ProfileImage) => void;
   setSelectedPosition: (selectedPosition: ParticipantPosition) => void;
   reset: () => void;
@@ -38,10 +38,10 @@ export const useEnter = create(
   persist(
     immer<EnterState>((set) => ({
       ...initialState,
-      setMessage: (message: string) => set({ message }),
+      setMessage: (message) => set({ message }),
       setSelectedPosition: (selectedPosition: ParticipantPosition) =>
         set({ selectedPosition }),
-      setNickname: (nickname: string) => set({ nickname }),
+      setNickname: (nickname) => set({ nickname }),
       setProfileImage: (profileImage: ProfileImage) =>
         set({ selectedProfileImage: profileImage }),
       reset: () =>

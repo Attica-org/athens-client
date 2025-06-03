@@ -1,3 +1,5 @@
+import { AgoraTitle, Duration, UserName } from '@/app/model/Agora';
+import { MemberId } from '@/app/model/Chat';
 import { enableMapSet } from 'immer';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
@@ -5,21 +7,21 @@ import { immer } from 'zustand/middleware/immer';
 enableMapSet();
 
 interface ChatState {
-  title: string;
+  title: AgoraTitle;
   start: string;
-  observer: number;
-  duration: number;
   end: string;
+  observer: number;
+  duration: Duration;
   participants: Map<number, string>;
   isEmptyParticipants: boolean;
-  setTitle: (title: string) => void;
+  setTitle: (title: AgoraTitle) => void;
   setDiscussionStart: (start: string) => void;
   setDiscussionEnd: (end: string) => void;
-  setDuration: (duration: number) => void;
+  setDuration: (duration: Duration) => void;
   setObserver: (observer: number) => void;
   reset: () => void;
-  addParticipant: (id: number, username: string) => void;
-  removeParticipant: (id: number) => void;
+  addParticipant: (id: MemberId, username: UserName) => void;
+  removeParticipant: (id: MemberId) => void;
   resetParticipants: () => void;
 }
 
@@ -42,16 +44,15 @@ const initialState: ChatState = {
   resetParticipants: () => {},
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const useChatInfo = create(
   immer<ChatState>((set) => ({
     ...initialState,
 
-    setTitle: (title: string) => set({ title }),
-    setDiscussionStart: (start: string) => set({ start }),
-    setDiscussionEnd: (end: string) => set({ end }),
-    setDuration: (duration: number) => set({ duration }),
-    setObserver: (observer: number) => set({ observer }),
+    setTitle: (title) => set({ title }),
+    setDiscussionStart: (start) => set({ start }),
+    setDiscussionEnd: (end) => set({ end }),
+    setDuration: (duration) => set({ duration }),
+    setObserver: (observer) => set({ observer }),
     reset: () =>
       set({
         title: '',

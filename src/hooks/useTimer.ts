@@ -1,18 +1,16 @@
-import { AgoraConfig, AgoraStartResponse } from '@/app/model/Agora';
+import { AgoraStartResponse, Duration } from '@/app/model/Agora';
 import { differenceInSeconds } from 'date-fns';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-type Time = AgoraConfig['duration'];
-
 const useTimer = (
   startTime: AgoraStartResponse['startTime'],
-  duration: Time,
+  duration: Duration,
 ) => {
-  const [remainingTime, setRemainingTime] = useState<Time>(duration * 60);
+  const [remainingTime, setRemainingTime] = useState<Duration>(duration * 60);
   const [isFinished, setIsFinished] = useState<boolean>(false);
   const intervalId = useRef<number | null>(null);
 
-  const setTimerLabel = (time: Time) => {
+  const setTimerLabel = (time: Duration) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
 
