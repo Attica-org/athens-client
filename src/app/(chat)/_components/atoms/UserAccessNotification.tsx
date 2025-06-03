@@ -1,9 +1,10 @@
 import { AccessStatus } from '@/app/model/AccessStatus';
+import { UserName } from '@/app/model/Agora';
 import React from 'react';
 
 type Props = {
   className?: string;
-  nickname: string;
+  nickname: UserName;
   access: AccessStatus;
 };
 

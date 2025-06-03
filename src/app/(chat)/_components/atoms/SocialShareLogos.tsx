@@ -1,5 +1,6 @@
 'use client';
 
+import { AgoraTitle } from '@/app/model/Agora';
 import { useChatInfo } from '@/store/chatInfo';
 import getKey from '@/utils/getKey';
 import Image from 'next/image';
@@ -23,7 +24,7 @@ import 'swiper/css/free-mode';
 import 'swiper/css/mousewheel';
 
 type Props = {
-  title?: string;
+  title?: AgoraTitle;
   url?: string;
 };
 
@@ -44,6 +45,18 @@ export default function SocialShareLogos({ title, url }: Props) {
   const sendUrl =
     url || `${process.env.NEXT_PUBLIC_CLIENT_URL}/agoras/${pathname.agora}`; // 공유할 URL
 
+  const setKakaoAPI = async () => {
+    const key = await getKey();
+
+    if (typeof window !== 'undefined') {
+      const { Kakao } = window;
+
+      if (!Kakao.isInitialized()) {
+        Kakao.init(key.kakaoKey);
+      }
+    }
+  };
+
   useEffect(() => {
     const swiper = new Swiper('.swiper', {
       direction: 'horizontal',
@@ -60,25 +73,11 @@ export default function SocialShareLogos({ title, url }: Props) {
       },
     });
 
+    setKakaoAPI();
+
     return () => {
       swiper.destroy();
     };
-  }, []);
-
-  const setKakaoAPI = async () => {
-    const key = await getKey();
-
-    if (typeof window !== 'undefined') {
-      const { Kakao } = window;
-
-      if (!Kakao.isInitialized()) {
-        Kakao.init(key.kakaoKey);
-      }
-    }
-  };
-
-  useEffect(() => {
-    setKakaoAPI();
   }, []);
 
   const getTitleFromState = () => {

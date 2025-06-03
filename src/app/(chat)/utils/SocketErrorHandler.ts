@@ -15,13 +15,14 @@ import {
 import { useRouter } from 'next/navigation';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import { Session } from 'next-auth';
+import { WebSocketErrorResponse } from '@/app/model/Chat';
 
 const SocketErrorHandler = () => {
   const { callReissueFn } = useUpdateSession();
   const router = useRouter();
 
   const chatSocketErrorHandler = async (
-    socketError: any,
+    socketError: WebSocketErrorResponse,
     session: Session | null,
   ) => {
     if (AUTH_MESSAGE.includes(socketError.message)) {

@@ -1,4 +1,4 @@
-import { CategoryAgora, UnionAgora } from '@/app/model/Agora';
+import { AgoraTabStatus, CategoryAgora, UnionAgora } from '@/app/model/Agora';
 import {
   AGORA_CATEGORY_SEARCH,
   NETWORK_ERROR_MESSAGE,
@@ -23,7 +23,7 @@ export const getAgoraCategorySearch: QueryFunction<
   [_1: string, _2: string, _3: string, searchParams: SearchParams],
   { nextCursor: number | null }
 > = async ({ queryKey, pageParam = { nextCursor: null } }) => {
-  const [, , , { status = 'active', category = '1' }] = queryKey;
+  const [, , , { status = AgoraTabStatus.ACTIVE, category = '1' }] = queryKey;
   const searchParams = { status, category };
 
   const urlSearchParams = new URLSearchParams(searchParams);

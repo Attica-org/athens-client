@@ -10,26 +10,17 @@ import React, {
   useState,
 } from 'react';
 import isNull from '@/utils/validation/validateIsNull';
-import { useUploadImage } from '@/store/uploadImage';
+import { initialImage, useUploadImage } from '@/store/uploadImage';
 import { useShallow } from 'zustand/react/shallow';
 import { useRouter } from 'next/navigation';
 import { uploadImageSegmentKey } from '@/constants/segmentKey';
 import showToast from '@/utils/showToast';
+import { ImageData } from '@/app/model/Agora';
 
 type Props = {
   image?: string;
   page?: string;
   color?: string;
-};
-
-type CropedPreview = {
-  dataUrl: string;
-  file: File;
-};
-
-const initialCropedPreview: CropedPreview = {
-  dataUrl: '',
-  file: new File([], 'image'),
 };
 
 export default function AgoraImageUpload({ image = '', page, color }: Props) {
@@ -44,7 +35,7 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
     );
 
   const [viewPopup, setViewPopup] = useState(false);
-  const [popupPosition, setPopupPosition] = useState('top');
+  const [popupPosition, setPopupPosition] = useState<'top' | 'bottom'>('top');
   const imageRef = useRef<HTMLInputElement>(null);
   const imageBtnRef = useRef<HTMLDivElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
@@ -110,8 +101,8 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
   };
 
   const removeImage = () => {
-    setUploadImage(initialCropedPreview);
-    setCropedPreview(initialCropedPreview);
+    setUploadImage(initialImage);
+    setCropedPreview(initialImage);
     handleViewPopup(false);
   };
 
@@ -173,7 +164,7 @@ export default function AgoraImageUpload({ image = '', page, color }: Props) {
   };
 
   const renderMedia = useCallback(
-    (file: { dataUrl: string; file: File }) => {
+    (file: ImageData) => {
       if (file.file.type === 'image/gif') {
         return (
           // eslint-disable-next-line @next/next/no-img-element

@@ -13,6 +13,7 @@ import 'swiper/css/free-mode';
 import 'swiper/css/mousewheel';
 import { isValidCategoryKey } from '@/utils/validation/validateCategoryKey';
 import { AGORACATEGORY } from '@/constants/consts';
+import isNull from '@/utils/validation/validateIsNull';
 import CategoryButton from '../atoms/CategoryButton';
 
 export default function CategoryButtonList() {
@@ -23,9 +24,20 @@ export default function CategoryButtonList() {
   );
 
   const searchParams = useSearchParams();
+  const getCategorySearchParams = (): keyof typeof AGORACATEGORY => {
+    const categorySearchParams = searchParams.get('category');
+
+    if (isNull(categorySearchParams)) return '1';
+
+    if (categorySearchParams in AGORACATEGORY) {
+      return categorySearchParams as keyof typeof AGORACATEGORY;
+    }
+
+    return '1';
+  };
+
   const pathname = usePathname();
   const router = useRouter();
-  const categorySearchParams: string = searchParams.get('category') || '';
   const { setCategory, category: selectedCategory } = useCreateAgora(
     useShallow((state) => ({
       setCategory: state.setCategory,
@@ -34,9 +46,7 @@ export default function CategoryButtonList() {
   );
 
   useEffect(() => {
-    if (categorySearchParams) {
-      setCategory(categorySearchParams);
-    }
+    setCategory(getCategorySearchParams());
 
     return () => {
       setCategory('1');
@@ -59,7 +69,6 @@ export default function CategoryButtonList() {
         '',
         newUrl,
       );
-      // router.push(`/home?${newSearchParams.toString()}`);
     },
     [router, searchParams, pathname, selectedCategory],
   );

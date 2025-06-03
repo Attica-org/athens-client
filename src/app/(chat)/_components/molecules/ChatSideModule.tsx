@@ -1,7 +1,8 @@
+import { AgoraTitle } from '@/app/model/Agora';
 import React from 'react';
 
 type Props = {
-  title: string;
+  title: AgoraTitle;
   children: React.ReactNode;
 };
 

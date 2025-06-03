@@ -8,12 +8,16 @@ import { useAgora } from '@/store/agora';
 
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import Image from 'next/image';
-import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
+import { AGORA_STATUS } from '@/constants/agora';
 import { isValidImgUrl } from '@/utils/validation/validateImage';
 import { COLOR } from '@/constants/consts';
 import { useMutation } from '@tanstack/react-query';
 import useApiError from '@/hooks/useApiError';
-import { UnionAgora, KeywordAgora as IKeywordAgora } from '@/app/model/Agora';
+import {
+  UnionAgora,
+  KeywordAgora as IKeywordAgora,
+  ParticipantPosition,
+} from '@/app/model/Agora';
 import {
   isActiveAgora,
   isKeywordAgora,
@@ -35,9 +39,9 @@ export default function KeywordAgora({ agora }: Props) {
     setEnterAgora({
       id: agora.id,
       imageUrl: agora.imageUrl,
-      title: agora.agoraTitle,
+      agoraTitle: agora.agoraTitle,
       status: agora.status,
-      role: AGORA_POSITION.OBSERVER,
+      role: ParticipantPosition.OBSERVER,
       isCreator: false,
       agoraColor: agora.agoraColor,
     });
@@ -60,7 +64,7 @@ export default function KeywordAgora({ agora }: Props) {
     setSelectedAgora({
       id: agora.id,
       imageUrl: agora.imageUrl,
-      title: agora.agoraTitle,
+      agoraTitle: agora.agoraTitle,
       status: agora.status,
       agoraColor: agora.agoraColor,
     });

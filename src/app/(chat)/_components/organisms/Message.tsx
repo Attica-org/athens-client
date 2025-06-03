@@ -29,6 +29,7 @@ import { useWebSocketClient } from '@/store/webSocket';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useSession } from 'next-auth/react';
 import { useAccessibleMessageNotifier } from '@/hooks/useAccessibleMessageNotifier';
+import { WebSocketResponse } from '@/app/model/Chat';
 import { getChatMessages } from '../../_lib/getChatMessages';
 import ChatNotification from '../atoms/ChatNotification';
 import NotificationNewMessage from '../atoms/NotificationNewMessage';
@@ -54,7 +55,7 @@ export default function Message() {
       status: state.enterAgora.status,
     })),
   );
-  // const agoraId = useAgora((state) => state.enterAgora.id);
+
   const { webSocketClient, webSocketClientConnected } = useWebSocketClient(
     useShallow((state) => ({
       webSocketClient: state.webSocketClient,
@@ -110,7 +111,7 @@ export default function Message() {
   });
 
   const handleWebSocketReaction = useCallback(
-    (response: any) => {
+    (response: WebSocketResponse) => {
       if (response.type === 'REACTION') {
         queryClient.setQueryData(
           getUserReactionQueryKey(agoraId, response.data.chatId),
@@ -124,6 +125,7 @@ export default function Message() {
   useEffect(() => {
     const subscribeReactions = () => {
       if (isNull(webSocketClient) || !webSocketClientConnected) return;
+
       webSocketClient.subscribe(
         `/topic/agoras/${agoraId}/reactions`,
         async (received_reaction: StompJs.IFrame) => {
@@ -289,7 +291,7 @@ export default function Message() {
   }, []);
 
   const isMyType = useCallback(
-    (type: string) =>
+    (type: IMessage['user']['type']) =>
       type === myRole ||
       (myRole === AGORA_POSITION.OBSERVER && type === AGORA_POSITION.PROS),
     [myRole],

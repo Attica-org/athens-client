@@ -1,14 +1,16 @@
 import { THEME } from '@/constants/theme';
 import { create } from 'zustand';
 
-interface ThemeState {
+interface State {
   isDarkMode: boolean;
-  toggleTheme(theme: string): void;
 }
 
-export const useThemeStore = create<ThemeState>((set) => ({
+interface Action {
+  toggleTheme(theme: THEME): void;
+}
+export const useThemeStore = create<State & Action>((set) => ({
   isDarkMode: false,
-  toggleTheme(theme: string) {
+  toggleTheme(theme) {
     const newDarkMode = theme === THEME.DARK;
     const themeColor = newDarkMode ? '#3f3f3f' : '#000000';
     let metaThemeColor = document.querySelector('meta[name="theme-color"]');

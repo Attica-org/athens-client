@@ -15,6 +15,7 @@ import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
 import useApiError from '@/hooks/useApiError';
 import showToast from '@/utils/showToast';
 import { useShallow } from 'zustand/react/shallow';
+import { ParticipantPosition } from '@/app/model/Agora';
 import isNull from '@/utils/validation/validateIsNull';
 
 export default function EnterAgoraButton() {
@@ -65,9 +66,9 @@ export default function EnterAgoraButton() {
             id: Number(pathname.split('/')[3]),
             userId: response.agoraId,
             imageUrl: selectedAgora.imageUrl,
-            title: selectedAgora.title,
+            agoraTitle: selectedAgora.agoraTitle,
             status: AGORA_STATUS.CLOSED,
-            role: AGORA_POSITION.OBSERVER,
+            role: ParticipantPosition.OBSERVER,
             isCreator: response.isCreator,
             agoraColor: selectedAgora.agoraColor,
           });
@@ -80,7 +81,7 @@ export default function EnterAgoraButton() {
             id: response.agoraId,
             userId: response.userId,
             imageUrl: selectedAgora.imageUrl,
-            title: selectedAgora.title,
+            agoraTitle: selectedAgora.agoraTitle,
             status: selectedAgora.status,
             role: response.type,
             isCreator: response.isCreator,

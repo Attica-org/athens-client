@@ -4,14 +4,14 @@ import DislikeIcon from '@/assets/icons/DislikeIcon';
 import LikeIcon from '@/assets/icons/LikeIcon';
 import SadIcon from '@/assets/icons/SadIcon';
 import HappyIcon from '@/assets/icons/HappyIcon';
-import { Reaction } from '@/app/model/Reaction';
+import { EmojiType } from '@/app/model/Reaction';
 
 type Props = {
   className: string;
 };
 
 type EmojiMap = {
-  [key in keyof Reaction]: {
+  [key in EmojiType]: {
     icon: JSX.Element;
   };
 };

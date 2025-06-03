@@ -79,7 +79,7 @@ function CreateAgoraBtn() {
         setSelectedAgora({
           id: response.id,
           imageUrl: createAgora.imageUrl,
-          title: createAgora.title,
+          agoraTitle: createAgora.title,
           status: AGORA_STATUS.QUEUED,
           agoraColor: createAgora.color.value,
         });

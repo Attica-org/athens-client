@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
+  AgoraId,
   AgoraSideBarDataType,
   ImageURL,
   ParticipantPosition,
@@ -24,7 +25,7 @@ const errorFallbackProps = {
 };
 
 type Props = {
-  agoraId: number;
+  agoraId: AgoraId;
 };
 
 function FallbackComponent(props: FallbackProps) {
