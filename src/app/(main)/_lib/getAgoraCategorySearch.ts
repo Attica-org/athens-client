@@ -1,4 +1,4 @@
-import { UnionAgora } from '@/app/model/Agora';
+import { CategoryAgora, UnionAgora } from '@/app/model/Agora';
 import {
   AGORA_CATEGORY_SEARCH,
   NETWORK_ERROR_MESSAGE,
@@ -12,6 +12,12 @@ type SearchParams = {
   q?: string;
 };
 
+type CategoryAgoraList = {
+  agoras: CategoryAgora[];
+  next: number | null;
+  hasNext: boolean;
+};
+
 export const getAgoraCategorySearch: QueryFunction<
   { agoras: UnionAgora[]; nextCursor: number | null },
   [_1: string, _2: string, _3: string, searchParams: SearchParams],
@@ -22,7 +28,7 @@ export const getAgoraCategorySearch: QueryFunction<
 
   const urlSearchParams = new URLSearchParams(searchParams);
 
-  const res = await callFetchWrapper<any>(
+  const res = await callFetchWrapper<CategoryAgoraList>(
     `/api/v1/open/agoras?${urlSearchParams.toString()}&next=${pageParam.nextCursor ?? ''}`,
     {
       next: {
@@ -66,7 +72,7 @@ export const getAgoraCategorySearch: QueryFunction<
   const result = res.response;
 
   return {
-    agoras: result.agoras,
-    nextCursor: result.hasNext ? result.next : null,
+    agoras: result?.agoras ?? [],
+    nextCursor: result?.hasNext ? result.next : null,
   };
 };

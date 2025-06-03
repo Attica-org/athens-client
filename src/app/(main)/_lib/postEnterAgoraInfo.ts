@@ -1,5 +1,5 @@
-import { ParticipantPosition } from '@/app/model/Agora';
-import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
+import { AgoraId, ParticipantPosition } from '@/app/model/Agora';
+import { AGORA_POSITION } from '@/constants/agora';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { getSession } from '@/serverActions/auth';
@@ -17,7 +17,25 @@ type Props = {
     role: ParticipantPosition;
     nickname?: string;
   };
-  agoraId: number;
+  agoraId: AgoraId;
+};
+
+type EnterAgoraInfoResponse = {
+  agoraId: AgoraId;
+  userId: number;
+  type: ParticipantPosition;
+  isCreator: boolean;
+};
+
+export enum FinishedAgoraInfo {
+  agoraId = -1,
+}
+
+const finishAgoraInfo: EnterAgoraInfoResponse = {
+  agoraId: FinishedAgoraInfo.agoraId,
+  userId: -1,
+  type: ParticipantPosition.OBSERVER,
+  isCreator: false,
 };
 
 const splitMessage = (message: string) => {
@@ -25,13 +43,16 @@ const splitMessage = (message: string) => {
   return split[0];
 };
 
-export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
+export const postEnterAgoraInfo = async ({
+  info,
+  agoraId,
+}: Props): Promise<EnterAgoraInfoResponse> => {
   const session = await getSession();
   if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper<any>(
+  const res = await callFetchWrapper<EnterAgoraInfoResponse>(
     `/api/v1/auth/agoras/${agoraId}/participants`,
     {
       method: 'post',
@@ -75,7 +96,7 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
       }
     } else if (res.error.code === 1002) {
       if (errorMessage === AGORA_ENTER.SERVER_RESPONSE_CLOSED_AGORA) {
-        return AGORA_STATUS.CLOSED;
+        return finishAgoraInfo;
       }
     } else if (res.error.code === 1004) {
       if (
@@ -100,6 +121,10 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
   }
 
   const result = res.response;
+
+  if (isNull(result)) {
+    throw new Error(AGORA_ENTER.UNKNOWN_ERROR);
+  }
 
   return result;
 };

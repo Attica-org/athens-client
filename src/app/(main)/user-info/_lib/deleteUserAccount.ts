@@ -12,7 +12,7 @@ type DeleteUserResponse = {
   deletedBy: string;
 };
 
-const deleteUserAccount = async () => {
+const deleteUserAccount = async (): Promise<void> => {
   const session = await getSession();
 
   if (isNull(session)) {

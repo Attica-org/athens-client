@@ -6,7 +6,7 @@ import isNull from '@/utils/validation/validateIsNull';
 
 type LogoutResponse = {};
 
-const postLogout = async () => {
+const postLogout = async (): Promise<void> => {
   const session = await getSession();
   if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);

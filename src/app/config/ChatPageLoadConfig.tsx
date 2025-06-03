@@ -16,7 +16,10 @@ import {
 } from '@/constants/segmentKey';
 import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
 import { COLOR } from '@/constants/consts';
-import { postEnterAgoraInfo } from '../(main)/_lib/postEnterAgoraInfo';
+import {
+  FinishedAgoraInfo,
+  postEnterAgoraInfo,
+} from '../(main)/_lib/postEnterAgoraInfo';
 import ChatPageLoading from '../(chat)/_components/atoms/ChatPageLoading';
 import { AgoraTitleResponse } from '../model/Agora';
 import { getAgoraTitle } from '../(main)/_lib/getAgoraTitle';
@@ -56,7 +59,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
     mutationFn: callEnterAgoraAPI,
     onSuccess: async (response) => {
       if (response) {
-        if (response === AGORA_STATUS.CLOSED) {
+        if (response.agoraId === FinishedAgoraInfo.agoraId) {
           showToast('종료된 아고라입니다.', 'info');
 
           setEnterAgora({
