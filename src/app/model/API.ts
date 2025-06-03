@@ -1,7 +1,7 @@
-export type ApiError = {
+export interface ApiError {
   code: number;
   message: string | Record<string, string>;
-};
+}
 
 export type ApiErrorResponse = {
   success: false;

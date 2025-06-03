@@ -3,10 +3,11 @@ import { useAgora } from '@/store/agora';
 import { useShallow } from 'zustand/react/shallow';
 import { useQuery } from '@tanstack/react-query';
 import { getUserReactionQueryKey } from '@/constants/queryKey';
-import { Reaction } from '@/app/model/Reaction';
+import { EMOJI_TYPES, Reaction } from '@/app/model/Reaction';
+import { AgoraId } from '@/app/model/Agora';
 import Emojis from './Emojis';
 
-const initReactionCount = {
+const initReactionCount: Reaction = {
   LIKE: 0,
   DISLIKE: 0,
   LOVE: 0,
@@ -16,7 +17,7 @@ const initReactionCount = {
 
 type Props = {
   className: string;
-  chatId: number;
+  chatId: AgoraId;
 };
 export default function UserReaction({ className, chatId }: Props) {
   const emojis = Emojis({ className });
@@ -34,20 +35,18 @@ export default function UserReaction({ className, chatId }: Props) {
 
   return (
     <div className="flex" aria-labelledby="reaction">
-      {Object.keys(reactionCount).map((reactionType) => {
-        const count = reactionCount[reactionType as keyof Reaction];
+      {EMOJI_TYPES.map((reaction) => {
+        const count = reactionCount[reaction];
         return count > 0 ? (
-          <React.Fragment key={reactionType}>
+          <React.Fragment key={reaction}>
             <span id="reaction" className="sr-only">
-              {reactionType} 리액션 {count}개
+              {reaction} 리액션 {count}개
             </span>
             <div
-              className={`mb-5 flex justify-center items-center border-1 py-4 px-4 rounded-md bg-white ${reactionType === 'LIKE' ? '' : 'ml-4'}`}
-              key={reactionType}
+              className={`mb-5 flex justify-center items-center border-1 py-4 px-4 rounded-md bg-white ${reaction === 'LIKE' ? '' : 'ml-4'}`}
+              key={reaction}
             >
-              <span className="mr-2">
-                {emojis[reactionType as keyof Reaction].icon}
-              </span>
+              <span className="mr-2">{emojis[reaction].icon}</span>
               <span className="text-xs">{count}</span>
             </div>
           </React.Fragment>

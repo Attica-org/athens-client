@@ -1,4 +1,5 @@
-import { AgoraId, ParticipantPosition } from '@/app/model/Agora';
+import { AgoraId } from '@/app/model/Agora';
+import { ChatExitResponse } from '@/app/model/Chat';
 import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import {
   AGORA_EXIT,
@@ -10,12 +11,6 @@ import isNull from '@/utils/validation/validateIsNull';
 
 type PatchChatExitArg = {
   agoraId: AgoraId;
-};
-
-type ChatExitResponse = {
-  userId: number;
-  type: ParticipantPosition;
-  socketDisconnectTime: string;
 };
 
 const patchChatExit = async ({ agoraId }: PatchChatExitArg) => {

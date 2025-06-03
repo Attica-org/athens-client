@@ -1,12 +1,11 @@
 'use client';
 
+import { AgoraTabStatus } from '@/app/model/Agora';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import { useSearchStore } from '@/store/search';
 import { useRouter, usePathname } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-
-type Status = 'active' | 'closed';
 
 function AgoraStatusTab() {
   const { tabStatus, setTabStatus } = useSearchStore(
@@ -16,7 +15,9 @@ function AgoraStatusTab() {
     })),
   );
   // const searchParams = useSearchParams();
-  const [status, setStatus] = useState<Status>(tabStatus as Status);
+  const [status, setStatus] = useState<AgoraTabStatus>(
+    tabStatus as AgoraTabStatus,
+  );
   const router = useRouter();
   const pathname = usePathname();
 
@@ -39,7 +40,7 @@ function AgoraStatusTab() {
     changeParams();
   }, [status, changeParams]);
 
-  const changeStatus = (state: Status) => {
+  const changeStatus = (state: AgoraTabStatus) => {
     setStatus(state);
   };
 
@@ -47,10 +48,10 @@ function AgoraStatusTab() {
     <nav className="flex flex-row justify-around items-center h-2rem w-full text-xs pl-5 pr-5 dark:text-white">
       <button
         aria-label="활성화 상태 아고라 목록 보기"
-        onClick={() => changeStatus('active')}
+        onClick={() => changeStatus(AgoraTabStatus.ACTIVE)}
         type="button"
         className={`border-b-1 ${
-          status === 'active'
+          status === AgoraTabStatus.ACTIVE
             ? 'border-athens-sub'
             : 'dark:border-dark-light-300'
         } flex flex-1 justify-center p-6`}
@@ -59,7 +60,7 @@ function AgoraStatusTab() {
       </button>
       <button
         aria-label="종료된 아고라 목록 보기"
-        onClick={() => changeStatus('closed')}
+        onClick={() => changeStatus(AgoraTabStatus.CLOSED)}
         type="button"
         className={`flex flex-1 justify-center p-6 border-b-1 ${
           status === 'closed'

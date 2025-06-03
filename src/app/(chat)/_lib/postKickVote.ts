@@ -1,18 +1,10 @@
-import { AgoraId } from '@/app/model/Agora';
-import { AgoraMemberInfo, Participants } from '@/app/model/AgoraMeta';
+import { AgoraId, PostKickVoteArg } from '@/app/model/Agora';
+import { MemberId } from '@/app/model/Chat';
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { PATCH_USER_KICK_VOTE_ERROR_MESSAGE } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import isNull from '@/utils/validation/validateIsNull';
-
-type MemberId = AgoraMemberInfo['memberId'];
-
-type PostKickVoteArg = {
-  targetMemberId: MemberId;
-  currentMemberCount: Participants['count'];
-  agoraId: AgoraId;
-};
 
 type KickVoteResponse = string;
 

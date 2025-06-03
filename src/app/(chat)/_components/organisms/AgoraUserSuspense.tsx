@@ -2,14 +2,19 @@
 
 import React, { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { AgoraSideBarDataType, ImageURL } from '@/app/model/Agora';
+import {
+  AgoraId,
+  AgoraSideBarDataType,
+  ImageURL,
+  ParticipantPosition,
+} from '@/app/model/Agora';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import ErrorFallback from '@/app/_components/templates/ErrorFallback';
 import { useChatInfo } from '@/store/chatInfo';
 import { useShallow } from 'zustand/react/shallow';
 import { getAgoraUserListQueryKey } from '@/constants/queryKey';
 import { useAgora } from '@/store/agora';
-import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
+import { AGORA_STATUS } from '@/constants/agora';
 import isNull from '@/utils/validation/validateIsNull';
 import AgoraUserList from '../molecules/AgoraUserList';
 import { getAgoraUsers } from '../../_lib/getAgoraUsers';
@@ -20,7 +25,7 @@ const errorFallbackProps = {
 };
 
 type Props = {
-  agoraId: number;
+  agoraId: AgoraId;
 };
 
 function FallbackComponent(props: FallbackProps) {
@@ -95,14 +100,14 @@ export default function AgoraUserSuspense({ agoraId }: Props) {
       {data?.participants && !end && (
         <ErrorBoundary FallbackComponent={FallbackComponent}>
           <AgoraUserList
-            position={AGORA_POSITION.PROS}
+            position={ParticipantPosition.PROS}
             userList={data.participants}
             subscribeCount={subscribeCount}
             decrementSubscribeCount={decrementSubscribeCount}
           />
           <div className="border-b-1 border-gray-200 mb-1rem dark:border-gray-500" />
           <AgoraUserList
-            position={AGORA_POSITION.CONS}
+            position={ParticipantPosition.CONS}
             userList={data.participants}
             subscribeCount={subscribeCount}
             decrementSubscribeCount={decrementSubscribeCount}

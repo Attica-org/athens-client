@@ -6,8 +6,13 @@ type Props = {
   callbackUrl: undefined | string;
 };
 
+enum Provider {
+  KAKAO = 'kakao',
+  GOOGLE = 'google',
+}
+
 export default function SNSLogin({ callbackUrl }: Props) {
-  const getRedirectUri = (provider: string) => {
+  const getRedirectUri = (provider: Provider) => {
     let redirectUri = `${process.env.NEXT_PUBLIC_CLIENT_URL}/login`;
     if (!isNull(callbackUrl)) {
       redirectUri += `?callbackUrl=${callbackUrl}`;
@@ -20,7 +25,7 @@ export default function SNSLogin({ callbackUrl }: Props) {
   return (
     <>
       <Link
-        href={getRedirectUri('kakao')}
+        href={getRedirectUri(Provider.KAKAO)}
         aria-label="카카오로 로그인하기"
         className="text-sm text-black relative flex justify-center items-center w-full bg-[#FEE500] border-1 border-[#FEE500] rounded-md h-42 p-12"
       >
@@ -45,7 +50,7 @@ export default function SNSLogin({ callbackUrl }: Props) {
         </div>
       </Link>
       <Link
-        href={getRedirectUri('google')}
+        href={getRedirectUri(Provider.GOOGLE)}
         aria-label="구글로 로그인하기"
         className="text-sm text-black relative flex justify-center items-center w-full bg-white border-1 border-dark-line-semilight rounded-md h-42 p-12"
       >

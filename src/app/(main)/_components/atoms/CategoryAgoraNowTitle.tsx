@@ -1,4 +1,4 @@
-import { SearchParams } from '@/app/model/Agora';
+import { AgoraTabStatus, SearchParams } from '@/app/model/Agora';
 import RefreshIcon from '@/assets/icons/RefreshIcon';
 import { useCreateAgora } from '@/store/create';
 import { useSearchStore } from '@/store/search';
@@ -74,7 +74,7 @@ function CategoryAgoraNowTitle({ searchParams }: Props) {
   }, [queryClient, tabStatus, category]);
 
   return (
-    tabStatus === 'active' && (
+    tabStatus === AgoraTabStatus.ACTIVE && (
       <h2
         aria-label="활성화 상태 아고라"
         className="flex justify-between items-center text-md font-semibold dark:text-dark-line-light text-left pl-10 mb-16 w-full"

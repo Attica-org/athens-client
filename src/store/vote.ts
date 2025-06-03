@@ -1,37 +1,38 @@
+import { AgoraId, VoteCount } from '@/app/model/Agora';
 import { create } from 'zustand';
 
-interface VoteState {
-  voteResult: {
-    id: number;
-    prosCount: number;
-    consCount: number;
-  };
+type VoteResult = {
+  id: AgoraId;
+  prosCount: VoteCount;
+  consCount: VoteCount;
+};
+
+interface State {
+  voteResult: VoteResult;
   voteEnd: boolean;
+}
+
+interface Action {
   setVoteEnd: (voteEnd: boolean) => void;
-  setVoteResult: (voteResult: {
-    id: number;
-    prosCount: number;
-    consCount: number;
-  }) => void;
+  setVoteResult: (voteResult: VoteResult) => void;
   reset: () => void;
 }
 
-// eslint-disable-next-line import/prefer-default-export
-export const useVoteStore = create<VoteState>((set) => ({
+const initialState: State = {
   voteResult: {
     id: 0,
     prosCount: 0,
     consCount: 0,
   },
   voteEnd: false,
-  setVoteEnd(voteEnd: boolean) {
+};
+
+export const useVoteStore = create<State & Action>((set) => ({
+  ...initialState,
+  setVoteEnd(voteEnd) {
     set({ voteEnd });
   },
-  setVoteResult(voteResult: {
-    id: number;
-    prosCount: number;
-    consCount: number;
-  }) {
+  setVoteResult(voteResult) {
     set({ voteResult });
   },
   reset() {

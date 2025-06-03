@@ -1,43 +1,34 @@
-import { ImageURL, Status } from '@/app/model/Agora';
+import { Agora, ParticipantPosition } from '@/app/model/Agora';
+import { AGORA_STATUS } from '@/constants/agora';
 import { COLOR } from '@/constants/consts';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-type Agora = {
-  id: number;
-  imageUrl: ImageURL;
-  title: string;
-  status: Status | '';
-  agoraColor: string;
-};
+const storageKey = 'athens-chat-info';
 
-type EnterAgora = {
-  id: number;
+interface EnterAgora extends Agora {
   userId?: number;
-  imageUrl: ImageURL;
-  title: string;
-  status: Status | '';
-  role: string;
+  role: ParticipantPosition;
   isCreator: boolean;
-  agoraColor: string;
-};
+}
 
-interface AgoraState {
+interface State {
   selectedAgora: Agora;
   enterAgora: EnterAgora;
+}
+
+interface Action {
   setEnterAgora: (agora: EnterAgora) => void;
   setSelectedAgora: (agora: Agora) => void;
   reset: () => void;
   enterAgoraReset: () => void;
 }
 
-const storageKey = 'athens-chat-info';
-
 const selectedAgoraInitialState: Agora = {
   id: 0,
   imageUrl: '',
-  title: '',
-  status: '',
+  agoraTitle: '',
+  status: AGORA_STATUS.CLOSED,
   agoraColor: COLOR[0].value,
 };
 
@@ -45,16 +36,15 @@ const enterAgoraInitialState: EnterAgora = {
   id: 0,
   userId: 0,
   imageUrl: '',
-  title: '',
-  status: '',
-  role: '',
+  agoraTitle: '',
+  status: AGORA_STATUS.CLOSED,
+  role: ParticipantPosition.OBSERVER,
   isCreator: false,
   agoraColor: COLOR[0].value,
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const useAgora = create(
-  persist<AgoraState>(
+  persist<State & Action>(
     (set) => ({
       selectedAgora: selectedAgoraInitialState,
       enterAgora: enterAgoraInitialState,

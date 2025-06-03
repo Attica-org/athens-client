@@ -38,7 +38,7 @@ export default function EnterAgoraContent() {
       setSelectedAgora({
         id: Number(agoraId),
         imageUrl: data.imageUrl,
-        title: data.title,
+        agoraTitle: data.title,
         status: data.status,
         agoraColor: data.agoraColor,
       });
@@ -58,12 +58,12 @@ export default function EnterAgoraContent() {
 
   return (
     <>
-      {selectedAgora.title ? (
+      {selectedAgora.agoraTitle ? (
         <p
           id="description"
           className="text-base p-1rem pt-5 flex justify-center items-center text-center break-keep font-medium"
         >
-          {selectedAgora.title}
+          {selectedAgora.agoraTitle}
         </p>
       ) : (
         <div className="mb-1rem flex justify-center items-center">

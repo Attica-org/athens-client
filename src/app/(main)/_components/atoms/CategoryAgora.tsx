@@ -3,13 +3,14 @@
 import {
   ClosedAgora,
   CategoryAgora as ICategoryAgora,
+  ParticipantPosition,
 } from '@/app/model/Agora';
 import { useAgora } from '@/store/agora';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import Image from 'next/image';
-import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
+import { AGORA_STATUS } from '@/constants/agora';
 import { isValidImgUrl } from '@/utils/validation/validateImage';
 import { COLOR, ColorValue } from '@/constants/consts';
 import { useMutation } from '@tanstack/react-query';
@@ -49,7 +50,7 @@ function CategoryAgora({ agora, className }: Props) {
     setSelectedAgora({
       id: agora.id,
       imageUrl: agora.imageUrl,
-      title: agora.agoraTitle,
+      agoraTitle: agora.agoraTitle,
       status: agora.status,
       agoraColor: agora.agoraColor,
     });
@@ -64,9 +65,9 @@ function CategoryAgora({ agora, className }: Props) {
         id: agora.id,
         userId: 0,
         imageUrl: agora.imageUrl,
-        title: agora.agoraTitle,
+        agoraTitle: agora.agoraTitle,
         status: agora.status,
-        role: AGORA_POSITION.OBSERVER,
+        role: ParticipantPosition.OBSERVER,
         isCreator: false,
         agoraColor: agora.agoraColor,
       });

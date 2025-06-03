@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import ErrorFallback from '@/app/_components/templates/ErrorFallback';
-import { SearchParams } from '@/app/model/Agora';
+import { AgoraTabStatus, SearchParams } from '@/app/model/Agora';
 import Loading from '@/app/_components/atoms/loading';
 import { useSearchStore } from '@/store/search';
 import { useShallow } from 'zustand/react/shallow';
@@ -84,7 +84,7 @@ export default function AgoraListDecider({ searchParams }: Props) {
 
   return (
     <>
-      {tabStatus === 'active' && (
+      {tabStatus === AgoraTabStatus.ACTIVE && (
         <>
           <ErrorBoundary FallbackComponent={FallbackComponent}>
             <LivelyAgoraList />

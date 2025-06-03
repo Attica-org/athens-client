@@ -1,6 +1,5 @@
 import { AGORA_STATUS } from '@/constants/agora';
 
-export type ParticipantPosition = 'PROS' | 'CONS' | 'OBSERVER';
 export type VotePosition = 'PROS' | 'CONS' | 'DEFAULT';
 export type ObserverPos = 'OBSERVER';
 export type ActiveAgora = CategoryAgora | KeywordAgora;
@@ -10,6 +9,19 @@ export type ImageURL = string | null;
 export type AgoraId = number;
 export type AgoraTitle = string;
 export type UserName = string;
+export type VoteCount = number;
+export type Duration = number;
+
+export enum ParticipantPosition {
+  PROS = 'PROS',
+  CONS = 'CONS',
+  OBSERVER = 'OBSERVER',
+}
+
+export enum AgoraTabStatus {
+  ACTIVE = 'active',
+  CLOSED = 'closed',
+}
 
 export type Participants = {
   pros: number;
@@ -17,7 +29,7 @@ export type Participants = {
   observer: number;
 };
 
-interface Agora {
+export interface Agora {
   id: AgoraId;
   agoraTitle: AgoraTitle;
   agoraColor: string;
@@ -35,8 +47,8 @@ export interface KeywordAgora extends Agora {
 }
 
 export interface ClosedAgora extends Agora {
-  prosCount: number;
-  consCount: number;
+  prosCount: VoteCount;
+  consCount: VoteCount;
   totalMember: number;
   createdAt: string;
 }
@@ -86,7 +98,7 @@ export type AgoraConfig = {
   category: string;
   color: ColorType;
   capacity: number;
-  duration: number | null;
+  duration: Duration;
 };
 
 export type ProfileImage = {
@@ -110,6 +122,12 @@ export type KickVoteResponse = {
     nickname: UserName;
     message: string;
   };
+};
+
+export type PostKickVoteArg = {
+  targetMemberId: number;
+  currentMemberCount: number;
+  agoraId: AgoraId;
 };
 
 export type VoteResults = Pick<ClosedAgora, 'id' | 'prosCount' | 'consCount'>;

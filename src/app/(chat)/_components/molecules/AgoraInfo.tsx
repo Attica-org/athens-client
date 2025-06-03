@@ -1,12 +1,11 @@
+import { AgoraTitle, Participants } from '@/app/model/Agora';
 import BoltIcon from '@/assets/icons/BoltIcon';
 import React from 'react';
 
 type Props = {
-  title: string;
-  pros?: number;
-  cons?: number;
+  title: AgoraTitle;
   isClosed?: boolean;
-};
+} & Partial<Omit<Participants, 'observer'>>;
 
 export default React.memo(function AgoraInfo({
   title,

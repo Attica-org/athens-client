@@ -1,8 +1,9 @@
+import { ImageData } from '@/app/model/Agora';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
 type ImageRendererProps = {
-  file: { dataUrl: string; file: File };
+  file: ImageData;
   onImageLoaded: (e: HTMLImageElement) => void;
   imgRef: React.RefObject<HTMLImageElement>;
 };
