@@ -1,13 +1,17 @@
 import { create } from 'zustand';
-import { immer } from 'zustand/middleware/immer';
 import { ParticipantPosition, ProfileImage, UserName } from '@/app/model/Agora';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-interface EnterState {
+const storageKey = 'athens-chat-user-profile';
+
+interface State {
   nickname: UserName;
   message: string;
   selectedProfileImage: ProfileImage;
   selectedPosition: ParticipantPosition;
+}
+
+interface Action {
   setMessage: (message: string) => void;
   setNickname: (nickname: UserName) => void;
   setProfileImage: (profileImage: ProfileImage) => void;
@@ -15,7 +19,7 @@ interface EnterState {
   reset: () => void;
 }
 
-const initialState: EnterState = {
+const initialState: State = {
   nickname: '',
   message: '관찰자는 프로필을 설정할 수 없습니다.',
   selectedProfileImage: {
@@ -24,19 +28,11 @@ const initialState: EnterState = {
     file: 'bear.png',
   },
   selectedPosition: ParticipantPosition.OBSERVER,
-  setMessage: () => {},
-  setSelectedPosition: () => {},
-  setNickname: () => {},
-  setProfileImage: () => {},
-  reset: () => {},
 };
 
-const storageKey = 'athens-chat-user-profile';
-
-// eslint-disable-next-line import/prefer-default-export
 export const useEnter = create(
-  persist(
-    immer<EnterState>((set) => ({
+  persist<State & Action>(
+    (set) => ({
       ...initialState,
       setMessage: (message) => set({ message }),
       setSelectedPosition: (selectedPosition: ParticipantPosition) =>
@@ -55,7 +51,7 @@ export const useEnter = create(
           },
           selectedPosition: ParticipantPosition.OBSERVER,
         }),
-    })),
+    }),
     {
       name: storageKey,
       storage: createJSONStorage(() => sessionStorage),

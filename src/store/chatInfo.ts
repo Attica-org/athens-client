@@ -2,11 +2,10 @@ import { AgoraTitle, Duration, UserName } from '@/app/model/Agora';
 import { MemberId } from '@/app/model/Chat';
 import { enableMapSet } from 'immer';
 import { create } from 'zustand';
-import { immer } from 'zustand/middleware/immer';
 
 enableMapSet();
 
-interface ChatState {
+interface State {
   title: AgoraTitle;
   start: string;
   end: string;
@@ -14,6 +13,9 @@ interface ChatState {
   duration: Duration;
   participants: Map<number, string>;
   isEmptyParticipants: boolean;
+}
+
+interface Action {
   setTitle: (title: AgoraTitle) => void;
   setDiscussionStart: (start: string) => void;
   setDiscussionEnd: (end: string) => void;
@@ -25,7 +27,7 @@ interface ChatState {
   resetParticipants: () => void;
 }
 
-const initialState: ChatState = {
+const initialState: State = {
   title: '',
   start: '',
   end: '',
@@ -33,50 +35,39 @@ const initialState: ChatState = {
   observer: 0,
   participants: new Map(),
   isEmptyParticipants: true,
-  setTitle: () => {},
-  setDiscussionStart: () => {},
-  setDiscussionEnd: () => {},
-  setDuration: () => {},
-  setObserver: () => {},
-  reset: () => {},
-  addParticipant: () => {},
-  removeParticipant: () => {},
-  resetParticipants: () => {},
 };
 
-export const useChatInfo = create(
-  immer<ChatState>((set) => ({
-    ...initialState,
+export const useChatInfo = create<State & Action>((set) => ({
+  ...initialState,
 
-    setTitle: (title) => set({ title }),
-    setDiscussionStart: (start) => set({ start }),
-    setDiscussionEnd: (end) => set({ end }),
-    setDuration: (duration) => set({ duration }),
-    setObserver: (observer) => set({ observer }),
-    reset: () =>
-      set({
-        title: '',
-        start: '',
-        end: '',
-        duration: 30,
-        observer: 0,
-        participants: new Map(),
-      }),
-    addParticipant: (id, username) =>
-      set((state) => {
-        const updatedParticipants = new Map(state.participants);
-        updatedParticipants.set(id, username);
-        return { participants: updatedParticipants };
-      }),
-    removeParticipant: (id) =>
-      set((state) => {
-        const updatedParticipants = new Map(state.participants);
-        updatedParticipants.delete(id);
-        return { participants: updatedParticipants };
-      }),
-    resetParticipants: () =>
-      set({
-        participants: new Map(),
-      }),
-  })),
-);
+  setTitle: (title) => set({ title }),
+  setDiscussionStart: (start) => set({ start }),
+  setDiscussionEnd: (end) => set({ end }),
+  setDuration: (duration) => set({ duration }),
+  setObserver: (observer) => set({ observer }),
+  reset: () =>
+    set({
+      title: '',
+      start: '',
+      end: '',
+      duration: 30,
+      observer: 0,
+      participants: new Map(),
+    }),
+  addParticipant: (id, username) =>
+    set((state) => {
+      const updatedParticipants = new Map(state.participants);
+      updatedParticipants.set(id, username);
+      return { participants: updatedParticipants };
+    }),
+  removeParticipant: (id) =>
+    set((state) => {
+      const updatedParticipants = new Map(state.participants);
+      updatedParticipants.delete(id);
+      return { participants: updatedParticipants };
+    }),
+  resetParticipants: () =>
+    set({
+      participants: new Map(),
+    }),
+}));

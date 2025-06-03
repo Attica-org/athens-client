@@ -1,18 +1,24 @@
 import { create } from 'zustand';
 
-interface SidebarState {
+interface State {
   isOpen: boolean;
   hamburgerButtonRef: React.RefObject<HTMLButtonElement> | null;
+}
+
+interface Action {
   setHanburgerButtonRef: (target: React.RefObject<HTMLButtonElement>) => void;
   toggle: () => void;
   close: () => void;
   reset: () => void;
 }
 
-// eslint-disable-next-line
-export const useSidebarStore = create<SidebarState>((set) => ({
+const initialState: State = {
   isOpen: false,
   hamburgerButtonRef: null,
+};
+
+export const useSidebarStore = create<State & Action>((set) => ({
+  ...initialState,
   setHanburgerButtonRef: (target) => {
     set({ hamburgerButtonRef: target });
   },

@@ -7,22 +7,28 @@ type VoteResult = {
   consCount: VoteCount;
 };
 
-interface VoteState {
+interface State {
   voteResult: VoteResult;
   voteEnd: boolean;
+}
+
+interface Action {
   setVoteEnd: (voteEnd: boolean) => void;
   setVoteResult: (voteResult: VoteResult) => void;
   reset: () => void;
 }
 
-// eslint-disable-next-line import/prefer-default-export
-export const useVoteStore = create<VoteState>((set) => ({
+const initialState: State = {
   voteResult: {
     id: 0,
     prosCount: 0,
     consCount: 0,
   },
   voteEnd: false,
+};
+
+export const useVoteStore = create<State & Action>((set) => ({
+  ...initialState,
   setVoteEnd(voteEnd) {
     set({ voteEnd });
   },

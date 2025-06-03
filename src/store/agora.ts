@@ -4,22 +4,25 @@ import { COLOR } from '@/constants/consts';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+const storageKey = 'athens-chat-info';
+
 interface EnterAgora extends Agora {
   userId?: number;
   role: ParticipantPosition;
   isCreator: boolean;
 }
 
-interface AgoraState {
+interface State {
   selectedAgora: Agora;
   enterAgora: EnterAgora;
+}
+
+interface Action {
   setEnterAgora: (agora: EnterAgora) => void;
   setSelectedAgora: (agora: Agora) => void;
   reset: () => void;
   enterAgoraReset: () => void;
 }
-
-const storageKey = 'athens-chat-info';
 
 const selectedAgoraInitialState: Agora = {
   id: 0,
@@ -41,7 +44,7 @@ const enterAgoraInitialState: EnterAgora = {
 };
 
 export const useAgora = create(
-  persist<AgoraState>(
+  persist<State & Action>(
     (set) => ({
       selectedAgora: selectedAgoraInitialState,
       enterAgora: enterAgoraInitialState,

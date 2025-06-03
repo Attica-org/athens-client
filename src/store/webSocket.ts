@@ -2,14 +2,22 @@ import { create } from 'zustand';
 import * as StompJs from '@stomp/stompjs';
 import isNull from '@/utils/validation/validateIsNull';
 
-interface WebSocketClient {
+interface State {
   webSocketClient: StompJs.Client | null;
-  setWebSocketClient: (newClient: StompJs.Client | null) => void;
   webSocketClientConnected: boolean;
 }
 
-export const useWebSocketClient = create<WebSocketClient>((set) => ({
+interface Action {
+  setWebSocketClient: (newClient: StompJs.Client | null) => void;
+}
+
+const initialState: State = {
   webSocketClient: null,
+  webSocketClientConnected: false,
+};
+
+export const useWebSocketClient = create<State & Action>((set) => ({
+  ...initialState,
   setWebSocketClient: (newClient) => {
     set((state) => ({
       ...state,
@@ -17,5 +25,4 @@ export const useWebSocketClient = create<WebSocketClient>((set) => ({
       webSocketClientConnected: !isNull(newClient),
     }));
   },
-  webSocketClientConnected: false,
 }));

@@ -1,11 +1,14 @@
 import { THEME } from '@/constants/theme';
 import { create } from 'zustand';
 
-interface ThemeState {
+interface State {
   isDarkMode: boolean;
+}
+
+interface Action {
   toggleTheme(theme: THEME): void;
 }
-export const useThemeStore = create<ThemeState>((set) => ({
+export const useThemeStore = create<State & Action>((set) => ({
   isDarkMode: false,
   toggleTheme(theme) {
     const newDarkMode = theme === THEME.DARK;
