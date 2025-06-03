@@ -1,10 +1,11 @@
+import { UserName } from '@/app/model/Agora';
 import Image from 'next/image';
 import React from 'react';
 
 type Props = {
   className: string;
   file?: string | null;
-  name?: string | null;
+  name?: UserName | null;
   w: number;
   h: number;
 };

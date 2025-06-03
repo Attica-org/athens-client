@@ -4,9 +4,9 @@ import CheckIcon from '@/assets/icons/CheckIcon';
 
 type CropImgHeaderProps = {
   handleCancelCrop: () => void;
-  handleKeyDownCancelCrop: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
+  handleKeyDownCancelCrop: (e: KeyboardEvent<HTMLButtonElement>) => void;
   handleImgCrop: () => void;
-  handleKeyDownImgCrop: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
+  handleKeyDownImgCrop: (e: KeyboardEvent<HTMLButtonElement>) => void;
 };
 
 const ImageCropperHeader = forwardRef<HTMLButtonElement, CropImgHeaderProps>(
