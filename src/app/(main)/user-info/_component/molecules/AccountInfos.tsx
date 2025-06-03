@@ -3,7 +3,11 @@
 import type { Session } from 'next-auth';
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { ANYNYMOUS, AUTHENTICATED, AUTH_PROVIDERS } from '@/constants/auth';
+import {
+  AUTHENTICATED,
+  AuthProvider,
+  AuthProviderLabels,
+} from '@/constants/auth';
 import isNull from '@/utils/validation/validateIsNull';
 import AccountInfo from '../atoms/AccountInfo';
 
@@ -14,27 +18,34 @@ type Props = {
 export default function AccountInfos({ className }: Props) {
   const { data: session, status } = useSession();
 
-  const [name, setName] = useState<Session['user']['name']>(ANYNYMOUS);
-  const [email, setEmail] = useState<Session['user']['email']>(ANYNYMOUS);
-  const [authProvider, setAuthProvider] =
-    useState<Session['user']['authProvider']>(ANYNYMOUS);
+  const [name, setName] = useState<Session['user']['name']>(
+    AuthProviderLabels.anynymous,
+  );
+  const [email, setEmail] = useState<Session['user']['email']>(
+    AuthProviderLabels.anynymous,
+  );
+  const [authProvider, setAuthProvider] = useState<
+    Session['user']['authProvider']
+  >(AuthProvider.DEFAULT);
 
-  const convertAuthProvider = (provider: string) => {
+  const convertAuthProvider = (provider: AuthProvider) => {
     switch (provider) {
-      case AUTH_PROVIDERS.GOOGLE:
-        return '구글';
-      case AUTH_PROVIDERS.KAKAO:
-        return '카카오';
+      case AuthProvider.GOOGLE:
+        return AuthProviderLabels.GOOGLE;
+      case AuthProvider.KAKAO:
+        return AuthProviderLabels.KAKAO;
       default:
-        return AUTH_PROVIDERS.DEFAULT;
+        return AuthProviderLabels.anynymous;
     }
   };
 
   useEffect(() => {
     if (!isNull(session) && status === AUTHENTICATED) {
-      setName(session?.user.name ?? ANYNYMOUS);
-      setEmail(session?.user.email ?? ANYNYMOUS);
-      setAuthProvider(session?.user.authProvider ?? ANYNYMOUS);
+      setName(session?.user.name ?? AuthProviderLabels.anynymous);
+      setEmail(session?.user.email ?? AuthProviderLabels.anynymous);
+      setAuthProvider(
+        session?.user.authProvider ?? AuthProviderLabels.anynymous,
+      );
     }
   }, [session]);
 

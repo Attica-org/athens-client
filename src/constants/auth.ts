@@ -1,9 +1,15 @@
-export const ANYNYMOUS = 'anynymous';
+const ANYNYMOUS = 'anynymous';
 
-export const AUTH_PROVIDERS = {
-  GOOGLE: 'GOOGLE',
-  KAKAO: 'KAKAO',
-  DEFAULT: ANYNYMOUS,
+export enum AuthProvider {
+  GOOGLE = 'GOOGLE',
+  KAKAO = 'KAKAO',
+  DEFAULT = ANYNYMOUS,
+}
+
+export const AuthProviderLabels: Record<AuthProvider, string> = {
+  [AuthProvider.GOOGLE]: '구글',
+  [AuthProvider.KAKAO]: '카카오',
+  [AuthProvider.DEFAULT]: '익명',
 };
 
 export const AUTHENTICATED = 'authenticated';

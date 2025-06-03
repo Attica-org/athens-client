@@ -1,11 +1,11 @@
 import 'next-auth';
 import '@auth/core/jwt';
-import { AUTHENTICATED, UNAUTHENTICATED } from '@/constants/auth';
+import { AUTHENTICATED, AuthProvider, UNAUTHENTICATED } from '@/constants/auth';
 
 export declare module 'next-auth' {
   interface User {
     accessToken: string;
-    authProvider: string;
+    authProvider: AuthProvider;
     name: string;
     email: string;
   }
@@ -13,7 +13,7 @@ export declare module 'next-auth' {
   interface Session {
     user: {
       accessToken: string;
-      authProvider: string;
+      authProvider: AuthProvider;
       name: string;
       email: string;
     };
@@ -25,6 +25,6 @@ export declare module '@auth/core/jwt' {
   interface JWT {
     email: string | null;
     accessToken: string;
-    authProvider: string;
+    authProvider: AuthProvider;
   }
 }
