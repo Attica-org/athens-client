@@ -3,7 +3,7 @@ import { ParticipantPosition } from '@/app/model/Agora';
 import { AGORA_POSITION } from '@/constants/agora';
 
 type Props = {
-  selectedPosition: string;
+  selectedPosition: ParticipantPosition;
   position: ParticipantPosition;
   color: string;
   children: React.ReactNode;

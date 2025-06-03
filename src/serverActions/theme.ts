@@ -8,15 +8,15 @@ function hasThemeCookie() {
   return cookieStore.has(THEME_KEY);
 }
 
-export async function getThemeValue() {
+export async function getThemeValue(): Promise<THEME> {
   if (hasThemeCookie()) {
     const theme = cookies().get(THEME_KEY)?.value;
-    return theme;
+    return theme as THEME;
   }
   return THEME.LIGHT;
 }
 
-export async function toggleThemeValue() {
+export async function toggleThemeValue(): Promise<THEME> {
   const theme = await getThemeValue();
   if (theme === THEME.DARK) {
     cookies().set(THEME_KEY, THEME.LIGHT, {
