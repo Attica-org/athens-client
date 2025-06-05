@@ -9,7 +9,7 @@ import {
 } from '@/constants/responseErrorMessage';
 import isNull from '@/utils/validation/validateIsNull';
 
-type Props = {
+type PostEnterAgoraInfoArgs = {
   info: {
     name?: string;
     id?: number;
@@ -46,7 +46,7 @@ const splitMessage = (message: string) => {
 export const postEnterAgoraInfo = async ({
   info,
   agoraId,
-}: Props): Promise<EnterAgoraInfoResponse> => {
+}: PostEnterAgoraInfoArgs): Promise<EnterAgoraInfoResponse> => {
   const session = await getSession();
   if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
