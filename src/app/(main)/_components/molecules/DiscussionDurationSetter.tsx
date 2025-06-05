@@ -15,9 +15,7 @@ export default function DiscussionDurationSetter() {
     })),
   );
 
-  const validateAgoraDuration: ChangeEventHandler<HTMLInputElement> = (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const validateAgoraDuration: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = parseInt(e.target.value, 10);
 
     if (value < AGORA_CREATE.MIN_DISCUSSION_TIME) {
