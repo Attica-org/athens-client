@@ -1,4 +1,9 @@
-import { KeywordAgora, UnionAgora, AgoraTabStatus } from '@/app/model/Agora';
+import {
+  KeywordAgora,
+  UnionAgora,
+  AgoraTabStatus,
+  AgoraSearchResponse,
+} from '@/app/model/Agora';
 import {
   AGORA_KEYWORD_SEARCH,
   NETWORK_ERROR_MESSAGE,
@@ -13,11 +18,9 @@ type SearchParams = {
   q?: string;
 };
 
-type KeywordAgoraList = {
+interface KeywordAgoraList extends AgoraSearchResponse {
   agoras: KeywordAgora[];
-  next: number | null;
-  hasNext: boolean;
-};
+}
 
 export const getAgoraKeywordSearch: QueryFunction<
   { agoras: UnionAgora[]; nextCursor: number | null },

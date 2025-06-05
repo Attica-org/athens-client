@@ -1,9 +1,15 @@
-import { AgoraTabStatus, CategoryAgora, UnionAgora } from '@/app/model/Agora';
+import {
+  AgoraSearchResponse,
+  AgoraTabStatus,
+  CategoryAgora,
+  UnionAgora,
+} from '@/app/model/Agora';
 import {
   AGORA_CATEGORY_SEARCH,
   NETWORK_ERROR_MESSAGE,
 } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
+import isNull from '@/utils/validation/validateIsNull';
 import { QueryFunction } from '@tanstack/react-query';
 
 type SearchParams = {
@@ -12,11 +18,9 @@ type SearchParams = {
   q?: string;
 };
 
-type CategoryAgoraList = {
+interface CategoryAgoraList extends AgoraSearchResponse {
   agoras: CategoryAgora[];
-  next: number | null;
-  hasNext: boolean;
-};
+}
 
 export const getAgoraCategorySearch: QueryFunction<
   { agoras: UnionAgora[]; nextCursor: number | null },
@@ -69,10 +73,14 @@ export const getAgoraCategorySearch: QueryFunction<
     throw new Error(AGORA_CATEGORY_SEARCH.FAILED_TO_GET_AGORA_LIST);
   }
 
+  if (isNull(res.response)) {
+    throw new Error(AGORA_CATEGORY_SEARCH.UNKNOWN_ERROR);
+  }
+
   const result = res.response;
 
   return {
-    agoras: result?.agoras ?? [],
+    agoras: result.agoras,
     nextCursor: result?.hasNext ? result.next : null,
   };
 };
