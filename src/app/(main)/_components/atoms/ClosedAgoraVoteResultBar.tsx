@@ -1,8 +1,9 @@
+import { VoteCount } from '@/app/model/Agora';
 import React from 'react';
 
 type Props = {
-  prosCount: number;
-  consCount: number;
+  prosCount: VoteCount;
+  consCount: VoteCount;
   totalMember: number;
 };
 

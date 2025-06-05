@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/naming-convention */
 import { QueryFunction } from '@tanstack/react-query';
 import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
@@ -8,14 +6,15 @@ import {
   NETWORK_ERROR_MESSAGE,
 } from '@/constants/responseErrorMessage';
 import { AgoraTitleResponse } from '@/app/model/Agora';
+import isNull from '@/utils/validation/validateIsNull';
 
 export const getAgoraTitle: QueryFunction<
   AgoraTitleResponse,
   [_1: string, _2: string]
 > = async ({ queryKey }) => {
-  const [_, agoraId] = queryKey;
+  const [, agoraId] = queryKey;
 
-  const res = await callFetchWrapper<any>(
+  const res = await callFetchWrapper<AgoraTitleResponse>(
     `/api/v1/open/agoras/${agoraId}/title`,
     {
       next: {
@@ -44,6 +43,10 @@ export const getAgoraTitle: QueryFunction<
   }
 
   const result = res.response;
+
+  if (isNull(result)) {
+    throw new Error(AGORA_INFO.FAILED_TO_GET_AGORA_INFO);
+  }
 
   return result;
 };
