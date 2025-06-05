@@ -14,7 +14,7 @@ type EnterClosedAgoraResponse = {
 };
 
 export const postEnterClosedAgora = async (
-  agoraId: number,
+  agoraId: AgoraId,
 ): Promise<EnterClosedAgoraResponse> => {
   const session = await getSession();
   if (isNull(session)) {
