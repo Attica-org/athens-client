@@ -1,4 +1,4 @@
-import { AgoraMemberInfo } from '@/app/model/AgoraMeta';
+import { MemberId } from '@/app/model/Chat';
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { DELETE_USER_ERROR_MESSAGE } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
@@ -6,7 +6,7 @@ import { getSession } from '@/serverActions/auth';
 import isNull from '@/utils/validation/validateIsNull';
 
 type DeleteUserResponse = {
-  memberId: AgoraMemberInfo['memberId'];
+  memberId: MemberId;
   isDeleted: true;
   deletedAt: string;
   deletedBy: string;
