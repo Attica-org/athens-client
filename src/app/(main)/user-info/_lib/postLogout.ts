@@ -4,30 +4,37 @@ import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import isNull from '@/utils/validation/validateIsNull';
 
-const postLogout = async () => {
+type LogoutResponse = {};
+
+const postLogout = async (): Promise<void> => {
   const session = await getSession();
   if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper('/api/v1/auth/member/logout', {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.user?.accessToken}`,
+  const res = await callFetchWrapper<LogoutResponse>(
+    '/api/v1/auth/member/logout',
+    {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.user?.accessToken}`,
+      },
+      credentials: 'include',
     },
-    credentials: 'include',
-  });
+  );
 
-  if (!res.ok && res.error?.message) {
-    if (res.error.code === 1201) {
-      throw new Error(LOGOUT_ERROR_MESSAGE.EXPIRED_TOKEN);
-    } else if (AUTH_MESSAGE.includes(res.error.message)) {
-      throw new Error(res.error.message);
-    }
-
+  if (!res.ok && !res.success) {
     if (!res.error) {
       throw new Error(LOGOUT_ERROR_MESSAGE.UNKNOWN_ERROR);
+    }
+    const errorMessage =
+      typeof res.error.message === 'string' ? res.error.message : 'ERROR';
+
+    if (res.error.code === 1201) {
+      throw new Error(LOGOUT_ERROR_MESSAGE.EXPIRED_TOKEN);
+    } else if (AUTH_MESSAGE.includes(errorMessage)) {
+      throw new Error(errorMessage);
     }
 
     throw new Error(LOGOUT_ERROR_MESSAGE.FAILED_TO_LOGOUT);

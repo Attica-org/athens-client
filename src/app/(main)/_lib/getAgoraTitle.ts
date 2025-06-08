@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/naming-convention */
 import { QueryFunction } from '@tanstack/react-query';
 import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
@@ -7,24 +5,28 @@ import {
   AGORA_INFO,
   NETWORK_ERROR_MESSAGE,
 } from '@/constants/responseErrorMessage';
-import { Status } from '@/app/model/Agora';
+import { AgoraTitleResponse } from '@/app/model/Agora';
+import isNull from '@/utils/validation/validateIsNull';
 
 export const getAgoraTitle: QueryFunction<
-  { title: string; status: Status | ''; imageUrl: string; agoraColor: string },
+  AgoraTitleResponse,
   [_1: string, _2: string]
 > = async ({ queryKey }) => {
-  const [_, agoraId] = queryKey;
+  const [, agoraId] = queryKey;
 
-  const res = await callFetchWrapper(`/api/v1/open/agoras/${agoraId}/title`, {
-    next: {
-      tags: getSelectedAgoraTags(agoraId),
+  const res = await callFetchWrapper<AgoraTitleResponse>(
+    `/api/v1/open/agoras/${agoraId}/title`,
+    {
+      next: {
+        tags: getSelectedAgoraTags(agoraId),
+      },
+      credentials: 'include',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     },
-    credentials: 'include',
-    cache: 'no-cache',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  );
 
   if (!res.ok && !res.success) {
     if (!res.error) {
@@ -38,10 +40,13 @@ export const getAgoraTitle: QueryFunction<
     }
 
     throw new Error(AGORA_INFO.FAILED_TO_GET_AGORA_INFO);
-    // redirect(`${homeSegmentKey}?status=active`);
   }
 
   const result = res.response;
+
+  if (isNull(result)) {
+    throw new Error(AGORA_INFO.FAILED_TO_GET_AGORA_INFO);
+  }
 
   return result;
 };

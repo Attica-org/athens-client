@@ -10,12 +10,9 @@ import {
   VOTE_RESULT,
 } from '@/constants/responseErrorMessage';
 import isNull from '@/utils/validation/validateIsNull';
+import { ClosedAgora } from '@/app/model/Agora';
 
-type VoteResult = {
-  id: number;
-  prosCount: number;
-  consCount: number;
-};
+type VoteResult = Pick<ClosedAgora, 'id' | 'prosCount' | 'consCount'>;
 
 export const getVoteResult: QueryFunction<
   VoteResult,
@@ -28,36 +25,46 @@ export const getVoteResult: QueryFunction<
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper(`/api/v1/auth/agoras/${agoraId}/results`, {
-    next: {
-      tags: getVoteResultTags(Number(agoraId)),
+  const res = await callFetchWrapper<VoteResult>(
+    `/api/v1/auth/agoras/${agoraId}/results`,
+    {
+      next: {
+        tags: getVoteResultTags(Number(agoraId)),
+      },
+      credentials: 'include',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.user?.accessToken}`,
+      },
     },
-    credentials: 'include',
-    cache: 'no-cache',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.user?.accessToken}`,
-    },
-  });
+  );
 
   if (!res.ok && !res.success) {
     if (!res.error) {
       throw new Error(VOTE_RESULT.UNKNOWN_ERROR);
     }
 
+    const errorMessage =
+      typeof res.error.message === 'string' ? res.error.message : 'ERROR';
+
     if (res.error.code === 1301) {
       throw new Error(VOTE_RESULT.NOT_FOUND_AGORA);
     } else if (res.error.code === 503) {
       throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
-    } else if (AUTH_MESSAGE.includes(res.error.message)) {
-      throw new Error(res.error.message);
+    } else if (AUTH_MESSAGE.includes(errorMessage)) {
+      throw new Error(errorMessage);
     }
 
     return {
-      id: agoraId,
+      id: Number(agoraId),
       prosCount: 0,
       consCount: 0,
     };
+  }
+
+  if (isNull(res.response)) {
+    throw new Error(VOTE_RESULT.UNKNOWN_ERROR);
   }
 
   const result = res.response;

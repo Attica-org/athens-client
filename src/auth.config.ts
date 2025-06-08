@@ -1,6 +1,7 @@
 import type { NextAuthConfig, User } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import isNull from './utils/validation/validateIsNull';
+import { AuthProvider } from './constants/auth';
 
 interface Authorize {
   accessToken?: string;
@@ -18,7 +19,7 @@ export const authConfig: NextAuthConfig = {
         const { accessToken } = credentials;
         let user: User = {
           accessToken: '',
-          authProvider: '',
+          authProvider: AuthProvider.DEFAULT,
           name: '',
           email: '',
         };

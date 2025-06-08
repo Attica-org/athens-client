@@ -20,6 +20,7 @@ import { COLOR } from '@/constants/consts';
 import { useShallow } from 'zustand/react/shallow';
 import { useUploadImage } from '@/store/uploadImage';
 import { useSearchStore } from '@/store/search';
+import isNull from '@/utils/validation/validateIsNull';
 import { postCreateAgora } from '../../_lib/postCreateAgora';
 
 function CreateAgoraBtn() {
@@ -74,11 +75,11 @@ function CreateAgoraBtn() {
       reset();
       resetUploadImageState();
 
-      if (response.id) {
+      if (!isNull(response)) {
         setSelectedAgora({
           id: response.id,
           imageUrl: createAgora.imageUrl,
-          title: createAgora.title,
+          agoraTitle: createAgora.title,
           status: AGORA_STATUS.QUEUED,
           agoraColor: createAgora.color.value,
         });

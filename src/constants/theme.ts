@@ -1,7 +1,7 @@
-export const THEME = {
-  LIGHT: 'light',
-  DARK: 'dark',
-} as const;
+export enum THEME {
+  LIGHT = 'light',
+  DARK = 'dark',
+}
 
 export const THEME_KEY = 'athens-theme';
 export const THEME_MAINTENANCE = 31536000; // 365일

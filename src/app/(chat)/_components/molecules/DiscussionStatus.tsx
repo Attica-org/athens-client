@@ -35,7 +35,7 @@ export default function DiscussionStatus({ meta }: Props) {
   );
 
   const agoraStartMutation = useMutation({
-    mutationFn: async () => patchAgoraStart(enterAgora.id),
+    mutationFn: async () => patchAgoraStart({ agoraId: enterAgora.id }),
     onMutate: () => {},
     onSuccess: async (response) => {
       if (!response) {
@@ -48,7 +48,7 @@ export default function DiscussionStatus({ meta }: Props) {
   });
 
   const agoraEndMutation = useMutation({
-    mutationFn: async () => patchAgoraEnd(enterAgora.id),
+    mutationFn: async () => patchAgoraEnd({ agoraId: enterAgora.id }),
     onSuccess: async (response) => {
       if (response) {
         setIsEndClicked(true);

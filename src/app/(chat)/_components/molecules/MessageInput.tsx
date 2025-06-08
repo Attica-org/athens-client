@@ -16,10 +16,8 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import { Message } from '@/app/model/Message';
+import { BadWord, Message, MessageMetaResponse } from '@/app/model/Message';
 import { useAgora } from '@/store/agora';
-// import showToast from '@/utils/showToast';
-// import { getReissuanceToken } from '@/lib/getReissuanceToken';
 import { getChatMessagesQueryKey } from '@/constants/queryKey';
 import showToast from '@/utils/showToast';
 import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
@@ -27,8 +25,8 @@ import useApiError from '@/hooks/useApiError';
 import { useWebSocketClient } from '@/store/webSocket';
 import { useShallow } from 'zustand/react/shallow';
 import isNull from '@/utils/validation/validateIsNull';
+import { WebSocketChatSend } from '@/app/model/Chat';
 import postFilterBadWords from '../../_lib/postFilterBadWords';
-// import { unloadDisconnectSocket } from '@/utils/unloadDisconnectSocket';
 
 export default function MessageInput() {
   const [message, setMessage] = useState<string>('');
@@ -48,13 +46,13 @@ export default function MessageInput() {
   const [highlightedMessage, setHighlightedMessage] = useState<string>('');
 
   const pushMessage = useCallback(
-    (data: any, type: string) => {
+    (response: WebSocketChatSend) => {
       // 쿼리 데이터에 추가
       const exMessages = queryClient.getQueryData(
         getChatMessagesQueryKey(enterAgora.id),
       ) as InfiniteData<{
         chats: Message[];
-        meta: { key: number; effectiveSize: number };
+        meta: MessageMetaResponse;
       }>;
 
       if (exMessages && typeof exMessages === 'object') {
@@ -67,11 +65,8 @@ export default function MessageInput() {
         const newLastPage = lastPage
           ? { ...lastPage, chats: [...lastPage.chats] }
           : { chats: [], meta: { key: 0, effectiveSize: 20 } };
-        // const lastMessageId = lastPage?.chats.at(-1)?.chatId;
 
-        if (type === 'received') {
-          newLastPage.chats.push(JSON.parse(data).data);
-        }
+        newLastPage.chats.push(response.data);
 
         newMessages.pages[newMessages.pages.length - 1] = {
           chats: newLastPage.chats,
@@ -110,7 +105,6 @@ export default function MessageInput() {
       if (inputRef.current) {
         inputRef.current.innerText = '';
       }
-      // console.log(`> Send message: ${message}`);
     }
   };
 
@@ -149,8 +143,9 @@ export default function MessageInput() {
       webSocketClient.subscribe(
         `/topic/agoras/${enterAgora.id}/chats`,
         (received_message: StompJs.IFrame) => {
+          const data = JSON.parse(received_message.body);
           // console.log(`> Received message: ${received_message.body}`);
-          pushMessage(received_message.body, 'received');
+          pushMessage(data);
         },
       );
     };
@@ -162,13 +157,7 @@ export default function MessageInput() {
     return postFilterBadWords({ message, agoraId: enterAgora.id });
   };
 
-  type BadWords = {
-    start: number;
-    end: number;
-    keyword: string;
-  }[];
-
-  const highlightBadWords = (badWords: BadWords) => {
+  const highlightBadWords = (badWords: BadWord[]) => {
     let newHighlightedMessage = '';
     let lastIndex = 0;
 
@@ -190,7 +179,7 @@ export default function MessageInput() {
 
   const filterBadWordsMutation = useMutation({
     mutationFn: callFilterBadWordsAPI,
-    onSuccess: async ({ response }) => {
+    onSuccess: async (response) => {
       if (response.hasBadWord) {
         highlightBadWords(response.badword);
         showToast('부적절한 단어가 포함되어 있습니다.', 'error');

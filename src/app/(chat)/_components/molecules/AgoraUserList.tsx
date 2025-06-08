@@ -1,7 +1,12 @@
 'use client';
 
 import React, { useCallback, useEffect } from 'react';
-import { KickVoteResponse, ParticipantPosition } from '@/app/model/Agora';
+import {
+  AgoraUserProfileType,
+  KickVoteResponse,
+  ParticipantPosition,
+  PostKickVoteArg,
+} from '@/app/model/Agora';
 import { AGORA_POSITION } from '@/constants/agora';
 import { PROFLELIST } from '@/constants/consts';
 import { useMutation } from '@tanstack/react-query';
@@ -18,29 +23,18 @@ import { useKickedStore } from '@/store/kick';
 import showToast from '@/utils/showToast';
 import { kickedUsers } from '@/store/kickedUser';
 import { useEnter } from '@/store/enter';
+import { AgoraMemberInfo } from '@/app/model/AgoraMeta';
+import { WebSocketChatUserKick } from '@/app/model/Chat';
 import UserImage from '../../../_components/atoms/UserImage';
 import { postKickVote } from '../../_lib/postKickVote';
 import patchChatExit from '../../_lib/patchChatExit';
 import { resetStateOnChatExit } from '../../utils/resetStateOnChatExit';
 
-type UserList = {
-  id: number;
-  nickname: string;
-  photoNumber: number;
-  type: ParticipantPosition;
-};
-
 type Props = {
   position: ParticipantPosition;
-  userList: UserList[];
+  userList: AgoraUserProfileType[];
   subscribeCount: React.MutableRefObject<number>;
   decrementSubscribeCount: () => void;
-};
-
-type KickMutationProps = {
-  targetMemberId: number;
-  currentMemberCount: number;
-  agoraId: number;
 };
 
 export default function AgoraUserList({
@@ -77,10 +71,10 @@ export default function AgoraUserList({
       targetMemberId,
       currentMemberCount,
       agoraId,
-    }: KickMutationProps) =>
-      postKickVote(targetMemberId, currentMemberCount, agoraId),
+    }: PostKickVoteArg) =>
+      postKickVote({ targetMemberId, currentMemberCount, agoraId }),
     onSuccess: (response) => {
-      if (response.success) {
+      if (response) {
         showToast('강퇴 투표에 성공하였습니다.', 'success');
         return;
       }
@@ -98,59 +92,55 @@ export default function AgoraUserList({
     })),
   );
 
-  const handleKick = (
-    targetMemberId: number,
-    agoraId: number,
-    nickname: string,
-  ) => {
-    if (useEnter.getState().nickname === nickname) {
+  const handleKick = ({
+    memberId,
+    agoraId,
+    username,
+  }: Omit<AgoraMemberInfo, 'socketDisconnectTime'>) => {
+    if (useEnter.getState().nickname === username) {
       showToast('자신에게 투표할 수 없습니다.', 'error');
       return;
     }
 
     const currentMemberCount = participants.size;
 
-    kickVoteMutation.mutate({ targetMemberId, currentMemberCount, agoraId });
+    kickVoteMutation.mutate({
+      targetMemberId: memberId,
+      currentMemberCount,
+      agoraId,
+    });
   };
 
   const callChatExitAPI = async () => patchChatExit({ agoraId: enterAgora.id });
 
-  const handleApprovedKickVote = (response: any) => {
-    if (!isNull(response)) {
-      setKicked(true);
-      resetStateOnChatExit();
-      router.replace(`${homeSegmentKey}?status=active`);
-    }
+  const handleApprovedKickVote = () => {
+    setKicked(true);
+    resetStateOnChatExit();
+    router.replace(`${homeSegmentKey}?status=active`);
   };
 
   const handleApprovedKickVoteMutation = useMutation({
     mutationFn: callChatExitAPI,
-    onSuccess: (response) => handleApprovedKickVote(response),
+    onSuccess: () => handleApprovedKickVote(),
     onError: async (error) => {
       await handleError(error, handleApprovedKickVoteMutation.mutate);
     },
   });
 
-  const isKickVoteApproved = (response: KickVoteResponse) =>
-    response.type === 'KICK';
-
   const amIKicked = (response: KickVoteResponse) =>
     enterAgora.userId === response.kickVoteInfo.targetMemberId;
 
   const handleKickVoteResponse = useCallback(
-    (response: KickVoteResponse) => {
+    (response: WebSocketChatUserKick) => {
       const { kickVoteInfo } = response;
 
-      if (isNull(kickVoteInfo)) return;
-      if (isKickVoteApproved(response)) {
-        if (amIKicked(response)) {
-          handleApprovedKickVoteMutation.mutate();
-          return;
-        }
-        // 내가 강퇴된 것이 아니라면, 강퇴된 유저를 id에 추가
-        removeParticipant(kickVoteInfo.targetMemberId);
-        kickedUsers.addUserName(kickVoteInfo.nickname);
+      if (amIKicked(response)) {
+        handleApprovedKickVoteMutation.mutate();
+        return;
       }
+      // 내가 강퇴된 것이 아니라면, 강퇴된 유저를 id에 추가
+      removeParticipant(kickVoteInfo.targetMemberId);
+      kickedUsers.addUserName(kickVoteInfo.nickname);
     },
     [enterAgora.userId],
   );
@@ -178,10 +168,14 @@ export default function AgoraUserList({
   }, [webSocketClientConnected]);
 
   const handleKickByKeyboard =
-    (userId: number, agoraId: number, nickname: string) =>
+    ({
+      memberId,
+      agoraId,
+      username,
+    }: Omit<AgoraMemberInfo, 'socketDisconnectTime'>) =>
     (e: React.KeyboardEvent<HTMLButtonElement>) => {
       if (e.key === 'Enter') {
-        handleKick(userId, agoraId, nickname);
+        handleKick({ memberId, agoraId, username });
       }
     };
 
@@ -228,13 +222,17 @@ export default function AgoraUserList({
                   type="button"
                   aria-label={`${position === AGORA_POSITION.PROS ? '찬성측' : '반대측'} 참여자 ${user.nickname} 추방하기`}
                   onClick={() =>
-                    handleKick(user.id, enterAgora.id, user.nickname)
+                    handleKick({
+                      memberId: user.id,
+                      agoraId: enterAgora.id,
+                      username: user.nickname,
+                    })
                   }
-                  onKeyDown={handleKickByKeyboard(
-                    user.id,
-                    enterAgora.id,
-                    user.nickname,
-                  )}
+                  onKeyDown={handleKickByKeyboard({
+                    memberId: user.id,
+                    agoraId: enterAgora.id,
+                    username: user.nickname,
+                  })}
                   className="w-70 h-24 text-xs bg-red-500 text-white rounded-md"
                 >
                   추방하기

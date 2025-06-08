@@ -1,21 +1,28 @@
+import { AgoraTabStatus } from '@/app/model/Agora';
 import { create } from 'zustand';
 
-interface SearchState {
+interface State {
   search: string;
+  tabStatus: AgoraTabStatus;
+}
+
+interface Action {
   setSearch: (search: string) => void;
-  tabStatus: string;
-  setTabStatus: (tabStatus: string) => void;
+  setTabStatus: (tabStatus: AgoraTabStatus) => void;
   reset: () => void;
 }
 
-// eslint-disable-next-line import/prefer-default-export
-export const useSearchStore = create<SearchState>((set) => ({
+const initialState: State = {
   search: '',
-  tabStatus: 'active',
-  setSearch(search: string) {
+  tabStatus: AgoraTabStatus.ACTIVE,
+};
+
+export const useSearchStore = create<State & Action>((set) => ({
+  ...initialState,
+  setSearch(search) {
     set({ search });
   },
-  setTabStatus(tabStatus: string) {
+  setTabStatus(tabStatus) {
     set({ tabStatus });
   },
   reset() {

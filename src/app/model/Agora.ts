@@ -1,6 +1,5 @@
 import { AGORA_STATUS } from '@/constants/agora';
 
-export type ParticipantPosition = 'PROS' | 'CONS' | 'OBSERVER';
 export type VotePosition = 'PROS' | 'CONS' | 'DEFAULT';
 export type ObserverPos = 'OBSERVER';
 export type ActiveAgora = CategoryAgora | KeywordAgora;
@@ -9,6 +8,20 @@ export type Status = (typeof AGORA_STATUS)[keyof typeof AGORA_STATUS];
 export type ImageURL = string | null;
 export type AgoraId = number;
 export type AgoraTitle = string;
+export type UserName = string;
+export type VoteCount = number;
+export type Duration = number;
+
+export enum ParticipantPosition {
+  PROS = 'PROS',
+  CONS = 'CONS',
+  OBSERVER = 'OBSERVER',
+}
+
+export enum AgoraTabStatus {
+  ACTIVE = 'active',
+  CLOSED = 'closed',
+}
 
 export type Participants = {
   pros: number;
@@ -16,7 +29,7 @@ export type Participants = {
   observer: number;
 };
 
-interface Agora {
+export interface Agora {
   id: AgoraId;
   agoraTitle: AgoraTitle;
   agoraColor: string;
@@ -34,20 +47,15 @@ export interface KeywordAgora extends Agora {
 }
 
 export interface ClosedAgora extends Agora {
-  prosCount: number;
-  consCount: number;
+  prosCount: VoteCount;
+  consCount: VoteCount;
   totalMember: number;
   createdAt: string;
 }
 
-export interface AgoraBasicFacts {
-  title: string;
-  status: Status;
-}
-
 export interface AgoraUserProfileType {
   id: number;
-  nickname: string;
+  nickname: UserName;
   photoNumber: number;
   type: ParticipantPosition;
 }
@@ -85,7 +93,7 @@ export type AgoraConfig = {
   category: string;
   color: ColorType;
   capacity: number;
-  duration: number | null;
+  duration: Duration;
 };
 
 export type ProfileImage = {
@@ -106,7 +114,41 @@ export type KickVoteResponse = {
   type: string;
   kickVoteInfo: {
     targetMemberId: number;
-    nickname: string;
+    nickname: UserName;
     message: string;
   };
 };
+
+export type PostKickVoteArg = {
+  targetMemberId: number;
+  currentMemberCount: number;
+  agoraId: AgoraId;
+};
+
+export type VoteResults = Pick<ClosedAgora, 'id' | 'prosCount' | 'consCount'>;
+export type Vote = {
+  id: number;
+  voteType: ParticipantPosition;
+};
+
+export type ErrorResponse = {
+  code: number;
+  message: string;
+};
+
+export interface AgoraStartResponse {
+  agoraId: AgoraId;
+  startTime: string;
+}
+
+export interface AgoraSearchResponse {
+  next: number | null;
+  hasNext: boolean;
+}
+
+export interface AgoraTitleResponse {
+  title: string;
+  status: Status;
+  imageUrl: ImageURL;
+  agoraColor: string;
+}

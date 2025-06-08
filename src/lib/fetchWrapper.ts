@@ -1,3 +1,4 @@
+import { ApiResult } from '@/app/model/API';
 import getKey from '@/utils/getKey';
 import isNull from '@/utils/validation/validateIsNull';
 
@@ -8,7 +9,10 @@ export class FetchWrapper {
     this.#baseURL = (await getKey()).BASE_URL || '';
   }
 
-  static async call(url: string, fetchNext: any): Promise<any> {
+  static async call<T>(
+    url: string,
+    fetchNext: RequestInit,
+  ): Promise<ApiResult<T>> {
     if (isNull(this.#baseURL)) {
       if (isNull(process.env.NEXT_BASE_URL)) {
         await this.setBaseUrl();
@@ -35,6 +39,9 @@ export class FetchWrapper {
 }
 
 // 서버 컴포넌트는 aysnc 함수를 export 해야한다.
-export async function callFetchWrapper(url: string, fetchNext: any) {
-  return FetchWrapper.call(url, fetchNext);
+export async function callFetchWrapper<T>(
+  url: string,
+  fetchNext: RequestInit,
+): Promise<ApiResult<T>> {
+  return FetchWrapper.call<T>(url, fetchNext);
 }

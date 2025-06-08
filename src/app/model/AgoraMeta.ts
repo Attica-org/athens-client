@@ -1,14 +1,14 @@
-import { AgoraId, AgoraTitle, ParticipantPosition } from './Agora';
+import { AgoraId, AgoraTitle, ParticipantPosition, UserName } from './Agora';
 
-type Participants = {
+export type Participants = {
   type: ParticipantPosition;
   count: number;
 };
 
-type AgoraMemberInfo = {
-  agoraId: number;
+export type AgoraMemberInfo = {
+  agoraId: AgoraId;
   memberId: number;
-  username: string;
+  username: UserName;
   socketDisconnectTime: string;
 };
 

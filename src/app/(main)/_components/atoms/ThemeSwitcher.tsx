@@ -8,7 +8,7 @@ import isNull from '@/utils/validation/validateIsNull';
 import React, { useState } from 'react';
 
 type Props = {
-  theme: string;
+  theme: THEME;
 };
 
 export default function ThemeSwitcher({ theme }: Props) {

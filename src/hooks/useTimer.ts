@@ -1,12 +1,16 @@
+import { AgoraStartResponse, Duration } from '@/app/model/Agora';
 import { differenceInSeconds } from 'date-fns';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-const useTimer = (startTime: string, duration: number) => {
-  const [remainingTime, setRemainingTime] = useState<number>(duration * 60);
+const useTimer = (
+  startTime: AgoraStartResponse['startTime'],
+  duration: Duration,
+) => {
+  const [remainingTime, setRemainingTime] = useState<Duration>(duration * 60);
   const [isFinished, setIsFinished] = useState<boolean>(false);
   const intervalId = useRef<number | null>(null);
 
-  const setTimerLabel = (time: number) => {
+  const setTimerLabel = (time: Duration) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
 
@@ -26,14 +30,11 @@ const useTimer = (startTime: string, duration: number) => {
     } else {
       setRemainingTime(remainTime);
     }
-
-    // return setTimerLabel(remainTime);
   }, [startTime, duration, intervalId]);
 
   useEffect(() => {
     if (startTime) {
       // 초기 실행 시의 지연 계산
-      // const diffTime = differenceInSeconds(new Date(), new Date(startTime));
       calculateRemaining();
       if (remainingTime > 0) {
         intervalId.current = window.setInterval(calculateRemaining, 1000);

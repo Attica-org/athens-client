@@ -5,7 +5,6 @@ import ModalPosSelectBtn from '@/app/(main)/_components/atoms/ModalPositionSelec
 import { useEnter } from '@/store/enter';
 import { useShallow } from 'zustand/react/shallow';
 import { ParticipantPosition } from '@/app/model/Agora';
-import { AGORA_POSITION } from '@/constants/agora';
 
 export default function ModalPosSelectContainer() {
   const { selectedPosition, setSelectedPosition, setMessage } = useEnter(
@@ -17,11 +16,11 @@ export default function ModalPosSelectContainer() {
   );
 
   useEffect(() => {
-    if (selectedPosition === AGORA_POSITION.OBSERVER) {
+    if (selectedPosition === ParticipantPosition.OBSERVER) {
       setMessage('관찰자는 프로필을 설정할 수 없습니다.');
     } else if (
-      selectedPosition === AGORA_POSITION.CONS ||
-      selectedPosition === AGORA_POSITION.PROS
+      selectedPosition === ParticipantPosition.CONS ||
+      selectedPosition === ParticipantPosition.PROS
     ) {
       setMessage('');
     }
@@ -36,7 +35,7 @@ export default function ModalPosSelectContainer() {
       <ModalPosSelectBtn
         selectedPosition={selectedPosition}
         selectPosition={selectPosition}
-        position={AGORA_POSITION.PROS}
+        position={ParticipantPosition.PROS}
         color="blue"
       >
         찬성
@@ -44,7 +43,7 @@ export default function ModalPosSelectContainer() {
       <ModalPosSelectBtn
         selectedPosition={selectedPosition}
         selectPosition={selectPosition}
-        position={AGORA_POSITION.CONS}
+        position={ParticipantPosition.CONS}
         color="red"
       >
         반대
@@ -52,7 +51,7 @@ export default function ModalPosSelectContainer() {
       <ModalPosSelectBtn
         selectedPosition={selectedPosition}
         selectPosition={selectPosition}
-        position={AGORA_POSITION.OBSERVER}
+        position={ParticipantPosition.OBSERVER}
         color="athens-main"
       >
         관찰자

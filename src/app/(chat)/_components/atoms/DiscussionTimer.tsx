@@ -10,10 +10,11 @@ import { useAgora } from '@/store/agora';
 import showToast from '@/utils/showToast';
 import { AGORA_STATUS } from '@/constants/agora';
 import useApiError from '@/hooks/useApiError';
+import { Duration } from '@/app/model/Agora';
 import { patchAgoraTimeOut } from '../../_lib/patchAgoraTimeOut';
 
 type Props = {
-  duration: number;
+  duration: Duration;
 };
 
 export default function DiscussionTimer({ duration }: Props) {
@@ -33,7 +34,7 @@ export default function DiscussionTimer({ duration }: Props) {
   const router = useRouter();
 
   const agoraEndMutation = useMutation({
-    mutationFn: async () => patchAgoraTimeOut(enterAgora.id),
+    mutationFn: async () => patchAgoraTimeOut({ agoraId: enterAgora.id }),
     onSuccess: async (response) => {
       if (response) {
         router.push(`/agoras/${enterAgora.id}/flow/end-agora`);

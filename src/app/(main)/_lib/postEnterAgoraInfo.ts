@@ -1,5 +1,5 @@
-import { ParticipantPosition } from '@/app/model/Agora';
-import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
+import { AgoraId, ParticipantPosition } from '@/app/model/Agora';
+import { AGORA_POSITION } from '@/constants/agora';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { getSession } from '@/serverActions/auth';
@@ -9,7 +9,7 @@ import {
 } from '@/constants/responseErrorMessage';
 import isNull from '@/utils/validation/validateIsNull';
 
-type Props = {
+type PostEnterAgoraInfoArgs = {
   info: {
     name?: string;
     id?: number;
@@ -17,7 +17,25 @@ type Props = {
     role: ParticipantPosition;
     nickname?: string;
   };
-  agoraId: number;
+  agoraId: AgoraId;
+};
+
+type EnterAgoraInfoResponse = {
+  agoraId: AgoraId;
+  userId: number;
+  type: ParticipantPosition;
+  isCreator: boolean;
+};
+
+export enum FinishedAgoraInfo {
+  agoraId = -1,
+}
+
+const finishAgoraInfo: EnterAgoraInfoResponse = {
+  agoraId: FinishedAgoraInfo.agoraId,
+  userId: -1,
+  type: ParticipantPosition.OBSERVER,
+  isCreator: false,
 };
 
 const splitMessage = (message: string) => {
@@ -25,13 +43,16 @@ const splitMessage = (message: string) => {
   return split[0];
 };
 
-export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
+export const postEnterAgoraInfo = async ({
+  info,
+  agoraId,
+}: PostEnterAgoraInfoArgs): Promise<EnterAgoraInfoResponse> => {
   const session = await getSession();
   if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper(
+  const res = await callFetchWrapper<EnterAgoraInfoResponse>(
     `/api/v1/auth/agoras/${agoraId}/participants`,
     {
       method: 'post',
@@ -54,8 +75,11 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
       throw new Error(AGORA_ENTER.UNKNOWN_ERROR);
     }
 
-    if (AUTH_MESSAGE.includes(res.error.message)) {
-      throw new Error(res.error.message);
+    const errorMessage =
+      typeof res.error.message === 'string' ? res.error.message : 'ERROR';
+
+    if (AUTH_MESSAGE.includes(errorMessage)) {
+      throw new Error(errorMessage);
     }
 
     if (res.error.code === 1001) {
@@ -71,17 +95,17 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
         throw new Error(AGORA_ENTER.NOT_ALLOWED_POSITION);
       }
     } else if (res.error.code === 1002) {
-      if (res.error.message === AGORA_ENTER.SERVER_RESPONSE_CLOSED_AGORA) {
-        return AGORA_STATUS.CLOSED;
+      if (errorMessage === AGORA_ENTER.SERVER_RESPONSE_CLOSED_AGORA) {
+        return finishAgoraInfo;
       }
     } else if (res.error.code === 1004) {
       if (
-        splitMessage(res.error.message) ===
+        splitMessage(errorMessage) ===
         AGORA_ENTER.SERVER_RESPONSE_ALREADY_PARTICIPATED
       ) {
         throw new Error(AGORA_ENTER.ALREADY_PARTICIPATED);
       } else if (
-        splitMessage(res.error.message) ===
+        splitMessage(errorMessage) ===
         AGORA_ENTER.SERVER_RESPONSE_NICKNAME_DUPLICATED
       ) {
         throw new Error(AGORA_ENTER.NICKNAME_DUPLICATED);
@@ -97,6 +121,10 @@ export const postEnterAgoraInfo = async ({ info, agoraId }: Props) => {
   }
 
   const result = res.response;
+
+  if (isNull(result)) {
+    throw new Error(AGORA_ENTER.UNKNOWN_ERROR);
+  }
 
   return result;
 };

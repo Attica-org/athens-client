@@ -22,7 +22,6 @@ export default function ModalBase({
   const [opacity, setOpacity] = useState('opacity-0');
   const modalRef = useRef<HTMLDivElement>(null);
   useFocusTrap(modalRef, closeIcon);
-  // useEscapeClose(modalRef, closeIcon);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';

@@ -1,30 +1,31 @@
+import { AgoraId, PostKickVoteArg } from '@/app/model/Agora';
+import { MemberId } from '@/app/model/Chat';
 import { SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
 import { PATCH_USER_KICK_VOTE_ERROR_MESSAGE } from '@/constants/responseErrorMessage';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import isNull from '@/utils/validation/validateIsNull';
 
-const NOT_FOUND_USER = (agoraId: number, memberId: number) =>
+type KickVoteResponse = string;
+
+const NOT_FOUND_USER = (agoraId: AgoraId, memberId: MemberId) =>
   `Agora user not found with agora id: ${agoraId} agoraMemberId: ${memberId}`;
 
-const NOT_FOUND_AGORA = (agoraId: number) =>
+const NOT_FOUND_AGORA = (agoraId: AgoraId) =>
   `Not found agora. agoraId: ${agoraId}`;
 
-export const postKickVote = async (
-  targetMemberId: number,
-  currentMemberCount: number,
-  agoraId: number,
-) => {
-  // Authorization: Bearer accessToken
-  // Cookie: 'ATKN=~'
-
+export const postKickVote = async ({
+  targetMemberId,
+  currentMemberCount,
+  agoraId,
+}: PostKickVoteArg) => {
   const session = await getSession();
 
   if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper(
+  const res = await callFetchWrapper<KickVoteResponse>(
     `/api/v1/auth/agoras/${agoraId}/kick-vote`,
     {
       method: 'POST',
@@ -50,9 +51,9 @@ export const postKickVote = async (
         throw new Error(PATCH_USER_KICK_VOTE_ERROR_MESSAGE.NOT_FOUND_USER);
       } else if (res.error.message === NOT_FOUND_AGORA(agoraId)) {
         throw new Error(PATCH_USER_KICK_VOTE_ERROR_MESSAGE.NOT_FOUND_AGORA);
-      } else if (res.error.code === 1004) {
-        throw new Error(PATCH_USER_KICK_VOTE_ERROR_MESSAGE.ALREADY_VOTE);
       }
+    } else if (res.error.code === 1004) {
+      throw new Error(PATCH_USER_KICK_VOTE_ERROR_MESSAGE.ALREADY_VOTE);
     }
 
     if (!res.error) {
@@ -62,5 +63,6 @@ export const postKickVote = async (
     throw new Error(PATCH_USER_KICK_VOTE_ERROR_MESSAGE.FAILED_TO_KICK_VOTE);
   }
 
-  return res;
+  const result = res.response;
+  return result;
 };

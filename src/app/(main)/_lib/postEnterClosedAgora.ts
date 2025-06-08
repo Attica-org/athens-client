@@ -6,14 +6,22 @@ import {
   NETWORK_ERROR_MESSAGE,
 } from '@/constants/responseErrorMessage';
 import isNull from '@/utils/validation/validateIsNull';
+import { AgoraId } from '@/app/model/Agora';
 
-export const postEnterClosedAgora = async (agoraId: number) => {
+type EnterClosedAgoraResponse = {
+  agoraId: AgoraId;
+  memberId: number;
+};
+
+export const postEnterClosedAgora = async (
+  agoraId: AgoraId,
+): Promise<EnterClosedAgoraResponse> => {
   const session = await getSession();
   if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper(
+  const res = await callFetchWrapper<EnterClosedAgoraResponse>(
     `/api/v1/auth/agoras/${agoraId}/closed/participants`,
     {
       method: 'post',
@@ -30,8 +38,11 @@ export const postEnterClosedAgora = async (agoraId: number) => {
       throw new Error(AGORA_ENTER.UNKNOWN_ERROR);
     }
 
-    if (AUTH_MESSAGE.includes(res.error.message)) {
-      throw new Error(res.error.message);
+    const errorMessage =
+      typeof res.error.message === 'string' ? res.error.message : 'ERROR';
+
+    if (AUTH_MESSAGE.includes(errorMessage)) {
+      throw new Error(errorMessage);
     }
     if (res.error.code === 1002) {
       throw new Error(AGORA_ENTER.ACTIVATE_AGORA);
@@ -44,6 +55,10 @@ export const postEnterClosedAgora = async (agoraId: number) => {
   }
 
   const result = res.response;
+
+  if (isNull(result)) {
+    throw new Error(AGORA_ENTER.UNKNOWN_ERROR);
+  }
 
   return result;
 };

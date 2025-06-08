@@ -6,7 +6,7 @@ import {
   useQueryClient,
   useSuspenseInfiniteQuery,
 } from '@tanstack/react-query';
-import { SearchParams, UnionAgora } from '@/app/model/Agora';
+import { AgoraTabStatus, SearchParams, UnionAgora } from '@/app/model/Agora';
 import DeferredComponent from '@/app/_components/utils/DefferedComponent';
 import Loading from '@/app/_components/atoms/loading';
 import { useCreateAgora } from '@/store/create';
@@ -140,7 +140,9 @@ export default function CategoryAgoraList({ searchParams }: Props) {
   return (
     <section
       aria-label={
-        tabStatus === 'active' ? '활성화 아고라 리스트' : '종료된 아고라 리스트'
+        tabStatus === AgoraTabStatus.ACTIVE
+          ? '활성화 아고라 리스트'
+          : '종료된 아고라 리스트'
       }
       className="w-full h-full"
     >

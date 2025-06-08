@@ -1,16 +1,23 @@
 import { create } from 'zustand';
 
-interface MessageState {
+interface State {
   shouldGoDown: boolean;
   adjustScroll: boolean;
+}
+
+interface Action {
   setGoDown(bool: boolean): void;
   setAdjustScroll(bool: boolean): void;
   reset(): void;
 }
-// eslint-disable-next-line import/prefer-default-export
-export const useMessageStore = create<MessageState>((set) => ({
+
+const initialState: State = {
   shouldGoDown: false,
   adjustScroll: false,
+};
+
+export const useMessageStore = create<State & Action>((set) => ({
+  ...initialState,
   setGoDown: (bool) => {
     set({ shouldGoDown: bool });
   },

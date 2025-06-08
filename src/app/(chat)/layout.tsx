@@ -1,7 +1,6 @@
 import React from 'react';
 import Header from './_components/organisms/Header';
 import MessageInput from './_components/molecules/MessageInput';
-import AgoraSideBar from './_components/templates/AgoraSideBar';
 import ChatPageLoadConfig from '../config/ChatPageLoadConfig';
 
 type Props = {
@@ -20,7 +19,6 @@ export default function Layout({ children }: Props) {
             {children}
             <MessageInput />
           </section>
-          <AgoraSideBar />
         </ChatPageLoadConfig>
       </section>
     </div>

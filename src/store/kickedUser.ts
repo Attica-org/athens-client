@@ -1,19 +1,21 @@
+import { UserName } from '@/app/model/Agora';
+
 class KickedUsers {
-  #nicknames: Set<string>;
+  #nicknames: Set<UserName>;
 
   constructor() {
     this.#nicknames = new Set();
   }
 
-  addUserName(username: string) {
+  addUserName(username: UserName) {
     this.#nicknames.add(username);
   }
 
-  removeUserName(username: string) {
+  removeUserName(username: UserName) {
     this.#nicknames.delete(username);
   }
 
-  hasUserName(username: string) {
+  hasUserName(username: UserName) {
     return this.#nicknames.has(username);
   }
 

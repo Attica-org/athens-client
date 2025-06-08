@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { AGORA_POSITION, AGORA_STATUS } from '@/constants/agora';
+import { AGORA_STATUS } from '@/constants/agora';
 import showToast from '@/utils/showToast';
 import useApiError from '@/hooks/useApiError';
 import {
@@ -16,9 +16,16 @@ import {
 } from '@/constants/segmentKey';
 import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
 import { COLOR } from '@/constants/consts';
-import { postEnterAgoraInfo } from '../(main)/_lib/postEnterAgoraInfo';
+import {
+  FinishedAgoraInfo,
+  postEnterAgoraInfo,
+} from '../(main)/_lib/postEnterAgoraInfo';
 import ChatPageLoading from '../(chat)/_components/atoms/ChatPageLoading';
-import { AgoraBasicFacts } from '../model/Agora';
+import {
+  AgoraId,
+  AgoraTitleResponse,
+  ParticipantPosition,
+} from '../model/Agora';
 import { getAgoraTitle } from '../(main)/_lib/getAgoraTitle';
 
 type Props = {
@@ -56,7 +63,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
     mutationFn: callEnterAgoraAPI,
     onSuccess: async (response) => {
       if (response) {
-        if (response === AGORA_STATUS.CLOSED) {
+        if (response.agoraId === FinishedAgoraInfo.agoraId) {
           showToast('종료된 아고라입니다.', 'info');
 
           setEnterAgora({
@@ -64,7 +71,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
             id: selectedAgora.id,
             userId: response.userId,
             status: AGORA_STATUS.CLOSED,
-            role: AGORA_POSITION.OBSERVER,
+            role: ParticipantPosition.OBSERVER,
             isCreator: false,
           });
           setSelectedAgora({
@@ -90,14 +97,15 @@ export default function ChatPageLoadConfig({ children }: Props) {
     },
   });
 
-  const isRedirect = isNull(selectedAgora.title) && isNull(enterAgora.title);
+  const isRedirect =
+    isNull(selectedAgora.agoraTitle) && isNull(enterAgora.agoraTitle);
 
   const {
     data: agoraInfo,
     isLoading: LoadingGetBasicFacts,
     isError,
   }: {
-    data: AgoraBasicFacts | undefined;
+    data: AgoraTitleResponse | undefined;
     isLoading: boolean;
     isError: boolean;
   } = useQuery({
@@ -108,8 +116,8 @@ export default function ChatPageLoadConfig({ children }: Props) {
     enabled: isAccessToAnotherAgora.current === true || isRedirect,
   });
 
-  const isSameAgora = (prevId: number, currentId: string | undefined) => {
-    if (prevId === Number(currentId)) {
+  const isSameAgora = (prevId: AgoraId, currentId: AgoraId) => {
+    if (prevId === currentId) {
       return true;
     }
     return false;
@@ -143,12 +151,15 @@ export default function ChatPageLoadConfig({ children }: Props) {
         ) {
           activeAgoraEnterMutation.mutate();
         }
-      } else if (entries?.type === 'navigate' && isNull(selectedAgora.title)) {
+      } else if (
+        entries?.type === 'navigate' &&
+        isNull(selectedAgora.agoraTitle)
+      ) {
         // 외부에서 채팅방 접근시 채팅방 입장하기 페이지 띄우기
         window.location.replace(`/flow/enter-agora/${agoraId}`);
       } else if (
         entries?.type === 'navigate' &&
-        !isSameAgora(selectedAgora.id, agoraId)
+        !isSameAgora(selectedAgora.id, Number(agoraId))
       ) {
         // 채팅방에서 다른 채팅방으로 이동 시, 넘어간 채팅방의 유효성(CLOSED인지, ACTIVE인지, 없는지)을 먼저 검사해야함
         // storage 데이터 초기화 후 입장하기 페이지 띄우기
@@ -166,7 +177,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
         setSelectedAgora({
           id: Number(agoraId),
           imageUrl: '',
-          title: agoraInfo.title,
+          agoraTitle: agoraInfo.title,
           status: agoraInfo.status,
           agoraColor: COLOR[0].value,
         });
@@ -174,10 +185,10 @@ export default function ChatPageLoadConfig({ children }: Props) {
           ...selectedAgora,
           id: Number(agoraId),
           imageUrl: '',
-          title: agoraInfo.title,
+          agoraTitle: agoraInfo.title,
           status: agoraInfo.status,
           userId: enterAgora.userId,
-          role: AGORA_POSITION.OBSERVER,
+          role: ParticipantPosition.OBSERVER,
           isCreator: false,
         });
 
@@ -223,7 +234,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
     return <ChatPageLoading />;
   }
 
-  if (!isNull(enterAgora.title)) {
+  if (!isNull(enterAgora.agoraTitle)) {
     return children;
   }
 }
