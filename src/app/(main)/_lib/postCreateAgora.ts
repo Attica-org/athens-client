@@ -1,4 +1,4 @@
-import { AgoraConfig } from '@/app/model/Agora';
+import { AgoraConfig, AgoraId } from '@/app/model/Agora';
 import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import { AUTH_MESSAGE, SIGNIN_REQUIRED } from '@/constants/authErrorMessage';
@@ -16,7 +16,13 @@ const DURATION_UNDER_ERROR = { duration: '1 이상이어야 합니다' };
 const DURATION_OVER_ERROR = { duration: '180 이하이어야 합니다' };
 const FILE_SIZE_OVER_ERROR = 'File size cannot exceed 5MB.';
 
-export const postCreateAgora = async (info: AgoraConfig) => {
+type CreateAgoraResponse = {
+  id: AgoraId;
+};
+
+export const postCreateAgora = async (
+  info: AgoraConfig,
+): Promise<CreateAgoraResponse> => {
   const requestInfo = {
     title: info.title,
     categoryId: info.category,
@@ -55,14 +61,17 @@ export const postCreateAgora = async (info: AgoraConfig) => {
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper<any>('/api/v1/auth/agoras', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${session.user?.accessToken}`,
+  const res = await callFetchWrapper<CreateAgoraResponse>(
+    '/api/v1/auth/agoras',
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${session.user?.accessToken}`,
+      },
+      credentials: 'include',
+      body: formData,
     },
-    credentials: 'include',
-    body: formData,
-  });
+  );
 
   if (!res.ok && !res.success) {
     if (!res.error) {
@@ -112,6 +121,10 @@ export const postCreateAgora = async (info: AgoraConfig) => {
   }
 
   const result = res.response;
+
+  if (isNull(result)) {
+    throw new Error(AGORA_CREATE.UNKNOWN_ERROR);
+  }
 
   return result;
 };

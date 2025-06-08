@@ -4,20 +4,25 @@ import { callFetchWrapper } from '@/lib/fetchWrapper';
 import { getSession } from '@/serverActions/auth';
 import isNull from '@/utils/validation/validateIsNull';
 
-const postLogout = async () => {
+type LogoutResponse = {};
+
+const postLogout = async (): Promise<void> => {
   const session = await getSession();
   if (isNull(session)) {
     throw new Error(SIGNIN_REQUIRED);
   }
 
-  const res = await callFetchWrapper<any>('/api/v1/auth/member/logout', {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.user?.accessToken}`,
+  const res = await callFetchWrapper<LogoutResponse>(
+    '/api/v1/auth/member/logout',
+    {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.user?.accessToken}`,
+      },
+      credentials: 'include',
     },
-    credentials: 'include',
-  });
+  );
 
   if (!res.ok && !res.success) {
     if (!res.error) {

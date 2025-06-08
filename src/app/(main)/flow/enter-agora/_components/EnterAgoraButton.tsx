@@ -1,6 +1,9 @@
 'use client';
 
-import { postEnterAgoraInfo } from '@/app/(main)/_lib/postEnterAgoraInfo';
+import {
+  FinishedAgoraInfo,
+  postEnterAgoraInfo,
+} from '@/app/(main)/_lib/postEnterAgoraInfo';
 import Loading from '@/app/_components/atoms/loading';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import { useAgora } from '@/store/agora';
@@ -13,6 +16,7 @@ import useApiError from '@/hooks/useApiError';
 import showToast from '@/utils/showToast';
 import { useShallow } from 'zustand/react/shallow';
 import { ParticipantPosition } from '@/app/model/Agora';
+import isNull from '@/utils/validation/validateIsNull';
 
 export default function EnterAgoraButton() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -54,8 +58,8 @@ export default function EnterAgoraButton() {
   const mutation = useMutation({
     mutationFn: callEnterAgoraAPI,
     onSuccess: async (response) => {
-      if (response) {
-        if (response === AGORA_STATUS.CLOSED) {
+      if (!isNull(response)) {
+        if (response?.agoraId === FinishedAgoraInfo.agoraId) {
           showToast('종료된 아고라입니다.', 'info');
 
           setEnterAgora({
@@ -65,7 +69,7 @@ export default function EnterAgoraButton() {
             agoraTitle: selectedAgora.agoraTitle,
             status: AGORA_STATUS.CLOSED,
             role: ParticipantPosition.OBSERVER,
-            isCreator: false,
+            isCreator: response.isCreator,
             agoraColor: selectedAgora.agoraColor,
           });
           setSelectedAgora({

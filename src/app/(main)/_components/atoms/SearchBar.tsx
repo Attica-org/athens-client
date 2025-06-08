@@ -41,11 +41,13 @@ function SearchBar() {
     // router.push(newUrl);
   };
 
-  const changeInputText: ChangeEventHandler<HTMLInputElement> = (e) => {
+  const changeInputText: ChangeEventHandler<HTMLInputElement> = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setSearchText(e.target.value);
   };
 
-  const handleSearch: FormEventHandler = (e) => {
+  const handleSearch: FormEventHandler = (e: React.FormEvent<Element>) => {
     e.preventDefault();
     setSearch(searchText);
 

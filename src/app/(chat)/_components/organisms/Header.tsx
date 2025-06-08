@@ -406,7 +406,8 @@ export default function Header() {
       if (
         previousPath === `${pathname}/flow/social-share` ||
         previousPath === `${pathname}/flow/end-agora` ||
-        previousPath === `${pathname}/flow/result-agora`
+        previousPath === `${pathname}/flow/result-agora` ||
+        previousPath === `${pathname}/upload-image`
       ) {
         return true;
       }

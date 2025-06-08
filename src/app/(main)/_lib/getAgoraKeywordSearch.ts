@@ -1,4 +1,9 @@
-import { ActiveAgora, AgoraTabStatus } from '@/app/model/Agora';
+import {
+  KeywordAgora,
+  UnionAgora,
+  AgoraTabStatus,
+  AgoraSearchResponse,
+} from '@/app/model/Agora';
 import {
   AGORA_KEYWORD_SEARCH,
   NETWORK_ERROR_MESSAGE,
@@ -13,15 +18,19 @@ type SearchParams = {
   q?: string;
 };
 
+interface KeywordAgoraList extends AgoraSearchResponse {
+  agoras: KeywordAgora[];
+}
+
 export const getAgoraKeywordSearch: QueryFunction<
-  { agoras: ActiveAgora[]; nextCursor: number | null },
+  { agoras: UnionAgora[]; nextCursor: number | null },
   [_1: string, _2: string, _3: string, searchParams: SearchParams],
   { nextCursor: number | null }
 > = async ({ queryKey, pageParam = { nextCursor: null } }) => {
   const [, , , { status = AgoraTabStatus.ACTIVE, q = '' }] = queryKey;
   const searchParams = { status, agora_name: q };
 
-  const res = await callFetchWrapper<any>(
+  const res = await callFetchWrapper<KeywordAgoraList>(
     `/api/v1/open/agoras?agora-name=${q}&status=${status}&next=${pageParam.nextCursor ?? ''}`,
     {
       next: {

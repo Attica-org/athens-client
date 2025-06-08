@@ -22,7 +22,9 @@ export default function AgoraTitleInput() {
     })),
   );
 
-  const changeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
+  const changeInput: ChangeEventHandler<HTMLInputElement> = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setTitle(e.target.value);
 
     if (e.target.value.trim().length === 0) {
@@ -33,6 +35,7 @@ export default function AgoraTitleInput() {
       setMessage(null);
     }
   };
+
   const dataReset = () => {
     setTitle('');
     setMessage(null);

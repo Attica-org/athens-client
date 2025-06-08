@@ -16,9 +16,16 @@ import {
 } from '@/constants/segmentKey';
 import { getSelectedAgoraQueryKey as getSelectedAgoraTags } from '@/constants/queryKey';
 import { COLOR } from '@/constants/consts';
-import { postEnterAgoraInfo } from '../(main)/_lib/postEnterAgoraInfo';
+import {
+  FinishedAgoraInfo,
+  postEnterAgoraInfo,
+} from '../(main)/_lib/postEnterAgoraInfo';
 import ChatPageLoading from '../(chat)/_components/atoms/ChatPageLoading';
-import { AgoraBasicFacts, ParticipantPosition } from '../model/Agora';
+import {
+  AgoraId,
+  AgoraTitleResponse,
+  ParticipantPosition,
+} from '../model/Agora';
 import { getAgoraTitle } from '../(main)/_lib/getAgoraTitle';
 
 type Props = {
@@ -56,7 +63,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
     mutationFn: callEnterAgoraAPI,
     onSuccess: async (response) => {
       if (response) {
-        if (response === AGORA_STATUS.CLOSED) {
+        if (response.agoraId === FinishedAgoraInfo.agoraId) {
           showToast('종료된 아고라입니다.', 'info');
 
           setEnterAgora({
@@ -98,7 +105,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
     isLoading: LoadingGetBasicFacts,
     isError,
   }: {
-    data: AgoraBasicFacts | undefined;
+    data: AgoraTitleResponse | undefined;
     isLoading: boolean;
     isError: boolean;
   } = useQuery({
@@ -109,8 +116,8 @@ export default function ChatPageLoadConfig({ children }: Props) {
     enabled: isAccessToAnotherAgora.current === true || isRedirect,
   });
 
-  const isSameAgora = (prevId: number, currentId: string | undefined) => {
-    if (prevId === Number(currentId)) {
+  const isSameAgora = (prevId: AgoraId, currentId: AgoraId) => {
+    if (prevId === currentId) {
       return true;
     }
     return false;
@@ -152,7 +159,7 @@ export default function ChatPageLoadConfig({ children }: Props) {
         window.location.replace(`/flow/enter-agora/${agoraId}`);
       } else if (
         entries?.type === 'navigate' &&
-        !isSameAgora(selectedAgora.id, agoraId)
+        !isSameAgora(selectedAgora.id, Number(agoraId))
       ) {
         // 채팅방에서 다른 채팅방으로 이동 시, 넘어간 채팅방의 유효성(CLOSED인지, ACTIVE인지, 없는지)을 먼저 검사해야함
         // storage 데이터 초기화 후 입장하기 페이지 띄우기
