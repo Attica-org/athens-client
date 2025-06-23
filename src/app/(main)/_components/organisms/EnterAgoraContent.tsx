@@ -1,60 +1,38 @@
 'use client';
 
 import { useAgora } from '@/store/agora';
-import { useQuery } from '@tanstack/react-query';
-import React, { useEffect } from 'react';
+import React from 'react';
 import Loading from '@/app/_components/atoms/loading';
 import { usePathname, useRouter } from 'next/navigation';
-import { getSelectedAgoraQueryKey } from '@/constants/queryKey';
-import { homeSegmentKey } from '@/constants/segmentKey';
 import { useShallow } from 'zustand/react/shallow';
-import { getAgoraTitle } from '../../_lib/getAgoraTitle';
+import { useEnterAgoraSetInfo } from '@/hooks/useEnterAgoraSetInfo';
+import { homeSegmentKey } from '@/constants/segmentKey';
 import ModalPosSelectContainer from '../../flow/enter-agora/_components/ModalPosSelectContainer';
 import InputErrorMessage from '../../flow/enter-agora/_components/InputErrorMessage';
 import SetUserProfile from '../../flow/enter-agora/_components/SetUserProfile';
 import EnterAgoraButton from '../../flow/enter-agora/_components/EnterAgoraButton';
 
 export default function EnterAgoraContent() {
-  const { selectedAgora, setSelectedAgora } = useAgora(
+  const pathname = usePathname();
+  const router = useRouter();
+  const { selectedAgora } = useAgora(
     useShallow((state) => ({
       selectedAgora: state.selectedAgora,
-      setSelectedAgora: state.setSelectedAgora,
     })),
   );
 
-  const router = useRouter();
-  const pathname = usePathname();
-  const agoraId = pathname.split('/')[3];
-  const shouldFetch = !!agoraId && !selectedAgora.id;
+  const agoraId = Number(pathname.split('/')[3]);
+  const enabled = !!agoraId && selectedAgora.id === -1;
 
-  const { data, isSuccess, isError } = useQuery({
-    queryKey: getSelectedAgoraQueryKey(agoraId),
-    queryFn: getAgoraTitle,
-    enabled: shouldFetch,
+  const { isSuccess, isError } = useEnterAgoraSetInfo({
+    enabled,
+    agoraId,
+    selectedAgoraId: selectedAgora.id,
   });
 
-  useEffect(() => {
-    if (isSuccess && data && !selectedAgora.id) {
-      setSelectedAgora({
-        id: Number(agoraId),
-        imageUrl: data.imageUrl,
-        agoraTitle: data.title,
-        status: data.status,
-        agoraColor: data.agoraColor,
-      });
-    } else if (!isSuccess && isError) {
-      // showToast('아고라 제목을 불러오는데 실패했습니다.', 'error');
-      router.push(`${homeSegmentKey}?status=active`);
-    }
-  }, [
-    agoraId,
-    data,
-    isError,
-    isSuccess,
-    router,
-    selectedAgora.id,
-    setSelectedAgora,
-  ]);
+  if (enabled && !isSuccess && isError) {
+    router.push(`${homeSegmentKey}?status=active`);
+  }
 
   return (
     <>
