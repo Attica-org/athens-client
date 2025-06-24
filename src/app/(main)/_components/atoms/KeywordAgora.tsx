@@ -150,7 +150,7 @@ export default function KeywordAgora({ agora }: Props) {
         <div className="relative w-67 h-67">
           {isValidImgUrl(agora.imageUrl) ? (
             <Image
-              src={agora.imageUrl ?? ''}
+              src={agora.imageUrl}
               alt="아고라 이미지"
               objectFit="cover"
               layout="fill"
