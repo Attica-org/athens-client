@@ -5,24 +5,26 @@ type Props = {
   label: string;
   value: number;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleButtonClick: (action: ParticipantCountAction) => void;
-  increaseLabel: string;
-  decreaseLabel: string;
-  inputLabel: string;
-  max: number;
-  min: number;
+  handleControlButtonClick: (action: ParticipantCountAction) => void;
+  controlLabel: {
+    increase: string;
+    decrease: string;
+  };
+  inputAriaLabel: string;
+  range: {
+    max: number;
+    min: number;
+  };
 };
 
 export default function ControlNumberInput({
   label,
   value,
   handleChange,
-  handleButtonClick,
-  increaseLabel,
-  decreaseLabel,
-  inputLabel,
-  max,
-  min,
+  handleControlButtonClick,
+  controlLabel,
+  inputAriaLabel,
+  range,
 }: Props) {
   return (
     <label
@@ -33,17 +35,19 @@ export default function ControlNumberInput({
       <div className="ml-0.5rem pl-7 pr-7 border-1 border-athens-gray rounded-md dark:border-gray-500 flex justify-center items-center">
         <button
           type="button"
-          aria-label={decreaseLabel}
+          aria-label={controlLabel.decrease}
           className="text-xl cursor-pointer"
-          onClick={() => handleButtonClick(ParticipantCountAction.DECREASE)}
+          onClick={() =>
+            handleControlButtonClick(ParticipantCountAction.DECREASE)
+          }
         >
           -
         </button>
         <input
           id="modify-number-input"
-          aria-label={inputLabel}
-          min={min}
-          max={max}
+          aria-label={inputAriaLabel}
+          min={range.min}
+          max={range.max}
           value={value}
           onChange={handleChange}
           type="number"
@@ -51,9 +55,11 @@ export default function ControlNumberInput({
         />
         <button
           type="button"
-          aria-label={increaseLabel}
+          aria-label={controlLabel.increase}
           className="text-xl cursor-pointer"
-          onClick={() => handleButtonClick(ParticipantCountAction.INCREASE)}
+          onClick={() =>
+            handleControlButtonClick(ParticipantCountAction.INCREASE)
+          }
         >
           +
         </button>
