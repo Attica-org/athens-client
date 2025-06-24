@@ -152,3 +152,8 @@ export interface AgoraTitleResponse {
   imageUrl: ImageURL;
   agoraColor: string;
 }
+
+export interface EnterClosedAgoraResponse {
+  agoraId: AgoraId;
+  memberId: number;
+}

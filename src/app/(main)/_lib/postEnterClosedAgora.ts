@@ -6,12 +6,7 @@ import {
   NETWORK_ERROR_MESSAGE,
 } from '@/constants/responseErrorMessage';
 import isNull from '@/utils/validation/validateIsNull';
-import { AgoraId } from '@/app/model/Agora';
-
-type EnterClosedAgoraResponse = {
-  agoraId: AgoraId;
-  memberId: number;
-};
+import { AgoraId, EnterClosedAgoraResponse } from '@/app/model/Agora';
 
 export const postEnterClosedAgora = async (
   agoraId: AgoraId,
