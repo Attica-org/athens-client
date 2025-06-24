@@ -2,15 +2,15 @@ import { useAgora } from '@/store/agora';
 import { useCallback, useState } from 'react';
 import {
   ClosedAgora,
-  CategoryAgora,
   ParticipantPosition,
+  UnionAgora,
 } from '@/app/model/Agora';
 import { useEnterClosedAgoraMutation } from './query/useEnterClosedAgoraMutation';
 import useApiError from './useApiError';
 
 type EnterClosedAgoraActionArg = {
   routeAgoraPage: (path: string) => void;
-  agora: CategoryAgora | ClosedAgora;
+  agora: UnionAgora | ClosedAgora;
 };
 
 export const useEnterClosedAgoraAction = ({
@@ -31,6 +31,19 @@ export const useEnterClosedAgoraAction = ({
     });
   }, [setSelectedAgora]);
 
+  const setEnterAgoraData = useCallback(() => {
+    setEnterAgora({
+      id: agora.id,
+      userId: 0,
+      imageUrl: agora.imageUrl,
+      agoraTitle: agora.agoraTitle,
+      status: agora.status,
+      role: ParticipantPosition.OBSERVER,
+      isCreator: false,
+      agoraColor: agora.agoraColor,
+    });
+  }, [setEnterAgora]);
+
   const { enterClosedAgoraMutation } = useEnterClosedAgoraMutation({
     agoraId: agora.id,
     options: {
@@ -40,16 +53,7 @@ export const useEnterClosedAgoraAction = ({
       onSuccess: () => {
         setIsLoading(false);
         setSelectAgoraData();
-        setEnterAgora({
-          id: agora.id,
-          userId: 0,
-          imageUrl: agora.imageUrl,
-          agoraTitle: agora.agoraTitle,
-          status: agora.status,
-          role: ParticipantPosition.OBSERVER,
-          isCreator: false,
-          agoraColor: agora.agoraColor,
-        });
+        setEnterAgoraData();
         routeAgoraPage(`/agoras/${agora.id}`);
       },
       onError: async (error) => {
