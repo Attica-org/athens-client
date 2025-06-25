@@ -1,4 +1,5 @@
 import { AGORA_STATUS } from '@/constants/agora';
+import { AGORACATEGORY } from '@/constants/consts';
 
 export type VotePosition = 'PROS' | 'CONS' | 'DEFAULT';
 export type ObserverPos = 'OBSERVER';
@@ -90,7 +91,7 @@ interface ColorType {
 export type AgoraConfig = {
   title: AgoraTitle;
   imageUrl: ImageURL;
-  category: string;
+  category: keyof typeof AGORACATEGORY;
   color: ColorType;
   capacity: number;
   duration: Duration;
