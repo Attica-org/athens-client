@@ -1,5 +1,6 @@
 import { AgoraTabStatus, SearchParams } from '@/app/model/Agora';
 import RefreshIcon from '@/assets/icons/RefreshIcon';
+import { useCategoryAgoraRefetch } from '@/hooks/useCategoryAgoraRefetch';
 import { useCreateAgora } from '@/store/create';
 import { useSearchStore } from '@/store/search';
 import { useQueryClient } from '@tanstack/react-query';
@@ -23,28 +24,19 @@ function CategoryAgoraNowTitle({ searchParams }: Props) {
     })),
   );
 
-  const activeAgoraRefresh = useCallback(async () => {
-    const options = {
-      queryKey: [
-        'agoras',
-        'search',
-        'category',
-        { ...searchParams, status: tabStatus, category },
-      ],
-      exact: false,
-    };
+  const { handleActiveAgoraRefreshBtn } = useCategoryAgoraRefetch(queryClient);
 
-    await queryClient.invalidateQueries(options);
-    await queryClient.refetchQueries(options);
-  }, [queryClient, category]);
+  const handleAgoraRefresh = () => {
+    handleActiveAgoraRefreshBtn({ searchParams, status: tabStatus, category });
+  };
 
   const handleKeyDownRefresh = useCallback(
     async (e: React.KeyboardEvent) => {
       if (e.key === 'Enter') {
-        activeAgoraRefresh();
+        handleAgoraRefresh();
       }
     },
-    [activeAgoraRefresh],
+    [handleActiveAgoraRefreshBtn],
   );
 
   return (
@@ -57,7 +49,7 @@ function CategoryAgoraNowTitle({ searchParams }: Props) {
         <button
           type="button"
           aria-label="활성화 아고라 새로고침"
-          onClick={activeAgoraRefresh}
+          onClick={handleAgoraRefresh}
           onKeyDown={handleKeyDownRefresh}
           className="cursor-pointer flex font-normal mr-5"
         >
