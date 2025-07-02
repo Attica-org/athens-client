@@ -62,7 +62,7 @@ export default function CategoryAgoraList({ searchParams }: Props) {
 
   useEffect(() => {
     // 초기 데이터 호출 후 카테고리 변경 시 데이터 재호출
-    if (!isPending && !isFetching && isFetchingNextPage) {
+    if (!isPending && !isFetching && !isFetchingNextPage) {
       refetchAgoraList({
         searchParams,
         category: selectedCategory,
