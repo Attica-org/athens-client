@@ -5,6 +5,7 @@ import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 import { ParticipantCountAction } from '@/app/model/Agora';
 import { AGORA_CREATE } from '@/constants/agora';
+import { getParticipantCapacityErrorMessage } from '@/utils/getParticipantCapacityErrorMessage';
 import ControlNumberInput from '../atoms/ControlNumberInput';
 
 function ParticipantCapacitySetter() {
@@ -17,23 +18,7 @@ function ParticipantCapacitySetter() {
   );
 
   const validateCapacity = (value: number, state?: ParticipantCountAction) => {
-    if (
-      state === ParticipantCountAction.INCREASE ||
-      value < AGORA_CREATE.MIN_PARTICIPANTS_CNT
-    ) {
-      setMessage(AGORA_CREATE.MIN_PARTICIPANTS_CNT_MESSAGE);
-      return;
-    }
-    if (
-      state === ParticipantCountAction.DECREASE ||
-      value > AGORA_CREATE.MAX_PARTICIPANTS_CNT
-    ) {
-      setMessage(AGORA_CREATE.MAX_PARTICIPANTS_CNT_MESSAGE);
-      return;
-    }
-
-    setMessage(null);
-
+    setMessage(getParticipantCapacityErrorMessage(value, state));
     setCapacity(value);
   };
 
