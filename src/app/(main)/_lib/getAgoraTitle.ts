@@ -33,7 +33,7 @@ export const getAgoraTitle: QueryFunction<
       throw new Error(AGORA_INFO.UNKNOWN_ERROR);
     }
 
-    if (res.error.code === 1301) {
+    if (res.error.code === 1301 || res.error.code === 1002) {
       throw new Error(AGORA_INFO.NOT_EXIST_AGORA);
     } else if (res.error.code === 503) {
       throw new Error(NETWORK_ERROR_MESSAGE.OFFLINE);
