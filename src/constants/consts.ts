@@ -27,3 +27,18 @@ export const COLOR = [
   { value: 'bg-agora-point-color5', label: '연한 핑크색' },
   { value: 'bg-agora-point-color6', label: '남색' },
 ] as const;
+
+export const TOST_ERROR_MESSAGE = {
+  KICKED: {
+    TITLE: '추방당하셨습니다',
+    TEXT: '과반수 이상의 참여자가 추방에 동의했습니다.',
+  },
+  ENTER: {
+    TITLE: '아고라 정보를 불러오는데 실패했습니다.',
+    TEXT: '유효하지 않은 아고라 입니다.',
+  },
+  EXIT: {
+    TITLE: '퇴장 처리되었습니다',
+    TEXT: '정상적으로 퇴장되었습니다.',
+  },
+};

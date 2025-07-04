@@ -10,7 +10,8 @@ type ThemeSwitchArg = {
 export const useThemeSwitch = ({ theme }: ThemeSwitchArg) => {
   const [isDarkMode, setIsDarkMode] = useState(theme === THEME.DARK);
   const [srStatusMessage, setSrStatusMessage] = useState('');
-  let metaThemeColor = document.querySelector('meta[name="theme-color"]');
+  let metaThemeColor =
+    window && document?.querySelector('meta[name="theme-color"]');
 
   const handleToggleTheme = async () => {
     const currentTheme = await toggleThemeValue();

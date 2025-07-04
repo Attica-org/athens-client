@@ -1,12 +1,14 @@
 'use client';
 
 import { useAgora } from '@/store/agora';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Loading from '@/app/_components/atoms/loading';
 import { usePathname, useRouter } from 'next/navigation';
 import { useShallow } from 'zustand/react/shallow';
 import { useEnterAgoraSetInfo } from '@/hooks/useEnterAgoraSetInfo';
 import { homeSegmentKey } from '@/constants/segmentKey';
+import { useErrorStore } from '@/store/error';
+import { AccessStatus } from '@/app/model/AccessStatus';
 import ModalPosSelectContainer from '../../flow/enter-agora/_components/ModalPosSelectContainer';
 import InputErrorMessage from '../../flow/enter-agora/_components/InputErrorMessage';
 import SetUserProfile from '../../flow/enter-agora/_components/SetUserProfile';
@@ -20,6 +22,11 @@ export default function EnterAgoraContent() {
       selectedAgora: state.selectedAgora,
     })),
   );
+  const { setErrorType } = useErrorStore(
+    useShallow((state) => ({
+      setErrorType: state.setErrorType,
+    })),
+  );
 
   const agoraId = Number(pathname.split('/')[3]);
   const enabled = !!agoraId && selectedAgora.id === -1;
@@ -30,9 +37,15 @@ export default function EnterAgoraContent() {
     selectedAgoraId: selectedAgora.id,
   });
 
-  if (enabled && !isSuccess && isError) {
-    router.push(`${homeSegmentKey}?status=active`);
-  }
+  useEffect(() => {
+    if (!enabled) {
+      setErrorType(AccessStatus.ENTER);
+      router.replace(`${homeSegmentKey}?status=active`);
+    }
+    if (!isSuccess && isError) {
+      router.replace(`${homeSegmentKey}?status=active`);
+    }
+  }, [enabled, isSuccess, isError, router]);
 
   return (
     <>
