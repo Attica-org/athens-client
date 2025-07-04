@@ -2,50 +2,23 @@
 
 import DarkIcon from '@/assets/icons/DarkIcon';
 import LightIcon from '@/assets/icons/LightIcon';
-import { THEME, THEME_CONTENT } from '@/constants/theme';
-import { toggleThemeValue } from '@/serverActions/theme';
-import isNull from '@/utils/validation/validateIsNull';
-import React, { useState } from 'react';
+import { THEME } from '@/constants/theme';
+import { useThemeSwitch } from '@/hooks/useThemeSwitch';
+import React from 'react';
 
 type Props = {
   theme: THEME;
 };
 
 export default function ThemeSwitcher({ theme }: Props) {
-  const [isDarkMode, setIsDarkMode] = useState(theme === THEME.DARK);
-  const [statusMessage, setStatusMessage] = useState('');
-
-  const handleToggleTheme = async () => {
-    const currentTheme = await toggleThemeValue();
-    let metaThemeColor = document.querySelector('meta[name="theme-color"]');
-
-    if (isNull(metaThemeColor)) {
-      metaThemeColor = document.createElement('meta');
-      metaThemeColor.setAttribute('name', 'theme-color');
-      document.head.appendChild(metaThemeColor);
-    }
-
-    if (currentTheme === THEME.LIGHT) {
-      document.documentElement.classList.remove(THEME.DARK);
-      document.documentElement.setAttribute('data-theme', THEME.LIGHT);
-      metaThemeColor.setAttribute('content', THEME_CONTENT.LIGHT);
-
-      setIsDarkMode(false);
-      setStatusMessage('라이트 모드로 바뀌었습니다.');
-    } else if (currentTheme === THEME.DARK) {
-      document.documentElement.classList.add(THEME.DARK);
-      document.documentElement.setAttribute('data-theme', THEME.DARK);
-      metaThemeColor.setAttribute('content', THEME_CONTENT.DARK);
-
-      setIsDarkMode(true);
-      setStatusMessage('다크 모드로 바뀌었습니다.');
-    }
-  };
+  const { handleToggleTheme, isDarkMode, srStatusMessage } = useThemeSwitch({
+    theme,
+  });
 
   return (
     <div>
       <div aria-live="polite" className="sr-only">
-        {statusMessage}
+        {srStatusMessage}
       </div>
       {!isDarkMode ? (
         <button

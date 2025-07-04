@@ -4,26 +4,18 @@ import React, { KeyboardEventHandler, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { useAgora } from '@/store/agora';
-
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import Image from 'next/image';
 import { AGORA_STATUS } from '@/constants/agora';
 import { isValidImgUrl } from '@/utils/validation/validateImage';
 import { COLOR } from '@/constants/consts';
-import { useMutation } from '@tanstack/react-query';
-import useApiError from '@/hooks/useApiError';
-import {
-  UnionAgora,
-  KeywordAgora as IKeywordAgora,
-  ParticipantPosition,
-} from '@/app/model/Agora';
+import { UnionAgora, KeywordAgora as IKeywordAgora } from '@/app/model/Agora';
 import {
   isActiveAgora,
   isKeywordAgora,
 } from '@/utils/validation/validateAgora';
+import { useEnterClosedAgoraAction } from '@/hooks/useEnterClosedAgoraAction';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
-import { postEnterClosedAgora } from '../../_lib/postEnterClosedAgora';
 import { getAgoraDetailString } from '../../utils/getScreenReaderString';
 
 type Props = {
@@ -32,48 +24,26 @@ type Props = {
 
 export default function KeywordAgora({ agora }: Props) {
   const router = useRouter();
-  const { setSelectedAgora, setEnterAgora } = useAgora();
-  const { handleError } = useApiError();
+  const routeAgoraPage = useCallback(
+    (path: string) => {
+      router.push(path);
+    },
+    [router],
+  );
 
-  const setAgoraData = useCallback(() => {
-    setEnterAgora({
-      id: agora.id,
-      imageUrl: agora.imageUrl,
-      agoraTitle: agora.agoraTitle,
-      status: agora.status,
-      role: ParticipantPosition.OBSERVER,
-      isCreator: false,
-      agoraColor: agora.agoraColor,
+  const { enterClosedAgoraMutation, setSelectAgoraData } =
+    useEnterClosedAgoraAction({
+      routeAgoraPage,
+      agora,
     });
-  }, [agora, setEnterAgora]);
 
-  const enterClosedAgoraMutation = useMutation({
-    mutationFn: () => postEnterClosedAgora(agora.id),
-    onSuccess: () => {
-      setAgoraData();
-      router.push(`/agoras/${agora.id}`);
-    },
-    onError: async (error) => {
-      await handleError(error, enterClosedAgoraMutation.mutate);
-    },
-  });
-
-  // TODO: 아고라 id를 받아서 해당 아고라로 이동
   const handleEnterAgora = () => {
-    // TODO: 아고라 id를 받아서 해당 아고라로 이동
-    setSelectedAgora({
-      id: agora.id,
-      imageUrl: agora.imageUrl,
-      agoraTitle: agora.agoraTitle,
-      status: agora.status,
-      agoraColor: agora.agoraColor,
-    });
-
     if (
       agora.status === AGORA_STATUS.QUEUED ||
       agora.status === AGORA_STATUS.RUNNING
     ) {
-      router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
+      setSelectAgoraData();
+      routeAgoraPage(`/flow${enterAgoraSegmentKey}/${agora.id}`);
     } else if (agora.status === AGORA_STATUS.CLOSED) {
       enterClosedAgoraMutation.mutate();
     }
@@ -150,7 +120,7 @@ export default function KeywordAgora({ agora }: Props) {
         <div className="relative w-67 h-67">
           {isValidImgUrl(agora.imageUrl) ? (
             <Image
-              src={agora.imageUrl ?? ''}
+              src={agora.imageUrl}
               alt="아고라 이미지"
               objectFit="cover"
               layout="fill"
