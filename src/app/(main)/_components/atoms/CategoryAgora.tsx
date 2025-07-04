@@ -3,22 +3,18 @@
 import {
   ClosedAgora,
   CategoryAgora as ICategoryAgora,
-  ParticipantPosition,
 } from '@/app/model/Agora';
-import { useAgora } from '@/store/agora';
 import { useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { enterAgoraSegmentKey } from '@/constants/segmentKey';
 import Image from 'next/image';
 import { AGORA_STATUS } from '@/constants/agora';
 import { isValidImgUrl } from '@/utils/validation/validateImage';
 import { COLOR, ColorValue } from '@/constants/consts';
-import { useMutation } from '@tanstack/react-query';
 import Loading from '@/app/_components/atoms/loading';
-import useApiError from '@/hooks/useApiError';
 import { isActiveAgora } from '@/utils/validation/validateAgora';
+import { useEnterClosedAgoraAction } from '@/hooks/useEnterClosedAgoraAction';
 import ClosedAgoraVoteResultBar from './ClosedAgoraVoteResultBar';
-import { postEnterClosedAgora } from '../../_lib/postEnterClosedAgora';
 import {
   getAgoraDetailString,
   getAgoraIntroduceString,
@@ -31,58 +27,30 @@ type Props = {
 
 function CategoryAgora({ agora, className }: Props) {
   const router = useRouter();
-  const { setSelectedAgora, setEnterAgora } = useAgora();
-  const [selectedColor, setSelectedColor] = useState<ColorValue>(
-    COLOR[0].value,
-  );
-  const { handleError } = useApiError();
-  const [isLoading, setIsLoading] = useState(false);
+  const agoraColor: ColorValue =
+    COLOR.find((color) => color.value === agora.agoraColor)?.value ||
+    COLOR[0].value;
+
   const [isActiveScreenReaderDetails, setIsActiveScreenReaderDetails] =
     useState(false);
   const articleRef = useRef<HTMLButtonElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const routeAgoraPage = useCallback(() => {
-    router.push(`/agoras/${agora.id}`);
-  }, [agora.id, router]);
+  const routeAgoraPage = useCallback(
+    (path: string) => {
+      router.push(path);
+    },
+    [router],
+  );
 
-  const setSelectAgoraData = useCallback(() => {
-    setSelectedAgora({
-      id: agora.id,
-      imageUrl: agora.imageUrl,
-      agoraTitle: agora.agoraTitle,
-      status: agora.status,
-      agoraColor: agora.agoraColor,
+  const { isLoading, setSelectAgoraData, enterClosedAgoraMutation } =
+    useEnterClosedAgoraAction({
+      routeAgoraPage,
+      agora,
     });
-  }, [setSelectedAgora]);
 
-  const enterClosedAgoraMutation = useMutation({
-    mutationFn: () => postEnterClosedAgora(agora.id),
-    onSuccess: () => {
-      setIsLoading(false);
-      setSelectAgoraData();
-      setEnterAgora({
-        id: agora.id,
-        userId: 0,
-        imageUrl: agora.imageUrl,
-        agoraTitle: agora.agoraTitle,
-        status: agora.status,
-        role: ParticipantPosition.OBSERVER,
-        isCreator: false,
-        agoraColor: agora.agoraColor,
-      });
-      routeAgoraPage();
-    },
-    onError: async (error) => {
-      setIsLoading(false);
-      await handleError(error, enterClosedAgoraMutation.mutate);
-    },
-  });
-
-  // TODO: 아고라 id를 받아서 해당 아고라로 이동
   const handleEnterAgora = () => {
     if (agora.status === AGORA_STATUS.CLOSED) {
-      setIsLoading(true);
       enterClosedAgoraMutation.mutate();
       return;
     }
@@ -92,23 +60,9 @@ function CategoryAgora({ agora, className }: Props) {
       agora.status === AGORA_STATUS.RUNNING
     ) {
       setSelectAgoraData();
-      router.push(`/flow${enterAgoraSegmentKey}/${agora.id}`);
+      routeAgoraPage(`/flow${enterAgoraSegmentKey}/${agora.id}`);
     }
   };
-
-  useEffect(() => {
-    setSelectedColor(
-      COLOR.find((color) => color.value === agora.agoraColor)?.value ||
-        COLOR[0].value,
-    );
-  }, []);
-
-  const getButtonText = useCallback((status: string) => {
-    if (status === AGORA_STATUS.CLOSED) {
-      return '결과보기';
-    }
-    return '입장하기';
-  }, []);
 
   function onKeyDownAgoraSRDetail(e: React.KeyboardEvent<HTMLButtonElement>) {
     if (e.key === 'Enter') {
@@ -136,6 +90,13 @@ function CategoryAgora({ agora, className }: Props) {
     buttonRef.current?.focus();
   }
 
+  const getButtonText = useCallback((status: string) => {
+    if (status === AGORA_STATUS.CLOSED) {
+      return '결과보기';
+    }
+    return '입장하기';
+  }, []);
+
   return (
     <article
       /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
@@ -151,11 +112,11 @@ function CategoryAgora({ agora, className }: Props) {
       aria-label={getAgoraIntroduceString(agora)}
     >
       <div
-        className={`${selectedColor} under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-3xl under-mobile:rounded-2xl relative`}
+        className={`${agoraColor} under-mobile:w-3rem under-mobile:h-3rem w-4rem h-4rem rounded-3xl under-mobile:rounded-2xl relative`}
       >
         {isValidImgUrl(agora.imageUrl) && (
           <Image
-            src={agora.imageUrl ?? ''}
+            src={agora.imageUrl}
             alt="아고라 이미지"
             layout="fill"
             objectFit="cover"

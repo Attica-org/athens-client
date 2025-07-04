@@ -1,5 +1,6 @@
 import { AgoraTabStatus, SearchParams } from '@/app/model/Agora';
 import RefreshIcon from '@/assets/icons/RefreshIcon';
+import { useCategoryAgoraRefetch } from '@/hooks/useCategoryAgoraRefetch';
 import { useCreateAgora } from '@/store/create';
 import { useSearchStore } from '@/store/search';
 import { useQueryClient } from '@tanstack/react-query';
@@ -17,64 +18,29 @@ function CategoryAgoraNowTitle({ searchParams }: Props) {
       category: state.category,
     })),
   );
-
   const { tabStatus } = useSearchStore(
     useShallow((state) => ({
       tabStatus: state.tabStatus,
     })),
   );
 
+  const { handleActiveAgoraRefreshBtn } = useCategoryAgoraRefetch(queryClient);
+
+  const handleAgoraRefresh = () => {
+    handleActiveAgoraRefreshBtn({ searchParams, status: tabStatus, category });
+  };
+
   const handleKeyDownRefresh = useCallback(
     async (e: React.KeyboardEvent) => {
       if (e.key === 'Enter') {
-        await queryClient.invalidateQueries({
-          queryKey: [
-            'agoras',
-            'search',
-            'category',
-            { ...searchParams, status: tabStatus, category },
-          ],
-          exact: false,
-        });
-
-        await queryClient.refetchQueries({
-          queryKey: [
-            'agoras',
-            'search',
-            'category',
-            { ...searchParams, status: tabStatus, category },
-          ],
-          exact: false,
-        });
+        handleAgoraRefresh();
       }
     },
-    [queryClient, tabStatus, category],
+    [handleActiveAgoraRefreshBtn],
   );
 
-  const handleClickRefresh = useCallback(async () => {
-    await queryClient.invalidateQueries({
-      queryKey: [
-        'agoras',
-        'search',
-        'category',
-        { ...searchParams, status: tabStatus, category },
-      ],
-      exact: false,
-    });
-
-    await queryClient.refetchQueries({
-      queryKey: [
-        'agoras',
-        'search',
-        'category',
-        { ...searchParams, status: tabStatus, category },
-      ],
-      exact: false,
-    });
-  }, [queryClient, tabStatus, category]);
-
   return (
-    tabStatus === AgoraTabStatus.ACTIVE && (
+    tabStatus !== AgoraTabStatus.CLOSED && (
       <h2
         aria-label="활성화 상태 아고라"
         className="flex justify-between items-center text-md font-semibold dark:text-dark-line-light text-left pl-10 mb-16 w-full"
@@ -83,7 +49,7 @@ function CategoryAgoraNowTitle({ searchParams }: Props) {
         <button
           type="button"
           aria-label="활성화 아고라 새로고침"
-          onClick={handleClickRefresh}
+          onClick={handleAgoraRefresh}
           onKeyDown={handleKeyDownRefresh}
           className="cursor-pointer flex font-normal mr-5"
         >

@@ -25,7 +25,7 @@ interface Action {
 }
 
 const selectedAgoraInitialState: Agora = {
-  id: 0,
+  id: -1,
   imageUrl: '',
   agoraTitle: '',
   status: AGORA_STATUS.CLOSED,
@@ -33,7 +33,7 @@ const selectedAgoraInitialState: Agora = {
 };
 
 const enterAgoraInitialState: EnterAgora = {
-  id: 0,
+  id: -1,
   userId: 0,
   imageUrl: '',
   agoraTitle: '',

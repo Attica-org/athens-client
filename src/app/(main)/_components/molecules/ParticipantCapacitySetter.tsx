@@ -5,6 +5,7 @@ import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 import { ParticipantCountAction } from '@/app/model/Agora';
 import { AGORA_CREATE } from '@/constants/agora';
+import { getParticipantCapacityErrorMessage } from '@/utils/getParticipantCapacityErrorMessage';
 import ControlNumberInput from '../atoms/ControlNumberInput';
 
 function ParticipantCapacitySetter() {
@@ -17,23 +18,7 @@ function ParticipantCapacitySetter() {
   );
 
   const validateCapacity = (value: number, state?: ParticipantCountAction) => {
-    if (
-      state === ParticipantCountAction.INCREASE ||
-      value < AGORA_CREATE.MIN_PARTICIPANTS_CNT
-    ) {
-      setMessage(AGORA_CREATE.MIN_PARTICIPANTS_CNT_MESSAGE);
-      return;
-    }
-    if (
-      state === ParticipantCountAction.DECREASE ||
-      value > AGORA_CREATE.MAX_PARTICIPANTS_CNT
-    ) {
-      setMessage(AGORA_CREATE.MAX_PARTICIPANTS_CNT_MESSAGE);
-      return;
-    }
-
-    setMessage(null);
-
+    setMessage(getParticipantCapacityErrorMessage(value, state));
     setCapacity(value);
   };
 
@@ -60,14 +45,18 @@ function ParticipantCapacitySetter() {
       <div className="p-3 flex justify-between items-center">
         <ControlNumberInput
           label="찬성 / 반대"
-          value={capacity}
+          inputAriaLabel="설정한 최대 참여 인원"
+          controlLabel={{
+            increase: '참여 인원 증가',
+            decrease: '참여 인원 감소',
+          }}
           handleChange={handleParticipants}
-          handleButtonClick={handleParticipantsBtn}
-          increaseLabel="참여 인원 증가"
-          decreaseLabel="참여 인원 감소"
-          inputLabel="설정한 최대 참여 인원"
-          max={AGORA_CREATE.MAX_PARTICIPANTS_CNT}
-          min={AGORA_CREATE.MIN_PARTICIPANTS_CNT}
+          handleControlButtonClick={handleParticipantsBtn}
+          value={capacity}
+          range={{
+            max: AGORA_CREATE.MAX_PARTICIPANTS_CNT,
+            min: AGORA_CREATE.MIN_PARTICIPANTS_CNT,
+          }}
         />
       </div>
       <div>

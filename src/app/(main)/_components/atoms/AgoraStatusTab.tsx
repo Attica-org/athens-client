@@ -1,47 +1,14 @@
 'use client';
 
 import { AgoraTabStatus } from '@/app/model/Agora';
-import { homeSegmentKey } from '@/constants/segmentKey';
-import { useSearchStore } from '@/store/search';
-import { useRouter, usePathname } from 'next/navigation';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useShallow } from 'zustand/react/shallow';
+import { useBrowserTabStatus } from '@/hooks/useBrowerTabStatus';
+import React from 'react';
 
 function AgoraStatusTab() {
-  const { tabStatus, setTabStatus } = useSearchStore(
-    useShallow((state) => ({
-      setTabStatus: state.setTabStatus,
-      tabStatus: state.tabStatus,
-    })),
-  );
-  // const searchParams = useSearchParams();
-  const [status, setStatus] = useState<AgoraTabStatus>(
-    tabStatus as AgoraTabStatus,
-  );
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const changeParams = useCallback(() => {
-    if (pathname !== homeSegmentKey) return;
-    const newSearchParams = new URLSearchParams(window.location.search);
-
-    newSearchParams.set('status', status);
-    setTabStatus(status);
-
-    const newUrl = `${homeSegmentKey}?${newSearchParams.toString()}`;
-    window.history.pushState(
-      { ...window.history.state, as: newUrl, url: newUrl },
-      '',
-      newUrl,
-    );
-  }, [router, status, pathname]);
-
-  useEffect(() => {
-    changeParams();
-  }, [status, changeParams]);
+  const { tabStatus, changeBrowserTabStatus } = useBrowserTabStatus();
 
   const changeStatus = (state: AgoraTabStatus) => {
-    setStatus(state);
+    changeBrowserTabStatus(state);
   };
 
   return (
@@ -51,7 +18,7 @@ function AgoraStatusTab() {
         onClick={() => changeStatus(AgoraTabStatus.ACTIVE)}
         type="button"
         className={`border-b-1 ${
-          status === AgoraTabStatus.ACTIVE
+          tabStatus === AgoraTabStatus.ACTIVE
             ? 'border-athens-sub'
             : 'dark:border-dark-light-300'
         } flex flex-1 justify-center p-6`}
@@ -63,7 +30,7 @@ function AgoraStatusTab() {
         onClick={() => changeStatus(AgoraTabStatus.CLOSED)}
         type="button"
         className={`flex flex-1 justify-center p-6 border-b-1 ${
-          status === 'closed'
+          tabStatus === 'closed'
             ? 'border-athens-sub'
             : 'dark:border-dark-light-300'
         }`}

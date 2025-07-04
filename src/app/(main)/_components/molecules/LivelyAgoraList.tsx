@@ -2,13 +2,12 @@
 
 import Loading from '@/app/_components/atoms/loading';
 import DeferredComponent from '@/app/_components/utils/DefferedComponent';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ActiveAgora } from '@/app/model/Agora';
+import { useQueryClient } from '@tanstack/react-query';
 import RefreshIcon from '@/assets/icons/RefreshIcon';
-import Swiper from 'swiper';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { getLivelyAgora } from '../../_lib/getLivelyAgora';
+import { useLivelyAgoraQuery } from '@/hooks/query/useLivelyAgoraQuery';
+import { useLivelyAgoraSwiper } from '@/hooks/useLivelyAgoraSwiper';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
 import CategoryAgora from '../atoms/CategoryAgora';
 
@@ -19,9 +18,6 @@ import 'swiper/css/mousewheel';
 export default function LivelyAgoraList() {
   const queryClient = useQueryClient();
   const swiperContainerRef = useRef<HTMLDivElement>(null);
-  const [swiperInstance, setSwiperInstance] = useState<Swiper | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
-  const [key, setKey] = useState(0); // 강제 리렌더링을 위한 키
   const pathname = usePathname();
 
   const {
@@ -29,75 +25,18 @@ export default function LivelyAgoraList() {
     refetch,
     isFetching,
     isPending,
-  } = useQuery<ActiveAgora[], Object, ActiveAgora[], [string, string]>({
-    queryKey: ['agoras', 'lively'],
-    queryFn: getLivelyAgora,
-    initialData: () => {
-      return queryClient.getQueryData(['agoras', 'lively']);
-    },
+  } = useLivelyAgoraQuery({ queryClient });
+
+  const { setSwiperInstance, isMounted, key } = useLivelyAgoraSwiper({
+    agoras,
+    isFetching,
+    pathname,
+    swiperContainerRef,
   });
-
-  useEffect(() => {
-    // setKey((prevKey) => prevKey + 1);
-    setIsMounted(true);
-
-    return () => {
-      setIsMounted(false);
-      if (swiperInstance && !swiperInstance.destroyed) {
-        swiperInstance.destroy();
-      }
-    };
-  }, [swiperInstance]);
-
-  useEffect(() => {
-    if (swiperInstance && !swiperInstance.destroyed) {
-      swiperInstance.destroy();
-    }
-    // 페이지 변경 시 key를 업데이트하여 강제 리렌더링
-    setKey((prevKey) => prevKey + 1);
-    setSwiperInstance(null);
-  }, [pathname, swiperInstance]);
-
-  useLayoutEffect(() => {
-    if (
-      agoras &&
-      !isFetching &&
-      isMounted &&
-      swiperContainerRef.current &&
-      !swiperInstance
-    ) {
-      setTimeout(() => {
-        const element = document.getElementById('lively-agora-swiper');
-
-        if (element) {
-          const swiper = new Swiper('.lively-agora-swiper', {
-            direction: 'horizontal',
-            loop: false,
-            centeredSlides: false,
-            touchRatio: 1,
-            freeMode: true,
-            grabCursor: true,
-            slidesPerView: 'auto',
-            spaceBetween: 10,
-            keyboard: {
-              enabled: true,
-              onlyInViewport: false,
-            },
-          });
-
-          setSwiperInstance(swiper);
-        }
-      }, 0);
-    }
-  }, [isMounted, agoras, key, swiperContainerRef, swiperInstance, isFetching]);
 
   const refetchLivelyAgoraList = () => {
     setSwiperInstance(null);
     refetch();
-  };
-
-  const handleClickRefresh = () => {
-    refetchLivelyAgoraList();
   };
 
   const handleKeyDownRefresh = (e: React.KeyboardEvent) => {
@@ -159,7 +98,7 @@ export default function LivelyAgoraList() {
         <button
           type="button"
           aria-label="인기 아고라 새로고침"
-          onClick={handleClickRefresh}
+          onClick={refetchLivelyAgoraList}
           onKeyDown={handleKeyDownRefresh}
           className="cursor-pointer flex font-normal mr-5"
         >

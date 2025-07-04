@@ -14,6 +14,7 @@ import React, {
 import { useShallow } from 'zustand/react/shallow';
 
 function SearchBar() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const q = searchParams.get('q');
   const { search, setSearch, reset } = useSearchStore(
@@ -24,7 +25,14 @@ function SearchBar() {
     })),
   );
   const [searchText, setSearchText] = useState<string>(search || q || '');
-  const router = useRouter();
+
+  const windowPushState = (newUrl: string) => {
+    window.history.pushState(
+      { ...window.history.state, as: newUrl, url: newUrl },
+      '',
+      newUrl,
+    );
+  };
 
   const removeAllInputText = () => {
     reset();
@@ -33,12 +41,7 @@ function SearchBar() {
     newSearchParams.delete('q');
 
     const newUrl = `${homeSegmentKey}?${newSearchParams.toString()}`;
-    window.history.pushState(
-      { ...window.history.state, as: newUrl, url: newUrl },
-      '',
-      newUrl,
-    );
-    // router.push(newUrl);
+    windowPushState(newUrl);
   };
 
   const changeInputText: ChangeEventHandler<HTMLInputElement> = (
@@ -53,32 +56,17 @@ function SearchBar() {
 
     if (!searchText) {
       const newUrl = homeSegmentKey;
-      window.history.pushState(
-        { ...window.history.state, as: newUrl, url: newUrl },
-        '',
-        newUrl,
-      );
-      // router.push('/home');
+      windowPushState(newUrl);
     } else {
       const newUrl = `${homeSegmentKey}?q=${searchText}&status=active`;
-      window.history.pushState(
-        { ...window.history.state, as: newUrl, url: newUrl },
-        '',
-        newUrl,
-      );
-      // router.push(`/home?q=${searchText}&status=active`);
+      windowPushState(newUrl);
     }
   };
 
   useEffect(() => {
     if (search) {
       const newUrl = `${homeSegmentKey}?q=${search}&status=active`;
-      window.history.pushState(
-        { ...window.history.state, as: newUrl, url: newUrl },
-        '',
-        newUrl,
-      );
-      // router.push(`/home?q=${search}&status=active`);
+      windowPushState(newUrl);
     }
   }, [router, search]);
 

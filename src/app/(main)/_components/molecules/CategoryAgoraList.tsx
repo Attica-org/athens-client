@@ -1,24 +1,17 @@
 'use client';
 
 import React, { useCallback, useEffect } from 'react';
-import {
-  InfiniteData,
-  useQueryClient,
-  useSuspenseInfiniteQuery,
-} from '@tanstack/react-query';
-import { AgoraTabStatus, SearchParams, UnionAgora } from '@/app/model/Agora';
+import { useQueryClient } from '@tanstack/react-query';
+import { AgoraTabStatus, SearchParams } from '@/app/model/Agora';
 import DeferredComponent from '@/app/_components/utils/DefferedComponent';
 import Loading from '@/app/_components/atoms/loading';
 import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 import { VirtuosoGrid } from 'react-virtuoso';
 import { useSearchStore } from '@/store/search';
-import {
-  getCategoryAgoraListBasicQueryKey,
-  getCategoryAgoraListQueryKey,
-} from '@/constants/queryKey';
+import { useInfiniteAgoraQuery } from '@/hooks/query/useInfiniteAgoraQuery';
+import { useCategoryAgoraRefetch } from '@/hooks/useCategoryAgoraRefetch';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
-import { getAgoraCategorySearch } from '../../_lib/getAgoraCategorySearch';
 import CategoryAgora from '../atoms/CategoryAgora';
 import CustomList from '../atoms/VirtuosoGridCustomList';
 
@@ -35,7 +28,6 @@ export default function CategoryAgoraList({ searchParams }: Props) {
 
   const { category: selectedCategory } = useCreateAgora(
     useShallow((state) => ({
-      setCategory: state.setCategory,
       category: state.category,
     })),
   );
@@ -48,38 +40,16 @@ export default function CategoryAgoraList({ searchParams }: Props) {
 
   const {
     data,
-    refetch,
     hasNextPage,
+    isFetchingNextPage,
     fetchNextPage,
     isFetching,
     isPending,
-    isFetchingNextPage,
-  } = useSuspenseInfiniteQuery<
-    { agoras: UnionAgora[]; nextCursor: number | null },
-    Object,
-    InfiniteData<{ agoras: UnionAgora[]; nextCursor: number | null }>,
-    [_1: string, _2: string, _3: string, Props['searchParams']],
-    { nextCursor: number | null }
-  >({
-    queryKey: [
-      'agoras',
-      'search',
-      'category',
-      { ...searchParams, status: tabStatus, category: selectedCategory },
-    ],
-    queryFn: getAgoraCategorySearch,
-    staleTime: 60 * 1000,
-    gcTime: 500 * 1000,
-    initialPageParam: { nextCursor: null },
-    getNextPageParam: (lastPage) =>
-      lastPage.nextCursor !== null
-        ? { nextCursor: lastPage.nextCursor }
-        : undefined,
-    initialData: () => {
-      return queryClient.getQueryData(
-        getCategoryAgoraListQueryKey(searchParams),
-      );
-    },
+  } = useInfiniteAgoraQuery({
+    searchParams,
+    category: selectedCategory,
+    status: tabStatus,
+    queryClient,
   });
 
   const loadNextPage = useCallback(() => {
@@ -88,35 +58,29 @@ export default function CategoryAgoraList({ searchParams }: Props) {
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const renderItemContent = useCallback(
-    (index: any, agora: any) => <CategoryAgora agora={agora} key={agora.id} />,
-    [],
-  );
+  const { refetchAgoraList } = useCategoryAgoraRefetch(queryClient);
 
   useEffect(() => {
-    const refetchAgoraList = async () => {
-      await queryClient.resetQueries({
-        queryKey: getCategoryAgoraListBasicQueryKey(),
-      });
-
-      await queryClient.invalidateQueries({
-        queryKey: [
-          'agoras',
-          'search',
-          'category',
-          { ...searchParams, status: tabStatus, category: selectedCategory },
-        ],
-      });
-    };
     // 초기 데이터 호출 후 카테고리 변경 시 데이터 재호출
-    refetchAgoraList();
-  }, [selectedCategory, queryClient, tabStatus, searchParams, refetch]);
+    if (!isPending && !isFetching && !isFetchingNextPage) {
+      refetchAgoraList({
+        searchParams,
+        category: selectedCategory,
+        status: tabStatus,
+      });
+    }
+  }, [selectedCategory, tabStatus]);
 
   useEffect(() => {
     if (data.pages.length <= 2) {
       loadNextPage(); // 화면이 큰 경우 초기 데이터 10개로는 스크롤이 생기지 않아 추가 데이터 호출
     }
   }, [data, loadNextPage]);
+
+  const renderItemContent = useCallback(
+    (index: any, agora: any) => <CategoryAgora agora={agora} key={agora.id} />,
+    [],
+  );
 
   const Content = useCallback(() => {
     if (data?.pages[0].agoras.length < 1) {

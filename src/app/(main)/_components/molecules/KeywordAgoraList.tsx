@@ -1,20 +1,15 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import {
-  InfiniteData,
-  useQueryClient,
-  useSuspenseInfiniteQuery,
-} from '@tanstack/react-query';
-import { SearchParams, UnionAgora } from '@/app/model/Agora';
+import { useQueryClient } from '@tanstack/react-query';
+import { SearchParams } from '@/app/model/Agora';
 import { useInView } from 'react-intersection-observer';
 import { useSearchStore } from '@/store/search';
 import { useShallow } from 'zustand/react/shallow';
 import DeferredComponent from '@/app/_components/utils/DefferedComponent';
 import Loading from '@/app/_components/atoms/loading';
-import { getKeywordAgoraListQueryKey } from '@/constants/queryKey';
+import { useInfiniteKeywordAgoraQuery } from '@/hooks/query/useInfiniteKeywordAgoraQuery';
 import NoAgoraMessage from '../atoms/NoAgoraMessage';
-import { getAgoraKeywordSearch } from '../../_lib/getAgoraKeywordSearch';
 import KeywordAgora from '../atoms/KeywordAgora';
 
 type Props = {
@@ -33,39 +28,15 @@ export default function KeywordAgoraList({ searchParams }: Props) {
   const {
     data,
     hasNextPage,
-    fetchNextPage,
     isFetching,
+    fetchNextPage,
     isPending,
     isFetchingNextPage,
-  } = useSuspenseInfiniteQuery<
-    { agoras: UnionAgora[]; nextCursor: number | null },
-    Object,
-    InfiniteData<{ agoras: UnionAgora[]; nextCursor: number | null }>,
-    [_1: string, _2: string, _3: string, Props['searchParams']],
-    { nextCursor: number | null }
-  >({
-    queryKey: [
-      'agoras',
-      'search',
-      'keyword',
-      { ...searchParams, q: search, status: tabStatus },
-    ],
-    queryFn: getAgoraKeywordSearch,
-    staleTime: 60 * 1000,
-    gcTime: 500 * 1000,
-    initialPageParam: { nextCursor: null },
-    getNextPageParam: (lastPage) =>
-      lastPage.nextCursor !== null
-        ? { nextCursor: lastPage.nextCursor }
-        : undefined,
-    initialData: () => {
-      if (searchParams.q && !search) {
-        return queryClient.getQueryData(
-          getKeywordAgoraListQueryKey(searchParams),
-        );
-      }
-      return undefined;
-    },
+  } = useInfiniteKeywordAgoraQuery({
+    queryClient,
+    search,
+    status: tabStatus,
+    searchParams,
   });
 
   const { ref, inView } = useInView({

@@ -4,7 +4,7 @@ import React, { ChangeEventHandler, useState } from 'react';
 import { useCreateAgora } from '@/store/create';
 import { useShallow } from 'zustand/react/shallow';
 import { AGORA_CREATE } from '@/constants/agora';
-import isNull from '@/utils/validation/validateIsNull';
+import { getAgoraDurationErrorMessage } from '@/utils/getAgoraDurationErrorMessage';
 
 export default function DiscussionDurationSetter() {
   const [message, setMessage] = useState<string | null>(null);
@@ -15,19 +15,12 @@ export default function DiscussionDurationSetter() {
     })),
   );
 
-  const validateAgoraDuration: ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleAgoraDurationChange: ChangeEventHandler<HTMLInputElement> = (
+    e,
+  ) => {
     const value = parseInt(e.target.value, 10);
 
-    if (value < AGORA_CREATE.MIN_DISCUSSION_TIME) {
-      setMessage(AGORA_CREATE.MIN_TIME_MESSAGE);
-    } else if (value > AGORA_CREATE.MAX_DISCUSSION_TIME) {
-      setMessage(AGORA_CREATE.MAX_TIME_MESSAGE);
-    } else if (isNull(value) || Number.isNaN(value)) {
-      setMessage('시간을 입력해주세요.');
-    } else {
-      setMessage(null);
-    }
-
+    setMessage(getAgoraDurationErrorMessage(e.target.value));
     setDuration(value);
   };
 
@@ -41,7 +34,7 @@ export default function DiscussionDurationSetter() {
           type="text"
           inputMode="numeric"
           value={duration || ''}
-          onChange={validateAgoraDuration}
+          onChange={handleAgoraDurationChange}
           className="input-number-hide focus-visible:outline-none text-sm mr-0.5rem text-center p-5 w-4rem lg:w-5rem border-1 border-athens-gray rounded-md dark:bg-dark-bg-light dark:border-gray-500"
         />
         <div className="text-xs lg:text-base">분</div>
