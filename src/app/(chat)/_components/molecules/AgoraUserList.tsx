@@ -19,12 +19,13 @@ import isNull from '@/utils/validation/validateIsNull';
 import { useRouter } from 'next/navigation';
 import { homeSegmentKey } from '@/constants/segmentKey';
 import useApiError from '@/hooks/useApiError';
-import { useKickedStore } from '@/store/kick';
+import { useErrorStore } from '@/store/error';
 import showToast from '@/utils/showToast';
 import { kickedUsers } from '@/store/kickedUser';
 import { useEnter } from '@/store/enter';
 import { AgoraMemberInfo } from '@/app/model/AgoraMeta';
 import { WebSocketChatUserKick } from '@/app/model/Chat';
+import { AccessStatus } from '@/app/model/AccessStatus';
 import UserImage from '../../../_components/atoms/UserImage';
 import { postKickVote } from '../../_lib/postKickVote';
 import patchChatExit from '../../_lib/patchChatExit';
@@ -86,9 +87,9 @@ export default function AgoraUserList({
     },
   });
 
-  const { setKicked } = useKickedStore(
+  const { setErrorType } = useErrorStore(
     useShallow((state) => ({
-      setKicked: state.setKicked,
+      setErrorType: state.setErrorType,
     })),
   );
 
@@ -114,7 +115,7 @@ export default function AgoraUserList({
   const callChatExitAPI = async () => patchChatExit({ agoraId: enterAgora.id });
 
   const handleApprovedKickVote = () => {
-    setKicked(true);
+    setErrorType(AccessStatus.EXIT);
     resetStateOnChatExit();
     router.replace(`${homeSegmentKey}?status=active`);
   };

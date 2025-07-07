@@ -1,6 +1,8 @@
 'use client';
 
 import Swal from 'sweetalert2';
+import { AccessStatus } from '@/app/model/AccessStatus';
+import { TOST_ERROR_MESSAGE } from '@/constants/consts';
 import isNull from './validation/validateIsNull';
 
 const focusToTitle = () => {
@@ -75,11 +77,11 @@ export const swalBackButtonAlert = async (text: string) => {
   });
 };
 
-export const swalKickedUserAlert = async () => {
+export const swalShowErrorAlert = async (type: AccessStatus) => {
   return swalConfirmAlertCustomClass.fire({
     icon: 'warning',
-    title: '추방당하셨습니다',
-    text: '과반수 이상의 참여자가 추방에 동의했습니다.',
+    title: TOST_ERROR_MESSAGE[type].TITLE,
+    text: TOST_ERROR_MESSAGE[type].TEXT,
     confirmButtonText: '확인',
     focusConfirm: false,
     width: '250px',
