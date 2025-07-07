@@ -1,14 +1,11 @@
 'use client';
 
 import { useCreateAgora } from '@/store/create';
-import { useRouter } from 'next/navigation';
 import React, { ChangeEventHandler, useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 export default function AgoraTitleInput() {
   const [message, setMessage] = useState<string | null>('주제를 입력해주세요.');
-  const router = useRouter();
-
   const { title, setTitle } = useCreateAgora(
     useShallow((state) => ({
       title: state.title,
@@ -30,14 +27,12 @@ export default function AgoraTitleInput() {
     }
   };
 
-  const dataReset = () => {
-    setTitle('');
-    setMessage(null);
-  };
-
   useEffect(() => {
-    dataReset();
-  }, [router]);
+    return () => {
+      setTitle('');
+      setMessage(null);
+    };
+  }, []);
 
   return (
     <>
