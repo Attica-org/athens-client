@@ -8,7 +8,7 @@ import { AgoraTabStatus, SearchParams } from '@/app/model/Agora';
 import Loading from '@/app/_components/atoms/loading';
 import { useSearchStore } from '@/store/search';
 import { useShallow } from 'zustand/react/shallow';
-import { useAlertKickedUser } from '@/hooks/useAlertKickedUser';
+import { useShowErrorToastOnHome } from '@/hooks/useShowErrorToastOnHome';
 import LivelyAgoraList from './LivelyAgoraList';
 import CategoryAgoraNowTitle from '../atoms/CategoryAgoraNowTitle';
 import Borderline from '../../user-info/_component/atoms/Borderline';
@@ -53,7 +53,7 @@ export default function AgoraListDecider({ searchParams }: Props) {
     }
   }, [q, setSearch]);
 
-  useAlertKickedUser();
+  useShowErrorToastOnHome();
 
   if (search) {
     return (
