@@ -4,13 +4,12 @@ import { useCreateAgora } from '@/store/create';
 import { useSearchStore } from '@/store/search';
 import { isValidCategoryKey } from '@/utils/validation/validateCategoryKey';
 import isNull from '@/utils/validation/validateIsNull';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 export const useCategoryStatus = () => {
   const pathname = usePathname();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const { reset } = useSearchStore(
     useShallow((state) => ({
@@ -44,8 +43,8 @@ export const useCategoryStatus = () => {
     };
   }, []);
 
-  const changeCategoryParams = useCallback(
-    (id: string) => {
+  useEffect(() => {
+    const changeCategoryParams = (id: string) => {
       if (pathname !== homeSegmentKey) return;
 
       const newSearchParams = new URLSearchParams(searchParams);
@@ -60,13 +59,10 @@ export const useCategoryStatus = () => {
         '',
         newUrl,
       );
-    },
-    [router, searchParams, pathname, selectedCategory],
-  );
+    };
 
-  useEffect(() => {
     changeCategoryParams(selectedCategory);
-  }, [selectedCategory, changeCategoryParams]);
+  }, [selectedCategory]);
 
   return {
     setCategory,

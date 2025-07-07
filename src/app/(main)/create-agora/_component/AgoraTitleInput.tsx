@@ -1,7 +1,6 @@
 'use client';
 
 import { useCreateAgora } from '@/store/create';
-import { useSearchStore } from '@/store/search';
 import { useRouter } from 'next/navigation';
 import React, { ChangeEventHandler, useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
@@ -9,11 +8,6 @@ import { useShallow } from 'zustand/react/shallow';
 export default function AgoraTitleInput() {
   const [message, setMessage] = useState<string | null>('주제를 입력해주세요.');
   const router = useRouter();
-  const { reset } = useSearchStore(
-    useShallow((state) => ({
-      reset: state.reset,
-    })),
-  );
 
   const { title, setTitle } = useCreateAgora(
     useShallow((state) => ({
@@ -39,7 +33,6 @@ export default function AgoraTitleInput() {
   const dataReset = () => {
     setTitle('');
     setMessage(null);
-    reset();
   };
 
   useEffect(() => {

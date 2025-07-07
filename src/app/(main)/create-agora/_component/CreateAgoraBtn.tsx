@@ -36,6 +36,7 @@ function CreateAgoraBtn() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const queryClient = useQueryClient();
   const { handleError } = useApiError();
+  const { reset: searchReset } = useSearchStore.getState();
   const { reset } = useCreateAgora(
     useShallow((state) => ({
       reset: state.reset,
@@ -73,6 +74,7 @@ function CreateAgoraBtn() {
     },
     onSuccess: async (response) => {
       reset();
+      searchReset();
       resetUploadImageState();
 
       if (!isNull(response)) {
@@ -139,10 +141,8 @@ function CreateAgoraBtn() {
   useEffect(() => {
     return () => {
       const { reset: createStoreReset } = useCreateAgora.getState();
-      const { reset: searchReset } = useSearchStore.getState();
 
       createStoreReset(); // 언마운트시 초기
-      searchReset();
       resetUploadImageState();
     };
   }, []);
