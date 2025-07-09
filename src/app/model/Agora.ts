@@ -158,3 +158,7 @@ export interface EnterClosedAgoraResponse {
   agoraId: AgoraId;
   memberId: number;
 }
+
+export interface CreateAgoraResponse {
+  id: AgoraId;
+}

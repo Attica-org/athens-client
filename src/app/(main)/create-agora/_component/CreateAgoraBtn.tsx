@@ -1,118 +1,45 @@
 'use client';
 
-import {
-  QueryClient,
-  UseMutateFunction,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query';
-import React, { KeyboardEventHandler, useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import React, { KeyboardEventHandler, useCallback, useEffect } from 'react';
 import { useCreateAgora } from '@/store/create';
 import { useRouter } from 'next/navigation';
-import { useAgora } from '@/store/agora';
 import Loading from '@/app/_components/atoms/loading';
 import showToast from '@/utils/showToast';
-import { AgoraConfig } from '@/app/model/Agora';
-import { enterAgoraSegmentKey } from '@/constants/segmentKey';
-import { AGORA_CREATE, AGORA_STATUS } from '@/constants/agora';
-import useApiError from '@/hooks/useApiError';
-import { COLOR } from '@/constants/consts';
 import { useShallow } from 'zustand/react/shallow';
 import { useUploadImage } from '@/store/uploadImage';
-import { useSearchStore } from '@/store/search';
-import isNull from '@/utils/validation/validateIsNull';
-import { postCreateAgora } from '../../_lib/postCreateAgora';
+import { validateCreateAgora } from '@/utils/validation/validateCreateAgora';
+import { useCreateAgoraAction } from '@/hooks/useCreateAgoraAction';
 
 function CreateAgoraBtn() {
-  const [createAgora, setCreateAgora] = useState<AgoraConfig>({
-    title: '',
-    imageUrl: '',
-    category: '1',
-    color: { idx: 0, value: COLOR[0].value },
-    capacity: 5,
-    duration: 60,
-  });
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const queryClient = useQueryClient();
-  const { handleError } = useApiError();
-  const { reset } = useCreateAgora(
-    useShallow((state) => ({
-      reset: state.reset,
-    })),
+
+  const routeAgoraPage = useCallback(
+    (path: string) => {
+      router.push(path);
+    },
+    [router],
   );
+
   const { resetUploadImageState } = useUploadImage(
     useShallow((state) => ({
       resetUploadImageState: state.resetUploadImageState,
     })),
   );
-  const { setSelectedAgora } = useAgora(
-    useShallow((state) => ({
-      setSelectedAgora: state.setSelectedAgora,
-    })),
-  );
 
-  const invalidAgora = async (client: QueryClient, queryKey: string[]) => {
-    await client.invalidateQueries({ queryKey });
-  };
-
-  const failedCreateAgora = async (
-    error: Error,
-    mutation: UseMutateFunction<any, Error, void, unknown>,
-  ) => {
-    setIsLoading(false);
-    await handleError(error, mutation);
-  };
-
-  const mutation = useMutation({
-    mutationFn: async () => {
-      const info = {
-        ...createAgora,
-      };
-      return postCreateAgora(info);
-    },
-    onSuccess: async (response) => {
-      reset();
-      resetUploadImageState();
-
-      if (!isNull(response)) {
-        setSelectedAgora({
-          id: response.id,
-          imageUrl: createAgora.imageUrl,
-          agoraTitle: createAgora.title,
-          status: AGORA_STATUS.QUEUED,
-          agoraColor: createAgora.color.value,
-        });
-
-        setIsLoading(false);
-
-        await invalidAgora(queryClient, ['agora']);
-        router.push(`/flow${enterAgoraSegmentKey}/${response.id}`);
-        return;
-      }
-      await failedCreateAgora(
-        new Error('아고라 생성에 실패했습니다.'),
-        mutation.mutate,
-      );
-    },
-    onError: async (error) => {
-      await failedCreateAgora(error, mutation.mutate);
-    },
-  });
+  const { isLoading, createAgoraMutation, setCreateAgora } =
+    useCreateAgoraAction({
+      routeAgoraPage,
+      queryClient,
+      resetUploadImageState,
+    });
 
   const handleClick = () => {
     const { title, imageUrl, category, color, capacity, duration } =
       useCreateAgora.getState();
 
-    if (
-      title.trim() === '' ||
-      title.length > 15 ||
-      !color ||
-      !category ||
-      !duration ||
-      duration > AGORA_CREATE.MAX_DISCUSSION_TIME ||
-      duration < AGORA_CREATE.MIN_DISCUSSION_TIME
-    ) {
+    if (validateCreateAgora({ title, color, category, duration })) {
       showToast('입력값을 확인해주세요.', 'error');
       return;
     }
@@ -126,8 +53,7 @@ function CreateAgoraBtn() {
       duration,
     });
 
-    setIsLoading(true);
-    mutation.mutate();
+    createAgoraMutation.mutate();
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLButtonElement> = (e) => {
@@ -139,10 +65,8 @@ function CreateAgoraBtn() {
   useEffect(() => {
     return () => {
       const { reset: createStoreReset } = useCreateAgora.getState();
-      const { reset: searchReset } = useSearchStore.getState();
 
       createStoreReset(); // 언마운트시 초기
-      searchReset();
       resetUploadImageState();
     };
   }, []);
