@@ -38,7 +38,7 @@ export default function EnterAgoraContent() {
   });
 
   useEffect(() => {
-    if (!enabled) {
+    if (Number.isNaN(agoraId)) {
       setErrorType(AccessStatus.ENTER);
       router.replace(`${homeSegmentKey}?status=active`);
     }
