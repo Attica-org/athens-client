@@ -1,47 +1,52 @@
 import React, { KeyboardEvent, useCallback, useEffect, useRef } from 'react';
 import BackIcon from '@/assets/icons/BackIcon';
 import CheckIcon from '@/assets/icons/CheckIcon';
-import { initialImage, useUploadImage } from '@/store/uploadImage';
+import { useUploadImage } from '@/store/uploadImage';
 import { useShallow } from 'zustand/react/shallow';
+import { useRouter } from 'next/navigation';
 
 type CropImgHeaderProps = {
   handleImgCrop: () => void;
-  movePage: () => void;
   handleKeyDownImgCrop: (e: KeyboardEvent<HTMLButtonElement>) => void;
 };
 
-export default function ImageCropperHeader({
+function ImageCropperHeader({
   handleImgCrop,
   handleKeyDownImgCrop,
-  movePage,
 }: CropImgHeaderProps) {
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
-  const { resetUploadImageState, setUploadImage } = useUploadImage(
+  const { resetUploadImageState } = useUploadImage(
     useShallow((state) => ({
-      uploadImage: state.uploadImage,
-      setUploadImage: state.setUploadImage,
-      setCropedPreview: state.setCropedPreview,
       resetUploadImageState: state.resetUploadImageState,
     })),
   );
+  const router = useRouter();
 
   useEffect(() => {
     cancelButtonRef.current?.focus();
   }, []);
 
   const handleCancelCrop = useCallback(() => {
-    setUploadImage(initialImage);
-    movePage();
+    resetUploadImageState();
+    router.back();
   }, []);
 
   const handleKeyDownCancelCrop = useCallback(
     (e: KeyboardEvent<HTMLButtonElement>) => {
       if (e.key === 'Enter') {
-        resetUploadImageState();
+        handleCancelCrop();
       }
     },
     [handleCancelCrop],
   );
+
+  useEffect(() => {
+    window.addEventListener('popstate', handleCancelCrop);
+
+    return () => {
+      window.removeEventListener('popstate', handleCancelCrop);
+    };
+  }, []);
 
   return (
     <header
@@ -75,4 +80,4 @@ export default function ImageCropperHeader({
   );
 }
 
-// export default React.memo(ImageCropperHeader);
+export default React.memo(ImageCropperHeader);

@@ -1,6 +1,4 @@
-import { useUploadImage } from '@/store/uploadImage';
 import { Crop, centerCrop, makeAspectCrop } from 'react-image-crop';
-import { useShallow } from 'zustand/react/shallow';
 import React from 'react';
 import ImageRenderer from './ImageRenderer';
 
@@ -10,13 +8,11 @@ type RenderMediaProps = {
   setCrop: React.Dispatch<Crop>;
 };
 
-export function RenderMedia({ file, imgRef, setCrop }: RenderMediaProps) {
-  const { setCropedPreview, resetUploadImageState } = useUploadImage(
-    useShallow((state) => ({
-      setCropedPreview: state.setCropedPreview,
-      resetUploadImageState: state.resetUploadImageState,
-    })),
-  );
+export default function RenderMedia({
+  file,
+  imgRef,
+  setCrop,
+}: RenderMediaProps) {
   const fileType = file.file.type.split('/')[0];
 
   const onImageLoaded = (e: HTMLImageElement) => {
@@ -50,10 +46,6 @@ export function RenderMedia({ file, imgRef, setCrop }: RenderMediaProps) {
         onImageLoaded={onImageLoaded}
       />
     );
-  }
-  if (file.file.type === 'image/gif') {
-    setCropedPreview(file);
-    resetUploadImageState();
   }
 
   return null; // 이미지 또는 비디오가 아닌 파일이 선택된 경우

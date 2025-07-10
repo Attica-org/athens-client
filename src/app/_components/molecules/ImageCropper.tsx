@@ -11,12 +11,11 @@ import ReactCrop, { Crop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { useUploadImage } from '@/store/uploadImage';
 import { useShallow } from 'zustand/react/shallow';
-import { useRouter } from 'next/navigation';
 import isNull from '@/utils/validation/validateIsNull';
 import { useHandleImgCrop } from '@/hooks/useHandleImgCrop';
 import Loading from '../atoms/loading';
 import ImageCropperHeader from '../atoms/ImageCropperHeader';
-import { RenderMedia } from '../atoms/RenderMedia';
+import RenderMedia from '../atoms/RenderMedia';
 
 export default function ImageCropper() {
   const [crop, setCrop] = useState<Crop>();
@@ -24,102 +23,108 @@ export default function ImageCropper() {
   const imgRef = useRef<HTMLImageElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [makeCrop, setMakeCrop] = useState<Crop>();
   const { uploadImage, setCropedPreview } = useUploadImage(
     useShallow((state) => ({
       uploadImage: state.uploadImage,
       setCropedPreview: state.setCropedPreview,
     })),
   );
-  const router = useRouter();
 
-  const movePage = () => {
-    router.back();
-  };
-
-  const { loading, setMakeCrop, handleImgCrop } = useHandleImgCrop({
+  const { loading, handleImgCrop } = useHandleImgCrop({
     imgRef,
     canvasRef,
     setCropedPreview,
-    movePage,
   });
+
+  const cropUserCustomImage = () => {
+    if (!isNull(makeCrop)) {
+      handleImgCrop(makeCrop);
+    }
+  };
 
   const handleKeyDownImgCrop = useCallback(
     (e: KeyboardEvent<HTMLButtonElement>) => {
       if (e.key === 'Enter') {
-        handleImgCrop();
+        cropUserCustomImage();
       }
     },
-    [handleImgCrop],
+    [cropUserCustomImage],
   );
 
   useEffect(() => {
     setOpacity('opacity-100');
   }, []);
 
+  if (loading) {
+    return (
+      <div className="min-w-300 w-full h-full flex absolute justify-center items-center z-50 top-0 right-0 left-0 bottom-0 bg-opacity-50 bg-dark-bg-dark">
+        <Loading
+          w="20"
+          h="20"
+          className="m-2 flex justify-center items-center"
+        />
+      </div>
+    );
+  }
+
   return (
-    <>
-      <div
-        ref={dialogRef}
-        id="agora-profile-image-dialog"
-        role="dialog"
-        aria-modal="true"
-        aria-label="이미지 자르기 창"
-        aria-describedby="이미지를 원하는 영역으로 자르고 완료 버튼을 눌러주세요."
-        className="flex flex-col z-50 fixed top-0 left-0 w-full h-full dark:bg-dark-bg-dark bg-dark-line-light"
+    <div
+      ref={dialogRef}
+      id="agora-profile-image-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-label="이미지 자르기 창"
+      aria-describedby="이미지를 원하는 영역으로 자르고 완료 버튼을 눌러주세요."
+      className="flex flex-col z-50 fixed top-0 left-0 w-full h-full dark:bg-dark-bg-dark bg-dark-line-light"
+    >
+      <main
+        className={`${opacity} transition duration-300 transform scale-100 h-full w-full`}
       >
-        <main
-          className={`${opacity} transition duration-300 transform scale-100 h-full w-full`}
+        <ImageCropperHeader
+          handleImgCrop={cropUserCustomImage}
+          handleKeyDownImgCrop={handleKeyDownImgCrop}
+        />
+        <section
+          aria-label="이미지 영역"
+          className="w-full h-full flex justify-center items-center pb-25"
         >
-          <ImageCropperHeader
-            movePage={movePage}
-            handleImgCrop={handleImgCrop}
-            handleKeyDownImgCrop={handleKeyDownImgCrop}
-          />
-          <section
-            aria-label="이미지 영역"
-            className="w-full h-full flex justify-center items-center pb-25"
+          <ReactCrop
+            crop={crop}
+            aspect={1}
+            keepSelection
+            ruleOfThirds
+            onChange={(newCrop) => setCrop(newCrop)}
+            onComplete={(newCrop) => setMakeCrop(newCrop)}
+            className="w-fit h-fit"
+            aria-label="이미지 자르기"
           >
-            <ReactCrop
-              crop={crop}
-              aspect={1}
-              keepSelection
-              ruleOfThirds
-              onChange={(newCrop) => setCrop(newCrop)}
-              onComplete={(newCrop) => setMakeCrop(newCrop)}
-              className="w-fit h-fit"
-              aria-label="이미지 자르기"
-            >
-              {!isNull(uploadImage.dataUrl) &&
-                RenderMedia({ file: uploadImage, imgRef, setCrop })}
-            </ReactCrop>
-          </section>
-          <div>
-            {crop && (
-              <canvas
-                aria-hidden
-                ref={canvasRef}
-                className="mt-12"
-                style={{
-                  display: 'none',
-                  border: '1px solid #000',
-                  objectFit: 'contain',
-                  width: Math.round(crop.width ?? 0),
-                  height: Math.round(crop.height ?? 0),
-                }}
+            {!isNull(uploadImage.dataUrl) && (
+              <RenderMedia
+                file={uploadImage}
+                imgRef={imgRef}
+                setCrop={setCrop}
               />
             )}
-          </div>
-        </main>
-      </div>
-      {loading && (
-        <div className="min-w-300 w-full h-full flex absolute justify-center items-center z-50 top-0 right-0 left-0 bottom-0 bg-opacity-50 bg-dark-bg-dark">
-          <Loading
-            w="20"
-            h="20"
-            className="m-2 flex justify-center items-center"
-          />
+          </ReactCrop>
+        </section>
+        <div>
+          {crop && (
+            <canvas
+              aria-hidden
+              ref={canvasRef}
+              className="mt-12"
+              style={{
+                display: 'none',
+                border: '1px solid #000',
+                objectFit: 'contain',
+                width: Math.round(crop.width ?? 0),
+                height: Math.round(crop.height ?? 0),
+              }}
+            />
+          )}
         </div>
-      )}
-    </>
+      </main>
+    </div>
   );
 }
