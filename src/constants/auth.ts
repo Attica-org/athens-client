@@ -14,3 +14,8 @@ export const AuthProviderLabels: Record<AuthProvider, string> = {
 
 export const AUTHENTICATED = 'authenticated';
 export const UNAUTHENTICATED = 'unauthenticated';
+
+export enum Provider {
+  KAKAO = 'kakao',
+  GOOGLE = 'google',
+}

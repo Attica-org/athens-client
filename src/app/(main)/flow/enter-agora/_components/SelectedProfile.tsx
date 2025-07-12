@@ -24,22 +24,6 @@ export default function SelectedProfile() {
 
   inputRef.current?.focus();
 
-  // useEffect(() => {
-  //   const handleOutSideClick = (e: MouseEvent) => {
-  //     if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
-  //       inputRef.current.focus();
-  //     }
-  //   };
-
-  //   window.addEventListener('click', handleOutSideClick);
-
-  //   const cleanup = () => {
-  //     window.removeEventListener('click', handleOutSideClick);
-  //   };
-
-  //   return cleanup;
-  // }, []);
-
   return (
     <div className="flex justify-start items-center mb-10">
       <UserImage

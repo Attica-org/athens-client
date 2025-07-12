@@ -39,7 +39,7 @@ function CreateAgoraBtn() {
     const { title, imageUrl, category, color, capacity, duration } =
       useCreateAgora.getState();
 
-    if (validateCreateAgora({ title, color, category, duration })) {
+    if (!validateCreateAgora({ title, color, category, duration })) {
       showToast('입력값을 확인해주세요.', 'error');
       return;
     }
