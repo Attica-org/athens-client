@@ -1,31 +1,17 @@
 import React from 'react';
 import Link from 'next/link';
-import isNull from '@/utils/validation/validateIsNull';
+import { Provider } from '@/constants/auth';
+import { getRedirectUri } from '@/utils/getRedirectUri';
 
 type Props = {
   callbackUrl: undefined | string;
 };
 
-enum Provider {
-  KAKAO = 'kakao',
-  GOOGLE = 'google',
-}
-
 export default function SNSLogin({ callbackUrl }: Props) {
-  const getRedirectUri = (provider: Provider) => {
-    let redirectUri = `${process.env.NEXT_PUBLIC_CLIENT_URL}/login`;
-    if (!isNull(callbackUrl)) {
-      redirectUri += `?callbackUrl=${callbackUrl}`;
-    }
-    const encodedRedirectUri = encodeURIComponent(redirectUri);
-    const finalUrl = `${process.env.NEXT_BASE_URL}/oauth2/authorization/${provider}?redirect_uri=${encodedRedirectUri}`;
-    return finalUrl;
-  };
-
   return (
     <>
       <Link
-        href={getRedirectUri(Provider.KAKAO)}
+        href={getRedirectUri({ provider: Provider.KAKAO, callbackUrl })}
         aria-label="카카오로 로그인하기"
         className="text-sm text-black relative flex justify-center items-center w-full bg-[#FEE500] border-1 border-[#FEE500] rounded-md h-42 p-12"
       >
@@ -50,7 +36,7 @@ export default function SNSLogin({ callbackUrl }: Props) {
         </div>
       </Link>
       <Link
-        href={getRedirectUri(Provider.GOOGLE)}
+        href={getRedirectUri({ provider: Provider.GOOGLE, callbackUrl })}
         aria-label="구글로 로그인하기"
         className="text-sm text-black relative flex justify-center items-center w-full bg-white border-1 border-dark-line-semilight rounded-md h-42 p-12"
       >
